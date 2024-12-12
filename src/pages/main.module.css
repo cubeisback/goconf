@@ -1,0 +1,29 @@
+.container {
+    width: 1280px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+.promo {
+    padding-top: 300px;
+    padding-bottom: 80px;
+}
+.promo_title {
+    font-family: Impact;
+    text-align: center;
+    font-size: 90px;
+    line-height: 1.1;
+    margin-bottom: 32px;
+}
+.promo_subtitle {
+    font-size: 20px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.filter {
+    width: 100%;
+    border-radius: 28px;
+    background-color: #8553F9;
+    height: 80px;
+}
