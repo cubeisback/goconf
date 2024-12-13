@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/goconf/static/css/main.daa6dc22.css",
+    "main.js": "/goconf/static/js/main.d2a53109.js",
+    "static/media/logo.svg": "/goconf/static/media/logo.7dfd2dfa3cc4574bfb32918b3d22c1e8.svg",
+    "index.html": "/goconf/index.html",
+    "main.daa6dc22.css.map": "/goconf/static/css/main.daa6dc22.css.map",
+    "main.d2a53109.js.map": "/goconf/static/js/main.d2a53109.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.daa6dc22.css",
+    "static/js/main.d2a53109.js"
+  ]
+}
