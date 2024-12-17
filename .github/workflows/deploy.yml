@@ -30,15 +30,19 @@ jobs:
       - name: Check if build directory exists
         run: |
           ls -l ./build
-
-      # Создаем директорию .ssh, если она не существует
+      
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
           chmod 600 ~/.ssh/goconf_key
-          ls -l ~/.ssh
+      
+          # Выводим значение SERVER_IP для отладки
+          echo "Server IP: $SERVER_IP"
+      
+          # Добавляем сервер в known_hosts
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+
 
       # Удаление старой версии
       - name: Remove old version on server
