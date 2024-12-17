@@ -47,7 +47,12 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/goocnf
         chmod 600 ~/.ssh/goocnf
-        ssh-keyscan -H 2.56.88.165 >> ~/.ssh/known_hosts
+    
+        # Проверяем права доступа
+        ls -l ~/.ssh
+    
+        # Добавляем сервер в known_hosts
+        ssh-keyscan -H 2.56.88.165 >> ~/.ssh/known_hosts || exit 1
     
     - name: Deploy to server
       run: |
