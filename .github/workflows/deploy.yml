@@ -33,7 +33,12 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
+          # Создаем файл ключа
+          echo "$PRIVATE_KEY" > ~/.ssh/selectel_key
+          chmod 600 ~/.ssh/selectel_key
+      
           # Удаление старой версии
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
+          ssh -i ~/.ssh/selectel_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
+      
           # Копирование новой версии
-          scp -i ~/.ssh/id_rsa -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
+          scp -i ~/.ssh/selectel_key -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
