@@ -1,0 +1,39 @@
+name: GoConf deploy
+
+on:
+  push:
+    branches:
+      - main  # Триггер при пуше в ветку main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Проверка кода
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Установка Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Укажите вашу версию Node.js
+
+      # Установка зависимостей и сборка проекта
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm run build
+
+      # Загрузка файлов на сервер
+      - name: Deploy to Selectel
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          # Удаление старой версии
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
+          # Копирование новой версии
+          scp -i ~/.ssh/id_rsa -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
