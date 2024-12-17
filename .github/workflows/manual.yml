@@ -45,13 +45,13 @@ jobs:
     - name: Set up SSH key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/goocnf
+        chmod 600 ~/.ssh/goocnf
         ssh-keyscan -H 2.56.88.165 >> ~/.ssh/known_hosts
     
     - name: Deploy to server
       run: |
-        ssh -i ~/.ssh/id_rsa p4988@2.56.88.165 'cd /goconf && git pull && npm install && npm run build && pm2 restart app'
+        ssh -i ~/.ssh/goocnf p4988@2.56.88.165 'cd /goconf && git pull && npm install && npm run build && pm2 restart app'
 
     - name: Deploy to production (example)
       run: |
