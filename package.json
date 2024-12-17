@@ -1,7 +1,7 @@
 {
   "name": "goconf",
   "version": "0.1.0",
-  "homepage": "https://cubeisback.github.io/goconf",
+  "homepage": "/goconf",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
