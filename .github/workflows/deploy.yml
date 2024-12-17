@@ -1,44 +1,66 @@
-name: GoConf deploy
+name: GoConf
 
 on:
   push:
     branches:
-      - main  # Триггер при пуше в ветку main
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Проверка кода
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Установка Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'  # Укажите вашу версию Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'  # Укажите нужную версию Node.js
 
-      # Установка зависимостей и сборка проекта
-      - name: Install dependencies
-        run: |
-          npm ci
-          npm run build
+    - name: Install dependencies
+      run: npm install
 
-      # Загрузка файлов на сервер
-      - name: Deploy to Selectel
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        run: |
-          # Создаем файл ключа
-          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-      
-          # Удаление старой версии
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
-      
-          # Копирование новой версии
-          scp -i ~/.ssh/id_rsa -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
+    - name: Build the app
+      run: npm run build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: success()
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/goconf_key
+        chmod 600 ~/.ssh/goconf_key
+    
+        # Проверяем права доступа
+        ls -l ~/.ssh
+    
+        # Добавляем сервер в known_hosts
+        ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts || exit 1
+    
+    - name: Deploy to server
+      run: |
+        echo "deps"
+        # ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP 'cd /goconf && git pull && npm install && npm run build && pm2 restart app'
+
+    - name: Deploy to production (example)
+      run: |
+        echo "Deploying to production server"
+        # Здесь можно добавить команду для деплоя на сервер или в облако
+        # Например, через SSH или на платформы вроде Netlify, Firebase, Vercel, AWS и т.д.
