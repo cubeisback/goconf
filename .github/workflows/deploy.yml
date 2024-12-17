@@ -42,23 +42,31 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up SSH key
+    - name: Deploy to Selectel
+      env:
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
       run: |
+        # Создаем директорию .ssh, если она не существует
         mkdir -p ~/.ssh
-        echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/goconf_key
+    
+        # Создаем файл с приватным ключом
+        echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
         chmod 600 ~/.ssh/goconf_key
     
         # Проверяем права доступа
         ls -l ~/.ssh
-        echo "Server IP: $SERVER_IP"
-        # Добавляем сервер в known_hosts
-        ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts || exit 1
+        
+        # Добавляем сервер в known_hosts (если еще не добавлен)
+        ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
     
-    - name: Deploy to server
-      run: |
-        echo "deps"
-        # ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP 'cd /goconf && git pull && npm install && npm run build && pm2 restart app'
-
+        # Удаление старой версии
+        ssh -i ~/.ssh/goconf_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
+    
+        # Копирование новой версии
+        scp -i ~/.ssh/goconf_key -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
+    
     - name: Deploy to production (example)
       run: |
         echo "Deploying to production server"
