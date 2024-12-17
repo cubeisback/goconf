@@ -33,6 +33,10 @@ jobs:
 
       # Шаг 5: Создание директории .ssh и настройка ключа
       - name: Setup SSH
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
@@ -46,10 +50,16 @@ jobs:
 
       # Шаг 6: Удаление старой версии на сервере
       - name: Remove old version on server
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
         run: |
           ssh -i ~/.ssh/goconf_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
 
       # Шаг 7: Копирование новой версии на сервер
       - name: Deploy new version
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
         run: |
           scp -i ~/.ssh/goconf_key -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
