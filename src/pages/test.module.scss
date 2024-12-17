@@ -1,0 +1,15 @@
+@use '../styles/variables' as *;
+
+.test {
+    font-size: 66px;
+    padding: 60px;
+    color: $green;
+
+    @media(max-width: 575px) {
+        font-size: 30px;
+    }
+
+    &_new {
+        font-size: 100px;
+    }
+}

@@ -10,6 +10,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { motion } from 'framer-motion';
 
+import test from './test.module.scss';
+
 
 export const Main = () => {
     const [startDate, setStartDate] = useState();
@@ -37,7 +39,11 @@ export const Main = () => {
 
     return (
         <>
+        
             <Header />
+            <h1 className={test.test}>TEST</h1>
+            <p className={test.test_new}>test2</p>
+
             <div className={styles.container}>
                 
                 <div className={styles.promo}>
@@ -59,7 +65,6 @@ export const Main = () => {
       </motion.div>
                 
                 </div>
-<h1>NOW PRIVATE</h1>
                 <div className={styles.slider}>
                     <div>Интересные события</div>
                     <div ref={navigationPrevRef} className={styles.slider_btn_prev}>

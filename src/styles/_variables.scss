@@ -1,0 +1,33 @@
+// common settings
+$fontSize: 16px;
+$lineHeight: normal;
+$transition: .3s ease-in-out;
+
+// fonts
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
+$fontMain: 'Gilroy', sans-serif, arial;
+
+// colors
+
+$green: #3f9412;
+$greenDark: #627358;
+$blue: #1C2B3B;
+
+
+$light: #F4F4F4;
+
+$mainColor: #fff;
+$red: #AE1E31;
+$yellow: #E9D593;
+$yellowDark: #E4C684;
+$black: #130816;
+
+
+// Settings
+$desktop-xl: 1280;
+$desktop: 1200;
+$laptop: 992;
+$tablet: 768;
+$mobile-hr: 576;
+$mobile: 320;
+$desktop-vh: 750;

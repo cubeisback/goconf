@@ -5,6 +5,7 @@ import { Main } from "./pages/Main";
 import { Events } from "./pages/Events";
 // import { theme } from "./theme";
 import './global.module.css'
+import './styles/global.scss'
 
 
 function App() {
