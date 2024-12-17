@@ -59,7 +59,7 @@ export const Main = () => {
       </motion.div>
                 
                 </div>
-
+<h1>NOW PRIVATE</h1>
                 <div className={styles.slider}>
                     <div>Интересные события</div>
                     <div ref={navigationPrevRef} className={styles.slider_btn_prev}>
