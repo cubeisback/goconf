@@ -1,74 +1,51 @@
-name: GoConf
+name: Deploy goconf React App
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # Триггер при пуше в ветку main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Проверка кода
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'  # Укажите нужную версию Node.js
+      # Установка Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    - name: Install dependencies
-      run: npm install
+      # Установка зависимостей и сборка проекта
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
 
-    - name: Build the app
-      run: npm run build
+      # Проверка существования директории build
+      - name: Check if build directory exists
+        run: |
+          ls -l ./build
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: build
-        path: build
+      # Создаем директорию .ssh, если она не существует
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
+          chmod 600 ~/.ssh/goconf_key
+          ls -l ~/.ssh
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    if: success()
+      # Удаление старой версии
+      - name: Remove old version on server
+        run: |
+          ssh -i ~/.ssh/goconf_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Deploy to Selectel
-      env:
-        SERVER_IP: ${{ secrets.SERVER_IP }}
-        SERVER_USER: ${{ secrets.SERVER_USER }}
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      run: |
-        # Создаем директорию .ssh, если она не существует
-        mkdir -p ~/.ssh
-    
-        # Создаем файл с приватным ключом
-        echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
-        chmod 600 ~/.ssh/goconf_key
-    
-        # Проверяем права доступа
-        ls -l ~/.ssh
-        
-        # Добавляем сервер в known_hosts (если еще не добавлен)
-        ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-    
-        # Удаление старой версии
-        ssh -i ~/.ssh/goconf_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
-    
-        # Копирование новой версии
-        scp -i ~/.ssh/goconf_key -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
-    
-    - name: Deploy to production (example)
-      run: |
-        echo "Deploying to production server"
-        # Здесь можно добавить команду для деплоя на сервер или в облако
-        # Например, через SSH или на платформы вроде Netlify, Firebase, Vercel, AWS и т.д.
+      # Копирование новой версии
+      - name: Deploy new version
+        run: |
+          scp -i ~/.ssh/goconf_key -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
