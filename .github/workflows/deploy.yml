@@ -26,11 +26,15 @@ jobs:
           npm install
           npm run build
 
+      - name: Debug SERVER_IP
+        run: |
+          echo "SERVER_IP: $SERVER_IP"
+
       # Проверка существования директории build
       - name: Check if build directory exists
         run: |
           ls -l ./build
-      
+          
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -38,11 +42,10 @@ jobs:
           chmod 600 ~/.ssh/goconf_key
       
           # Выводим значение SERVER_IP для отладки
-          echo "Server IP: $SERVER_IP"
+          echo "SERVER_IP: $SERVER_IP"
       
           # Добавляем сервер в known_hosts
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-
 
       # Удаление старой версии
       - name: Remove old version on server
