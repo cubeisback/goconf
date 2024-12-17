@@ -44,7 +44,7 @@ jobs:
       
     - name: Deploy to server
       run: |
-        ssh -i ${{ secrets.SSH_PRIVATE_KEY }} p4988@cpanel2:~ 'cd /goconf && git pull && npm install && npm run build && pm2 restart app'
+        ssh -i ${{ secrets.SSH_PRIVATE_KEY }} p4988@cpanel2 'cd /goconf && git pull && npm install && npm run build && pm2 restart app'
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
