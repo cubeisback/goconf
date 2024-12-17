@@ -6,53 +6,50 @@ on:
       - main  # Триггер при пуше в ветку main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Проверка кода
+      # Шаг 1: Проверка кода
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Установка Node.js
+      # Шаг 2: Установка Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Установка зависимостей и сборка проекта
+      # Шаг 3: Установка зависимостей и сборка проекта
       - name: Install dependencies and build
         run: |
           npm install
           npm run build
 
-      - name: Debug SERVER_IP
-        run: |
-          echo "SERVER_IP: $SERVER_IP"
-
-      # Проверка существования директории build
+      # Шаг 4: Проверка существования директории build
       - name: Check if build directory exists
         run: |
           ls -l ./build
-          
+
+      # Шаг 5: Создание директории .ssh и настройка ключа
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
           chmod 600 ~/.ssh/goconf_key
-      
-          # Выводим значение SERVER_IP для отладки
+          
+          # Выводим SERVER_IP для отладки
           echo "SERVER_IP: $SERVER_IP"
-      
-          # Добавляем сервер в known_hosts
+
+          # Добавляем сервер в known_hosts для предотвращения ошибок при подключении
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      # Удаление старой версии
+      # Шаг 6: Удаление старой версии на сервере
       - name: Remove old version on server
         run: |
           ssh -i ~/.ssh/goconf_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
 
-      # Копирование новой версии
+      # Шаг 7: Копирование новой версии на сервер
       - name: Deploy new version
         run: |
           scp -i ~/.ssh/goconf_key -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
