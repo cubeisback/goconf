@@ -41,12 +41,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      
+
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 2.56.88.165 >> ~/.ssh/known_hosts
+    
     - name: Deploy to server
       run: |
-        ssh -i ${{ secrets.SSH_PRIVATE_KEY }} p4988@cpanel2 'cd /goconf && git pull && npm install && npm run build && pm2 restart app'
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ssh -i ~/.ssh/id_rsa p4988@2.56.88.165 'cd /goconf && git pull && npm install && npm run build && pm2 restart app'
 
     - name: Deploy to production (example)
       run: |
