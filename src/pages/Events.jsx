@@ -4,7 +4,6 @@ export const Events = () => {
 
     return (
         <>
-            <Header />
             
         </>
     );
