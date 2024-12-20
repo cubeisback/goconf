@@ -3,7 +3,8 @@ header {
     top: 0;
     left: 0;
     padding: 10px 64px;
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(16px);
     display: flex;
     gap: 64px;
     justify-content: space-between;

@@ -2,8 +2,8 @@ import { NavLink } from "react-router";
 import { ReactComponent as Logo } from '../../images/svg/logo.svg';
 import styled from '@emotion/styled';
 import styles from '../header/header.module.css';
-import { css } from '@emotion/css';
-import { useEffect } from "react";
+// import { css } from '@emotion/css';
+// import { useEffect } from "react";
 
 const Button = styled.div`
     border-radius: 28px;

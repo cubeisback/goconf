@@ -1,4 +1,3 @@
-import { Header } from "../components/header/Header"
 import styles from './main.module.css'
 import { ReactComponent as SliderArrow } from '../images/svg/slider_arrow.svg';
 import { ReactComponent as LinkArrow } from '../images/svg/link_arrow.svg';

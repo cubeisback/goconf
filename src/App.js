@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
-import { Global, ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '@emotion/react';
 import { Main } from "./pages/Main";
 import { Events } from "./pages/Events";
 import { theme } from "./theme";
