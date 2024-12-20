@@ -1,4 +1,4 @@
-import styles from './main.module.css'
+import styles from './main.module.css';
 import { ReactComponent as SliderArrow } from '../images/svg/slider_arrow.svg';
 import { ReactComponent as LinkArrow } from '../images/svg/link_arrow.svg';
 import { ReactComponent as FormSvg } from '../images/svg/form.svg';
@@ -50,16 +50,23 @@ export const Main = () => {
                 </div>
 
                 <div className={styles.filter}>
-                    <div onClick={()=>setShowP(true)}>1</div>
-                    <motion.div
-                        initial={{ pointerEvents: 'none', bottom: -20, opacity: 0 }}
-                        animate={{ opacity: showp ? 1 : 0, bottom: showp ? 0 : -20, pointerEvents: showp ? 'all' : 'none' }}
-                        transition={{ duration: 0.2 }}
-                        style={{position: "relative", zIndex: 10}}
-                        ref={datePickerRef}
-                    >
-                        <DatePicker selected={startDate} onChange={(date) => {setStartDate(date); console.log(date)}} inline />
-                    </motion.div>
+                    <div>Тематика</div>
+                    <div>Город</div>
+                    <div>Формат</div>
+                    <div onClick={()=>setShowP(true)}>Начало
+                        <motion.div
+                            initial={{ pointerEvents: 'none', bottom: -36, opacity: 0 }}
+                            animate={{ opacity: showp ? 1 : 0, bottom: showp ? -18 : -36, pointerEvents: showp ? 'all' : 'none' }}
+                            transition={{ duration: 0.2 }}
+                            style={{position: "relative", zIndex: 10}}
+                            ref={datePickerRef}
+                        >
+                            <DatePicker selected={startDate} onChange={(date) => {setStartDate(date); console.log(date)}} inline />
+                        </motion.div>
+                    </div>
+                    <div>Окончание</div>
+                    <div>Найти</div>
+                    
                 </div>
 
                 <div className={styles.slider}>

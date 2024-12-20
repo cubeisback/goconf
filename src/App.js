@@ -7,6 +7,8 @@ import { theme } from "./theme";
 import './global.module.css';
 import { Header } from "./components/header/Header";
 import { Footer } from "./components/Footer/Footer";
+import { Org } from "./pages/Org";
+import { About } from "./pages/About";
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/events" element={<Events />} />
+        <Route path="/org" element={<Org />} />
+        <Route path="/about" element={<About />} />
       </Routes>
       <Footer />
     </BrowserRouter>

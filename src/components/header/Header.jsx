@@ -29,9 +29,9 @@ export const Header = () => {
         <NavLink to="/"><Logo /></NavLink>
         <nav>
             <NavLink to="/events">Мероприятия</NavLink>
-            <NavLink to="/">Организаторам</NavLink>
-            <NavLink to="/">О&nbsp;проекте</NavLink>
-            <NavLink to="/">FAQ</NavLink>
+            <NavLink to="/org">Организаторам</NavLink>
+            <NavLink to="/about">О&nbsp;проекте</NavLink>
+            <NavLink to="/faq">FAQ</NavLink>
         </nav>
         <div className={styles.header_right}>
             <Button>Разместить событие</Button>
