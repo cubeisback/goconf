@@ -8,7 +8,7 @@ export const Org = () => {
             <div className={styles.promo_page}>
                 <div className={styles.container}>
                     <div className={styles.breadcrumbs}>
-                        <a href="">Главная</a>
+                        <a href="/">Главная</a>
                         <p>Организаторам</p>
                     </div>
                     <h1 style={{textAlign: 'center'}}>Организаторам</h1>

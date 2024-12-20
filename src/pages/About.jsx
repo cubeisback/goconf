@@ -11,7 +11,7 @@ export const About = () => {
             <div className={styles.promo_page}>
                 <div className={styles.container}>
                     <div className={styles.breadcrumbs}>
-                        <a href="">Главная</a>
+                        <a href="/">Главная</a>
                         <p>О проекте</p>
                     </div>
                     <h1 style={{textAlign: 'center'}}>О проекте <span style={{color: '#8553F9'}}>GoCONF</span></h1>

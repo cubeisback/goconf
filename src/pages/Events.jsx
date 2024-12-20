@@ -33,7 +33,7 @@ export const Events = () => {
             <div className={styles.promo_page}>
                 <div className={styles.container}>
                     <div className={styles.breadcrumbs}>
-                        <a href="">Главная</a>
+                        <a href="/">Главная</a>
                         <p>Мероприятия</p>
                     </div>
                     <h1>Мероприятия</h1>
