@@ -12,6 +12,7 @@ import { About } from "./pages/About";
 
 
 function App() {
+
   return (
     <ThemeProvider theme={theme}>
     {/* <Global styles={globalStyles} />  */}

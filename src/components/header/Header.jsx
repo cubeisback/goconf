@@ -1,7 +1,8 @@
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import { ReactComponent as Logo } from '../../images/svg/logo.svg';
 import styled from '@emotion/styled';
 import styles from '../header/header.module.css';
+import { useEffect } from "react";
 // import { css } from '@emotion/css';
 // import { useEffect } from "react";
 
@@ -24,10 +25,17 @@ const Button = styled.div`
 
 export const Header = () => {
 
+  const location = useLocation();
+  
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [location]);
+
   return (
     <header>
         <NavLink to="/"><Logo /></NavLink>
         <nav>
+            <NavLink to="/events">1111</NavLink>
             <NavLink to="/events">Мероприятия</NavLink>
             <NavLink to="/org">Организаторам</NavLink>
             <NavLink to="/about">О&nbsp;проекте</NavLink>
