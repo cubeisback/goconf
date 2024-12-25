@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { motion } from 'framer-motion';
+import { container } from './ui';
+import { NavLink } from 'react-router';
 
 export const Events = () => {
     const [startDate, setStartDate] = useState();
@@ -31,7 +33,7 @@ export const Events = () => {
     return (
         <>
             <div className={styles.promo_page}>
-                <div className={styles.container}>
+                <div className={container}>
                     <div className={styles.breadcrumbs}>
                         <a href="/">Главная</a>
                         <p>Мероприятия</p>
@@ -42,7 +44,7 @@ export const Events = () => {
             </div>
 
             <div className={styles.events_filter}>
-                <div className={styles.container}>
+                <div className={container}>
                     <div className={styles.filter}>
                         <div>Тематика</div>
                         <div>Город</div>
@@ -72,7 +74,7 @@ export const Events = () => {
             </div>
 
             <div className={styles.b3}>
-                <div className={styles.container}>
+                <div className={container}>
                     <div className={styles.b3_block}>
                         <div className={styles.b3_block_item}>
                             <div className={styles.b3_block_item_date}>
@@ -93,7 +95,9 @@ export const Events = () => {
                                 <div className={styles.b3_block_item_info_4}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo.</div>
                             </div>
                             <div className={styles.b3_block_item_link}>
-                                <LinkArrow />
+                                <NavLink to='/events/test' >
+                                    <LinkArrow />
+                                </NavLink>
                             </div>
                         </div>
                         <div className={styles.b3_block_item}>
@@ -146,7 +150,7 @@ export const Events = () => {
             </div>
             
             <div className={styles.b4}>
-                <div className={styles.container}>
+                <div className={container}>
                     <div className={styles.form}>
                         <div className={styles.form_main}>
                             <div className={styles.form_title}>Дайджест событий<br/> в&nbsp;вашей почте</div>

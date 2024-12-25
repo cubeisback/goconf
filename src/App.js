@@ -1,26 +1,28 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
-import { ThemeProvider } from '@emotion/react';
+import { Global, ThemeProvider } from '@emotion/react';
+import { theme } from "./theme";
+import { globalStyles } from "./global";
+import { Header } from "./components/Header/Header";
+import { Footer } from "./components/Footer/Footer";
 import { Main } from "./pages/Main";
 import { Events } from "./pages/Events";
-import { theme } from "./theme";
-import './global.module.css';
-import { Header } from "./components/header/Header";
-import { Footer } from "./components/Footer/Footer";
 import { Org } from "./pages/Org";
 import { About } from "./pages/About";
+import { Event } from "./pages/Event";
 
 
 function App() {
 
   return (
     <ThemeProvider theme={theme}>
-    {/* <Global styles={globalStyles} />  */}
+    <Global styles={globalStyles} /> 
     <BrowserRouter>
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/events" element={<Events />} />
+        <Route path="/events/:name" element={<Event />} />
         <Route path="/org" element={<Org />} />
         <Route path="/about" element={<About />} />
       </Routes>
