@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { Global, ThemeProvider } from '@emotion/react';
 import { theme } from "./theme";
 import { globalStyles } from "./global";
-import { Header } from "./components/Header/Header";
+import { Header } from "./components/header/Header";
 import { Footer } from "./components/Footer/Footer";
 import { Main } from "./pages/Main";
 import { Events } from "./pages/Events";
