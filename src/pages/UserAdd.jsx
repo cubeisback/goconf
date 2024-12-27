@@ -1,15 +1,9 @@
 import { css, cx } from "@emotion/css";
 import { Button, input, textarea } from "./ui";
 import { motion } from 'framer-motion';
-import { useTheme } from "@emotion/react";
 import { useState } from "react";
-import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
-import { ReactComponent as RemoveIcon } from '../images/svg/remove.svg';
-import { ReactComponent as CheckIcon } from '../images/svg/check.svg';
-import { ReactComponent as ArrowDown } from '../images/svg/arrowDown.svg';
 
 export const UserAdd = () => {
-    const theme = useTheme();
     const [view, setView] = useState(1);
 
     const [text, setText] = useState('');

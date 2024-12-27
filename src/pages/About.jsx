@@ -2,7 +2,6 @@ import { css } from '@emotion/css';
 import { ReactComponent as About1 } from '../images/svg/about_1.svg';
 import { ReactComponent as About2 } from '../images/svg/about_2.svg';
 import { ReactComponent as About3 } from '../images/svg/about_3.svg';
-import { ReactComponent as FormSvg } from '../images/svg/form.svg';
 import { breadcrumbs, container, pagePromo } from './ui';
 import { Form } from '../components/Form';
 

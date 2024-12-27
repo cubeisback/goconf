@@ -44,8 +44,7 @@ export const User = ({page, setIsLogin}) => {
 
     useEffect(()=>{
         setIsLogin(true);
-        console.log('test')
-    }, []);
+    });
 
     return (
         <div className={css`

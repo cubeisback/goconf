@@ -1,7 +1,6 @@
 import { css, cx } from "@emotion/css";
-import { Button, input, inputItem, textarea } from "./ui";
+import { Button, input, textarea } from "./ui";
 import { motion } from 'framer-motion';
-import { useTheme } from "@emotion/react";
 import { useState } from "react";
 import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
 import { ReactComponent as RemoveIcon } from '../images/svg/remove.svg';
@@ -9,7 +8,6 @@ import { ReactComponent as AvatarIcon } from '../images/svg/avatar.svg';
 import org_1 from '../images/org_1.png';
 
 export const UserOrg = () => {
-    const theme = useTheme();
     const [view, setView] = useState(1);
     const [text, setText] = useState('');
 
