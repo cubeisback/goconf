@@ -1,11 +1,12 @@
-import styles from './main.module.css';
-import { Button, container } from './ui';
+import { breadcrumbs, Button, container, pagePromo } from './ui';
 import event_img from '../images/event_ex.jpg'
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
-import { Events } from '../components/Events/Events';
 import { Helper } from '../components/ui/Helper';
 import { useState } from 'react';
+import { MainEventsSlider } from '../components/MainEventsSlider';
+import { Form } from '../components/Form';
+import { MainEvents } from '../components/MainEvents';
 
 export const Event = () => {
     const [version, setVersion] = useState(0);
@@ -47,9 +48,9 @@ export const Event = () => {
 
     return (
         <>
-            <div className={styles.promo_page}>
+            <div className={pagePromo}>
                 <div className={container}>
-                    <div className={styles.breadcrumbs}>
+                    <div className={breadcrumbs}>
                         <a href="/">Главная</a>
                         <a href="/">Мероприятия</a>
                         <p>Национальный рекламный форум</p>
@@ -99,12 +100,15 @@ export const Event = () => {
                             position: sticky;
                             top: 108px;
                             height: max-content;
-                            border-radius: 28px;
-                            background-color: #F5F7FA;
-                            padding: 24px;
                             display: flex;
                             flex-direction: column;
                         `}>
+                            <div className={css`
+                                background-color: #F5F7FA;
+                                border-radius: 28px;
+                                padding: 24px;
+                                margin-bottom: 14px;
+                            `}>
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -192,6 +196,7 @@ export const Event = () => {
                                     color: #8553F9;
                                 `}>ЦРБК</p>
                             </div>
+                            </div>
                             
                             {version === 2 && <a href="/">Это ваше мероприятие?</a>}
                             {version === 3 && <Button>На сайт мероприятия</Button>}
@@ -201,8 +206,12 @@ export const Event = () => {
             </div>
             
             <div className={container}>
-                <Events />
+                <MainEventsSlider />
             </div>
+
+            <MainEvents similar={true} />
+
+            <Form />
 
             <Helper>
                 <h2>Версия</h2>

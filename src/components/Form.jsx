@@ -1,0 +1,88 @@
+import { css } from "@emotion/css"
+import { container } from "../pages/ui"
+import { ReactComponent as FormSvg } from '../images/svg/form.svg';
+
+export const Form = () => {
+
+    return (
+        <div className={css`
+            background-color: #22222A;
+            padding: 64px 0;
+        `}>
+            <div className={container}>
+                <div className={css`
+                    border-radius: 32px;
+                    background-color: #6C35EA;
+                    padding: 40px;
+                    display: flex;
+                    gap: 16px;
+                `}>
+                    <div className={css`
+                        flex: 0 1 768px;
+                        max-width: 768px;
+                    `}>
+                        <div className={css`
+                            color: #fff;
+                            margin-bottom: 16px;
+                            font-family: Impact;
+                            font-size: 56px;
+                            line-height: 1.15;
+                        `}>Дайджест событий<br/> в&nbsp;вашей почте</div>
+                        <div className={css`
+                            margin-bottom: 40px;
+                            font-size: 18px;
+                            color: #C5D7FF;
+                            line-height: 1.36;
+                        `}>Раз в&nbsp;месяц присылаем подборку мероприятий по&nbsp;выбранной тематике в&nbsp;вашем городе. Никакого спама.</div>
+                        <form action="" className={css`
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 16px;
+                            margin-bottom: 16px;
+
+                            input {
+                                flex: 0 1 100%;
+                                max-width: 100%;
+                                padding: 16px;
+                                background-color: #fff;
+                                border-radius: 28px;
+                                color: rgba(71, 71, 77, .64);
+                                border: none;
+                                outline: none;
+                                font-size: 14px;
+                            }
+
+                            div {
+                                flex: 0 1 calc(33.33333% - 10.666666px);
+                                max-width: calc(33.33333% - 10.666666px);
+                                padding: 16px;
+                                background-color: #fff;
+                                border-radius: 28px;
+                                color: rgba(71, 71, 77, .64);
+                                font-size: 14px;
+
+                                &:last-of-type {
+                                    background-color: #B3ED73;
+                                    color: #191921;
+                                    text-align: center;
+                                    font-size: 16px;
+                                }
+                            }
+                        `}>
+                            <input type="text" placeholder="Ваш E-mail" />
+                            <div>Тематика</div>
+                            <div>Город</div>
+                            <div>Подписаться</div>
+                        </form>
+                        <div className={css`
+                            color: #C5D7FF;
+                            font-size: 14px;
+                            line-height: 1.16;
+                        `}>Нажимая &laquo;Подписаться&raquo;, вы&nbsp;соглашаетесь получать материалы компании GoConf на&nbsp;свой электронный адрес и&nbsp;даете согласие на&nbsp;обработку персональных данных</div>
+                    </div>
+                    <FormSvg />
+                </div>
+            </div>
+        </div>
+    )
+}

@@ -68,14 +68,6 @@ const formatsArray = [
         name: 'Бизнес-семинары',
         count: 125
     },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
 ]
 
 export const Formats = () => {
@@ -107,7 +99,7 @@ export const Formats = () => {
                 `}>Самые интересные бизнес-мероприятия различных форматов от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div>
             </div>
             <div className={css`
-                overflow: hidden;
+                // overflow-x: hidden;
             `}>
             <div className={css`
                 display: flex;
@@ -120,16 +112,21 @@ export const Formats = () => {
                         transform: translateX(0);
                     }
                     100% {
-                        transform: translateX(-100%);
+                        transform: translateX(-1240px);
                     }
                 }
             `}>
                 {formatsArray.map((item, index) => (
-                    <div className={css`
+                    <div key={index} className={css`
                         max-width: 224px;
                         border-radius: 24px;
                         overflow: hidden;
                         position: relative;
+                        transition: ${theme.transition};
+
+                        &:hover {
+                            transform: scale(1.05);
+                        }
                     `}>
                         <img src={formats_ex_1} alt="" />
                         <div className={css`

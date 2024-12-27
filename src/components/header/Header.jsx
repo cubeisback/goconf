@@ -1,15 +1,22 @@
 import { NavLink, useLocation } from "react-router";
 import { ReactComponent as Logo } from '../../images/svg/logo.svg';
-import { useEffect } from "react";
+import { ReactComponent as UserIcon } from '../../images/svg/user.svg';
+import { useEffect, useState } from "react";
 import { Button, DoubleLink } from "../../pages/ui";
 import { css } from '@emotion/css';
+import { Modal } from "../ui/Modal";
 
-export const Header = () => {
+export const Header = ({isLogin}) => {
   const location = useLocation();
   
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <header className={css`
@@ -54,11 +61,21 @@ export const Header = () => {
           align-items: center;
           justify-content: flex-end;
         `}>
-          <NavLink>
+          <NavLink to="/lk/add">
             <Button>Разместить событие</Button>
           </NavLink>
-            <div>Войти</div>
+          {isLogin ?
+          <div>Александр Ром...</div>
+          :
+          <div onClick={openModal} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>
+            <UserIcon />
+            <p>Войти</p>
+          </div>
+          }
+          
         </div>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal} />
     </header>
     
   );

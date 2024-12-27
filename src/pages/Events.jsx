@@ -1,171 +1,94 @@
-import styles from './main.module.css';
-import { ReactComponent as LinkArrow } from '../images/svg/link_arrow.svg';
-import { ReactComponent as FormSvg } from '../images/svg/form.svg';
-import img_ex_1 from '../images/events_1.jpg';
-import { useEffect, useRef, useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { motion } from 'framer-motion';
-import { container } from './ui';
-import { NavLink } from 'react-router';
+import { breadcrumbs, container, pagePromo, pageTitle } from './ui';
+import { Filter } from '../components/Filter/Filter';
+import { css } from '@emotion/css';
+import { MainEvents } from '../components/MainEvents';
+import { Form } from '../components/Form';
 
 export const Events = () => {
-    const [startDate, setStartDate] = useState();
-    const [showp, setShowP] = useState(false);
-    const datePickerRef = useRef(null);
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-          if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
-            setShowP(false); // Закрываем DatePicker
-          }
-        };
-    
-        // Добавляем обработчик события для кликов по документу
-        document.addEventListener("mousedown", handleClickOutside);
-    
-        // Убираем обработчик при размонтировании компонента
-        return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
-        };
-      }, []);
 
     return (
         <>
-            <div className={styles.promo_page}>
+            <div className={pagePromo}>
                 <div className={container}>
-                    <div className={styles.breadcrumbs}>
+                    <div className={breadcrumbs}>
                         <a href="/">Главная</a>
                         <p>Мероприятия</p>
                     </div>
-                    <h1>Мероприятия</h1>
-                    <div className={styles.promo_page_search}>Поиск по мероприятиям</div>
+                    <h1 className={pageTitle}>Мероприятия</h1>
+                    <div className={css`
+                        background-color: #fff;
+                        border-radius: 28px;
+                        padding: 14px 16px;
+                        width: 608px;
+                        font-size: 14px;
+                        line-height: 1.16;
+                    `}>Поиск по мероприятиям</div>
                 </div>
             </div>
 
-            <div className={styles.events_filter}>
+            <div className={css`
+                position: relative;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    left: -100vw;
+                    top: 0;
+                    width: 200vw;
+                    height: 80px;
+                    background-color: #F5F7FA;
+                    z-index: -1;
+                }
+            `}>
                 <div className={container}>
-                    <div className={styles.filter}>
-                        <div>Тематика</div>
-                        <div>Город</div>
-                        <div>Формат</div>
-                        <div onClick={()=>setShowP(true)}>Начало
-                            <motion.div
-                                initial={{ pointerEvents: 'none', bottom: -36, opacity: 0 }}
-                                animate={{ opacity: showp ? 1 : 0, bottom: showp ? -18 : -36, pointerEvents: showp ? 'all' : 'none' }}
-                                transition={{ duration: 0.2 }}
-                                style={{position: "relative", zIndex: 10}}
-                                ref={datePickerRef}
-                            >
-                                <DatePicker selected={startDate} onChange={(date) => {setStartDate(date); console.log(date)}} inline />
-                            </motion.div>
-                        </div>
-                        <div>Окончание</div>
-                        <div>Найти</div>
-                    </div>
-                    <div className={styles.sort}>
+                    <Filter full={true} />
+
+                    <div className={css`
+                        display: flex;
+                        gap: 16px;
+                        flex-wrap: wrap;
+
+                        div {
+                            padding: 7px 12px 9px;
+                            border-radius: 8px;
+                            background-color: #F5F7FA;
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+                    `}>
                         <div>Конференции по&nbsp;маркетингу</div>
                         <div>Бизнес-семинары</div>
                         <div>Конференции в Москве</div>
                         <div>Выставки в Санкт-Петербурге</div>
                         <div>Конференции в Москве</div>
                     </div>
-                </div>
-            </div>
 
-            <div className={styles.b3}>
-                <div className={container}>
-                    <div className={styles.b3_block}>
-                        <div className={styles.b3_block_item}>
-                            <div className={styles.b3_block_item_date}>
-                                <div className={styles.b3_block_item_date_1}>26&nbsp;июля 2024&nbsp;- 09&nbsp;мая 2025</div>
-                                <div className={styles.b3_block_item_date_2}>Россия, Екатеринбург</div>
-                            </div>
-                            <div className={styles.b3_block_item_img}>
-                                <img src={img_ex_1} alt="" />
-                            </div>
-                            <div className={styles.b3_block_item_info}>
-                                <div className={styles.b3_block_item_info_1}>Конференция</div>
-                                <div className={styles.b3_block_item_info_2}>
-                                    <p>Управление персоналом</p>
-                                    <p>Менеджмент</p>
-                                    <p>HR-процессы</p>
-                                </div>
-                                <div className={styles.b3_block_item_info_3}>Национальный рекламный форум</div>
-                                <div className={styles.b3_block_item_info_4}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo.</div>
-                            </div>
-                            <div className={styles.b3_block_item_link}>
-                                <NavLink to='/events/test' >
-                                    <LinkArrow />
-                                </NavLink>
-                            </div>
-                        </div>
-                        <div className={styles.b3_block_item}>
-                            <div className={styles.b3_block_item_date}>
-                                <div className={styles.b3_block_item_date_1}>26&nbsp;июля 2024&nbsp;- 09&nbsp;мая 2025</div>
-                                <div className={styles.b3_block_item_date_2}>Россия, Екатеринбург</div>
-                            </div>
-                            <div className={styles.b3_block_item_img}>
-                                <img src={img_ex_1} alt="" />
-                            </div>
-                            <div className={styles.b3_block_item_info}>
-                                <div className={styles.b3_block_item_info_1}>Конференция</div>
-                                <div className={styles.b3_block_item_info_2}>
-                                    <p>Управление персоналом</p>
-                                    <p>Менеджмент</p>
-                                    <p>HR-процессы</p>
-                                </div>
-                                <div className={styles.b3_block_item_info_3}>Национальный рекламный форум</div>
-                                <div className={styles.b3_block_item_info_4}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo.</div>
-                            </div>
-                            <div className={styles.b3_block_item_link}>
-                                <LinkArrow />
-                            </div>
-                        </div>
-                        <div className={styles.b3_block_item}>
-                            <div className={styles.b3_block_item_date}>
-                                <div className={styles.b3_block_item_date_1}>26&nbsp;июля 2024&nbsp;- 09&nbsp;мая 2025</div>
-                                <div className={styles.b3_block_item_date_2}>Россия, Екатеринбург</div>
-                            </div>
-                            <div className={styles.b3_block_item_img}>
-                                <img src={img_ex_1} alt="" />
-                            </div>
-                            <div className={styles.b3_block_item_info}>
-                                <div className={styles.b3_block_item_info_1}>Конференция</div>
-                                <div className={styles.b3_block_item_info_2}>
-                                    <p>Управление персоналом</p>
-                                    <p>Менеджмент</p>
-                                    <p>HR-процессы</p>
-                                </div>
-                                <div className={styles.b3_block_item_info_3}>Национальный рекламный форум</div>
-                                <div className={styles.b3_block_item_info_4}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo.</div>
-                            </div>
-                            <div className={styles.b3_block_item_link}>
-                                <LinkArrow />
-                            </div>
+                    <MainEvents onPage={true} />
+
+                    
+                </div>
+
+                <div className={css`
+                        padding: 64px 0;
+                        background-color: #F5F7FA;
+                `}>
+                    <div className={container}>
+                        <div className={css`
+                            display: flex;
+                            flex-direction: column;
+                            gap: 16px;
+                            
+                            p {
+                                color: #47474D;
+                            }
+                        `}>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.</p>
                         </div>
                     </div>
-                    <div className={styles.b3_btn}>Показать еще +</div>
                 </div>
-            </div>
-            
-            <div className={styles.b4}>
-                <div className={container}>
-                    <div className={styles.form}>
-                        <div className={styles.form_main}>
-                            <div className={styles.form_title}>Дайджест событий<br/> в&nbsp;вашей почте</div>
-                            <div className={styles.form_subtitle}>Раз в&nbsp;месяц присылаем подборку мероприятий по&nbsp;выбранной тематике в&nbsp;вашем городе. Никакого спама.</div>
-                            <form action="">
-                                <input type="text" placeholder="Ваш E-mail" />
-                                <div>Тематика</div>
-                                <div>Город</div>
-                                <div>Подписаться</div>
-                            </form>
-                            <div className={styles.form_agree}>Нажимая &laquo;Подписаться&raquo;, вы&nbsp;соглашаетесь получать материалы компании GoConf на&nbsp;свой электронный адрес и&nbsp;даете согласие на&nbsp;обработку персональных данных</div>
-                        </div>
-                        <FormSvg />
-                    </div>
-                </div>
+
+                <Form />
             </div>
         </>
     );
