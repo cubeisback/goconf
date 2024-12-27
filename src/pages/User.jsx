@@ -13,6 +13,7 @@ import { UserMain } from "./UserMain";
 import { UserEvents } from "./UserEvents";
 import { UserOrg } from "./UserOrg";
 import { UserAdd } from "./UserAdd";
+import { UserNotifications } from "./UserNotifications";
 
 export const User = ({page, setIsLogin}) => {
     const theme = useTheme();
@@ -122,6 +123,7 @@ export const User = ({page, setIsLogin}) => {
                     {page === 2 && <UserEvents />}
                     {page === 3 && <UserOrg />}
                     {page === 4 && <UserAdd />}
+                    {page === 5 && <UserNotifications />}
                 </div>
             </div>
         </div>

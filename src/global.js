@@ -10,13 +10,18 @@ export const globalStyles = (props) => css`
   }
   @font-face {
       font-family: 'StyreneAWeb';
+      src: url('/fonts/StyreneAWeb-Bold.woff2') format('woff2'),
+          url('/fonts/StyreneAWeb-Bold.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+  }
+  @font-face {
+      font-family: 'StyreneAWeb';
       src: url('/fonts/StyreneAWeb-Medium.woff2') format('woff2'),
           url('/fonts/StyreneAWeb-Medium.woff') format('woff');
       font-weight: 500;
       font-style: normal;
   }
-
-  //TODO жирный шрифт
 
   *,
   *::before,

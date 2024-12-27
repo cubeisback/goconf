@@ -36,6 +36,7 @@ function App() {
         <Route path="/lk/events" element={<User page={2} setIsLogin={setIsLogin} />} />
         <Route path="/lk/org" element={<User page={3} setIsLogin={setIsLogin} />} />
         <Route path="/lk/add" element={<User page={4} setIsLogin={setIsLogin} />} />
+        <Route path="/lk/notifications" element={<User page={5} setIsLogin={setIsLogin} />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
