@@ -15,7 +15,7 @@ import { UserOrg } from "./UserOrg";
 import { UserAdd } from "./UserAdd";
 import { UserNotifications } from "./UserNotifications";
 
-export const User = ({page, setIsLogin}) => {
+export const User = ({page, setIsLogin, windowWidth}) => {
     const theme = useTheme();
     const location = useLocation();
     const isActive = (path) => location.pathname === path;
@@ -29,12 +29,30 @@ export const User = ({page, setIsLogin}) => {
         border-radius: 18px;
         transition: ${theme.transition};
 
+        @media(max-width: 1023px) {
+            flex-direction: column;
+            gap: 8px;
+            font-size: 14px;
+            text-align: center;
+            flex: 0 1 calc(25% - 6px);
+            max-width: calc(25% - 6px);
+        }
+        @media(max-width: 767px) {
+            flex: 0 1 48px;
+            max-width: 48px;
+            border-radius: 100%;
+        }
+
         &:hover {
             background-color: #F5F7FA;
         }
 
         & > p {
             line-height: 1.28;
+
+            @media(max-width: 767px) {
+                display: none;
+            }
         }
         
     `;
@@ -51,6 +69,10 @@ export const User = ({page, setIsLogin}) => {
         <div className={css`
             padding: 120px 0;
             background-color: #F5F7FA;
+
+            @media(max-width: 575px) {
+                padding-bottom: 64px;
+            }
         `}>
             <div className={container}>
                 <div
@@ -58,6 +80,7 @@ export const User = ({page, setIsLogin}) => {
                     display: flex;
                     gap: 64px;
                 `}>
+                    {windowWidth > 1023 ?
                     <motion.div className={css`
                         flex: 0 1 296px;
                         max-width: 296px;
@@ -119,6 +142,50 @@ export const User = ({page, setIsLogin}) => {
                         </div>
 
                     </motion.div>
+                    :
+                    <motion.div 
+                    initial={{ opacity: 0, y: 100 }}
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ duration: .3 }}
+                    className={css`
+                        position: fixed;
+                        bottom: 24px;
+                        width: calc(100vw - 64px);
+                        left: 32px;
+                        background-color: #fff;
+                        border-radius: 28px;
+                        box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+                        z-index: 1;
+                        padding: 8px;
+                        display: flex;
+                        justify-content: space-between;
+
+                        @media(max-width: 767px) {
+                            left: 0;
+                            bottom: 0;
+                            width: 100vw;
+                            border-radius: 0;
+                            padding: 8px 48px;
+                        }
+                    `}>
+                        <NavLink to='/lk' className={cx(menuItem, isActive('/lk') && activeMenuItem)}>
+                            <UserIcon />
+                            <p>Мой профиль</p>
+                        </NavLink>
+                        <NavLink to='/lk/events' className={cx(menuItem, isActive('/lk/events') && activeMenuItem)}>
+                            <EventsIcon />
+                            <p>Мои мероприятия</p>
+                        </NavLink>
+                        <NavLink to='/lk/org' className={cx(menuItem, isActive('/lk/org') && activeMenuItem)}>
+                            <OrgIcon />
+                            <p>Организаторы</p>
+                        </NavLink>
+                        <div className={menuItem}>
+                            <CartIcon />
+                            <p>Заказы</p>
+                        </div>
+                    </motion.div>
+                    }
                     {page === 1 && <UserMain />}
                     {page === 2 && <UserEvents />}
                     {page === 3 && <UserOrg />}

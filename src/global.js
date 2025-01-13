@@ -40,6 +40,11 @@ export const globalStyles = (props) => css`
     color: ${props.colors.font};
   }
 
+  #reset,
+  #html_reset {
+    overflow-x: hidden;
+  }
+
   input,
   button,
   textarea {
@@ -47,6 +52,12 @@ export const globalStyles = (props) => css`
     border: none;
     font-family: StyreneAWeb;
   }
+
+  input {
+    width: 100%;
+    min-width: 0px;
+    appearance: none;
+    }
 
   a {
     text-decoration: none;

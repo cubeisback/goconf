@@ -1,5 +1,5 @@
 import { css, cx } from "@emotion/css";
-import { Button, input, inputItem } from "./ui";
+import { Button, input, inputItem, userMain } from "./ui";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
@@ -21,10 +21,7 @@ export const UserMain = () => {
         `;
 
     return(
-        <motion.div className={css`
-            flex: 1;
-            padding-top: 24px;
-        `}
+        <motion.div className={userMain}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }} 
         transition={{ duration: .3 }}>
@@ -33,6 +30,10 @@ export const UserMain = () => {
                 font-size: 36px;
                 line-height: 1.12;
                 margin-bottom: 16px;
+
+                @media(max-width: 575px) {
+                    font-size: 28px;
+                }
             `}>Мой профиль</div>
             <div className={css`
                 display: flex;
@@ -51,6 +52,11 @@ export const UserMain = () => {
                 border-radius: 28px;
                 max-width: max-content;
                 margin-bottom: 32px;
+
+                @media(max-width: 575px) {
+                    flex-direction: column;
+                    max-width: 100%;
+                }
             `}>
                 <div className={cx(tabItem, activeTab === 1 && tabItemActive)} onClick={()=>setActiveTab(1)}>Личные данные</div>
                 <div className={cx(tabItem, activeTab === 2 && tabItemActive)} onClick={()=>setActiveTab(2)}>Данные об организации</div>
@@ -99,6 +105,11 @@ export const UserMain = () => {
                                 margin-bottom: 32px;
                                 flex: 0 1 100%;
                                 max-width: 100%;
+
+                                @media(max-width: 575px) {
+                                    margin-bottom: 0;
+                                    font-size: 28px;
+                                }
                             `}>Изменить пароль</div>
                             <div className={inputItem}>
                                 <p>Пароль</p>

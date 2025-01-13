@@ -8,7 +8,7 @@ export const container = css`
     padding: 0 30px;
     position: relative;
 
-    @media(max-width: 575px) {
+    @media(max-width: 1339px) {
         width: 100%;
         padding: 0 15px;
     }
@@ -42,6 +42,7 @@ export const Button = styled.div`
     border: 2px solid ${props => props.theme.colors.purple};
     padding: 12px 32px;
     cursor: pointer;
+    text-align: center;
     color: #fff;
     width: max-content;
     transition: ${props => props.theme.transition};
@@ -58,6 +59,11 @@ export const inputItem = css`
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    @media(max-width: 575px) {
+        flex: 0 1 100%;
+        max-width: 100%;
+    }
 
     & > p {
         font-size: 14px;
@@ -103,6 +109,15 @@ export const filterSelector = css`
     font-size: 14px;
     line-height: 1.28;
     position: relative;
+
+    @media(max-width: 1339px) {
+        flex: 0 1 calc(33.3333333% - 10.666666px);
+        max-width: calc(33.3333333% - 10.666666px);
+    }
+    @media(max-width: 575px) {
+        flex: 0 1 calc(50% - 8px);
+        max-width: calc(50% - 8px);
+    }
 
     & > label {
         display: flex;
@@ -151,7 +166,11 @@ export const pagePromo = css`
 export const breadcrumbs = css`
     margin-bottom: 16px;
     display: flex;
-    gap: 4px;
+    gap: 6px;
+
+    @media(max-width: 575px) {
+        margin-bottom: 32px;
+    }
 
     a {
         font-size: 14px;
@@ -160,7 +179,7 @@ export const breadcrumbs = css`
 
         &::after {
             content: '/';
-            padding-left: 4px;
+            padding-left: 6px;
         }
     }
 
@@ -177,4 +196,17 @@ export const pageTitle = css`
     font-size: 56px;
     line-height: 1.15;
     font-weight: normal;
+
+    @media(max-width: 575px) {
+        font-size: 32px;
+    }
+`;
+
+export const userMain = css`
+    flex: 1;
+    padding-top: 24px;
+
+    @media(max-width: 1023px) {
+        width: 100%;
+    }
 `;

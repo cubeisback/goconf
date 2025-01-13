@@ -62,15 +62,30 @@ export const Faq = () => {
                                         cursor: pointer;
                                         padding: 16px 16px 16px 32px;
                                         display: flex;
+                                        gap: 16px;
                                         justify-content: space-between;
                                         align-items: center;
                                         font-size: 20px;
                                         font-weight: 500;
                                         line-height: 1.4;
+
+                                        @media(max-width: 767px) {
+                                            font-size: 18px;
+                                            line-height: 1.2;
+                                        }
+
+                                        p {
+                                            flex: 1;
+                                        }
+
+                                        svg {
+                                            flex: 0 1 48px;
+                                            max-width: 48px;
+                                        }
                                     `}
                                     onClick={() => handleToggle(index)}
                                 >
-                                    {item.q}
+                                    <p>{item.q}</p>
                                     <PlusIcon />
                                 </div>
                                 <AnimatePresence>
@@ -82,7 +97,6 @@ export const Faq = () => {
                                             transition={{ duration: .3 }}
                                             className={css`
                                                 overflow: hidden;
-                                                
                                             `}
                                         >
                                             <div className={css`font-size: 14px; padding: 0 16px 16px 32px;`}>{item.a}</div>

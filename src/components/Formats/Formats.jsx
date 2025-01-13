@@ -77,6 +77,10 @@ export const Formats = () => {
         <div className={css`
             background-color: #F5F7FA;
             padding: 120px 0;
+
+            @media(max-width: 575px) {
+                padding: 96px 0 64px;
+            }
         `}>
             <div className={container}>
                 <div className={css`
@@ -85,6 +89,10 @@ export const Formats = () => {
                     font-family: Impact;
                     font-size: 56px;
                     line-height: 1.15;
+
+                    @media(max-width: 575px) {
+                        font-size: 32px;
+                    }
 
                     & > span {
                         color: ${theme.colors.purple}
@@ -96,6 +104,11 @@ export const Formats = () => {
                     color: #47474D;
                     margin-bottom: 96px;
                     text-align: center;
+
+                    @media(max-width: 575px) {
+                        font-size: 18px;
+                        margin-bottom: 48px;
+                    }
                 `}>Самые интересные бизнес-мероприятия различных форматов от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div>
             </div>
             <div className={css`

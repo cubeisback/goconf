@@ -9,6 +9,13 @@ export const Footer = () => {
       color: #fff;
       display: flex;
       justify-content: space-between;
+
+      @media(max-width: 767px) {
+        padding: 32px 16px;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+      }
     `}>
         <div>© GoCONF 2024</div>
         <div>info@goconf.ru</div>

@@ -1,5 +1,5 @@
 import { css, cx } from "@emotion/css";
-import { Button, input, textarea } from "./ui";
+import { Button, input, textarea, userMain } from "./ui";
 import { motion } from 'framer-motion';
 import { useState } from "react";
 import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
@@ -18,10 +18,7 @@ export const UserOrg = () => {
     return (
         <>
         {view === 1 &&
-        <motion.div className={css`
-            flex: 1;
-            padding-top: 24px;
-        `}
+        <motion.div className={userMain}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }} 
         transition={{ duration: .3 }}>
@@ -31,11 +28,20 @@ export const UserOrg = () => {
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 24px;
+
+                @media(max-width: 575px) {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
             `}>
                 <div className={css`
                     font-family: Impact;
                     font-size: 36px;
                     line-height: 1.12;
+
+                    @media(max-width: 575px) {
+                        font-size: 28px;
+                    }
                 `}>Организаторы</div>
                 <Button onClick={()=>setView(2)}>+ Добавить организатора</Button>
             </div>
@@ -140,10 +146,7 @@ export const UserOrg = () => {
         }
 
         {view === 2 && 
-        <motion.div className={css`
-            flex: 1;
-            padding-top: 24px;
-        `}
+        <motion.div className={userMain}
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: .3 }}>

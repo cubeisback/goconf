@@ -3,19 +3,25 @@ import { ReactComponent as Logo } from '../../images/svg/logo.svg';
 import { ReactComponent as UserIcon } from '../../images/svg/user.svg';
 import { ReactComponent as NotificationIcon } from '../../images/svg/notification.svg';
 import { ReactComponent as NotificationImg } from '../../images/svg/notification_img.svg';
+import { ReactComponent as SearchIcon } from '../../images/svg/search.svg';
 import { ReactComponent as SettingsIcon } from '../../images/svg/settings.svg';
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, DoubleLink } from "../../pages/ui";
 import { css } from '@emotion/css';
 import { Modal } from "../ui/Modal";
+import { useTheme } from "@emotion/react";
 
-export const Header = ({isLogin}) => {
+export const Header = ({isLogin, windowWidth}) => {
   const location = useLocation();
+
+  const theme = useTheme();
 
   const [notifications, setNotifications] = useState(false);
   const notificationsRef = useRef(null);
   const iconRef = useRef(null);
+
+  const [searchOpened, setSearchOpened] = useState(false);
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -45,7 +51,11 @@ export const Header = ({isLogin}) => {
     setNotifications(prev => !prev);
   };
 
+  //burger menu
+  const [burger, setBurger] = useState(false);
+
   return (
+    <>
     <header className={css`
       position: fixed;
       top: 0;
@@ -59,12 +69,27 @@ export const Header = ({isLogin}) => {
       align-items: center;
       width: 100%;
       z-index: 10;
+      max-width: 100vw;
+
+      @media(max-width: 1439px) {
+        padding: 10px 32px;
+      }
+      @media(max-width: 1023px) {
+        padding: 10px 24px;
+      }
+      @media(max-width: 767px) {
+        padding: 10px 16px;
+      }
+      @media(max-width: 575px) {
+        gap: 32px;
+      }
 
       & > * {
         flex: 1;
       }
     `}>
-        <NavLink to="/"><Logo /></NavLink>
+        <NavLink to="/" className={css`@media(max-width: 575px) { svg {height: 48px; width: 108px;} }`}><Logo /></NavLink>
+        {windowWidth > 1439 &&
         <nav className={css`
           display: flex;
           gap: 32px;
@@ -82,29 +107,118 @@ export const Header = ({isLogin}) => {
               <span>FAQ</span><span>FAQ</span>
             </NavLink>
         </nav>
+        }
         <div className={css`
           display: flex;
           gap: 32px;
           align-items: center;
           justify-content: flex-end;
+
+          @media(max-width: 575px) {
+            gap: 24px;
+          }
         `}>
-          <NavLink to="/lk/add">
-            <Button>Разместить событие</Button>
-          </NavLink>
+          {windowWidth > 575 && 
+          <div className={css`
+            position: relative;
+            height: 48px;
+            width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          `}
+          onClick={()=>{setSearchOpened(prev => !prev)}}
+          >
+            <div className={css`
+              position: absolute;
+              right: 0;
+              top: 0;
+              flex: 0 1 ${searchOpened ? '720px' : '48px'};
+              max-width: ${searchOpened ? '720px' : '48px'};
+              min-width: ${searchOpened ? '720px' : '48px'};
+              height: 48px;
+              border: 1px solid #EDEDEE;
+              border-radius: ${searchOpened ? '28px' : '100%'};
+              cursor: pointer;
+              transition: ${theme.transition};
+              background-color: #fff;
+              padding: ${searchOpened ? '16px 48px 16px 16px' : '0'};
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            `}>
+              {searchOpened && <input type="text" placeholder="Поиск по мероприятиям" /> }
+            </div>
+            
+            <div className={css`position: relative; cursor: pointer;height: 20px;`} onClick={()=>setSearchOpened(prev => !prev)}>
+              <SearchIcon />
+            </div>
+            
+          </div>
+          }
+          {windowWidth > 768 && 
+            <NavLink to="/lk/add">
+              <Button>Разместить событие</Button>
+            </NavLink>
+          }
           {isLogin ?
           <>
           <div className={css`cursor:pointer;`} ref={iconRef} onClick={toggleNotifications}>
             <NotificationIcon />
           </div>
-          <NavLink to="/lk">Александр Ром...</NavLink>
+          <NavLink to="/lk"> {windowWidth > 575 ? 'Александр Ром...' : <UserIcon />}</NavLink>
           </>
           :
           <div onClick={openModal} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>
             <UserIcon />
-            <p>Войти</p>
+            {windowWidth > 575 && <p>Войти</p> }
           </div>
           }
-          
+          {windowWidth < 1440 && 
+          <div className={css`
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 48px;
+            height: 48px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            span {
+              position: absolute;
+              background-color: ${theme.colors.purple};
+              height: 2px;
+              width: 24px;
+              transition: ${theme.transition};
+
+              &:nth-of-type(1) {
+                opacity: ${burger ? '0' : '1'};
+                top: 18px;
+              }
+              &:nth-of-type(2) {
+                top: 24px;
+                transform: rotate(${burger ? '45deg' : '0deg'});
+              }
+              &:nth-of-type(3) {
+                transform: rotate(${burger ? '-45deg' : '0deg'});
+                top: 24px;
+              }
+              &:nth-of-type(4) {
+                opacity: ${burger ? '0' : '1'};
+                top: 30px;
+              }
+            }
+          `}
+          onClick={()=>setBurger(prev => !prev)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          }
         </div>
       
       <AnimatePresence>
@@ -143,7 +257,34 @@ export const Header = ({isLogin}) => {
       </AnimatePresence>
 
       <Modal isOpen={isModalOpen} onClose={closeModal} />
+
+      
     </header>
+
+    <AnimatePresence>
+    {burger && 
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }} 
+        exit={{ opacity: 0 }}
+        transition={{ duration: .3 }}
+        className={css`
+          position: fixed;
+          top: 0;
+          left: 0;
+          background: rgba(255, 255, 255, 0.90);
+          backdrop-filter: blur(16px);
+          width: 100vw;
+          height: 100vh;
+          z-index: 2;
+          padding-top: 90px;
+        `}
+      >
+        MENU
+      </motion.div>
+    }
+    </AnimatePresence>
     
+    </>
   );
 }

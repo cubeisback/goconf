@@ -1,5 +1,5 @@
 import { css, cx } from "@emotion/css";
-import { Button } from "./ui";
+import { Button, userMain } from "./ui";
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
@@ -29,10 +29,7 @@ export const UserEvents = () => {
     return(
         <>
         {view === 1 && 
-        <motion.div className={css`
-            flex: 1;
-            padding-top: 24px;
-        `}
+        <motion.div className={userMain}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }} 
         transition={{ duration: .3 }}>
@@ -42,6 +39,11 @@ export const UserEvents = () => {
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 24px;
+
+                @media(max-width: 575px) {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
             `}>
                 <div className={css`
                     font-family: Impact;
@@ -82,15 +84,32 @@ export const UserEvents = () => {
                     background-color: #fff;
                     box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
                     padding: 24px 32px;
+
+                    @media(max-width: 575px) {
+                        padding: 16px;
+                    }
                 `}>
                     <div className={css`
                         display: flex;
                         gap: 16px;
                         align-items: center;
                         margin-bottom: 24px;
+
+                        @media(max-width: 575px) {
+                            flex-wrap: wrap;
+                            justify-content: space-between;
+                        }
                     `}>
                         <div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #8553F9; font-size: 14px; line-height: 1.16;`}>На модерации</div>
-                        <div className={css`flex: 1; font-size: 14px; line-height: 1.16; color: #47474D;`}>Дата публикации: 27 сентября 2024</div>
+                        <div className={css`
+                            flex: 1; font-size: 14px; line-height: 1.16; color: #47474D;
+
+                            @media(max-width: 575px) {
+                                order: 1;
+                                flex: 0 1 100%;
+                                max-width: 100%;
+                            }
+                        `}>Дата публикации: 27 сентября 2024</div>
                         <div className={css`display: flex; gap: 16px;`}>
                             <EditIcon />
                             <RemoveIcon />
@@ -98,13 +117,33 @@ export const UserEvents = () => {
                     </div>
                     <div className={css`margin-bottom: 8px;font-size: 20px;font-weight: 500;line-height: 1.4;`}>Налоговая и юридическая безопасность селлера на маркетплейсах</div>
                     <div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>32 900 руб.</div>
-                    <div className={css`display: flex;justify-content: space-between;align-items: flex-end;`}>
+                    <div className={css`
+                        display: flex;justify-content: space-between;align-items: flex-end;
+
+                        @media(max-width: 575px) {
+                            flex-direction: column;
+                            align-items: flex-start;
+                            gap: 16px;
+                        }
+                    `}>
                         <div>
-                            <div className={css`display: flex;flex-direction: column;gap: 8px;margin-bottom: 24px;`}>
+                            <div className={css`
+                                display: flex;flex-direction: column;gap: 8px;margin-bottom: 24px;
+
+                                @media(max-width: 575px) {
+                                    width: 100%;
+                                }
+                            `}>
                                 <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Даты проведения:</b> 25-27 июля 2024</div>
                                 <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Организатор:</b> ЦРБК</div>
                             </div>
-                            <Button className={cx(css`background-color: #fff!important;color: #8553F9!important;`)} onClick={()=>setView(2)}>Продвигать событие</Button>
+                            <Button className={cx(css`
+                                background-color: #fff!important;color: #8553F9!important;
+                                
+                                @media(max-width: 575px) {
+                                    width: 100%!important;
+                                }
+                            `)} onClick={()=>setView(2)}>Продвигать событие</Button>
                         </div>
                         <div className={css`
                             border-radius: 16px;
@@ -112,6 +151,14 @@ export const UserEvents = () => {
                             padding: 12px 16px;
                             display: flex;
                             gap: 8px;
+
+                            @media(max-width: 575px) {
+                                width: 100%;
+
+                                div {
+                                    flex: 1;
+                                }
+                            }
 
                             p {
                                 margin-bottom: 4px;
@@ -146,15 +193,32 @@ export const UserEvents = () => {
                         background-color: #fff;
                         box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
                         padding: 24px 32px;
+
+                        @media(max-width: 575px) {
+                            padding: 16px;
+                        }
                     `}>
                         <div className={css`
                             display: flex;
                             gap: 16px;
                             align-items: center;
                             margin-bottom: 24px;
+
+                            @media(max-width: 575px) {
+                                flex-wrap: wrap;
+                                justify-content: space-between;
+                            }
                         `}>
                             <div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #69B90F; font-size: 14px; line-height: 1.16;`}>Опубликовано</div>
-                            <div className={css`flex: 1; font-size: 14px; line-height: 1.16; color: #47474D;`}>Дата публикации: 27 сентября 2024</div>
+                            <div className={css`
+                                flex: 1; font-size: 14px; line-height: 1.16; color: #47474D;
+
+                                @media(max-width: 575px) {
+                                    order: 1;
+                                    flex: 0 1 100%;
+                                    max-width: 100%;
+                                }
+                            `}>Дата публикации: 27 сентября 2024</div>
                             <div className={css`display: flex; gap: 16px;`}>
                                 <EditIcon />
                                 <RemoveIcon />
@@ -162,9 +226,23 @@ export const UserEvents = () => {
                         </div>
                         <div className={css`margin-bottom: 8px;font-size: 20px;font-weight: 500;line-height: 1.4;`}>Налоговая и юридическая безопасность селлера на маркетплейсах</div>
                         <div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>бесплатно</div>
-                        <div className={css`display: flex;justify-content: space-between;align-items: flex-end;`}>
+                        <div className={css`
+                            display: flex;justify-content: space-between;align-items: flex-end;
+
+                            @media(max-width: 575px) {
+                                flex-direction: column;
+                                align-items: flex-start;
+                                gap: 16px;
+                            }
+                        `}>
                             <div>
-                                <div className={css`display: flex;flex-direction: column;gap: 8px;`}>
+                                <div className={css`
+                                    display: flex;flex-direction: column;gap: 8px;
+
+                                    @media(max-width: 575px) {
+                                        width: 100%;
+                                    }
+                                `}>
                                     <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Даты проведения:</b> 25-27 июля 2024</div>
                                     <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Организатор:</b> ЦРБК</div>
                                 </div>
@@ -175,6 +253,14 @@ export const UserEvents = () => {
                                 padding: 12px 16px;
                                 display: flex;
                                 gap: 8px;
+
+                                @media(max-width: 575px) {
+                                    width: 100%;
+
+                                    div {
+                                        flex: 1;
+                                    }
+                                }
 
                                 p {
                                     margin-bottom: 4px;
@@ -203,10 +289,7 @@ export const UserEvents = () => {
         </motion.div>
         }
         {view === 2 && 
-        <motion.div className={css`
-            flex: 1;
-            padding-top: 24px;
-        `}
+        <motion.div className={userMain}
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: .3 }}>
@@ -216,6 +299,11 @@ export const UserEvents = () => {
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 24px;
+
+                @media(max-width: 575px) {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
             `}>
                 <div className={css`
                     font-family: Impact;
@@ -278,16 +366,18 @@ export const UserEvents = () => {
         </motion.div>
         }
         {view === 3 &&
-        <div className={css`
-            flex: 1;
-            padding-top: 24px;
-        `}>
+        <div className={userMain}>
             <div className={css`
                 display: flex;
                 gap: 16px;
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 24px;
+
+                @media(max-width: 575px) {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
             `}>
                 <div className={css`
                     font-family: Impact;

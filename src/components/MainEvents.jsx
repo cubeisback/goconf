@@ -90,6 +90,10 @@ export const MainEvents = ({onPage, similar}) => {
     return (
         <div className={css`
             padding: 120px 0;
+
+            @media(max-width: 575px) {
+                padding: 64px 0;
+            }
         `}>
             <div className={container}>
                 {!onPage && 
@@ -99,6 +103,11 @@ export const MainEvents = ({onPage, similar}) => {
                     margin-bottom: 96px;
                     font-size: 56px;
                     line-height: 1.15;
+
+                    @media(max-width: 575px) {
+                        font-size: 32px;
+                        margin-bottom: 48px;
+                    }
                 `}>{similar ? 'Похожие мероприятия' : 'Ближайшие события'}</div> 
                 }
                 <div className={css`
@@ -117,6 +126,14 @@ export const MainEvents = ({onPage, similar}) => {
                                 display: flex;
                                 gap: 32px;
 
+                                @media(max-width: 1199px) {
+                                    flex-wrap: wrap;
+                                    justify-content: space-between;
+                                }
+                                @media(max-width: 575px) {
+                                    gap: 20px;
+                                }
+
                                 &:last-of-type {
                                     padding-bottom: 0;
                                     margin-bottom: 0;
@@ -130,12 +147,26 @@ export const MainEvents = ({onPage, similar}) => {
                                 display: flex;
                                 flex-direction: column;
                                 gap: 4px;
+
+                                @media(max-width: 1199px) {
+                                    flex: 0 1 100%;
+                                    max-width: 100%;
+                                }
+                                @media(max-width: 767px) {
+                                    order: 1;
+                                    flex: 0 1 calc(100% - 80px);
+                                    max-width: calc(100% - 80px);
+                                }
                             `}>
                                 <div className={css`
                                     font-size: 28px;
                                     font-family: Impact;
                                     color: ${theme.colors.purple};
                                     line-height: 1.2;
+
+                                    @media(max-width: 575px) {
+                                        font-size: 24px;
+                                    }
                                 `}>{item.date}</div>
                                 <div className={css`
                                     font-size: 14px;
@@ -149,10 +180,17 @@ export const MainEvents = ({onPage, similar}) => {
                                 border-radius: 16px;
                                 overflow: hidden;
 
+                                @media(max-width: 767px) {
+                                    flex: 0 1 100%;
+                                    max-width: 100%;
+                                    height: 250px;
+                                }
+
                                 img {
                                     object-fit: cover;
                                     width: 100%;
                                     height: 100%;
+                                    object-position: top;
                                 }
                             `}>
                                 <img src={img_ex_1} alt="" />
@@ -161,7 +199,7 @@ export const MainEvents = ({onPage, similar}) => {
                                 flex: 1;
                                 display: flex;
                                 flex-direction: column;
-                                gap: 16px;    
+                                gap: 16px;
                             `}>
                                 <div className={css`
                                     font-size: 14px;
@@ -171,20 +209,48 @@ export const MainEvents = ({onPage, similar}) => {
                                     background-color: ${theme.colors.green};
                                     padding: 3px 8px 5px;
                                     width: max-content;
-                                `}>{item.tag}</div>
+                                `}><NavLink to="/events/test">{item.tag}</NavLink></div>
                                 <div className={css`
                                     display: flex;
                                     gap: 16px;
+                                    flex-wrap: wrap;
+
+                                    @media(max-width: 575px) {
+                                        flex-wrap: nowrap;
+                                        overflow-x: auto;
+                                        overflow-y: hidden;
+                                        max-width: calc(100vw - 30px);
+                                    }
                                     
-                                    p {
+                                    a {
                                         color: ${theme.colors.purple};
                                         font-size: 14px;
                                         line-height: 1.16;
+                                        position: relative;
+
+                                        @media(max-width: 575px) {
+                                            min-width: max-content;
+                                        }
+                                        
+                                        &::before {
+                                            content: '';
+                                            transition: ${theme.transition};
+                                            opacity: 0;
+                                            width: 100%;
+                                            position: absolute;
+                                            bottom: -4px;
+                                            height: 1px;
+                                            background-color: ${theme.colors.purple};
+                                        }
+
+                                        &:hover::before {
+                                            opacity: .4;
+                                        }
                                     }
                                 `}>
-                                    <p>Управление персоналом</p>
-                                    <p>Менеджмент</p>
-                                    <p>HR-процессы</p>
+                                    <NavLink to="/events/test">Управление персоналом</NavLink>
+                                    <NavLink to="/events/test">Менеджмент</NavLink>
+                                    <NavLink to="/events/test">HR-процессы</NavLink>
                                 </div>
                                 <NavLink to="/events/test" className={css`
                                     font-size: 18px;
@@ -193,12 +259,26 @@ export const MainEvents = ({onPage, similar}) => {
                                 `}>{item.title}</NavLink>
                                 <div className={css`
                                     font-size: 14px;
-                                    line-height: 1.16;    
+                                    line-height: 1.16;
+
+                                    @media(max-width: 575px) {
+                                        display: none;
+                                    }
                                 `}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo.</div>
                             </div>
                             <NavLink to="/events/test" className={css`
                                 flex: 0 1 56px;
                                 max-width: 56px;
+
+                                @media(max-width: 1199px) {
+                                    display: none;
+                                }
+                                @media(max-width: 767px) {
+                                    display: flex;
+                                    order: 1;
+                                    flex: 0 1 48px;
+                                    max-width: 48px;
+                                }
                             `}>
                                 <LinkArrow />
                             </NavLink>

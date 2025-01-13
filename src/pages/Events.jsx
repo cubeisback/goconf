@@ -22,6 +22,10 @@ export const Events = () => {
                         width: 608px;
                         font-size: 14px;
                         line-height: 1.16;
+
+                        @media(max-width: 640px) {
+                            width: 100%;
+                        }
                     `}>Поиск по мероприятиям</div>
                 </div>
             </div>
@@ -62,11 +66,10 @@ export const Events = () => {
                         <div>Выставки в Санкт-Петербурге</div>
                         <div>Конференции в Москве</div>
                     </div>
-
-                    <MainEvents onPage={true} />
-
                     
                 </div>
+
+                <MainEvents onPage={true} />
 
                 <div className={css`
                         padding: 64px 0;

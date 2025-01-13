@@ -1,6 +1,9 @@
 import { css } from "@emotion/css"
 import { container } from "../pages/ui"
 import { ReactComponent as FormSvg } from '../images/svg/form.svg';
+import DropdownInput from "./ui/DropdownInput";
+
+const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6'];
 
 export const Form = () => {
 
@@ -8,6 +11,10 @@ export const Form = () => {
         <div className={css`
             background-color: #22222A;
             padding: 64px 0;
+
+            @media(max-width: 640px) {
+                padding: 32px 0;
+            }
         `}>
             <div className={container}>
                 <div className={css`
@@ -16,6 +23,16 @@ export const Form = () => {
                     padding: 40px;
                     display: flex;
                     gap: 16px;
+
+                    @media(max-width: 640px) {
+                        padding: 16px;
+                    }
+
+                    svg {
+                        @media(max-width: 991px) {
+                            display: none;
+                        }
+                    }
                 `}>
                     <div className={css`
                         flex: 0 1 768px;
@@ -27,6 +44,10 @@ export const Form = () => {
                             font-family: Impact;
                             font-size: 56px;
                             line-height: 1.15;
+
+                            @media(max-width: 640px) {
+                                font-size: 32px;
+                            }
                         `}>Дайджест событий<br/> в&nbsp;вашей почте</div>
                         <div className={css`
                             margin-bottom: 40px;
@@ -52,27 +73,30 @@ export const Form = () => {
                                 font-size: 14px;
                             }
 
-                            div {
+                            & > div {
                                 flex: 0 1 calc(33.33333% - 10.666666px);
                                 max-width: calc(33.33333% - 10.666666px);
-                                padding: 16px;
-                                background-color: #fff;
-                                border-radius: 28px;
-                                color: rgba(71, 71, 77, .64);
-                                font-size: 14px;
 
-                                &:last-of-type {
-                                    background-color: #B3ED73;
-                                    color: #191921;
-                                    text-align: center;
-                                    font-size: 16px;
+                                @media(max-width: 640px) {
+                                    flex: 0 1 100%;
+                                    max-width: 100%;
                                 }
                             }
                         `}>
                             <input type="text" placeholder="Ваш E-mail" />
-                            <div>Тематика</div>
-                            <div>Город</div>
-                            <div>Подписаться</div>
+                            <DropdownInput options={options} placeholder={'Тематика'} />
+                            <DropdownInput options={options} placeholder={'Город'} />
+                            
+                            
+                            <div className={css`
+                                cursor: pointer;
+                                padding: 16px;
+                                border-radius: 28px;
+                                background-color: #B3ED73;
+                                color: #191921;
+                                text-align: center;
+                                font-size: 16px;
+                            `}>Подписаться</div>
                         </form>
                         <div className={css`
                             color: #C5D7FF;

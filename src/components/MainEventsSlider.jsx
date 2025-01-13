@@ -44,21 +44,16 @@ export const MainEventsSlider = () => {
     const navigationNextRef = useRef(null);
 
     return (
+        
+
+       
         <div className={css`
             background-color: #22222A;
             border-radius: 28px;
-            position: relative;
             margin-bottom: 120px;
-
-            &::before {
-                content: '';
-                position: absolute;
-                left: -100vw;
-                bottom: -120px;
-                width: 200vw;
-                height: 600px;
-                background-color: ${theme.colors.purple};
-                z-index: -1;
+            
+            @media(max-width: 1339px) {
+                margin-bottom: -32px;
             }
         `}>
             <div className={css`
@@ -67,7 +62,13 @@ export const MainEventsSlider = () => {
                 padding: 40px;
                 align-items: center;
                 font-size: 36px;
-                line-height: 1.12;    
+                line-height: 1.12;
+                gap: 16px;
+
+                @media(max-width: 575px) {
+                    padding: 32px 16px;
+                    font-size: 28px;
+                }
             `}>
                 <div className={css`
                     color: #fff;
@@ -81,6 +82,13 @@ export const MainEventsSlider = () => {
                         display: flex;
                         cursor: pointer;
                     }
+
+                    svg {
+                        @media(max-width: 575px) {
+                            width: 48px;
+                            height: 48px;
+                        }
+                    }
                 `}>
                     <div ref={navigationPrevRef}>
                         <SliderArrow />
@@ -93,6 +101,10 @@ export const MainEventsSlider = () => {
                     
                     <div className={css`
                         padding: 0 40px 40px;
+
+                        @media(max-width: 575px) {
+                            padding: 0 16px 32px;
+                        }
 
                         & > div {
                             border-radius: 28px;
@@ -117,17 +129,32 @@ export const MainEventsSlider = () => {
                                 }
                               }, 500);
                         }}
-                        slidesPerView={3}
+                        slidesPerView={1}
                         spaceBetween={24}
+
+                        breakpoints={{
+                            640: {
+                                slidesPerView: 2,
+                            },
+                            1024: {
+                              slidesPerView: 3,
+                            },
+                        }}
                     >
                         {eventsArray.map((item, index) => (
                         <SwiperSlide key={index} className={css`
                             border-radius: 24px;
                             background-color: #fff;
-                            overflow: hidden;    
+                            overflow: hidden;
                         `}>
-                            <NavLink to="/events/test">
-                                <img src={img_ex_1} alt="" />
+                            <NavLink to="/events/test" className={css`
+                                width: 100%;
+                            `}>
+                                <img src={img_ex_1} alt="" className={css`
+                                    object-fit: cover;
+                                    width: 100%;
+                                    height: 100%;
+                                `} />
                             </NavLink>
                             <div className={css`
                                 padding: 24px;
@@ -144,7 +171,7 @@ export const MainEventsSlider = () => {
                                     font-weight: 500;
                                     line-height: 1.16;
                                     width: max-content;    
-                                `}>{item.tag}</div>
+                                `}><NavLink to="/events/test">{item.tag}</NavLink></div>
                                 <NavLink to="/events/test" className={css`
                                     font-size: 18px;
                                     font-weight: 500;
@@ -166,7 +193,11 @@ export const MainEventsSlider = () => {
                                             font-size: 28px;
                                             line-height: 1.2;
                                             margin-bottom: 4px;
-                                            font-family: Impact;    
+                                            font-family: Impact;
+
+                                            @media(max-width: 575px) {
+                                                font-size: 24px;
+                                            }
                                         `}>{item.date}</div>
                                         <div className={css`
                                             color: #47474D;
@@ -185,5 +216,6 @@ export const MainEventsSlider = () => {
                     </Swiper>
                     </div>
                 </div>
+            
     )
 };

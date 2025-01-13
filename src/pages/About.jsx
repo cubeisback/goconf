@@ -1,8 +1,8 @@
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { ReactComponent as About1 } from '../images/svg/about_1.svg';
 import { ReactComponent as About2 } from '../images/svg/about_2.svg';
 import { ReactComponent as About3 } from '../images/svg/about_3.svg';
-import { breadcrumbs, container, pagePromo } from './ui';
+import { breadcrumbs, container, pagePromo, pageTitle } from './ui';
 import { Form } from '../components/Form';
 
 export const About = () => {
@@ -15,20 +15,37 @@ export const About = () => {
                         <a href="/">Главная</a>
                         <p>О проекте</p>
                     </div>
-                    <h1 style={{textAlign: 'center'}}>О проекте <span style={{color: '#8553F9'}}>GoCONF</span></h1>
-                    <div style={{textAlign: 'center'}}>Самые интересные бизнес-мероприятия различных форматов<br/> от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div>
+                    <h1 className={cx(pageTitle, css`text-align:center;`)}>О проекте <span style={{color: '#8553F9'}}>GoCONF</span></h1>
+                    <div className={css`
+                        text-align:center;
+
+                        br {
+                            @media(max-width: 575px) {
+                                display: none;
+                            }
+                        }
+                    `}>Самые интересные бизнес-мероприятия различных форматов<br/> от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div>
                 </div>
             </div>
 
             <div className={css`
                 padding: 32px 0 120px;
-                background-color: #F5F7FA;    
+                background-color: #F5F7FA;
+
+                @media(max-width: 575px) {
+                    padding-bottom: 64px;
+                }
             `}>
                 <div className={container}>
                     <div className={css`
                         display: flex;
                         gap: 32px;
-                        padding-top: 60px;    
+                        padding-top: 60px;
+
+                        @media(max-width: 991px) {
+                            flex-direction: column;
+                            gap: 100px;
+                        }
                     `}>
                         <div className={css`
                             flex: 0 1 calc(33.333333% - 21.333333px);
@@ -37,12 +54,22 @@ export const About = () => {
                             border-radius: 28px;
                             background-color: #fff;
 
+                            @media(max-width: 991px) {
+                                flex: 0 1 100%;
+                                max-width: 100%;
+                                padding: 120px 24px 24px;
+                            }
+
                             div {
                                 text-align: center;
                                 margin-bottom: 24px;
                                 font-size: 24px;
                                 font-weight: 500;
                                 line-height: 1.34;
+
+                                @media(max-width: 575px) {
+                                    font-size: 22px;
+                                }
                             }
 
                             svg {
@@ -61,12 +88,22 @@ export const About = () => {
                             border-radius: 28px;
                             background-color: #fff;
 
+                            @media(max-width: 991px) {
+                                flex: 0 1 100%;
+                                max-width: 100%;
+                                padding: 120px 24px 24px;
+                            }
+
                             div {
                                 text-align: center;
                                 margin-bottom: 24px;
                                 font-size: 24px;
                                 font-weight: 500;
                                 line-height: 1.34;
+
+                                @media(max-width: 575px) {
+                                    font-size: 22px;
+                                }
                             }
 
                             svg {
@@ -85,12 +122,22 @@ export const About = () => {
                             border-radius: 28px;
                             background-color: #fff;
 
+                            @media(max-width: 991px) {
+                                flex: 0 1 100%;
+                                max-width: 100%;
+                                padding: 120px 24px 24px;
+                            }
+
                             div {
                                 text-align: center;
                                 margin-bottom: 24px;
                                 font-size: 24px;
                                 font-weight: 500;
                                 line-height: 1.34;
+
+                                @media(max-width: 575px) {
+                                    font-size: 22px;
+                                }
                             }
 
                             svg {

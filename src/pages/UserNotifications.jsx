@@ -21,7 +21,6 @@ const AnimatedSwitch = ({ label, initialChecked = false }) => {
                 border-radius: 28px;
                 position: relative;
                 transition: .3s;
-
             `}
         >
             <div className={css`
@@ -36,7 +35,7 @@ const AnimatedSwitch = ({ label, initialChecked = false }) => {
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             `}/>
         </div>
-        <span>{label}</span>
+        <span className={css`flex: 1;`}>{label}</span>
       </div>
     );
 };
