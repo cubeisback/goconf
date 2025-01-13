@@ -5,7 +5,7 @@ import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { useEffect, useRef, useState } from "react";
 import { filterBtn, filterSelector } from "../../pages/ui";
-import { ReactComponent as ArrowDown } from '../../images/svg/arrowDown.svg';
+// import { ReactComponent as ArrowDown } from '../../images/svg/arrowDown.svg';
 import DropdownInput from "../ui/DropdownInput";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
@@ -15,9 +15,9 @@ export const Filter = ({full}) => {
 
     const [startDate, setStartDate] = useState();
     const [showDate, setShowDate] = useState(false);
-    const [showSelect, setShowSelect] = useState(false);
+    // const [showSelect, setShowSelect] = useState(false);
     const datePickerRef = useRef(null);
-    const selectorRef = useRef(null);
+    // const selectorRef = useRef(null);
 
     useEffect(() => {
             const handleClickOutside = (event) => {
@@ -33,25 +33,25 @@ export const Filter = ({full}) => {
             };
     }, []);
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-          if (selectorRef.current && !selectorRef.current.contains(event.target)) {
-            setShowSelect(false);
-          }
-        };
+    // useEffect(() => {
+    //     const handleClickOutside = (event) => {
+    //       if (selectorRef.current && !selectorRef.current.contains(event.target)) {
+    //         setShowSelect(false);
+    //       }
+    //     };
     
-        document.addEventListener("mousedown", handleClickOutside);
+    //     document.addEventListener("mousedown", handleClickOutside);
     
-        return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+    //     return () => {
+    //       document.removeEventListener("mousedown", handleClickOutside);
+    //     };
+    // }, []);
 
-    const labelRef = useRef(null)
-    const changeSel = (e) => {
-        setShowSelect(false);
-        labelRef.current.textContent = e.target.textContent;
-    }
+    // const labelRef = useRef(null)
+    // const changeSel = (e) => {
+    //     setShowSelect(false);
+    //     labelRef.current.textContent = e.target.textContent;
+    // }
 
     //Список городов
     const [cities, setCities] = useState([]);
