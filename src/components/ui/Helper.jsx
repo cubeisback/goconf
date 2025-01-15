@@ -10,6 +10,7 @@ export const Helper = (props) => {
         padding: 8px;
         background: #fff;
         max-width: 300px;
+        z-index: 99;
     `}>
         {props.children}
     </div>

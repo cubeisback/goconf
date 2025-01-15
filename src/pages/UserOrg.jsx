@@ -6,6 +6,7 @@ import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
 import { ReactComponent as RemoveIcon } from '../images/svg/remove.svg';
 import { ReactComponent as AvatarIcon } from '../images/svg/avatar.svg';
 import org_1 from '../images/org_1.png';
+import EditorComponent from "../components/ui/Editor";
 
 export const UserOrg = () => {
     const [view, setView] = useState(1);
@@ -190,6 +191,8 @@ export const UserOrg = () => {
                 <textarea className={textarea} name="" id="" placeholder="Александр" onChange={handleChange}></textarea>
                 <div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{text.length} / 200</div>
             </div>
+        
+            <EditorComponent />
 
             <div className={css`
                 font-family: Impact;

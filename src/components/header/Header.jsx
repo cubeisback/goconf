@@ -29,9 +29,6 @@ export const Header = ({isLogin, windowWidth}) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (notificationsRef.current && !notificationsRef.current.contains(event.target) &&
@@ -169,7 +166,7 @@ export const Header = ({isLogin, windowWidth}) => {
           <NavLink to="/lk"> {windowWidth > 575 ? 'Александр Ром...' : <UserIcon />}</NavLink>
           </>
           :
-          <div onClick={openModal} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>
+          <div onClick={()=>setIsModalOpen(true)} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>
             <UserIcon />
             {windowWidth > 575 && <p>Войти</p> }
           </div>
@@ -256,7 +253,7 @@ export const Header = ({isLogin, windowWidth}) => {
         }
       </AnimatePresence>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <Modal isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} />
 
       
     </header>

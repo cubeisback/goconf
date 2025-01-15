@@ -59,6 +59,7 @@ function App() {
         <Route path="/lk/org" element={<User windowWidth={windowWidth} page={3} setIsLogin={setIsLogin} />} />
         <Route path="/lk/add" element={<User windowWidth={windowWidth} page={4} setIsLogin={setIsLogin} />} />
         <Route path="/lk/notifications" element={<User windowWidth={windowWidth} page={5} setIsLogin={setIsLogin} />} />
+        <Route path="/lk/orders" element={<User windowWidth={windowWidth} page={6} setIsLogin={setIsLogin} />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -14,6 +14,7 @@ import { UserEvents } from "./UserEvents";
 import { UserOrg } from "./UserOrg";
 import { UserAdd } from "./UserAdd";
 import { UserNotifications } from "./UserNotifications";
+import { UserOrders } from "./UserOrders";
 
 export const User = ({page, setIsLogin, windowWidth}) => {
     const theme = useTheme();
@@ -119,10 +120,10 @@ export const User = ({page, setIsLogin, windowWidth}) => {
                                 <OrgIcon />
                                 <p>Организаторы</p>
                             </NavLink>
-                            <div className={menuItem}>
+                            <NavLink to='/lk/orders' className={cx(menuItem, isActive('/lk/orders') && activeMenuItem)}>
                                 <CartIcon />
                                 <p>Заказы</p>
-                            </div>
+                            </NavLink>
                         </div>
                         <div className={cx(menuItem, css`flex-direction: column;align-items:flex-start;`)}>
                             <div className={css`
@@ -180,10 +181,10 @@ export const User = ({page, setIsLogin, windowWidth}) => {
                             <OrgIcon />
                             <p>Организаторы</p>
                         </NavLink>
-                        <div className={menuItem}>
+                        <NavLink to='/lk/orders' className={cx(menuItem, isActive('/lk/orders') && activeMenuItem)}>
                             <CartIcon />
                             <p>Заказы</p>
-                        </div>
+                        </NavLink>
                     </motion.div>
                     }
                     {page === 1 && <UserMain />}
@@ -191,6 +192,7 @@ export const User = ({page, setIsLogin, windowWidth}) => {
                     {page === 3 && <UserOrg />}
                     {page === 4 && <UserAdd />}
                     {page === 5 && <UserNotifications />}
+                    {page === 6 && <UserOrders />}
                 </div>
             </div>
         </div>

@@ -38,18 +38,22 @@ export const DoubleLink = css`
 
 export const Button = styled.div`
     border-radius: 28px;
-    background: ${props => props.theme.colors.purple};
-    border: 2px solid ${props => props.theme.colors.purple};
+    background: ${props => props.green ? props.theme.colors.green : props.theme.colors.purple};
+    border: 2px solid ${props => props.green ? props.theme.colors.green : props.theme.colors.purple};
     padding: 12px 32px;
     cursor: pointer;
     text-align: center;
-    color: #fff;
+    color: ${props => props.green ? props.theme.colors.font : '#fff'};
     width: max-content;
     transition: ${props => props.theme.transition};
 
     &:hover {
         background: #FFF;
-        color: ${props => props.theme.colors.purple};
+        color: ${props => props.green ? props.theme.colors.font : props.theme.colors.purple};
+    }
+
+    @media(max-width: 575px) {
+        width: 100%;
     }
 `;
 
@@ -167,6 +171,10 @@ export const breadcrumbs = css`
     margin-bottom: 16px;
     display: flex;
     gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: calc(100vw - 30px);
 
     @media(max-width: 575px) {
         margin-bottom: 32px;
@@ -176,6 +184,7 @@ export const breadcrumbs = css`
         font-size: 14px;
         color: #B5B7B9;
         line-height: 1.16;
+        min-width: max-content;
 
         &::after {
             content: '/';
@@ -187,6 +196,7 @@ export const breadcrumbs = css`
         color: #6C6C71;
         font-size: 14px;
         line-height: 1.16;
+        min-width: max-content;
     }
 `;
 
@@ -208,5 +218,50 @@ export const userMain = css`
 
     @media(max-width: 1023px) {
         width: 100%;
+    }
+`;
+
+export const checkBox = css`
+    input {
+        display: none;
+    }
+    label {
+        cursor: pointer;
+        padding-left: 40px;
+        position: relative;
+        font-size: 14px;
+        line-height: 1.16;
+
+        &::before {
+            content: '';
+            position: absolute;
+            border: 2px solid rgba(255,255,255,.3);
+            background-color: transparent;
+            border-radius: 5px;
+            width: 24px;
+            height: 24px;
+            left: 2px;
+            top: -3px;
+            transition: ${theme.transition};
+        }
+        &::after {
+            content: '';
+            position: absolute;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.883 6.88398L9.883 17.884C9.39485 18.3721 8.60339 18.3721 8.11523 17.884L3.11523 12.884L4.883 11.1162L8.99912 15.2323L19.1152 5.11621L20.883 6.88398Z" fill="%238553F9"/></svg>');
+            width: 24px;
+            height: 24px;
+            left: 2px;
+            top: -3px;
+            opacity: 0;
+            transition: ${theme.transition};
+        }
+    }
+    input:checked ~ label {
+        &::before {
+            background-color: #fff;
+        }
+        &::after {
+            opacity: 1;
+        }
     }
 `;

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useState } from "react";
 
 
-const AnimatedSwitch = ({ label, initialChecked = false }) => {
+export const AnimatedSwitch = ({ label, initialChecked = false }) => {
     const [isChecked, setIsChecked] = useState(initialChecked);
   
     const toggleSwitch = () => {
@@ -12,7 +12,7 @@ const AnimatedSwitch = ({ label, initialChecked = false }) => {
     };
   
     return (
-      <div className={css`display: flex; gap:8px;cursor:pointer;`} onClick={toggleSwitch}>
+      <div className={css`display: flex; gap:8px;cursor:pointer;align-items: center;`} onClick={toggleSwitch}>
         <div
             className={css`
                 width: 40px;

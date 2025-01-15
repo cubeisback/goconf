@@ -1,12 +1,13 @@
-import { breadcrumbs, Button, container, pagePromo } from './ui';
+import { breadcrumbs, Button, container, pagePromo, pageTitle } from './ui';
 import event_img from '../images/event_ex.jpg'
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Helper } from '../components/ui/Helper';
 import { useState } from 'react';
 import { MainEventsSlider } from '../components/MainEventsSlider';
 import { Form } from '../components/Form';
 import { MainEvents } from '../components/MainEvents';
+import { motion } from 'framer-motion';
 
 export const Event = () => {
     const [version, setVersion] = useState(0);
@@ -18,6 +19,11 @@ export const Event = () => {
         gap: 16px;
         font-size: 14px;
         line-height: 1.16;
+        flex-wrap: wrap;
+
+        @media(max-width: 575px) {
+            gap: 8px 16px;
+        }
 
         & > p {
             color: #47474D;
@@ -55,7 +61,7 @@ export const Event = () => {
                         <a href="/">Мероприятия</a>
                         <p>Национальный рекламный форум</p>
                     </div>
-                    <h1>Национальный рекламный форум</h1>
+                    <h1 className={pageTitle}>Национальный рекламный форум</h1>
                     <div className={promoThemes}>
                         <p>Тематика:</p>
                         <a href="/">Управление персоналом</a>
@@ -67,13 +73,25 @@ export const Event = () => {
 
             <div className={css`
                 padding: 32px 0 120px;
+
+                @media(max-width: 575px) {
+                    padding-bottom: 64px;
+                }
             `}>
                 <div className={container}>
                     <div className={css`
                         display: flex;
                         gap: 32px;
+
+                        @media(max-width: 991px) {
+                            flex-direction: column;
+                        }
                     `}>
-                        <div className={css`
+                        <motion.div 
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }} 
+                        transition={{ duration: .3 }}
+                        className={css`
                             flex: 1;
                         `}>
                             <img src={event_img} alt="" className={css`margin-bottom: 40px;`} />
@@ -93,8 +111,12 @@ export const Event = () => {
                                 <div>15 ноября — День стратегических инициатив</div>
                                 <p>Ключевые игроки рекламного рынка обсудят цели и задачи российского маркетинга, узнаваемость отечественных брендов и тренды в поведении потребителей.</p>
                             </div>
-                        </div>
-                        <div className={css`
+                        </motion.div>
+                        <motion.div 
+                        initial={{ opacity: 0, x: 80 }}
+                        animate={{ opacity: 1, x: 0 }} 
+                        transition={{ duration: .3 }}
+                        className={css`
                             flex: 0 1 296px;
                             max-width: 296px;
                             position: sticky;
@@ -102,6 +124,11 @@ export const Event = () => {
                             height: max-content;
                             display: flex;
                             flex-direction: column;
+
+                            @media(max-width: 991px) {
+                                flex: 0 1 100%;
+                                max-width: 100%;
+                            }
                         `}>
                             <div className={css`
                                 background-color: #F5F7FA;
@@ -198,14 +225,16 @@ export const Event = () => {
                             </div>
                             </div>
                             
-                            {version === 2 && <a href="/">Это ваше мероприятие?</a>}
-                            {version === 3 && <Button>На сайт мероприятия</Button>}
-                        </div>
+                            {version === 2 && <a href="/" className={css`
+                                color: ${theme.colors.purple};
+                            `}>Это ваше мероприятие?</a>}
+                            {version === 3 && <Button green>На сайт мероприятия</Button>}
+                        </motion.div>
                     </div>
                 </div>
             </div>
             
-            <div className={container}>
+            <div className={cx(container, css`@media(max-width: 1439px) {padding: 0;}` )}>
                 <MainEventsSlider />
             </div>
 

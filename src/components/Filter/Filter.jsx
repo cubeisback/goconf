@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { useEffect, useRef, useState } from "react";
-import { filterBtn, filterSelector } from "../../pages/ui";
+import { checkBox, filterBtn, filterSelector } from "../../pages/ui";
 // import { ReactComponent as ArrowDown } from '../../images/svg/arrowDown.svg';
 import DropdownInput from "../ui/DropdownInput";
 
@@ -203,97 +203,11 @@ export const Filter = ({full}) => {
                             line-height:1.16;
                           }
                         `}>
-                          <div className={css`
-                            input {
-                              display: none;
-                            }
-                            label {
-                              cursor: pointer;
-                              padding-left: 40px;
-                              position: relative;
-                              font-size: 14px;
-                              line-height: 1.16;
-
-                              &::before {
-                                content: '';
-                                position: absolute;
-                                border: 2px solid rgba(255,255,255,.3);
-                                background-color: transparent;
-                                border-radius: 5px;
-                                width: 24px;
-                                height: 24px;
-                                left: 2px;
-                                top: -3px;
-                                transition: ${theme.transition};
-                              }
-                              &::after {
-                                content: '';
-                                position: absolute;
-                                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.883 6.88398L9.883 17.884C9.39485 18.3721 8.60339 18.3721 8.11523 17.884L3.11523 12.884L4.883 11.1162L8.99912 15.2323L19.1152 5.11621L20.883 6.88398Z" fill="%238553F9"/></svg>');
-                                width: 24px;
-                                height: 24px;
-                                left: 2px;
-                                top: -3px;
-                                opacity: 0;
-                                transition: ${theme.transition};
-                              }
-                            }
-                            input:checked ~ label {
-                              &::before {
-                                background-color: #fff;
-                              }
-                              &::after {
-                                opacity: 1;
-                              }
-                            }
-                          `}>
+                          <div className={checkBox}>
                             <input type="checkbox" id="expample1" />
                             <label htmlFor="expample1">Онлайн</label>
                           </div>
-                          <div className={css`
-                            input {
-                              display: none;
-                            }
-                            label {
-                              cursor: pointer;
-                              padding-left: 40px;
-                              position: relative;
-                              font-size: 14px;
-                              line-height: 1.16;
-
-                              &::before {
-                                content: '';
-                                position: absolute;
-                                border: 2px solid rgba(255,255,255,.3);
-                                background-color: transparent;
-                                border-radius: 5px;
-                                width: 24px;
-                                height: 24px;
-                                left: 2px;
-                                top: -3px;
-                                transition: ${theme.transition};
-                              }
-                              &::after {
-                                content: '';
-                                position: absolute;
-                                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.883 6.88398L9.883 17.884C9.39485 18.3721 8.60339 18.3721 8.11523 17.884L3.11523 12.884L4.883 11.1162L8.99912 15.2323L19.1152 5.11621L20.883 6.88398Z" fill="%238553F9"/></svg>');
-                                width: 24px;
-                                height: 24px;
-                                left: 2px;
-                                top: -3px;
-                                opacity: 0;
-                                transition: ${theme.transition};
-                              }
-                            }
-                            input:checked ~ label {
-                              &::before {
-                                background-color: #fff;
-                              }
-                              &::after {
-                                opacity: 1;
-                              }
-                            }
-                          `}>
+                          <div className={checkBox}>
                             <input type="checkbox" id="expample2" />
                             <label htmlFor="expample2">Бесплатное</label>
                           </div>
