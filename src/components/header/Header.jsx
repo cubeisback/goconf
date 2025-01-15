@@ -277,7 +277,26 @@ export const Header = ({isLogin, windowWidth}) => {
           padding-top: 90px;
         `}
       >
-        MENU
+        <div className={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 32px;
+          padding: 24px 16px;
+        `}>
+            <NavLink to="/events" className={DoubleLink} onClick={()=>setBurger(false)}>
+              <span>Мероприятия</span><span>Мероприятия</span>
+            </NavLink>
+            <NavLink to="/org" className={DoubleLink} onClick={()=>setBurger(false)}>
+              <span>Организаторам</span><span>Организаторам</span>
+            </NavLink>
+            <NavLink to="/about" className={DoubleLink} onClick={()=>setBurger(false)}>
+              <span>О&nbsp;проекте</span><span>О&nbsp;проекте</span>
+            </NavLink>
+            <NavLink to="/faq" className={DoubleLink} onClick={()=>setBurger(false)}>
+              <span>FAQ</span><span>FAQ</span>
+            </NavLink>
+        </div>
       </motion.div>
     }
     </AnimatePresence>
