@@ -63,10 +63,21 @@ export const Filter = ({full}) => {
         try {
           const response = await fetch(url);
           const data = await response.json();
-
+  
           if (data) {
-            const cityList = data.map(city => city.name);
-            setCities(cityList);
+            // Сортировка: Москва и Санкт-Петербург всегда на первом месте
+            const sortedCities = data
+              .map(city => city.name) // Получаем список городов
+              .sort((a, b) => {
+                if (a === 'Москва') return -1;  // Москва на первом месте
+                if (b === 'Москва') return 1;
+                if (a === 'Санкт-Петербург') return -1; // Санкт-Петербург на втором месте
+                if (b === 'Санкт-Петербург') return 1;
+                return a.localeCompare(b); // Остальные города сортируем по алфавиту
+              });
+  
+            console.log(sortedCities); // Логируем отсортированный список
+            setCities(sortedCities); // Устанавливаем в состояние
           }
         } catch (error) {
           console.error('Ошибка при получении городов:', error);

@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { userMain } from "./ui";
+import { Button, userMain } from "./ui";
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 
@@ -33,6 +33,7 @@ export const UserStatus = () => {
             <div className={css`
                 display: flex;
                 gap: 24px;
+                flex-wrap: wrap;
                 padding: 40px 24px;
                 border-radius: 28px;
                 border: 2px solid ${theme.colors.purple};
@@ -40,6 +41,11 @@ export const UserStatus = () => {
                 & > div {
                     flex: 0 1 calc(33.333333% - 16px);
                     max-width: calc(33.333333% - 16px);
+
+                    @media(max-width: 767px) {
+                        flex: 0 1 100%;
+                        max-width: 100%;
+                    }
                 }
             `}>
                 <div>
@@ -98,7 +104,7 @@ export const UserStatus = () => {
                                 <p className={css`color: #D7DADD; &::before {content: none!important;}`}>Аналитика мероприятия</p>
                                 <p className={css`color: #D7DADD; &::before {content: none!important;}`}>Добавление фото/видео материалов</p>
                             </div>
-                    <div>Активен</div>
+                    <Button className={css`width:100%!important;background-color: ${theme.colors.green}!important;border-color: ${theme.colors.green}!important;color: ${theme.colors.font}!important;`}>Активен</Button>
                 </div>
                 <div>
                     <div className={css`
@@ -156,7 +162,7 @@ export const UserStatus = () => {
                                 <p>Аналитика мероприятия</p>
                                 <p>Добавление фото/видео материалов</p>
                             </div>
-                    <div>Оформить</div>
+                    <Button className={css`width:100%!important;`}>Оформить</Button>
                 </div>
                 <div>
                     <div className={css`
@@ -214,7 +220,7 @@ export const UserStatus = () => {
                                 <p>Аналитика мероприятия</p>
                                 <p>Добавление фото/видео материалов</p>
                             </div>
-                    <div>Оформить</div>
+                    <Button className={css`width:100%!important;`}>Оформить</Button>
                 </div>
             </div>
         </motion.div>
