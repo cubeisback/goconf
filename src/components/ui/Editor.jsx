@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import List from '@editorjs/list';
@@ -151,25 +151,25 @@ const EditorComponent = () => {
       
       console.log('EditorJS initialized', editorInstance.current);
       
-      return () => {
-        if (editorInstance.current) {
-          console.log('Destroying EditorJS...');
-          if (typeof editorInstance.current.destroy === 'function') {
-            editorInstance.current.destroy().then(() => {
-              console.log('EditorJS destroyed');
-              editorInstance.current = null;
-            }).catch((error) => {
-              console.error('Error destroying EditorJS:', error);
-            });
-          } else {
-            console.error('EditorJS does not have a destroy method');
-          }
-        }
-      };
+      // return () => {
+      //   if (editorInstance.current) {
+      //     console.log('Destroying EditorJS...');
+      //     if (typeof editorInstance.current.destroy === 'function') {
+      //       editorInstance.current.destroy().then(() => {
+      //         console.log('EditorJS destroyed');
+      //         editorInstance.current = null;
+      //       }).catch((error) => {
+      //         console.error('Error destroying EditorJS:', error);
+      //       });
+      //     } else {
+      //       console.error('EditorJS does not have a destroy method');
+      //     }
+      //   }
+      // };
     }
   }, []);
 
-  // Функция для преобразования данных в HTML
+//   // Функция для преобразования данных в HTML
 // const convertToHTML = (editorData) => {
 //   let htmlContent = '';
 
@@ -208,22 +208,22 @@ const EditorComponent = () => {
 //   return htmlContent;
 // };
 
-  // const [previewHtml, setPreviewHtml] = useState(null)
-  // // Функция для сохранения данных в базу
-  // const saveData = async () => {
-  //   try {
-  //     const savedData = await editorInstance.current.save();
-  //     const htmlContent = convertToHTML(savedData);
+//   const [previewHtml, setPreviewHtml] = useState(null)
+//   // Функция для сохранения данных в базу
+//   const saveData = async () => {
+//     try {
+//       const savedData = await editorInstance.current.save();
+//       const htmlContent = convertToHTML(savedData);
 
-  //     // Сохраните htmlContent в базу данных через API или другие средства
-  //     console.log('HTML content:', htmlContent);
-  //     setPreviewHtml(htmlContent)
+//       // Сохраните htmlContent в базу данных через API или другие средства
+//       console.log('HTML content:', htmlContent);
+//       setPreviewHtml(htmlContent)
 
-  //     // Здесь отправьте htmlContent в базу данных
-  //   } catch (error) {
-  //     console.error('Error saving EditorJS data:', error);
-  //   }
-  // };
+//       // Здесь отправьте htmlContent в базу данных
+//     } catch (error) {
+//       console.error('Error saving EditorJS data:', error);
+//     }
+//   };
 
   return (
       <div ref={editorRef} className={css`
@@ -243,7 +243,7 @@ const EditorComponent = () => {
           display: none;
         }
       `}>
-        {/* <button onClick={saveData}>Сохранить как HTML</button>
+        {/* <button onClick={saveData}>Предпросмотр</button>
 
         <div
             dangerouslySetInnerHTML={{ __html: previewHtml }}

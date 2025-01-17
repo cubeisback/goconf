@@ -33,7 +33,7 @@ export const UserStatus = () => {
             <div className={css`
                 display: flex;
                 gap: 24px;
-                padding: 0 24px;
+                padding: 40px 24px;
                 border-radius: 28px;
                 border: 2px solid ${theme.colors.purple};
 
@@ -43,8 +43,21 @@ export const UserStatus = () => {
                 }
             `}>
                 <div>
-                    <div>Базовый</div>
-                    <div>Бесплатно</div>
+                    <div className={css`
+                        color: ${theme.colors.purple};
+                        text-align: center;
+                        margin-bottom: 24px;
+                        font-family: Impact;
+                        font-size: 24px;
+                        line-height: 1.34;
+                    `}>Базовый</div>
+                    <div className={css`
+                        text-align: center;
+                        margin-bottom: 40px;
+                        font-size: 24px;
+                        font-weight: 500;
+                        line-height: 1.34;
+                    `}>Бесплатно</div>
                     <div className={css`
                                 border-radius: 16px;
                                 background-color: #fff;
@@ -88,8 +101,21 @@ export const UserStatus = () => {
                     <div>Активен</div>
                 </div>
                 <div>
-                    <div>Стандарт</div>
-                    <div>1 900 Р. / мес</div>
+                    <div className={css`
+                        color: ${theme.colors.purple};
+                        text-align: center;
+                        margin-bottom: 24px;
+                        font-family: Impact;
+                        font-size: 24px;
+                        line-height: 1.34;
+                    `}>Стандарт</div>
+                    <div className={css`
+                        text-align: center;
+                        margin-bottom: 40px;
+                        font-size: 24px;
+                        font-weight: 500;
+                        line-height: 1.34;
+                    `}>1 900 Р. / мес</div>
                     <div className={css`
                                 border-radius: 16px;
                                 background-color: #fff;
@@ -133,8 +159,21 @@ export const UserStatus = () => {
                     <div>Оформить</div>
                 </div>
                 <div>
-                    <div>Бизнес</div>
-                    <div>3 800 Р. / мес</div>
+                    <div className={css`
+                        color: ${theme.colors.purple};
+                        text-align: center;
+                        margin-bottom: 24px;
+                        font-family: Impact;
+                        font-size: 24px;
+                        line-height: 1.34;
+                    `}>Бизнес</div>
+                    <div className={css`
+                        text-align: center;
+                        margin-bottom: 40px;
+                        font-size: 24px;
+                        font-weight: 500;
+                        line-height: 1.34;
+                    `}>3 800 Р. / мес</div>
                     <div className={css`
                                 border-radius: 16px;
                                 background-color: #fff;
