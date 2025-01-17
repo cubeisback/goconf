@@ -13,6 +13,7 @@ import { Event } from "./pages/Event";
 import { User } from "./pages/User";
 import { Faq } from "./pages/Faq";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { DB } from "./db";
 
 // TODO отложенная загрузка компонентов
 
@@ -46,6 +47,8 @@ function App() {
     <ThemeProvider theme={theme}>
     <Global styles={globalStyles} /> 
     <BrowserRouter>
+      <DB/> 
+      {/* TODO remove db */}
       <Header isLogin={isLogin} windowWidth={windowWidth} />
       <Routes>
         <Route path="/" element={<Main />} />
@@ -60,6 +63,7 @@ function App() {
         <Route path="/lk/add" element={<User windowWidth={windowWidth} page={4} setIsLogin={setIsLogin} />} />
         <Route path="/lk/notifications" element={<User windowWidth={windowWidth} page={5} setIsLogin={setIsLogin} />} />
         <Route path="/lk/orders" element={<User windowWidth={windowWidth} page={6} setIsLogin={setIsLogin} />} />
+        <Route path="/lk/status" element={<User windowWidth={windowWidth} page={7} setIsLogin={setIsLogin} />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

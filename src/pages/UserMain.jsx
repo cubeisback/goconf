@@ -1,5 +1,6 @@
 import { css, cx } from "@emotion/css";
 import { Button, input, inputItem, userMain } from "./ui";
+import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
@@ -42,7 +43,7 @@ export const UserMain = () => {
                 margin-bottom: 24px;
             `}>
                 <div>Статус профиля:</div>
-                <div className={css`color: ${theme.colors.purple}`}>Базовый</div>
+                <div className={css`color: ${theme.colors.purple};display: flex;align-items: center;gap: 4px;`}>Базовый <EditIcon /></div>
             </div>
             <div className={css`
                 display: flex;

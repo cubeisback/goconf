@@ -1,13 +1,16 @@
 import { css, cx } from "@emotion/css";
 import { Button, input, textarea, userMain } from "./ui";
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from "react";
 import DropdownInput from "../components/ui/DropdownInput";
 import { NavLink } from "react-router";
 import { useTheme } from "@emotion/react";
 import { ReactComponent as AvatarIcon } from '../images/svg/avatar.svg';
+import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
+import { ReactComponent as RemoveIcon } from '../images/svg/remove.svg';
 import { AnimatedSwitch } from "./UserNotifications";
 import EditorComponent from "../components/ui/Editor";
+import img_ex_1 from '../images/events_1.jpg';
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6'];
 
@@ -21,6 +24,19 @@ export const UserAdd = () => {
     const handleChange = (event) => {
         setText(event.target.value);
     };
+
+    const [activeTab, setActiveTab] = useState(1)
+        const tabItem = css`
+            background-color: #fff;
+            transition: ${theme.transition};
+            padding: 14px 32px;
+            cursor: pointer;
+            border-radius: 32px;
+        `;
+        const tabItemActive = css`
+            background-color: ${theme.colors.purple};
+            color: #fff;
+        `;
     
 
     return(
@@ -50,6 +66,7 @@ export const UserAdd = () => {
                 align-items: center;
                 gap: 8px;
                 margin-bottom: 24px;
+                overflow-x: auto;
 
                 div {
                     padding: 11px 16px 13px;
@@ -58,13 +75,18 @@ export const UserAdd = () => {
                     line-height: 1.16;
                     border-radius: 28px;
                     border: 2px solid #D7DADD;
+                    transition: ${theme.transition};
+                    min-width: max-content;
                 }
             `}>
-                <div className={css`border-color: #8553F9!important;`}>Основные данные</div>
-                <div className={css`width: 16px;height: 2px;background-color: #8553F9;padding: 0!important;border:none!important;`}></div>
-                <div>Место и время</div>
-                <div className={css`width: 16px;height: 2px;background-color: #8553F9;padding: 0!important;border:none!important;`}></div>
-                <div>Дополнительная информация</div>
+                <div className={css`border-color: ${theme.colors.purple}!important; color: ${theme.colors.purple}!important; ${view > 1 && `background-color: ${theme.colors.purple};color:#fff!important;` }`}>Основные данные</div>
+                <div className={css`width: 16px;min-width: 16px!important;height: 2px;background-color: ${theme.colors.purple};padding: 0!important;border:none!important;`}></div>
+                <div className={css`
+                    ${view > 1 && `color: ${theme.colors.purple}!important;border-color: ${theme.colors.purple}!important;` }
+                    ${view > 2 && `background-color: ${theme.colors.purple};color:#fff!important;` }
+                `}>Место и время</div>
+                <div className={css`width: 16px;min-width: 16px!important;height: 2px;background-color: ${theme.colors.purple};padding: 0!important;border:none!important;`}></div>
+                <div className={css`${view > 2 && `color: ${theme.colors.purple}!important;border-color: ${theme.colors.purple}!important;` }`}>Дополнительная информация</div>
             </div>
 
             {view === 1 && 
@@ -74,7 +96,12 @@ export const UserAdd = () => {
         transition={{ duration: .3 }}>
 
             <div className={css`margin-bottom: 24px;`}>
-                <div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;`}>
+                <div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;
+                    @media(max-width: 575px) {
+                        flex-direction: column;
+                        gap: 8px;
+                    }    
+                `}>
                     <p className={css`color: #47474D;`}>Название</p>
                     <p className={css`color: #6C6C71;`}>Юридическое наименование вашей организации или ИП</p>
                 </div>
@@ -82,7 +109,12 @@ export const UserAdd = () => {
             </div>
                         
             <div className={css`margin-bottom: 24px;`}>
-                <div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;`}>
+                <div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;
+                    @media(max-width: 575px) {
+                        flex-direction: column;
+                        gap: 8px;
+                    }    
+                `}>
                     <p className={css`color: #47474D;`}>Краткое описание для анонса</p>
                     <p className={css`color: #6C6C71;`}>Максимальное количество символов - 200</p>
                 </div>
@@ -103,6 +135,12 @@ export const UserAdd = () => {
                     display: flex;
                     flex-direction: column;
                     gap: 8px;
+                    color: #47474D;
+
+                    @media(max-width: 575px) {
+                        flex: 0 1 100%;
+                        max-width: 100%;
+                    }
                 }
             `}>
                 <div>
@@ -136,12 +174,21 @@ export const UserAdd = () => {
                 display: flex;
                 gap: 64px;
                 margin-bottom: 48px;
+
+                @media(max-width: 1199px) {
+                    flex-direction: column;
+                }
             `}>
                 <div className={css`
                     flex: 0 1 336px;
                     max-width: 336px;
                     font-size: 14px;
                     line-height: 1.16;
+
+                    @media(max-width: 1199px) {
+                        flex: 0 1 100%;
+                        max-width: 100%;
+                    }
                 `}>
                     <div className={css`color: #47474D;margin-bottom: 4px;`}>Изображение для анонса</div>
                     <div className={css`color: #6C6C71;margin-bottom: 16px;`}>Изображение в&nbsp;ленте мероприятий</div>
@@ -185,12 +232,21 @@ export const UserAdd = () => {
                 font-size: 14px;
                 margin-bottom: 48px;
 
+                @media(max-width: 575px) {
+                    flex-direction: column;
+                }
+
                 & > div {
                     display: flex;
                     flex-direction: column;
                     gap: 8px;
                     flex: 0 1 calc(50% - 12px);
                     max-width: calc(50% - 12px);
+
+                    @media(max-width: 575px) {
+                        flex: 0 1 100%;
+                        max-width: 100%;
+                    }
                 }
             `}>
                 <div>
@@ -235,12 +291,274 @@ export const UserAdd = () => {
                 font-size: 36px;
                 line-height: 1.12;
             `}>Формат события</div></div>
+            <div className={css`
+                display: flex;
+                gap: 4px;
+                padding: 4px;
+                background-color: #fff;
+                border-radius: 28px;
+                max-width: max-content;
+                margin-bottom: 32px;
+
+                @media(max-width: 575px) {
+                    flex-direction: column;
+                    max-width: 100%;
+                }
+            `}>
+                <div className={cx(tabItem, activeTab === 1 && tabItemActive)} onClick={()=>setActiveTab(1)}>Оффлайн</div>
+                <div className={cx(tabItem, activeTab === 2 && tabItemActive)} onClick={()=>setActiveTab(2)}>Онлайн</div>
+            </div>
+            <AnimatePresence>
+                {activeTab === 1 ? (
+                    <motion.div
+                        key="tab1"
+                        initial={{opacity: 0, y: 40}}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: .3 }}
+                    >
+                        <div className={css`
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 24px;
+                            margin-bottom: 48px;
+                            font-size: 14px;
+
+                            & > div {
+                                flex: 0 1 calc(33.333333% - 16px);
+                                max-width: calc(33.333333% - 16px);
+                                display: flex;
+                                flex-direction: column;
+                                gap: 8px;
+                                color: #47474D;
+
+                                @media(max-width: 575px) {
+                                    flex: 0 1 100%;
+                                    max-width: 100%;
+                                }
+                            }
+                        `}>
+                            <div className={css`
+                                flex: 0 1 calc(50% - 12px)!important;
+                                max-width: calc(50% - 12px)!important;
+
+                                @media(max-width: 575px) {
+                                    flex: 0 1 100%!important;
+                                    max-width: 100%!important;
+                                }
+                            `}>
+                                <p>Город</p>
+                                <DropdownInput options={options} placeholder={'Выбрать город'} />
+                            </div>
+                            <div className={css`
+                                flex: 0 1 calc(50% - 12px)!important;
+                                max-width: calc(50% - 12px)!important;
+
+                                @media(max-width: 575px) {
+                                    flex: 0 1 100%!important;
+                                    max-width: 100%!important;
+                                }
+                            `}>
+                                <p>Адрес</p>
+                                <input className={input} type="text" placeholder="Укажите адрес" />
+                            </div>
+                            <div>
+                                <p>Дата начала</p>
+                                <input className={input} type="text" placeholder="Дата начала" />
+                            </div>
+                            <div>
+                                <p>Дата окончания</p>
+                                <input className={input} type="text" placeholder="Дата окончания" />
+                            </div>
+                            <div>
+                                <p>Время начала</p>
+                                <input className={input} type="text" placeholder="Время начала" />
+                            </div>
+                        </div>
+                    </motion.div>
+                    ) : (
+                    <motion.div
+                        key="tab2"
+                        initial={{opacity: 0, y: 40}}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: .3 }}
+                    >
+                        <div className={css`
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 24px;
+                            margin-bottom: 48px;
+                            font-size: 14px;
+
+                            & > div {
+                                flex: 0 1 calc(33.333333% - 16px);
+                                max-width: calc(33.333333% - 16px);
+                                display: flex;
+                                flex-direction: column;
+                                gap: 8px;
+                                color: #47474D;
+
+                                @media(max-width: 575px) {
+                                    flex: 0 1 100%;
+                                    max-width: 100%;
+                                }
+                            }
+                        `}>
+                            <div>
+                                <p>Дата начала</p>
+                                <input className={input} type="text" placeholder="Дата начала" />
+                            </div>
+                            <div>
+                                <p>Дата окончания</p>
+                                <input className={input} type="text" placeholder="Дата окончания" />
+                            </div>
+                            <div>
+                                <p>Время начала</p>
+                                <input className={input} type="text" placeholder="Время начала" />
+                            </div>
+                            <div className={css`
+                                flex: 0 1 100%!important;
+                                max-width: 100%!important;
+                            `}>
+                                <p>Ссылка на трансляцию</p>
+                                <input className={input} type="text" placeholder="https://" />
+                                <p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <NavLink className={css`color: ${theme.colors.purple};`}>Сменить статус</NavLink></p>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div>
         }
 
-        <div className={css`display: flex;gap:16px;align-items:center;`}>
+        {view === 3 && 
+        <>
+            <div className={css`
+                margin-bottom: 8px;
+                font-family: Impact;
+                font-size: 28px;
+                line-height: 1.2;
+            `}>Галерея</div>
+            <div className={css`
+                margin-bottom: 24px;
+
+                & > p {
+                    font-size: 12px;
+                    color: #6C6C71;
+
+                    span {
+                        color: ${theme.colors.font};
+                    }
+                }
+            `}>
+                <p><span>Разрешение</span>&nbsp;&mdash; не&nbsp;более 9&nbsp;фотографий</p>
+                <p><span>Формат</span>&nbsp;&mdash; PNG или JPEG, рекомендуемое разрешение&nbsp;&mdash; 900&times;600</p>
+            </div>
+            <div className={css`
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 24px;
+                    margin-bottom: 40px;
+
+                    & > div {
+                        flex: 0 1 calc(33.33333% - 16px);
+                        max-width: calc(33.333333% - 16px);
+
+                        @media(max-width: 575px) {
+                            flex: 0 1 100%;
+                            max-width: 100%;
+                        }
+
+                        img {
+                            border-radius: 16px;
+                            margin-bottom: 8px;
+                        }
+                        
+                        div {
+                            display: flex;
+                            justify-content: space-between;
+                            gap: 8px;
+                            align-items: center;
+                        }
+                    }
+                `}>
+                    <div>
+                        <img src={img_ex_1} alt="" />
+                        <div>
+                            <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+                            <div>
+                                <EditIcon />
+                                <RemoveIcon />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src={img_ex_1} alt="" />
+                        <div>
+                            <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+                            <div>
+                                <EditIcon />
+                                <RemoveIcon />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src={img_ex_1} alt="" />
+                        <div>
+                            <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+                            <div>
+                                <EditIcon />
+                                <RemoveIcon />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src={img_ex_1} alt="" />
+                        <div>
+                            <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+                            <div>
+                                <EditIcon />
+                                <RemoveIcon />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src={img_ex_1} alt="" />
+                        <div>
+                            <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+                            <div>
+                                <EditIcon />
+                                <RemoveIcon />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;margin-bottom: 48px;`)} >+ Добавить изображение</Button>
+
+            <div className={css`
+                margin-bottom: 8px;
+                font-family: Impact;
+                font-size: 28px;
+                line-height: 1.2;
+            `}>Видео</div>
+            <div className={css`
+                margin-bottom: 16px;
+                font-size: 12px;
+            `}>Вы можете добавить Iframe с Ютуба или ВК</div>
+            <textarea className={cx(textarea, css`margin-bottom: 40px;`)} name="" id="" placeholder="https://" ></textarea>
+        </>
+        }
+
+        <div className={css`
+            display: flex;
+            gap:16px;
+            align-items:center;
+
+            @media(max-width: 575px) {
+                flex-direction: column;
+            }
+        `}>
             <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{view > 1 && setView(prev => prev - 1)}}>Отменить</Button>
-            <Button onClick={()=>{view < 4 && setView(prev => prev + 1)}}>Продолжить</Button>
+            <Button onClick={()=>{view < 3 && setView(prev => prev + 1)}}> {view > 2 ? 'Опубликовать' : 'Продолжить'}</Button>
             <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`}>Сохранить в черновик</div>
         </div>
         </motion.div>

@@ -3,16 +3,27 @@ import event_img from '../images/event_ex.jpg'
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Helper } from '../components/ui/Helper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MainEventsSlider } from '../components/MainEventsSlider';
 import { Form } from '../components/Form';
 import { MainEvents } from '../components/MainEvents';
 import { motion } from 'framer-motion';
+import { getEventById } from '../db';
+import { NavLink, useLocation } from 'react-router';
 
 export const Event = () => {
     const [version, setVersion] = useState(0);
 
     const theme = useTheme();
+
+    const [event, setEvent] = useState(null);
+    const location = useLocation(); // Получаем информацию о текущем пути
+    useEffect(() => {
+        const pathParts = location.pathname.split('/');
+        const eventId = pathParts[pathParts.length - 1];
+    
+        getEventById(eventId).then((res) => setEvent(res[0]));
+    }, [location.pathname]);
 
     const promoThemes = css`
         display: flex;
@@ -61,12 +72,12 @@ export const Event = () => {
                         <a href="/">Мероприятия</a>
                         <p>Национальный рекламный форум</p>
                     </div>
-                    <h1 className={pageTitle}>Национальный рекламный форум</h1>
+                    {event && <h1 className={pageTitle}>{event.title}</h1> }
                     <div className={promoThemes}>
                         <p>Тематика:</p>
-                        <a href="/">Управление персоналом</a>
-                        <a href="/">Менеджмент</a>
-                        <a href="/">HR-процессы</a>
+                        {event && event.themes.map(theme => (
+                            <NavLink key={theme} to="/">{theme}</NavLink>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -79,6 +90,7 @@ export const Event = () => {
                 }
             `}>
                 <div className={container}>
+                    {event &&
                     <div className={css`
                         display: flex;
                         gap: 32px;
@@ -95,8 +107,9 @@ export const Event = () => {
                             flex: 1;
                         `}>
                             <img src={event_img} alt="" className={css`margin-bottom: 40px;`} />
-                            <div className={text}>
-                                <p>Сразу два уникальных события ждут представителей индустрии в ноябре:</p>
+                            <div className={text} dangerouslySetInnerHTML={{ __html: event.text }} />
+                                 
+                                {/* <p>Сразу два уникальных события ждут представителей индустрии в ноябре:</p>
                                 <div>
                                     <p>🌟12-15 ноября — Неделя рекламы в Москве;</p>
                                     <p>🌟13-15 ноября — НРФ’8.</p>
@@ -109,8 +122,8 @@ export const Event = () => {
                                 <div>14 ноября — День контента и креатива</div>
                                 <p>На площадке форума выступят российские и зарубежные эксперты. Также пройдет официальная церемония награждения победителей фестиваля Red Apple.</p>
                                 <div>15 ноября — День стратегических инициатив</div>
-                                <p>Ключевые игроки рекламного рынка обсудят цели и задачи российского маркетинга, узнаваемость отечественных брендов и тренды в поведении потребителей.</p>
-                            </div>
+                                <p>Ключевые игроки рекламного рынка обсудят цели и задачи российского маркетинга, узнаваемость отечественных брендов и тренды в поведении потребителей.</p> */}
+                            {/* </div> */}
                         </motion.div>
                         <motion.div 
                         initial={{ opacity: 0, x: 80 }}
@@ -148,7 +161,7 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>25 сентября - 2 октября 2024</p>
+                                `}>{event.date1} - {event.date2}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -162,7 +175,7 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>Москва</p>
+                                `}>{event.city}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -176,7 +189,7 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>Кинотеатр Каро 11 Октябрь</p>
+                                `}>{event.address}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -192,7 +205,7 @@ export const Event = () => {
                                     line-height: 1.16;
                                     font-weight: 500;
                                     color: #8553F9;
-                                `}>32 900 - 72 000 руб.</p>
+                                `}>{event.price}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -206,7 +219,7 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>Конференция</p>
+                                `}>{event.format}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -221,7 +234,7 @@ export const Event = () => {
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #8553F9;
-                                `}>ЦРБК</p>
+                                `}>{event.organization}</p>
                             </div>
                             </div>
                             
@@ -231,6 +244,7 @@ export const Event = () => {
                             {version === 3 && <Button green>На сайт мероприятия</Button>}
                         </motion.div>
                     </div>
+                    }
                 </div>
             </div>
             

@@ -7,6 +7,7 @@ import { ReactComponent as EventsIcon } from '../images/svg/events.svg';
 import { ReactComponent as OrgIcon } from '../images/svg/people.svg';
 import { ReactComponent as CartIcon } from '../images/svg/cart.svg';
 import { ReactComponent as ExitIcon } from '../images/svg/exit.svg';
+import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
 import { NavLink, useLocation } from "react-router";
 import { motion } from 'framer-motion';
 import { UserMain } from "./UserMain";
@@ -15,6 +16,7 @@ import { UserOrg } from "./UserOrg";
 import { UserAdd } from "./UserAdd";
 import { UserNotifications } from "./UserNotifications";
 import { UserOrders } from "./UserOrders";
+import { UserStatus } from "./UserStatus";
 
 export const User = ({page, setIsLogin, windowWidth}) => {
     const theme = useTheme();
@@ -125,15 +127,26 @@ export const User = ({page, setIsLogin, windowWidth}) => {
                                 <p>Заказы</p>
                             </NavLink>
                         </div>
-                        <div className={cx(menuItem, css`flex-direction: column;align-items:flex-start;`)}>
+                        <div className={cx(menuItem, css`
+                            flex-direction: column;align-items:flex-start;
+                            cursor: default;
+
+                            &:hover {
+                                background-color: transparent;
+                            }
+                        `)}>
                             <div className={css`
                                 color: #47474D;
                                 font-size: 14px;
                                 line-height:1.16;
                             `}>Статус профиля:</div>
-                            <div className={css`
+                            <NavLink to="/lk/status" className={css`
                                 color: ${theme.colors.purple};
-                            `}>Базовый</div>
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                width: 100%;
+                            `}>Базовый <EditIcon /></NavLink>
                         </div>
                         <div className={cx(menuItem, css`
                             margin-top: auto;
@@ -193,6 +206,7 @@ export const User = ({page, setIsLogin, windowWidth}) => {
                     {page === 4 && <UserAdd />}
                     {page === 5 && <UserNotifications />}
                     {page === 6 && <UserOrders />}
+                    {page === 7 && <UserStatus />}
                 </div>
             </div>
         </div>

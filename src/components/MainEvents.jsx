@@ -4,88 +4,95 @@ import { useTheme } from "@emotion/react";
 import img_ex_1 from '../images/events_1.jpg';
 import { ReactComponent as LinkArrow } from '../images/svg/link_arrow.svg';
 import { NavLink } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
+import { getAllEvents } from "../db";
 
-const eventsArray = [
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    }
-]
+// const eventsArray = [
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     }
+// ]
+
 
 export const MainEvents = ({onPage, similar}) => {
     const theme = useTheme();
 
     const [limit, setLimit] = useState(3);
+
+    const [events, setEvents] = useState(null);
+    useEffect(()=>{
+        getAllEvents().then((res)=>setEvents(res));        
+    }, [])
 
     return (
         <div className={css`
@@ -113,7 +120,7 @@ export const MainEvents = ({onPage, similar}) => {
                 <div className={css`
                     margin-bottom: 32px;
                 `}>
-                    {eventsArray.slice(0, limit).map((item, index) => (
+                    {events && events.slice(0, limit).map((item, index) => (
                         <motion.div 
                             initial={{ y: 50, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
@@ -167,14 +174,14 @@ export const MainEvents = ({onPage, similar}) => {
                                     @media(max-width: 575px) {
                                         font-size: 24px;
                                     }
-                                `}>{item.date}</div>
+                                `}>{item.date1} -<br/> {item.date2}</div>
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #47474D;
-                                `}>{item.place}</div>
+                                `}>Россия, {item.city}</div>
                             </div>
-                            <NavLink to="/events/test" className={css`
+                            <NavLink to={`/events/${item.url}`} className={css`
                                 flex: 0 1 300px;
                                 max-width: 300px;
                                 border-radius: 16px;
@@ -209,7 +216,7 @@ export const MainEvents = ({onPage, similar}) => {
                                     background-color: ${theme.colors.green};
                                     padding: 3px 8px 5px;
                                     width: max-content;
-                                `}><NavLink to="/events/test">{item.tag}</NavLink></div>
+                                `}><NavLink to={`/events/${item.url}`}>{item.format}</NavLink></div>
                                 <div className={css`
                                     display: flex;
                                     gap: 16px;
@@ -248,11 +255,11 @@ export const MainEvents = ({onPage, similar}) => {
                                         }
                                     }
                                 `}>
-                                    <NavLink to="/events/test">Управление персоналом</NavLink>
-                                    <NavLink to="/events/test">Менеджмент</NavLink>
-                                    <NavLink to="/events/test">HR-процессы</NavLink>
+                                    {item.themes.map(theme => (
+                                        <NavLink key={theme} to={`/events/${item.url}`}>{theme}</NavLink>
+                                    ))}
                                 </div>
-                                <NavLink to="/events/test" className={css`
+                                <NavLink to={`/events/${item.url}`} className={css`
                                     font-size: 18px;
                                     font-weight: 500;
                                     line-height: 1.36;    
@@ -264,9 +271,9 @@ export const MainEvents = ({onPage, similar}) => {
                                     @media(max-width: 575px) {
                                         display: none;
                                     }
-                                `}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo.</div>
+                                `}>{item.previewText}</div>
                             </div>
-                            <NavLink to="/events/test" className={css`
+                            <NavLink to={`/events/${item.url}`} className={css`
                                 flex: 0 1 56px;
                                 max-width: 56px;
 

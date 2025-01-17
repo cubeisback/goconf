@@ -183,7 +183,13 @@ export const UserEvents = () => {
                 </div>
 
                 <div>
-                    <div className={css`background-color: #8553F9; border-radius: 28px 28px 0px 0px; padding: 16px 32px; display: flex; justify-content: space-between; color: #fff;`}>
+                    <div className={css`
+                        background-color: #8553F9; border-radius: 28px 28px 0px 0px; padding: 16px 32px; display: flex; justify-content: space-between; color: #fff;
+
+                        @media(max-width: 575px) {
+                            flex-direction: column;
+                        }
+                    `}>
                         <div>Событие продвигается</div>
                         <div>До окончания осталось <b>7 дней</b></div>
                     </div>
@@ -317,6 +323,7 @@ export const UserEvents = () => {
                 align-items: center;
                 gap: 8px;
                 margin-bottom: 24px;
+                overflow-x: auto;
 
                 div {
                     padding: 11px 16px 13px;
@@ -325,6 +332,7 @@ export const UserEvents = () => {
                     line-height: 1.16;
                     border-radius: 28px;
                     border: 2px solid #D7DADD;
+                    min-width: max-content;
                 }
             `}>
                 <div className={css`border-color: #8553F9!important;`}>Выбор опций</div>
@@ -391,6 +399,7 @@ export const UserEvents = () => {
                 align-items: center;
                 gap: 8px;
                 margin-bottom: 24px;
+                overflow-x: auto;
 
                 div {
                     padding: 11px 16px 13px;
@@ -399,6 +408,7 @@ export const UserEvents = () => {
                     line-height: 1.16;
                     border-radius: 28px;
                     border: 2px solid #D7DADD;
+                    min-width: max-content;
                 }
             `}>
                 <div className={css`border-color: #8553F9!important;`}>Выбор опций</div>
@@ -428,7 +438,12 @@ export const UserEvents = () => {
                     }
                 `}>
                     <div className={css`margin-bottom: 16px;color: #6C6C71;font-size: 14px;line-height: 1.16;`}>Промежуточный итог</div>
-                    <div className={css`display: flex;gap:16px;justify-content: space-between;margin-bottom: 16px;padding-bottom: 16px;border-bottom: 1px solid #D7DADD;`}>
+                    <div className={css`
+                        display: flex;gap:16px;justify-content: space-between;margin-bottom: 16px;padding-bottom: 16px;border-bottom: 1px solid #D7DADD;
+                        @media(max-width: 575px) {
+                            flex-direction: column;
+                        }
+                    `}>
                         <div>Размещение в сквозном слайдере «Интересные события» (на 7 дней)</div>
                         <div className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</div>
                     </div>
@@ -484,6 +499,7 @@ export const UserEvents = () => {
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 24px;
+                max-width: 100%;
             `}>
                 <div className={css`
                     font-family: Impact;

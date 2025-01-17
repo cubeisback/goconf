@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -9,39 +9,46 @@ import img_ex_1 from '../images/events_1.jpg';
 import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { NavLink } from "react-router";
+import { getAllEvents } from "../db";
 
-const eventsArray = [
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    },
-    {
-        title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-        tag: 'Конференция',
-        date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-        place: 'Россия, Екатеринбург',
-    }
-]
+// const eventsArray = [
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     },
+//     {
+//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
+//         tag: 'Конференция',
+//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
+//         place: 'Россия, Екатеринбург',
+//     }
+// ]
 
 export const MainEventsSlider = () => {
     const theme = useTheme();
 
     const navigationPrevRef = useRef(null);
     const navigationNextRef = useRef(null);
+
+    const [events, setEvents] = useState(null);
+
+    useEffect(()=>{
+        getAllEvents().then((res)=>setEvents(res));        
+    }, [])
 
     return (
         
@@ -141,13 +148,13 @@ export const MainEventsSlider = () => {
                             },
                         }}
                     >
-                        {eventsArray.map((item, index) => (
+                        {events && events.map((item, index) => (
                         <SwiperSlide key={index} className={css`
                             border-radius: 24px;
                             background-color: #fff;
                             overflow: hidden;
                         `}>
-                            <NavLink to="/events/test" className={css`
+                            <NavLink to={`/events/${item.url}`} className={css`
                                 width: 100%;
                             `}>
                                 <img src={img_ex_1} alt="" className={css`
@@ -171,8 +178,8 @@ export const MainEventsSlider = () => {
                                     font-weight: 500;
                                     line-height: 1.16;
                                     width: max-content;    
-                                `}><NavLink to="/events/test">{item.tag}</NavLink></div>
-                                <NavLink to="/events/test" className={css`
+                                `}><NavLink to={`/events/${item.url}`}>{item.format}</NavLink></div>
+                                <NavLink to={`/events/${item.url}`} className={css`
                                     font-size: 18px;
                                     font-weight: 500;
                                     line-height: 1.36;
@@ -198,14 +205,14 @@ export const MainEventsSlider = () => {
                                             @media(max-width: 575px) {
                                                 font-size: 24px;
                                             }
-                                        `}>{item.date}</div>
+                                        `}>{item.date1} -<br/> {item.date2}</div>
                                         <div className={css`
                                             color: #47474D;
                                             font-size: 14px;
                                             line-height: 1.16;    
-                                        `}>{item.place}</div>
+                                        `}>Россия, {item.city}</div>
                                     </div>
-                                    <NavLink to="/events/test">
+                                    <NavLink to={`/events/${item.url}`}>
                                         <LinkArrow />
                                     </NavLink>
                                 </div>
