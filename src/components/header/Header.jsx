@@ -163,7 +163,12 @@ export const Header = ({isLogin, windowWidth}) => {
           <div className={css`cursor:pointer;`} ref={iconRef} onClick={toggleNotifications}>
             <NotificationIcon />
           </div>
-          <NavLink to="/lk"> {windowWidth > 575 ? 'Александр Ром...' : <UserIcon />}</NavLink>
+          <NavLink className={css`
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 136px;
+          `} to="/lk"> {windowWidth > 575 ? 'Александр Романов' : <UserIcon />}</NavLink>
           </>
           :
           <div onClick={()=>setIsModalOpen(true)} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>

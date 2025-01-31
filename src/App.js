@@ -14,6 +14,7 @@ import { User } from "./pages/User";
 import { Faq } from "./pages/Faq";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { DB } from "./db";
+import { Organizer } from "./pages/Organizer";
 
 // TODO отложенная загрузка компонентов
 
@@ -57,6 +58,7 @@ function App() {
         <Route path="/org" element={<Org />} />
         <Route path="/about" element={<About />} />
         <Route path="/faq" element={<Faq />} />
+        <Route path="/organizer" element={<Organizer />} />
         <Route path="/lk" element={<User windowWidth={windowWidth} page={1} setIsLogin={setIsLogin} />} />
         <Route path="/lk/events" element={<User windowWidth={windowWidth} page={2} setIsLogin={setIsLogin} />} />
         <Route path="/lk/org" element={<User windowWidth={windowWidth} page={3} setIsLogin={setIsLogin} />} />

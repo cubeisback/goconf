@@ -4,6 +4,7 @@ import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
+import { PasswordInput } from "../components/ui/PasswordInput";
 
 export const UserMain = () => {
     const theme = useTheme();
@@ -114,11 +115,12 @@ export const UserMain = () => {
                             `}>Изменить пароль</div>
                             <div className={inputItem}>
                                 <p>Пароль</p>
-                                <input type="text" className={input} placeholder="Александр" />
+                                <PasswordInput text='Введите пароль' />
                             </div>
+                            
                             <div className={inputItem}>
                                 <p>Повторите пароль</p>
-                                <input type="text" className={input} placeholder="Романов" />
+                                <PasswordInput text='Повторите пароль' />
                             </div>
                             <Button className={cx(css`opacity: .2; pointer-events: none;`)}>Сохранить изменения</Button>
                         </div>

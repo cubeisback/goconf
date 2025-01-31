@@ -1,20 +1,28 @@
 import { breadcrumbs, Button, container, pagePromo, pageTitle } from './ui';
 import event_img from '../images/event_ex.jpg'
+import { ReactComponent as SliderArrow } from '../images/svg/slider_arrow.svg';
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Helper } from '../components/ui/Helper';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MainEventsSlider } from '../components/MainEventsSlider';
 import { Form } from '../components/Form';
 import { MainEvents } from '../components/MainEvents';
 import { motion } from 'framer-motion';
 import { getEventById } from '../db';
 import { NavLink, useLocation } from 'react-router';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
 
 export const Event = () => {
     const [version, setVersion] = useState(0);
 
     const theme = useTheme();
+
+    const navigationPrevRef = useRef(null);
+    const navigationNextRef = useRef(null);
 
     const [event, setEvent] = useState(null);
     const location = useLocation(); // Получаем информацию о текущем пути
@@ -105,6 +113,7 @@ export const Event = () => {
                         transition={{ duration: .3 }}
                         className={css`
                             flex: 1;
+                            max-width: 952px;
                         `}>
                             <img src={event_img} alt="" className={css`margin-bottom: 40px;`} />
                             <div className={text} dangerouslySetInnerHTML={{ __html: event.text }} />
@@ -124,6 +133,107 @@ export const Event = () => {
                                 <div>15 ноября — День стратегических инициатив</div>
                                 <p>Ключевые игроки рекламного рынка обсудят цели и задачи российского маркетинга, узнаваемость отечественных брендов и тренды в поведении потребителей.</p> */}
                             {/* </div> */}
+
+                            {version === 3 && 
+                            
+                            <div className={css`
+                                padding-top: 32px;
+                            `}>
+                                <div className={css`
+                                    display: flex;
+                                    gap: 16px;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    margin-bottom: 24px;
+                                `}>
+                                    <div className={pageTitle}>Галерея</div>
+                                    <div className={css`
+                                        display: flex;
+                                        gap: 16px;
+
+                                        & > div {
+                                            display: flex;
+                                            cursor: pointer;
+                                        }
+
+                                        svg {
+                                            @media(max-width: 575px) {
+                                                width: 48px;
+                                                height: 48px;
+                                            }
+                                        }
+                                    `}>
+                                        <div ref={navigationPrevRef}>
+                                            <SliderArrow />
+                                        </div>
+                                        <div ref={navigationNextRef}style={{transform: 'rotate(180deg)'}}>
+                                            <SliderArrow />
+                                        </div>
+                                    </div>
+                                </div>
+                                <Swiper 
+                                    modules={[Navigation]} 
+                                    navigation={{
+                                        prevEl: navigationPrevRef.current,
+                                        nextEl: navigationNextRef.current,
+                                    }}
+                                    loop
+                                    onSwiper={(swiper) => {
+                                        setTimeout(() => {
+                                            if (swiper.params) {
+                                            swiper.params.navigation.prevEl = navigationPrevRef.current;
+                                            swiper.params.navigation.nextEl = navigationNextRef.current;
+                                
+                                            swiper.navigation.destroy();
+                                            swiper.navigation.init();
+                                            swiper.navigation.update();
+                                            }
+                                        }, 500);
+                                    }}
+                                    slidesPerView={1}
+                                    spaceBetween={24}
+
+                                    breakpoints={{
+                                        640: {
+                                            slidesPerView: 2,
+                                        },
+                                        1024: {
+                                        slidesPerView: 3,
+                                        },
+                                    }}
+                                >
+                                    <SwiperSlide className={css`
+                                        border-radius: 24px;
+                                        background-color: #fff;
+                                        overflow: hidden;
+                                    `}>
+                                        <img src={event_img} alt="" />
+                                    </SwiperSlide>
+                                    <SwiperSlide className={css`
+                                        border-radius: 24px;
+                                        background-color: #fff;
+                                        overflow: hidden;
+                                    `}>
+                                        <img src={event_img} alt="" />
+                                    </SwiperSlide>
+                                    <SwiperSlide className={css`
+                                        border-radius: 24px;
+                                        background-color: #fff;
+                                        overflow: hidden;
+                                    `}>
+                                        <img src={event_img} alt="" />
+                                    </SwiperSlide>
+                                    <SwiperSlide className={css`
+                                        border-radius: 24px;
+                                        background-color: #fff;
+                                        overflow: hidden;
+                                    `}>
+                                        <img src={event_img} alt="" />
+                                    </SwiperSlide>
+                                </Swiper>
+                            </div>
+                            }
+
                         </motion.div>
                         <motion.div 
                         initial={{ opacity: 0, x: 80 }}
@@ -230,11 +340,12 @@ export const Event = () => {
                                 <p className={css`
                                     line-height: 1.28;
                                 `}>Организатор</p>
-                                <p className={css`
+                                <NavLink to="/organizer" className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #8553F9;
-                                `}>{event.organization}</p>
+                                    cursor: pointer;
+                                `}>{event.organization}</NavLink>
                             </div>
                             </div>
                             

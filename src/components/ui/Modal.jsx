@@ -5,6 +5,7 @@ import { Button, checkBox } from '../../pages/ui';
 import { NavLink } from 'react-router';
 import { useTheme } from '@emotion/react';
 import { ReactComponent as Google } from '../../images/svg/google.svg';
+import { PasswordInput } from './PasswordInput';
 
 const modalBackdrop = css`
   position: fixed;
@@ -190,7 +191,7 @@ export const Modal = ({ isOpen, onClose }) => {
 
                   <form action="" className={modalForm}>
                     <input type="text" placeholder="Электронная почта" />
-                    <input type="text" placeholder="Пароль" />
+                    <PasswordInput text='Пароль' />
                     <div className={cx(checkBox, css`
                       label::before {
                         border-color: rgba(16, 16, 16, 0.2);
@@ -236,8 +237,8 @@ export const Modal = ({ isOpen, onClose }) => {
                       <input type="text" placeholder="Имя" />
                       <input type="text" placeholder="Фамилия" />
                       <input type="text" placeholder="Электронная почта" />
-                      <input type="text" placeholder="Пароль" />
-                      <input type="text" placeholder="Подтверждение пароля" />
+                      <PasswordInput text='Пароль' />
+                      <PasswordInput text='Подтверждение пароля' />
                       <Button className={css`width: 100%!important;margin-bottom: 24px;`}>Зарегистрироваться</Button>
                     </form>
                     <div className={modalTextWithLine}>

@@ -6,7 +6,9 @@ import { useState } from "react";
 import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
 import { ReactComponent as RemoveIcon } from '../images/svg/remove.svg';
 import { ReactComponent as CheckIcon } from '../images/svg/check.svg';
-import { ReactComponent as ArrowDown } from '../images/svg/arrowDown.svg';
+import DropdownInput from "../components/ui/DropdownInput";
+
+const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
 export const UserEvents = () => {
     const theme = useTheme();
@@ -60,17 +62,15 @@ export const UserEvents = () => {
             `}>
                 <div className={css`flex: 0 1 300px;`}>
                     <p className={css`margin-bottom: 8px;color: #47474D;font-size: 14px;line-height:1.16;`}>Статус</p>
-                    <div className={css`display:flex;gap:8px;justify-content:space-between;background-color:#fff;border-radius:28px;padding:14px 16px;`}>
+                    {/* <div className={css`display:flex;gap:8px;justify-content:space-between;background-color:#fff;border-radius:28px;padding:14px 16px;`}>
                         <p className={css`color: #47474D;font-size: 14px;line-height:1.16;`}>Все</p>
                         <ArrowDown />
-                    </div>
+                    </div> */}
+                    <DropdownInput options={options} placeholder={'Тематика'} isSimple />
                 </div>
                 <div className={css`flex: 0 1 300px;`}>
                     <p className={css`margin-bottom: 8px;color: #47474D;font-size: 14px;line-height:1.16;`}>Дата проведения</p>
-                    <div className={css`display:flex;gap:8px;justify-content:space-between;background-color:#fff;border-radius:28px;padding:14px 16px;`}>
-                        <p className={css`color: #47474D;font-size: 14px;line-height:1.16;`}>Предстоящие</p>
-                        <ArrowDown />
-                    </div>
+                    <DropdownInput options={options} placeholder={'Предстоящие'} isSimple />
                 </div>
             </div>
 

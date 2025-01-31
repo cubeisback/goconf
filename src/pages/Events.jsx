@@ -1,8 +1,9 @@
-import { breadcrumbs, container, pagePromo, pageTitle } from './ui';
+import { breadcrumbs, container, input, pagePromo, pageTitle } from './ui';
 import { Filter } from '../components/Filter/Filter';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { MainEvents } from '../components/MainEvents';
 import { Form } from '../components/Form';
+import { ReactComponent as SearchIcon } from '../images/svg/search.svg';
 
 export const Events = () => {
 
@@ -22,11 +23,17 @@ export const Events = () => {
                         width: 608px;
                         font-size: 14px;
                         line-height: 1.16;
+                        display: flex;
+                        gap: 8px;
+                        align-items: center;
 
                         @media(max-width: 640px) {
                             width: 100%;
                         }
-                    `}>Поиск по мероприятиям</div>
+                    `}>
+                        <input className={cx(input, css`padding: 0 4px;`)} type="text" placeholder='Поиск по мероприятиям' />
+                        <SearchIcon className={css`cursor: pointer;`} />
+                    </div>
                 </div>
             </div>
 

@@ -1,7 +1,7 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; //TODO remove
 import { motion } from 'framer-motion';
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { useEffect, useRef, useState } from "react";
 import { checkBox, filterBtn, filterSelector } from "../../pages/ui";
@@ -76,7 +76,6 @@ export const Filter = ({full}) => {
                 return a.localeCompare(b); // Остальные города сортируем по алфавиту
               });
   
-            console.log(sortedCities); // Логируем отсортированный список
             setCities(sortedCities); // Устанавливаем в состояние
           }
         } catch (error) {
@@ -125,8 +124,8 @@ export const Filter = ({full}) => {
                         </motion.div>
                     </div> */}
                     <div className={css`
-                      flex: 0 1 calc(16.666666% - 13.333333px);
-                      max-width: calc(16.666666% - 13.333333px);
+                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
+                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
 
                       @media(max-width: 1339px) {
                         flex: 0 1 calc(33.3333333% - 10.666666px);
@@ -140,8 +139,8 @@ export const Filter = ({full}) => {
                       <DropdownInput options={options} placeholder={'Тематика'} />
                     </div>
                     <div className={css`
-                      flex: 0 1 calc(16.666666% - 13.333333px);
-                      max-width: calc(16.666666% - 13.333333px);
+                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
+                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
 
                       @media(max-width: 1339px) {
                         flex: 0 1 calc(33.3333333% - 10.666666px);
@@ -155,8 +154,8 @@ export const Filter = ({full}) => {
                       <DropdownInput options={cities} placeholder={'Город'} />
                     </div>
                     <div className={css`
-                      flex: 0 1 calc(16.666666% - 13.333333px);
-                      max-width: calc(16.666666% - 13.333333px);
+                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
+                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
 
                       @media(max-width: 1339px) {
                         flex: 0 1 calc(33.3333333% - 10.666666px);
@@ -172,7 +171,10 @@ export const Filter = ({full}) => {
                     
                     
                     
-                    <div className={filterSelector} onClick={()=>setShowDate(true)}>Начало
+                    <div className={cx(filterSelector, css`
+                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
+                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
+                    `)} onClick={()=>setShowDate(true)}>Начало
                         <motion.div
                             initial={{ pointerEvents: 'none', y: 18, opacity: 0 }}
                             animate={{ opacity: showDate ? 1 : 0, y: showDate ? 18 : 40, pointerEvents: showDate ? 'all' : 'none' }}
@@ -183,8 +185,11 @@ export const Filter = ({full}) => {
                             <DatePicker selected={startDate} onChange={(date) => {setStartDate(date); console.log(date)}} inline />
                         </motion.div>
                     </div>
-                    <div className={filterSelector}>Окончание</div>
-                    <div className={filterBtn}>Найти</div>
+                    <div className={cx(filterSelector, css`
+                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
+                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
+                    `)}>Окончание</div>
+                    {!full && <div className={filterBtn}>Найти</div>}
 
                     {full && 
                       <div className={css`

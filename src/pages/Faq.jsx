@@ -3,6 +3,7 @@ import { breadcrumbs, container, pagePromo, pageTitle } from "./ui";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from "react";
 import { ReactComponent as PlusIcon } from '../images/svg/plus.svg';
+import { ReactComponent as MinusIcon } from '../images/svg/minus.svg';
 import { Form } from '../components/Form';
 
 const faqArray = [
@@ -86,7 +87,7 @@ export const Faq = () => {
                                     onClick={() => handleToggle(index)}
                                 >
                                     <p>{item.q}</p>
-                                    <PlusIcon />
+                                    {openIndexes.includes(index) ? <MinusIcon /> : <PlusIcon /> }
                                 </div>
                                 <AnimatePresence>
                                     {openIndexes.includes(index) && (
