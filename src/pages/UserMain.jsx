@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
 import { PasswordInput } from "../components/ui/PasswordInput";
+import { NavLink } from "react-router";
 
 export const UserMain = () => {
     const theme = useTheme();
@@ -44,7 +45,7 @@ export const UserMain = () => {
                 margin-bottom: 24px;
             `}>
                 <div>Статус профиля:</div>
-                <div className={css`color: ${theme.colors.purple};display: flex;align-items: center;gap: 4px;`}>Базовый <EditIcon /></div>
+                <NavLink to="/lk/status" className={css`color: ${theme.colors.purple};display: flex;align-items: center;gap: 4px;`}>Базовый <EditIcon /></NavLink>
             </div>
             <div className={css`
                 display: flex;

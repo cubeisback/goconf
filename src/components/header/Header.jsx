@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import { ReactComponent as Logo } from '../../images/svg/logo.svg';
 import { ReactComponent as UserIcon } from '../../images/svg/user.svg';
 import { ReactComponent as NotificationIcon } from '../../images/svg/notification.svg';
@@ -22,6 +22,24 @@ export const Header = ({isLogin, windowWidth}) => {
   const iconRef = useRef(null);
 
   const [searchOpened, setSearchOpened] = useState(false);
+
+  const searchRef = useRef(null);
+
+  useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (searchRef.current && !searchRef.current.contains(event.target)) {
+            setSearchOpened(false);
+          }
+        };
+    
+        document.addEventListener("mousedown", handleClickOutside);
+    
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+  }, []);
+    
+  const navigate = useNavigate();
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -90,6 +108,8 @@ export const Header = ({isLogin, windowWidth}) => {
         <nav className={css`
           display: flex;
           gap: 32px;
+          transition: ${theme.transition};
+          margin-left: ${searchOpened ? '-400px' : '0'}
         `}>
             <NavLink to="/events" className={DoubleLink}>
               <span>Мероприятия</span><span>Мероприятия</span>
@@ -124,15 +144,16 @@ export const Header = ({isLogin, windowWidth}) => {
             align-items: center;
             justify-content: center;
           `}
-          onClick={()=>{setSearchOpened(prev => !prev)}}
+          onClick={()=>{setSearchOpened(true)}}
+          ref={searchRef}
           >
             <div className={css`
               position: absolute;
               right: 0;
               top: 0;
-              flex: 0 1 ${searchOpened ? '720px' : '48px'};
-              max-width: ${searchOpened ? '720px' : '48px'};
-              min-width: ${searchOpened ? '720px' : '48px'};
+              flex: 0 1 ${searchOpened ? '520px' : '48px'};
+              max-width: ${searchOpened ? '520px' : '48px'};
+              min-width: ${searchOpened ? '520px' : '48px'};
               height: 48px;
               border: 1px solid #EDEDEE;
               border-radius: ${searchOpened ? '28px' : '100%'};
@@ -143,11 +164,17 @@ export const Header = ({isLogin, windowWidth}) => {
               display: flex;
               align-items: center;
               justify-content: center;
+
+              @media(max-width: 1199px) {
+                flex: 0 1 ${searchOpened ? '300px' : '48px'};
+                max-width: ${searchOpened ? '300px' : '48px'};
+                min-width: ${searchOpened ? '300px' : '48px'};
+              }
             `}>
               {searchOpened && <input type="text" placeholder="Поиск по мероприятиям" /> }
             </div>
             
-            <div className={css`position: relative; cursor: pointer;height: 20px;`} onClick={()=>setSearchOpened(prev => !prev)}>
+            <div className={css`position: relative; cursor: pointer;height: 20px;`} onClick={()=>{searchOpened && navigate('/events')}}>
               <SearchIcon />
             </div>
             
@@ -155,7 +182,12 @@ export const Header = ({isLogin, windowWidth}) => {
           }
           {windowWidth > 768 && 
             <NavLink to="/lk/add">
-              <Button>Разместить событие</Button>
+              <Button>
+                <p>
+                  <span>Разместить событие</span>
+                  <span>Разместить событие</span>
+                </p>
+              </Button>
             </NavLink>
           }
           {isLogin ?

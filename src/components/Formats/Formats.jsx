@@ -2,6 +2,10 @@ import { css } from '@emotion/css';
 import { container } from '../../pages/ui';
 import { useTheme } from '@emotion/react';
 import formats_ex_1 from '../../images/formats_1.jpg';
+import { useEffect, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 const formatsArray = [
     {
@@ -73,6 +77,22 @@ const formatsArray = [
 export const Formats = () => {
     const theme = useTheme();
 
+    //ширина экрана
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+      
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+      
+    useEffect(() => {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
+
     return (
         <div className={css`
             background-color: #F5F7FA;
@@ -111,6 +131,7 @@ export const Formats = () => {
                     }
                 `}>Самые интересные бизнес-мероприятия различных форматов от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div>
             </div>
+            {windowWidth > 767 ?
             <div className={css`
                 // overflow-x: hidden;
             `}>
@@ -173,6 +194,55 @@ export const Formats = () => {
                 ))}
             </div>
             </div>
+            : 
+            <Swiper 
+                loop
+                slidesPerView='auto'
+            >
+                        {formatsArray.map((item, index) => (
+                            <SwiperSlide key={index} className={css`
+                                max-width: 180px;
+                                padding: 0 10px; 
+                            `}>
+                            <div key={index} className={css`
+                                max-width: 224px;
+                                border-radius: 24px;
+                                overflow: hidden;
+                                position: relative;
+                            `}>
+                                <img src={formats_ex_1} alt="" />
+                                <div className={css`
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: space-between;
+                                    padding: 16px;
+                                `}>
+                                    <div className={css`
+                                        font-size: 18px;
+                                        color: #fff;
+                                        font-weight: 500;
+                                        line-height: 1.36;
+                                    `}>{item.name}</div>
+                                    <div className={css`
+                                        padding: 2px 4px;
+                                        border-radius: 4px;
+                                        background: rgba(255, 255, 255, 0.08);
+                                        backdrop-filter: blur(8px);
+                                        line-height: 1.28;
+                                        color: #fff;
+                                        width: max-content;
+                                    `}>{item.count} событий</div>
+                                </div>
+                            </div>
+                            </SwiperSlide>
+                        ))}
+            </Swiper>
+            }
         </div>
     );
 }

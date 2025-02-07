@@ -1,11 +1,13 @@
 import { css, cx } from "@emotion/css";
-import { Button, userMain } from "./ui";
+import { Button, inputRadio, inputRadioActive, userMain } from "./ui";
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
 import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
 import { ReactComponent as RemoveIcon } from '../images/svg/remove.svg';
 import { ReactComponent as CheckIcon } from '../images/svg/check.svg';
+import { ReactComponent as UpIcon } from '../images/svg/up.svg';
+import { ReactComponent as InfoIcon } from '../images/svg/info.svg';
 import DropdownInput from "../components/ui/DropdownInput";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
@@ -14,7 +16,7 @@ export const UserEvents = () => {
     const theme = useTheme();
     const [view, setView] = useState(1);
     
-    const [selectedBlocks, setSelectedBlocks] = useState([]);
+    const [selectedBlocks, setSelectedBlocks] = useState([1]);
 
     // Функция для обработки клика по блоку
     const handleBlockClick = (blockId) => {
@@ -27,6 +29,9 @@ export const UserEvents = () => {
 
     // Массив блоков для отображения
     const blocks = [1, 2, 3, 4, 5]; // Это может быть любая структура данных
+
+
+    const [radios, setRadios] = useState(1);
 
     return(
         <>
@@ -190,7 +195,7 @@ export const UserEvents = () => {
                             flex-direction: column;
                         }
                     `}>
-                        <div>Событие продвигается</div>
+                        <div className={css`display: flex;align-items: center;gap: 16px;`}><UpIcon/> Событие продвигается</div>
                         <div>До окончания осталось <b>7 дней</b></div>
                     </div>
                  
@@ -290,6 +295,140 @@ export const UserEvents = () => {
                         </div>
                     </div>
                 </div>
+
+                <div className={css`
+                    border-radius: 28px;
+                    background-color: #fff;
+                    box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+                    padding: 24px 32px;
+
+                    @media(max-width: 575px) {
+                        padding: 16px;
+                    }
+                `}>
+                    <div className={css`
+                        display: flex;
+                        gap: 16px;
+                        align-items: center;
+                        margin-bottom: 24px;
+
+                        @media(max-width: 575px) {
+                            flex-wrap: wrap;
+                            justify-content: space-between;
+                        }
+                    `}>
+                        <div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #FF5B3B; font-size: 14px; line-height: 1.16;display: flex;align-items:center;gap:8px;position: relative;`}>
+                            <p>Отклонено</p>
+                            <div className={css`
+                                svg {
+                                    margin-bottom: -3px;
+                                }
+                                span {
+                                    position: absolute;
+                                    border-radius: 8px;
+                                    border: 1px solid #F5F7FA;
+                                    background: #fff;
+                                    box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+                                    color: #47474D;
+                                    padding: 7px 16px 9px;
+                                    width: max-content;
+                                    bottom: 28px;
+                                    left: 0;
+                                    pointer-events: none;
+                                    opacity: 0;
+                                    transition: ${theme.transition};
+                                }
+                                &:hover {
+                                    span {
+                                        opacity: 1;
+                                        pointer-events: all;
+                                    }
+                                }
+                            `}>
+                                <InfoIcon/>
+                                <span>Не&nbsp;соответствует политике сайта</span>
+                            </div>
+                        </div>
+                        <div className={css`
+                            flex: 1; font-size: 14px; line-height: 1.16; color: #47474D;
+
+                            @media(max-width: 575px) {
+                                order: 1;
+                                flex: 0 1 100%;
+                                max-width: 100%;
+                            }
+                        `}>Дата публикации: 27 сентября 2024</div>
+                        <div className={css`display: flex; gap: 16px;`}>
+                            <EditIcon />
+                            <RemoveIcon />
+                        </div>
+                    </div>
+                    <div className={css`margin-bottom: 8px;font-size: 20px;font-weight: 500;line-height: 1.4;`}>Налоговая и юридическая безопасность селлера на маркетплейсах</div>
+                    <div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>32 900 руб.</div>
+                    <div className={css`
+                        display: flex;justify-content: space-between;align-items: flex-end;
+
+                        @media(max-width: 575px) {
+                            flex-direction: column;
+                            align-items: flex-start;
+                            gap: 16px;
+                        }
+                    `}>
+                        <div>
+                            <div className={css`
+                                display: flex;flex-direction: column;gap: 8px;margin-bottom: 24px;
+
+                                @media(max-width: 575px) {
+                                    width: 100%;
+                                }
+                            `}>
+                                <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Даты проведения:</b> 25-27 июля 2024</div>
+                                <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Организатор:</b> ЦРБК</div>
+                            </div>
+                            <Button className={cx(css`
+                                background-color: #fff!important;color: #8553F9!important;
+                                
+                                @media(max-width: 575px) {
+                                    width: 100%!important;
+                                }
+                            `)} onClick={()=>setView(2)}>Продвигать событие</Button>
+                        </div>
+                        <div className={css`
+                            border-radius: 16px;
+                            background-color: #F5F7FA;
+                            padding: 12px 16px;
+                            display: flex;
+                            gap: 8px;
+
+                            @media(max-width: 575px) {
+                                width: 100%;
+
+                                div {
+                                    flex: 1;
+                                }
+                            }
+
+                            p {
+                                margin-bottom: 4px;
+                                font-weight: 500;
+                            }
+
+                            span {
+                                font-size: 14px;
+                                line-height: 1.16;
+                            }
+                        `}>
+                            <div>
+                                <p>327</p>
+                                <span>Просмотров</span>
+                            </div>
+                            <div>
+                                <p>25</p>
+                                <span>Переходов</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
         </motion.div>
@@ -351,6 +490,7 @@ export const UserEvents = () => {
                         filter: ${selectedBlocks.includes(blockId) ? 'grayscale(0)' : 'grayscale(1)' };
                         opacity: ${selectedBlocks.includes(blockId) ? 1 : .4 };
                         transition: ${theme.transition};
+                        pointer-events: ${selectedBlocks.includes(blockId) ? 'all' : 'none' };
                         
                         &::before {
                             content: '';
@@ -455,27 +595,9 @@ export const UserEvents = () => {
                     gap: 8px;
                     flex-direction: column;
                     margin-bottom: 24px;
-
-                    div {
-                        padding-left: 40px;
-                        padding: 6px 0 6px 40px;
-                        position: relative;
-
-                        &::before {
-                            content: '';
-                            position: absolute;
-                            left: 3px;
-                            top: 4px;
-                            width: 26px;
-                            height: 26px;
-                            background-color: #fff;
-                            border-radius: 100%;
-                            border: 5px solid #8553F9;
-                        }
-                    }
                 `}>
-                    <div>Онлайн-оплата</div>
-                    <div>Безналичная оплата</div>
+                    <div className={cx(inputRadio, radios === 1 && inputRadioActive)} onClick={()=>setRadios(1)}>Онлайн-оплата</div>
+                    <div className={cx(inputRadio, radios === 2 && inputRadioActive)} onClick={()=>setRadios(2)}>Безналичная оплата</div>
                 </div>
                 <div className={css`display: flex;gap:16px;`}>
                     <Button onClick={()=>setView(2)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Назад</Button>

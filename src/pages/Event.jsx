@@ -359,8 +359,28 @@ export const Event = () => {
                 </div>
             </div>
             
-            <div className={cx(container, css`@media(max-width: 1439px) {padding: 0;}` )}>
-                <MainEventsSlider />
+            <div className={css`
+                position: relative;
+                // overflow-x: hidden;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    left: -100vw;
+                    bottom: -120px;
+                    width: 200vw;
+                    height: 600px;
+                    background-color: ${theme.colors.purple};
+                    z-index: -1;
+
+                    @media(max-width: 1339px) {
+                        content: none;
+                    }
+                }
+            `}>
+                <div className={cx(container, css`@media(max-width: 1439px) {padding: 0;}` )}>
+                    <MainEventsSlider />
+                </div>
             </div>
 
             <MainEvents similar={true} />

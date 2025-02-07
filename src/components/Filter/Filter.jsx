@@ -1,57 +1,16 @@
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; //TODO remove
+
 import { motion } from 'framer-motion';
-import { css, cx } from "@emotion/css";
+import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
-import { useEffect, useRef, useState } from "react";
-import { checkBox, filterBtn, filterSelector } from "../../pages/ui";
-// import { ReactComponent as ArrowDown } from '../../images/svg/arrowDown.svg';
+import { useEffect, useState } from "react";
+import { checkBox, filterBtn } from "../../pages/ui";
 import DropdownInput from "../ui/DropdownInput";
+import Datepicker from "../ui/Datepicker";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
 export const Filter = ({full}) => {
     const theme = useTheme();
-
-    const [startDate, setStartDate] = useState();
-    const [showDate, setShowDate] = useState(false);
-    // const [showSelect, setShowSelect] = useState(false);
-    const datePickerRef = useRef(null);
-    // const selectorRef = useRef(null);
-
-    useEffect(() => {
-            const handleClickOutside = (event) => {
-              if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
-                setShowDate(false);
-              }
-            };
-        
-            document.addEventListener("mousedown", handleClickOutside);
-        
-            return () => {
-              document.removeEventListener("mousedown", handleClickOutside);
-            };
-    }, []);
-
-    // useEffect(() => {
-    //     const handleClickOutside = (event) => {
-    //       if (selectorRef.current && !selectorRef.current.contains(event.target)) {
-    //         setShowSelect(false);
-    //       }
-    //     };
-    
-    //     document.addEventListener("mousedown", handleClickOutside);
-    
-    //     return () => {
-    //       document.removeEventListener("mousedown", handleClickOutside);
-    //     };
-    // }, []);
-
-    // const labelRef = useRef(null)
-    // const changeSel = (e) => {
-    //     setShowSelect(false);
-    //     labelRef.current.textContent = e.target.textContent;
-    // }
 
     //Список городов
     const [cities, setCities] = useState([]);
@@ -171,24 +130,10 @@ export const Filter = ({full}) => {
                     
                     
                     
-                    <div className={cx(filterSelector, css`
-                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
-                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
-                    `)} onClick={()=>setShowDate(true)}>Начало
-                        <motion.div
-                            initial={{ pointerEvents: 'none', y: 18, opacity: 0 }}
-                            animate={{ opacity: showDate ? 1 : 0, y: showDate ? 18 : 40, pointerEvents: showDate ? 'all' : 'none' }}
-                            transition={{ duration: 0.3 }}
-                            style={{position: "absolute", zIndex: 10}}
-                            ref={datePickerRef}
-                        >
-                            <DatePicker selected={startDate} onChange={(date) => {setStartDate(date); console.log(date)}} inline />
-                        </motion.div>
-                    </div>
-                    <div className={cx(filterSelector, css`
-                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
-                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
-                    `)}>Окончание</div>
+                    
+                    <Datepicker full={full} title={'Начало'} />
+                    <Datepicker full={full} title={'Окончание'} />
+
                     {!full && <div className={filterBtn}>Найти</div>}
 
                     {full && 

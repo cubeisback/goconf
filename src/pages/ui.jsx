@@ -55,6 +55,32 @@ export const Button = styled.div`
     @media(max-width: 575px) {
         width: 100%;
     }
+
+    p {
+        height: 21px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        span {
+            display: block;
+            min-width: max-content;
+            transition: ${props => props.theme.transition};
+            color: ${props => props.green ? props.theme.colors.font : '#fff'};
+
+            &:nth-of-type(2) {
+                transform: translateY(100%);
+                color: ${props => props.green ? props.theme.colors.font : props.theme.colors.purple};
+            }
+        }
+    }
+    &:hover {
+        p {
+            span {
+                transform: translateY(-100%);
+            }
+        }
+    }
 `;
 
 export const inputItem = css`
@@ -215,7 +241,7 @@ export const pageTitle = css`
 export const userMain = css`
     flex: 1;
     padding-top: 24px;
-
+    
     @media(max-width: 1023px) {
         width: 100%;
     }
@@ -263,5 +289,30 @@ export const checkBox = css`
         &::after {
             opacity: 1;
         }
+    }
+`;
+
+export const inputRadio = css`
+    padding-left: 40px;
+    padding: 6px 0 6px 40px;
+    position: relative;
+    cursor: pointer;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 3px;
+        top: 4px;
+        width: 26px;
+        height: 26px;
+        background-color: #fff;
+        border-radius: 100%;
+        border: 5px solid rgba(16, 16, 16, 0.2);
+        transition: ${theme.transition};
+    }       
+`;
+export const inputRadioActive = css`
+    &::before {
+        border-color: ${theme.colors.purple};
     }
 `;
