@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ReactComponent as CalendarIcon } from '../../images/svg/calendar.svg';
 import { filterSelector } from "../../pages/ui";
 import DatePicker from "react-datepicker";
+import {ru} from 'date-fns/locale/ru';
 import "react-datepicker/dist/react-datepicker.css"; //TODO remove
 
 const Datepicker = ({full, title}) => {
@@ -60,6 +61,7 @@ const Datepicker = ({full, title}) => {
                     `}>
                   <DatePicker 
                     // selected={startDate} 
+                    locale={ru}
                     onChange={(date) => {
                         const day = String(date.getDate()).padStart(2, '0');
                         const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0
@@ -67,6 +69,9 @@ const Datepicker = ({full, title}) => {
 
                         const formattedDate = `${day}.${month}.${year}`;
                         setStartDate(formattedDate);
+                        setTimeout(()=>{
+                          setShowDate(false);
+                        }, 0)
                         // console.log(formattedDate)
                         }
                     } 

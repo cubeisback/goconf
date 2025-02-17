@@ -8,6 +8,7 @@ import { ReactComponent as OrgIcon } from '../images/svg/people.svg';
 import { ReactComponent as CartIcon } from '../images/svg/cart.svg';
 import { ReactComponent as ExitIcon } from '../images/svg/exit.svg';
 import { ReactComponent as EditIcon } from '../images/svg/edit.svg';
+import { ReactComponent as StatusIcon } from '../images/svg/status.svg';
 import { NavLink, useLocation } from "react-router";
 import { motion } from 'framer-motion';
 import { UserMain } from "./UserMain";
@@ -199,6 +200,10 @@ export const User = ({page, setIsLogin, windowWidth}) => {
                         <NavLink to='/lk/orders' className={cx(menuItem, isActive('/lk/orders') && activeMenuItem)}>
                             <CartIcon />
                             <p>Заказы</p>
+                        </NavLink>
+                        <NavLink to='/lk/status' className={cx(menuItem, isActive('/lk/status') && activeMenuItem)}>
+                            <StatusIcon />
+                            <p>Статус</p>
                         </NavLink>
                     </motion.div>
                     }

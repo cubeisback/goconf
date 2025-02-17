@@ -42,7 +42,7 @@ export const globalStyles = (props) => css`
 
   #reset,
   #html_reset {
-    overflow-x: hidden;
+    // overflow-x: hidden;
   }
 
   input,

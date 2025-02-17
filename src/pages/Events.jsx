@@ -4,8 +4,10 @@ import { css, cx } from '@emotion/css';
 import { MainEvents } from '../components/MainEvents';
 import { Form } from '../components/Form';
 import { ReactComponent as SearchIcon } from '../images/svg/search.svg';
+import { useTheme } from '@emotion/react';
 
 export const Events = () => {
+    const theme = useTheme();
 
     return (
         <>
@@ -65,6 +67,12 @@ export const Events = () => {
                             background-color: #F5F7FA;
                             font-size: 14px;
                             font-weight: 500;
+                            cursor: pointer;
+                            transition: ${theme.transition};
+
+                            &:hover {
+                                background-color: ${theme.colors.green};
+                            }
                         }
                     `}>
                         <div>Конференции по&nbsp;маркетингу</div>

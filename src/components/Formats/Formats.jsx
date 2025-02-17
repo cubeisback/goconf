@@ -105,7 +105,7 @@ export const Formats = () => {
             <div className={container}>
                 <div className={css`
                     text-align: center;
-                    margin-bottom: 24px;
+                    margin-bottom: 96px;
                     font-family: Impact;
                     font-size: 56px;
                     line-height: 1.15;
@@ -117,8 +117,10 @@ export const Formats = () => {
                     & > span {
                         color: ${theme.colors.purple}
                     }
-                `}>Популярные форматы <span>GoCONF</span></div>
-                <div className={css`
+                `}>Популярные форматы
+                {/* <span>GoCONF</span> */}
+                </div>
+                {/* <div className={css`
                     font-size: 20px;
                     line-height: 1.14;
                     color: #47474D;
@@ -129,7 +131,7 @@ export const Formats = () => {
                         font-size: 18px;
                         margin-bottom: 48px;
                     }
-                `}>Самые интересные бизнес-мероприятия различных форматов от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div>
+                `}>Самые интересные бизнес-мероприятия различных форматов от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div> */}
             </div>
             {windowWidth > 767 ?
             <div className={css`
