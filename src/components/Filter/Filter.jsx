@@ -132,7 +132,7 @@ export const Filter = ({full}) => {
                     
                     
                     <Datepicker full={full} title={'Начало'} />
-                    <Datepicker full={full} title={'Окончание'} />
+                    <Datepicker full={full} title={'Окончание'} fixmob={true} /> {/*TODO Передалать на экран*/}
 
                     {!full && <div className={filterBtn}>Найти</div>}
 

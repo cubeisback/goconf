@@ -45,24 +45,42 @@ export const User = ({page, setIsLogin, windowWidth}) => {
             flex: 0 1 48px;
             max-width: 48px;
             border-radius: 100%;
+            justify-content: center;
+            padding: 0;
         }
 
         &:hover {
             background-color: #F5F7FA;
+
+            @media(max-width: 767px) {
+                background-color: transparent;
+            }
+        }
+
+        & > svg {
+            @media(max-width: 767px) {
+                padding: 12px;
+                width: 48px;
+                height: 48px;
+                border-radius: 100%;
+            }
         }
 
         & > p {
             line-height: 1.28;
 
             @media(max-width: 767px) {
-                display: none;
+                // display: none;
+                font-size: 9px;
             }
         }
         
     `;
 
     const activeMenuItem = css`
-        background-color: #F5F7FA;
+        svg {
+            background-color: #F5F7FA;
+        }
     `;
 
     useEffect(()=>{
@@ -182,16 +200,16 @@ export const User = ({page, setIsLogin, windowWidth}) => {
                             bottom: 0;
                             width: 100vw;
                             border-radius: 0;
-                            padding: 8px 48px;
+                            padding: 8px 24px;
                         }
                     `}>
                         <NavLink to='/lk' className={cx(menuItem, isActive('/lk') && activeMenuItem)}>
                             <UserIcon />
-                            <p>Мой профиль</p>
+                            <p>Профиль</p>
                         </NavLink>
                         <NavLink to='/lk/events' className={cx(menuItem, isActive('/lk/events') && activeMenuItem)}>
                             <EventsIcon />
-                            <p>Мои мероприятия</p>
+                            <p>Мероприятия</p>
                         </NavLink>
                         <NavLink to='/lk/org' className={cx(menuItem, isActive('/lk/org') && activeMenuItem)}>
                             <OrgIcon />

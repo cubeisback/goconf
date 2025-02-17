@@ -97,6 +97,7 @@ export const Formats = () => {
         <div className={css`
             background-color: #F5F7FA;
             padding: 120px 0;
+            overflow: hidden;
 
             @media(max-width: 575px) {
                 padding: 96px 0 64px;

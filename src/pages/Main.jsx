@@ -93,6 +93,10 @@ export const Main = () => {
                         width: 16px;
                         height: 16px;
                         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1.72 15.24L7.62 9.35L13.52 15.24L15.24 13.52L9.35 7.62L15.24 1.72L13.52 0L7.62 5.9L1.72 0L0 1.72L5.9 7.62L0 13.52L1.72 15.24Z" fill="%23B3ED73"/></svg>');
+
+                        @media(max-width: 1439px) {
+                            display: none;
+                        }
                     `}></div>
                     <div className={css`
                         position: absolute;
@@ -101,6 +105,10 @@ export const Main = () => {
                         width: 54px;
                         height: 54px;
                         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54" fill="none"><path d="M48.8788 19.9268C44.9743 7.83385 31.9934 1.21697 19.9253 5.12119C7.85708 9.0254 1.21451 22.0056 5.11893 34.0732C9.02334 46.1662 22.0042 52.783 34.0724 48.8788C46.166 44.9746 52.7832 31.9944 48.8788 19.9268Z" stroke="%23B3ED73" stroke-width="8" stroke-miterlimit="10"/></svg>');
+
+                        @media(max-width: 1439px) {
+                            display: none;
+                        }
                     `}></div>
                     <div className={css`
                         position: absolute;
@@ -109,6 +117,10 @@ export const Main = () => {
                         width: 122px;
                         height: 122px;
                         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="122" height="122" viewBox="0 0 122 122" fill="none"><path d="M15.1332 2C1.42267 4.61154 -2.34956 24.0997 7.62597 35.6236C26.559 57.4952 56.0338 22.061 74.8714 43.1317C94.1333 64.6769 43.594 84.2635 66.3857 111.685C78.8668 126.701 109.474 118.214 119.594 90.4659" stroke="%238553F9" stroke-width="4" stroke-linecap="round"/></svg>');
+
+                        @media(max-width: 1439px) {
+                            display: none;
+                        }
                     `}></div>
                     <div className={css`
                         position: absolute;
@@ -117,6 +129,10 @@ export const Main = () => {
                         width: 130px;
                         height: 50px;
                         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="130" height="50" viewBox="0 0 130 50" fill="none"><path d="M5.39944 38.6044C-1.12941 25.2202 1.48414 9.77446 15.5192 5.96013C48.49 -3.00045 40.3289 50.6564 66.1175 47.7448C87.3363 45.3491 79.8281 3.34753 102.679 2.04292C128.77 0.553352 127.815 38.278 126.836 45.7862" stroke="%23F5F7FA" stroke-width="4" stroke-linecap="round"/></svg>');
+
+                        @media(max-width: 1439px) {
+                            display: none;
+                        }
                     `}></div>
                     <motion.div
                     initial={{ x: 50, opacity: 0 }}

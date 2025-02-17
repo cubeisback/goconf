@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import {ru} from 'date-fns/locale/ru';
 import "react-datepicker/dist/react-datepicker.css"; //TODO remove
 
-const Datepicker = ({full, title}) => {
+const Datepicker = ({full, title, fixmob}) => {
     const [startDate, setStartDate] = useState();
     const [showDate, setShowDate] = useState(false);
     // const [showSelect, setShowSelect] = useState(false);
@@ -41,6 +41,10 @@ const Datepicker = ({full, title}) => {
                 box-shadow: none;
                 width: 0;
                 height: 0;
+
+                @media(max-width: 991px) {
+                  left: ${fixmob && '-30vw'};
+                }
             }
           `)} onClick={()=>setShowDate(true)}>
               <p>{startDate ? startDate : title}</p>
