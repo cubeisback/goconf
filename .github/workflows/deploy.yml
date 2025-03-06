@@ -62,4 +62,4 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
-          scp -i ~/.ssh/goconf_key -r ./build/* $SERVER_USER@$SERVER_IP:/web/dev.goconf.ru/public_html/frontend/
+           rsync -avz -e "ssh -i ~/.ssh/goconf_key" ./build/ $SERVER_USER@$SERVER_IP:/web/dev.goconf.ru/public_html/frontend/
