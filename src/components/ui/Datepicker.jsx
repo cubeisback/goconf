@@ -13,6 +13,16 @@ const Datepicker = ({full, title, fixmob}) => {
     // const [showSelect, setShowSelect] = useState(false);
     const datePickerRef = useRef(null);
 
+    const customRu = {
+      ...ru,
+      localize: {
+        ...ru.localize,
+        month: (n) => ru.localize.month(n).charAt(0).toUpperCase() + ru.localize.month(n).slice(1),
+        // day: (n) => ru.localize.day(n).charAt(0).toUpperCase() + ru.localize.day(n).slice(1),
+        day: (n) => ru.localize.day(n).charAt(0).toUpperCase(),
+      },
+    };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
           if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
@@ -65,7 +75,7 @@ const Datepicker = ({full, title, fixmob}) => {
                     `}>
                   <DatePicker 
                     // selected={startDate} 
-                    locale={ru}
+                    locale={customRu}
                     onChange={(date) => {
                         const day = String(date.getDate()).padStart(2, '0');
                         const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0

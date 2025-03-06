@@ -2,6 +2,7 @@
   "name": "goconf",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/frontend",
   "dependencies": {
     "@editorjs/editorjs": "^2.30.7",
     "@editorjs/header": "^2.8.8",
