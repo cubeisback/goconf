@@ -34,9 +34,9 @@ jobs:
       # Шаг 5: Создание директории .ssh и настройка ключа
       - name: Setup SSH
         env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY_DEV }}
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
@@ -51,15 +51,15 @@ jobs:
       # Шаг 6: Удаление старой версии на сервере
       - name: Remove old version on server
         env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
-          ssh -i ~/.ssh/goconf_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "rm -rf /var/www/goconf/*"
+          rsync -avz -e "ssh -i ~/.ssh/goconf_key" ./build/ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/public_html/frontend/
 
       # Шаг 7: Копирование новой версии на сервер
       - name: Deploy new version
         env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
-          scp -i ~/.ssh/goconf_key -r ./build/* $SERVER_USER@$SERVER_IP:/var/www/goconf/
+           rsync -avz -e "ssh -i ~/.ssh/goconf_key" ./build/ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/public_html/frontend/
