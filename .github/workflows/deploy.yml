@@ -54,7 +54,7 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
-          rsync -avz -e "ssh -i ~/.ssh/goconf_key" ./build/ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/public_html/frontend/
+          rsync -avz -e "ssh -i ~/.ssh/goconf_key" ./build/ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/public_html/
 
       # Шаг 7: Копирование новой версии на сервер
       - name: Deploy new version
@@ -62,4 +62,4 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
-           rsync -avz -e "ssh -i ~/.ssh/goconf_key" ./build/ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/public_html/frontend/
+           rsync -avz -e "ssh -i ~/.ssh/goconf_key" ./build/ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/public_html/
