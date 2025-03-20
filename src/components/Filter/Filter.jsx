@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { checkBox, filterBtn } from "../../pages/ui";
 import DropdownInput from "../ui/DropdownInput";
 import Datepicker from "../ui/Datepicker";
+import axios from 'axios';
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
@@ -44,6 +45,36 @@ export const Filter = ({full}) => {
   
       getCities();
     }, []);
+
+
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [formData, setFormData] = useState({
+      city: "Москва",
+      format: null,
+    });
+    const [response, setResponse] = useState(null);
+    const handleSubmit = async () => {
+      console.log('1')
+      try {
+        const res = await axios.post(
+          "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        // setResponse(res.data);
+        console.log(res)
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     return (
         <motion.div
@@ -134,7 +165,7 @@ export const Filter = ({full}) => {
                     <Datepicker full={full} title={'Начало'} />
                     <Datepicker full={full} title={'Окончание'} fixmob={true} /> {/*TODO Передалать на экран*/}
 
-                    {!full && <div className={filterBtn}>Найти</div>}
+                    {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>Найти</div>}
 
                     {full && 
                       <div className={css`

@@ -76,30 +76,6 @@ export const Header = ({isLogin, windowWidth}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [formData, setFormData] = useState({
-    direction: "",
-  });
-  const [response, setResponse] = useState(null);
-  const handleSubmit = async () => {
-    try {
-      const res = await axios.post(
-        "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // setResponse(res.data);
-      console.log(res)
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     axios
       .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
@@ -132,8 +108,6 @@ export const Header = ({isLogin, windowWidth}) => {
         setError(error.message);
         setLoading(false);
       });
-
-      handleSubmit();
 
   }, []);
 
