@@ -47,14 +47,10 @@ export const Filter = ({full}) => {
     }, []);
 
 
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [formData, setFormData] = useState({
       city: "Москва",
       format: null,
     });
-    const [response, setResponse] = useState(null);
     const handleSubmit = async () => {
       console.log('1')
       try {
@@ -67,12 +63,9 @@ export const Filter = ({full}) => {
             },
           }
         );
-        // setResponse(res.data);
         console.log(res)
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        console.log(err.message)
       }
     };
 
