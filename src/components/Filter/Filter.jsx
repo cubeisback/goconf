@@ -52,7 +52,22 @@ export const Filter = ({full}) => {
       format: null,
     });
     const handleSubmit = async () => {
-      console.log('1')
+      try {
+        const res = await axios.post(
+          "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
+          {},
+          {
+            params: formData,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log('params ', res)
+      } catch (err) {
+        console.log(err.message)
+      }
+
       try {
         const res = await axios.post(
           "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
@@ -63,7 +78,7 @@ export const Filter = ({full}) => {
             },
           }
         );
-        console.log(res)
+        console.log('body ', res)
       } catch (err) {
         console.log(err.message)
       }
