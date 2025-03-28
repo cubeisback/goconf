@@ -48,6 +48,22 @@ export const Filter = ({full}) => {
       getCities();
     }, []);
 
+    const [filtersData, setFiltersData] = useState();
+    useEffect(() => {
+      axios
+      .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
+      .then((response) => {
+        // setData(response.data);
+        // setLoading(false);
+        setFiltersData(response.data.front_filter)
+        console.log('home ', response.data.front_filter)
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+    },[])
+    
+
   // Запрос по url
   const { filterParams } = useParams();
 const [filterValues, setFilterValues] = useState({});
@@ -203,7 +219,7 @@ useEffect(() => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={options} handleFilterChange={handleFilterChange} type={'direction'} placeholder={'Тематика'} />
+                      <DropdownInput options={filtersData && filtersData.subjects} handleFilterChange={handleFilterChange} type={'direction'} placeholder={'Тематика'} />
                     </div>
                     <div className={css`
                       flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
@@ -218,7 +234,7 @@ useEffect(() => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={cities} handleFilterChange={handleFilterChange} type={'city'} placeholder={'Город'} />
+                      <DropdownInput options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} type={'city'} placeholder={'Город'} />
                     </div>
                     <div className={css`
                       flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
@@ -233,7 +249,7 @@ useEffect(() => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={options} handleFilterChange={handleFilterChange} type={'format'} placeholder={'Формат'} />
+                      <DropdownInput options={filtersData && filtersData.formats} handleFilterChange={handleFilterChange} type={'format'} placeholder={'Формат'} />
                     </div>
                     
                     

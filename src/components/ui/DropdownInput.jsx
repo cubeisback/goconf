@@ -14,8 +14,21 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
+  const [keys, setKeys] = useState([]);    // Стейт для ключей
+  const [values, setValues] = useState([]); // Стейт для значений
+  
+  
+  useEffect(() => {
+    if (options) {
+      const keysArray = Object.keys(options);
+      const valuesArray = Object.values(options);
+      setKeys(keysArray);  // Заполняем стейт ключей
+      setValues(valuesArray); // Заполняем стейт значений
+    }
+  }, [options]);  // Эффект сработает, когда данные изменятся
+  
   // Фильтрация опций на основе введенного текста
-  const filteredOptions = options.filter(option =>
+  const filteredOptions = values.filter(option =>
     option.toLowerCase().includes(query.toLowerCase())
   );
 
@@ -25,7 +38,7 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
     setShowFullList(false); // Показывать фильтрованный список при вводе
   };
 
-  const handleSelect = (value, type) => {
+  const handleSelect = (value, type, index) => {
     if(!isSimple) {
       setSelectedValue(value);
       setQuery(value); // Подставляем выбранное значение в инпут
@@ -36,7 +49,8 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
       setQuery(value);
       setShowFullList(true);
     }
-    handleFilterChange(value, type);
+    handleFilterChange(keys[index], type);
+    console.log(keys[index], type)
   };
 
   const handleFocus = () => {
@@ -169,10 +183,10 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
                 }
               `}
             >
-              {(showFullList ? options : filteredOptions).map((option, index) => (
+              {(showFullList ? values : filteredOptions).map((option, index) => (
                 <li
                   key={index}
-                  onClick={() => handleSelect(option, type)}
+                  onClick={() => handleSelect(option, type, index)}
                   className={css`
                     padding: 8px;
                     cursor: pointer;

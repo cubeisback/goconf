@@ -50,18 +50,18 @@ function App() {
   const [error, setError] = useState(null);
 
     useEffect(() => {
-      axios
-        .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
-        .then((response) => {
-          // setData(response.data);
-          // setLoading(false);
-          // setHomeData(response.data)
-          // console.log('home ', response.data)
-        })
-        .catch((error) => {
-          setError(error.message);
-          setLoading(false);
-        });
+      // axios
+      //   .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
+      //   .then((response) => {
+      //     // setData(response.data);
+      //     // setLoading(false);
+      //     // setHomeData(response.data)
+      //     console.log('home ', response.data)
+      //   })
+      //   .catch((error) => {
+      //     setError(error.message);
+      //     setLoading(false);
+      //   });
   
       // axios
       //   .get("https://dev.goconf.ru/backend/wp-json/wp/v2/get_all_options/")
@@ -83,15 +83,15 @@ function App() {
       //     setLoading(false);
       //   });
   
-        axios
-        .get("https://dev.goconf.ru/backend/wp-json/events/v2/single/?slug=kakoj-to-material")
-        .then((response) => {
-          console.log('single ', response.data)
-        })
-        .catch((error) => {
-          setError(error.message);
-          setLoading(false);
-        });
+        // axios
+        // .get("https://dev.goconf.ru/backend/wp-json/events/v2/single/?slug=test")
+        // .then((response) => {
+        //   console.log('single ', response.data)
+        // })
+        // .catch((error) => {
+        //   setError(error.message);
+        //   setLoading(false);
+        // });
   
         
   
