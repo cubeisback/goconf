@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import {ru} from 'date-fns/locale/ru';
 import "react-datepicker/dist/react-datepicker.css"; //TODO remove
 
-const Datepicker = ({full, title, fixmob}) => {
+const Datepicker = ({full, title, fixmob, handleFilterChange, type}) => {
     const [startDate, setStartDate] = useState();
     const [showDate, setShowDate] = useState(false);
     // const [showSelect, setShowSelect] = useState(false);
@@ -86,6 +86,7 @@ const Datepicker = ({full, title, fixmob}) => {
                         setTimeout(()=>{
                           setShowDate(false);
                         }, 0)
+                        handleFilterChange(formattedDate, type)
                         // console.log(formattedDate)
                         }
                     } 

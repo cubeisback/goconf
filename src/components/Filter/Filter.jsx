@@ -56,7 +56,7 @@ export const Filter = ({full}) => {
         // setData(response.data);
         // setLoading(false);
         setFiltersData(response.data.front_filter)
-        console.log('home ', response.data.front_filter)
+        // console.log('home ', response.data.front_filter)
       })
       .catch((error) => {
         console.log(error)
@@ -72,6 +72,8 @@ const [formData, setFormData] = useState({
   city: null,
   format: null,
   direction: null,
+  dateStart: null,
+  dateEnd: null
 });
 
 // Обновление состояния formData при изменении filterParams из URL
@@ -99,6 +101,8 @@ useEffect(() => {
       city: null,
       format: null,
       direction: null,
+      dateStart: null,
+      dateEnd: null
     });
   }
 }, [filterParams]);
@@ -111,27 +115,29 @@ const updateFormData = (filters) => {
     city: filters.city || prevState.city,
     format: filters.format || prevState.format,
     direction: filters.direction || prevState.direction,
+    dateStart: filters.dateStart || prevState.dateStart,
+    dateEnd: filters.dateEnd || prevState.dateEnd,
   }));
 };
 
 const handleSubmit = async () => {
   console.log('Submitting form with data: ', formData);  // Проверяем актуальные данные
 
-  try {
-    const res = await axios.post(
-      "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
-      {}, // Пустое тело
-      {
-        params: formData, // Отправляем параметры как query params
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log('Response with params: ', res);
-  } catch (err) {
-    console.log('Error with params: ', err.message);
-  }
+  // try {
+  //   const res = await axios.post(
+  //     "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
+  //     {}, // Пустое тело
+  //     {
+  //       params: formData, // Отправляем параметры как query params
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
+  //   console.log('Response with params: ', res);
+  // } catch (err) {
+  //   console.log('Error with params: ', err.message);
+  // }
 
   try {
     const res = await axios.post(
@@ -163,8 +169,7 @@ const handleFilterChange = (newFilter, type) => {
 };
 
 useEffect(() => {
-  console.log("formData changed: ", formData);  // Проверяем, когда formData изменяется
-  if (formData.city || formData.format || formData.direction) {
+  if (formData.city || formData.format || formData.direction || formData.dateStart || formData.dateEnd) {
     handleSubmit(); // Отправляем запрос при каждом изменении formData
   }
 }, [formData]); // Срабатывает, когда formData изменяется
@@ -255,8 +260,8 @@ useEffect(() => {
                     
                     
                     
-                    <Datepicker full={full} title={'Начало'} />
-                    <Datepicker full={full} title={'Окончание'} fixmob={true} /> {/*TODO Передалать на экран*/}
+                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} type={'start'} />
+                    <Datepicker full={full} title={'Окончание'} fixmob={true} handleFilterChange={handleFilterChange} type={'end'} /> {/*TODO Передалать на экран*/}
 
                     {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>Найти</div>}
 
