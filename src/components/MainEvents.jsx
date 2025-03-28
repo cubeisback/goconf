@@ -181,7 +181,7 @@ export const MainEvents = ({onPage, similar}) => {
                                     color: #47474D;
                                 `}>Россия, {item.city}</div>
                             </div>
-                            <NavLink to={`/events/${item.url}`} className={css`
+                            <NavLink to={`/event/${item.url}`} className={css`
                                 flex: 0 1 300px;
                                 max-width: 300px;
                                 border-radius: 16px;
@@ -216,7 +216,7 @@ export const MainEvents = ({onPage, similar}) => {
                                     background-color: ${theme.colors.green};
                                     padding: 3px 8px 5px;
                                     width: max-content;
-                                `}><NavLink to={`/events/${item.url}`}>{item.format}</NavLink></div>
+                                `}><NavLink to={`/event/${item.url}`}>{item.format}</NavLink></div>
                                 <div className={css`
                                     display: flex;
                                     gap: 16px;
@@ -256,10 +256,10 @@ export const MainEvents = ({onPage, similar}) => {
                                     }
                                 `}>
                                     {item.themes.map(theme => (
-                                        <NavLink key={theme} to={`/events/${item.url}`}>{theme}</NavLink>
+                                        <NavLink key={theme} to={`/event/${item.url}`}>{theme}</NavLink>
                                     ))}
                                 </div>
-                                <NavLink to={`/events/${item.url}`} className={css`
+                                <NavLink to={`/event/${item.url}`} className={css`
                                     font-size: 18px;
                                     font-weight: 500;
                                     line-height: 1.36;    
@@ -273,7 +273,7 @@ export const MainEvents = ({onPage, similar}) => {
                                     }
                                 `}>{item.previewText}</div>
                             </div>
-                            <NavLink to={`/events/${item.url}`} className={css`
+                            <NavLink to={`/event/${item.url}`} className={css`
                                 flex: 0 1 56px;
                                 max-width: 56px;
 

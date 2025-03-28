@@ -15,7 +15,7 @@ import { Faq } from "./pages/Faq";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { DB } from "./db";
 import { Organizer } from "./pages/Organizer";
-
+import axios from "axios";
 // TODO отложенная загрузка компонентов
 
 
@@ -44,6 +44,59 @@ function App() {
       };
     }, []);
 
+    //fetch
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+    useEffect(() => {
+      axios
+        .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
+        .then((response) => {
+          // setData(response.data);
+          // setLoading(false);
+          // setHomeData(response.data)
+          // console.log('home ', response.data)
+        })
+        .catch((error) => {
+          setError(error.message);
+          setLoading(false);
+        });
+  
+      // axios
+      //   .get("https://dev.goconf.ru/backend/wp-json/wp/v2/get_all_options/")
+      //   .then((response) => {
+      //     console.log('get_all_options ', response.data)
+      //   })
+      //   .catch((error) => {
+      //     setError(error.message);
+      //     setLoading(false);
+      //   });
+  
+      // axios
+      //   .get("https://dev.goconf.ru/backend/wp-json/wp/v2/get_primary_menu/?current_url=/events")
+      //   .then((response) => {
+      //     console.log('menu ', response.data)
+      //   })
+      //   .catch((error) => {
+      //     setError(error.message);
+      //     setLoading(false);
+      //   });
+  
+        axios
+        .get("https://dev.goconf.ru/backend/wp-json/events/v2/single/?slug=kakoj-to-material")
+        .then((response) => {
+          console.log('single ', response.data)
+        })
+        .catch((error) => {
+          setError(error.message);
+          setLoading(false);
+        });
+  
+        
+  
+    }, []);
+
   return (
     <ThemeProvider theme={theme}>
     <Global styles={globalStyles} /> 
@@ -54,7 +107,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/events" element={<Events />} />
-        <Route path="/events/:name" element={<Event />} />
+        <Route path="/events/:filterParams*" element={<Events />} />
+        <Route path="/event/:name" element={<Event />} />
         <Route path="/org" element={<Org />} />
         <Route path="/about" element={<About />} />
         <Route path="/faq" element={<Faq />} />

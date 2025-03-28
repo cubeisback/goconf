@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ReactComponent as ArrowDown } from '../../images/svg/arrowDown.svg';
 import { useTheme } from '@emotion/react';
 
-const DropdownInput = ({ options, placeholder, isSimple }) => {
+const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, type }) => {
   const theme = useTheme();
 
   const [query, setQuery] = useState('');
@@ -25,7 +25,7 @@ const DropdownInput = ({ options, placeholder, isSimple }) => {
     setShowFullList(false); // Показывать фильтрованный список при вводе
   };
 
-  const handleSelect = (value) => {
+  const handleSelect = (value, type) => {
     if(!isSimple) {
       setSelectedValue(value);
       setQuery(value); // Подставляем выбранное значение в инпут
@@ -36,6 +36,7 @@ const DropdownInput = ({ options, placeholder, isSimple }) => {
       setQuery(value);
       setShowFullList(true);
     }
+    handleFilterChange(value, type);
   };
 
   const handleFocus = () => {
@@ -171,7 +172,7 @@ const DropdownInput = ({ options, placeholder, isSimple }) => {
               {(showFullList ? options : filteredOptions).map((option, index) => (
                 <li
                   key={index}
-                  onClick={() => handleSelect(option)}
+                  onClick={() => handleSelect(option, type)}
                   className={css`
                     padding: 8px;
                     cursor: pointer;

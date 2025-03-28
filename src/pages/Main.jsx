@@ -7,10 +7,26 @@ import { Filter } from '../components/Filter/Filter';
 import { MainEventsSlider } from '../components/MainEventsSlider';
 import { MainEvents } from '../components/MainEvents';
 import { Form } from '../components/Form';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
 export const Main = () => {
     const theme = useTheme();
+
+    const [homeData, setHomeData] = useState(null)
+    useEffect(() => {
+      axios
+        .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
+        .then((response) => {
+          setHomeData(response.data)
+          console.log('home ', response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+
+    }, [])
 
     return (
         <>
@@ -194,7 +210,7 @@ export const Main = () => {
                             font-size: 16px;
                             line-height: 1.22;
                         }
-                    `}>Делаем поиск профессиональных событий удобным, а&nbsp;привлечение участников эффективным</motion.div>
+                    `}>{homeData && homeData.front_subtitle}</motion.div>
                 </div>
                 
                 
@@ -226,7 +242,7 @@ export const Main = () => {
                 }
             `}>
                 <div className={cx(container, css`@media(max-width: 1439px) {padding: 0;}` )}>
-                    <MainEventsSlider />
+                    <MainEventsSlider homeData={homeData} />
                 </div>
             </div>
             

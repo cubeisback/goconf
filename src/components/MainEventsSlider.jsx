@@ -38,7 +38,7 @@ import { getAllEvents } from "../db";
 //     }
 // ]
 
-export const MainEventsSlider = () => {
+export const MainEventsSlider = ({homeData}) => {
     const theme = useTheme();
 
     const navigationPrevRef = useRef(null);
@@ -147,7 +147,103 @@ export const MainEventsSlider = () => {
                               slidesPerView: 3,
                             },
                         }}
-                    >
+                    >   
+                        {homeData && homeData.interesting_events.items.map((item, index) => (
+                            <SwiperSlide key={index} className={css`
+                                border-radius: 24px;
+                                background-color: #fff;
+                                overflow: hidden;
+                            `}>
+                                <NavLink to={`/events/${item.slug}`} className={css`
+                                    width: 100%;
+                                `}>
+                                    <img src={item.cover} alt="" className={css`
+                                        object-fit: cover;
+                                        width: 100%;
+                                        height: 100%;
+                                    `} />
+                                </NavLink>
+                                <div className={css`
+                                    padding: 24px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 16px;    
+                                `}>
+                                    <div>
+                                    {/* {item.format.map((f)=>{
+                                            <div className={css`
+                                                border-radius: 8px;
+                                                background-color: ${theme.colors.green};
+                                                padding: 3px 8px 5px;
+                                                color: #191921;
+                                                font-size: 14px;
+                                                font-weight: 500;
+                                                line-height: 1.16;
+                                                width: max-content;    
+                                            `}><NavLink to={`/events/${f.slug}`}>
+                                                {f.name}
+                                            </NavLink>
+                                            </div>
+                                        })} */}
+
+{item.format.map((f, idx) => (
+        <div key={idx} className={css`
+            border-radius: 8px;
+            background-color: ${theme.colors.green};
+            padding: 3px 8px 5px;
+            color: #191921;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.16;
+            width: max-content;    
+        `}><NavLink to={`/events/${f.slug}`}>
+            {f.name}
+        </NavLink>
+        </div>
+      ))}
+                                    </div>
+                                        
+                                        
+                                    <NavLink to={`/events/${item.slug}`} className={css`
+                                        font-size: 18px;
+                                        font-weight: 500;
+                                        line-height: 1.36;
+                                        -webkit-line-clamp: 2;
+                                        line-clamp: 2;
+                                        display: -webkit-box;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;    
+                                    `}>{item.title}</NavLink>
+                                    <div className={css`
+                                        display: flex;
+                                        align-items: flex-end;
+                                        justify-content: space-between;    
+                                    `}>
+                                        <div>
+                                            <div className={css`
+                                                color: ${theme.colors.purple};
+                                                font-size: 28px;
+                                                line-height: 1.2;
+                                                margin-bottom: 4px;
+                                                font-family: Impact;
+    
+                                                @media(max-width: 575px) {
+                                                    font-size: 24px;
+                                                }
+                                            `}>{item.date_start} -<br/> {item.date_end}</div>
+                                            <div className={css`
+                                                color: #47474D;
+                                                font-size: 14px;
+                                                line-height: 1.16;    
+                                            `}>Россия, {item.city}</div>
+                                        </div>
+                                        <NavLink to={`/events/${item.slug}`}>
+                                            <LinkArrow />
+                                        </NavLink>
+                                    </div>
+                                </div>
+                            </SwiperSlide>
+                        ))}
                         {events && events.map((item, index) => (
                         <SwiperSlide key={index} className={css`
                             border-radius: 24px;
@@ -210,9 +306,9 @@ export const MainEventsSlider = () => {
                                             color: #47474D;
                                             font-size: 14px;
                                             line-height: 1.16;    
-                                        `}>Россия, {item.city}</div>
+                                        `}>{item.city}</div>
                                     </div>
-                                    <NavLink to={`/events/${item.url}`}>
+                                    <NavLink to={`/events/${item.slug}`}>
                                         <LinkArrow />
                                     </NavLink>
                                 </div>

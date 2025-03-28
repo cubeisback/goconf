@@ -7,6 +7,8 @@ import { checkBox, filterBtn } from "../../pages/ui";
 import DropdownInput from "../ui/DropdownInput";
 import Datepicker from "../ui/Datepicker";
 import axios from 'axios';
+import { useLocation, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
@@ -46,44 +48,110 @@ export const Filter = ({full}) => {
       getCities();
     }, []);
 
+  // Запрос по url
+  const { filterParams } = useParams();
+const [filterValues, setFilterValues] = useState({});
+const navigate = useNavigate();
+const [formData, setFormData] = useState({
+  city: null,
+  format: null,
+  direction: null,
+});
 
-    const [formData, setFormData] = useState({
-      city: "Москва",
+// Обновление состояния formData при изменении filterParams из URL
+useEffect(() => {
+  console.log("filterParams: ", filterParams);  // Проверяем filterParams
+  if (filterParams) {
+    const filters = filterParams.split('/').reduce((acc, param) => {
+      const [key, value] = param.split('_');
+      
+      // Проверяем, что и key, и value существуют, и только тогда добавляем их в объект
+      if (key && value) {
+        acc[key] = value;
+      }
+      
+      return acc;
+    }, {});
+
+    console.log("Parsed filters: ", filters);  // Проверяем разобранные фильтры
+
+    setFilterValues(filters);
+    updateFormData(filters); // Обновляем formData
+  } else {
+    setFilterValues({});
+    setFormData({
+      city: null,
       format: null,
+      direction: null,
     });
-    const handleSubmit = async () => {
-      try {
-        const res = await axios.post(
-          "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
-          {},
-          {
-            params: formData,
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log('params ', res)
-      } catch (err) {
-        console.log(err.message)
-      }
+  }
+}, [filterParams]);
 
-      try {
-        const res = await axios.post(
-          "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log('body ', res)
-      } catch (err) {
-        console.log(err.message)
-      }
-    };
+// Функция для обновления состояния formData
+const updateFormData = (filters) => {
+  console.log("Updating formData with: ", filters);  // Проверяем обновление formData
+  setFormData((prevState) => ({
+    ...prevState,
+    city: filters.city || prevState.city,
+    format: filters.format || prevState.format,
+    direction: filters.direction || prevState.direction,
+  }));
+};
 
+const handleSubmit = async () => {
+  console.log('Submitting form with data: ', formData);  // Проверяем актуальные данные
+
+  try {
+    const res = await axios.post(
+      "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
+      {}, // Пустое тело
+      {
+        params: formData, // Отправляем параметры как query params
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log('Response with params: ', res);
+  } catch (err) {
+    console.log('Error with params: ', err.message);
+  }
+
+  try {
+    const res = await axios.post(
+      "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
+      formData, // Отправляем данные в теле запроса
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log('Response with body: ', res);
+  } catch (err) {
+    console.log('Error with body: ', err.message);
+  }
+};
+
+const handleFilterChange = (newFilter, type) => {
+  const updatedFilters = { ...filterValues, [type]: newFilter };
+  setFilterValues(updatedFilters);
+
+  // Формируем новый URL
+  const filterString = Object.entries(updatedFilters)
+    .map(([key, value]) => `${key}_${value}`)
+    .join('/');
+
+  navigate(`/events/${filterString}`); // Обновляем адресную строку
+  updateFormData(updatedFilters); // Обновляем formData после изменения фильтра
+};
+
+useEffect(() => {
+  console.log("formData changed: ", formData);  // Проверяем, когда formData изменяется
+  if (formData.city || formData.format || formData.direction) {
+    handleSubmit(); // Отправляем запрос при каждом изменении formData
+  }
+}, [formData]); // Срабатывает, когда formData изменяется
     return (
         <motion.div
                 initial={{ opacity: 0 }}
@@ -134,7 +202,7 @@ export const Filter = ({full}) => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={options} placeholder={'Тематика'} />
+                      <DropdownInput options={options} handleFilterChange={handleFilterChange} type={'direction'} placeholder={'Тематика'} />
                     </div>
                     <div className={css`
                       flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
@@ -149,7 +217,7 @@ export const Filter = ({full}) => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={cities} placeholder={'Город'} />
+                      <DropdownInput options={cities} handleFilterChange={handleFilterChange} type={'city'} placeholder={'Город'} />
                     </div>
                     <div className={css`
                       flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
@@ -164,7 +232,7 @@ export const Filter = ({full}) => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={options} placeholder={'Формат'} />
+                      <DropdownInput options={options} handleFilterChange={handleFilterChange} type={'format'} placeholder={'Формат'} />
                     </div>
                     
                     

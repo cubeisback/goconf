@@ -17,7 +17,7 @@ export const Footer = () => {
         gap: 32px;
       }
     `}>
-        <div>© GoCONF 2024</div>
+        <div>© GoCONF 2025</div>
         <div>info@goconf.ru</div>
         <div>Пользовательское соглашение</div>
     </footer>
