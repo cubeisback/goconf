@@ -152,6 +152,7 @@ useEffect(() => {
     handleSubmit(); // Отправляем запрос при каждом изменении formData
   }
 }, [formData]); // Срабатывает, когда formData изменяется
+
     return (
         <motion.div
                 initial={{ opacity: 0 }}
