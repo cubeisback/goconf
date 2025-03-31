@@ -173,9 +173,9 @@ const handleFilterChange = (newFilter, type) => {
 };
 
 useEffect(() => {
-  if (formData.city || formData.format || formData.direction || formData.dateStart || formData.dateEnd) {
+  // if (formData.city || formData.format || formData.direction || formData.dateStart || formData.dateEnd) {
     handleSubmit(); // Отправляем запрос при каждом изменении formData
-  }
+  // }
 }, [formData]); // Срабатывает, когда formData изменяется
 
     return (
