@@ -73,7 +73,9 @@ const [formData, setFormData] = useState({
   format: null,
   direction: null,
   dateStart: null,
-  dateEnd: null
+  dateEnd: null,
+  isOnline: false,
+  isFree: false,
 });
 
 // Обновление состояния formData при изменении filterParams из URL
@@ -102,14 +104,16 @@ useEffect(() => {
       format: null,
       direction: null,
       dateStart: null,
-      dateEnd: null
+      dateEnd: null,
+      isOnline: false,
+      isFree: false,
     });
   }
 }, [filterParams]);
 
 // Функция для обновления состояния formData
 const updateFormData = (filters) => {
-  console.log("Updating formData with: ", filters);  // Проверяем обновление formData
+  // console.log("Updating formData with: ", filters);  // Проверяем обновление formData
   setFormData((prevState) => ({
     ...prevState,
     city: filters.city || prevState.city,
@@ -121,7 +125,7 @@ const updateFormData = (filters) => {
 };
 
 const handleSubmit = async () => {
-  console.log('Submitting form with data: ', formData);  // Проверяем актуальные данные
+  // console.log('Submitting form with data: ', formData);  // Проверяем актуальные данные
 
   // try {
   //   const res = await axios.post(
@@ -294,11 +298,17 @@ useEffect(() => {
                           }
                         `}>
                           <div className={checkBox}>
-                            <input type="checkbox" id="expample1" />
+                            <input type="checkbox" id="expample1" onChange={()=>setFormData((prevState) => ({
+                              ...prevState,
+                              isOnline: !prevState.isOnline,
+                            }))} />
                             <label htmlFor="expample1">Онлайн</label>
                           </div>
                           <div className={checkBox}>
-                            <input type="checkbox" id="expample2" />
+                            <input type="checkbox" id="expample2" onChange={()=>setFormData((prevState) => ({
+                              ...prevState,
+                              isFree: !prevState.isFree,
+                            }))} />
                             <label htmlFor="expample2">Бесплатное</label>
                           </div>
                         </div>
