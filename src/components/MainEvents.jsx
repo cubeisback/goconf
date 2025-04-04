@@ -7,6 +7,7 @@ import { NavLink } from "react-router";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import { getAllEvents } from "../db";
+import axios from "axios";
 
 // const eventsArray = [
 //     {
@@ -94,6 +95,20 @@ export const MainEvents = ({onPage, similar}) => {
         getAllEvents().then((res)=>setEvents(res));        
     }, [])
 
+    const [nearEvents, setNearEvents] = useState(null)
+    useEffect(() => {
+      axios
+        .get("https://dev.goconf.ru/backend/wp-json/events/v2/near-events/")
+        .then((response) => {
+            setNearEvents(response.data.items)
+            console.log('near-events ', response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+
+    }, [])
+
     return (
         <div className={css`
             padding: 120px 0;
@@ -120,7 +135,7 @@ export const MainEvents = ({onPage, similar}) => {
                 <div className={css`
                     margin-bottom: 32px;
                 `}>
-                    {events && events.slice(0, limit).map((item, index) => (
+                    {nearEvents && nearEvents.slice(0, limit).map((item, index) => (
                         <motion.div 
                             initial={{ y: 50, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
@@ -174,14 +189,14 @@ export const MainEvents = ({onPage, similar}) => {
                                     @media(max-width: 575px) {
                                         font-size: 24px;
                                     }
-                                `}>{item.date1} -<br/> {item.date2}</div>
+                                `}>{item.date_start} -<br/> {item.date_end}</div>
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #47474D;
-                                `}>Россия, {item.city}</div>
+                                `}>{item.city}</div>
                             </div>
-                            <NavLink to={`/event/${item.url}`} className={css`
+                            <NavLink to={`/event/${item.slug}`} className={css`
                                 flex: 0 1 300px;
                                 max-width: 300px;
                                 border-radius: 16px;
@@ -200,7 +215,7 @@ export const MainEvents = ({onPage, similar}) => {
                                     object-position: top;
                                 }
                             `}>
-                                <img src={img_ex_1} alt="" />
+                                <img src={item.cover} alt="" />
                             </NavLink>
                             <div className={css`
                                 flex: 1;
@@ -216,7 +231,11 @@ export const MainEvents = ({onPage, similar}) => {
                                     background-color: ${theme.colors.green};
                                     padding: 3px 8px 5px;
                                     width: max-content;
-                                `}><NavLink to={`/event/${item.url}`}>{item.format}</NavLink></div>
+                                `}>
+                                    {item.format.map(theme => (
+                                        <NavLink key={theme} to={`/event/${theme.slug}`}>{theme.name}</NavLink>
+                                    ))}
+                                    </div>
                                 <div className={css`
                                     display: flex;
                                     gap: 16px;
@@ -255,11 +274,11 @@ export const MainEvents = ({onPage, similar}) => {
                                         }
                                     }
                                 `}>
-                                    {item.themes.map(theme => (
-                                        <NavLink key={theme} to={`/event/${item.url}`}>{theme}</NavLink>
+                                    {item.format.map(theme => (
+                                        <NavLink key={theme} to={`/event/${theme.slug}`}>{theme.name}</NavLink>
                                     ))}
                                 </div>
-                                <NavLink to={`/event/${item.url}`} className={css`
+                                <NavLink to={`/event/${item.slug}`} className={css`
                                     font-size: 18px;
                                     font-weight: 500;
                                     line-height: 1.36;    
@@ -271,9 +290,12 @@ export const MainEvents = ({onPage, similar}) => {
                                     @media(max-width: 575px) {
                                         display: none;
                                     }
-                                `}>{item.previewText}</div>
+                                `}>
+                                    {/* {item.previewText} */}
+                                    Previewtext
+                                </div>
                             </div>
-                            <NavLink to={`/event/${item.url}`} className={css`
+                            <NavLink to={`/event/${item.slug}`} className={css`
                                 flex: 0 1 56px;
                                 max-width: 56px;
 

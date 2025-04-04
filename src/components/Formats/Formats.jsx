@@ -6,73 +6,74 @@ import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import axios from 'axios';
 
-const formatsArray = [
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-    {
-        name: 'Бизнес-семинары',
-        count: 125
-    },
-]
+// const formatsArray = [
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+//     {
+//         name: 'Бизнес-семинары',
+//         count: 125
+//     },
+// ]
 
 export const Formats = () => {
     const theme = useTheme();
@@ -92,6 +93,21 @@ export const Formats = () => {
         window.removeEventListener('resize', handleResize);
       };
     }, []);
+
+    const [formatItems, setFormatItems] = useState(null)
+    useEffect(() => {
+      axios
+        .get("https://dev.goconf.ru/backend/wp-json/events/v2/popular-formats/")
+        .then((response) => {
+            setFormatItems(response.data.items)
+            console.log('popular-formats ', response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+
+    }, [])
+    
 
     return (
         <div className={css`
@@ -153,7 +169,7 @@ export const Formats = () => {
                     }
                 }
             `}>
-                {formatsArray.map((item, index) => (
+                {formatItems && formatItems.map((item, index) => (
                     <div key={index} className={css`
                         max-width: 224px;
                         border-radius: 24px;
@@ -165,7 +181,7 @@ export const Formats = () => {
                             transform: scale(1.05);
                         }
                     `}>
-                        <img src={formats_ex_1} alt="" />
+                        <img src={item.img} alt="" />
                         <div className={css`
                             position: absolute;
                             left: 0;
@@ -182,7 +198,9 @@ export const Formats = () => {
                                 color: #fff;
                                 font-weight: 500;
                                 line-height: 1.36;
-                            `}>{item.name}</div>
+                            `} dangerouslySetInnerHTML={{
+                                __html: item.name.replace(/\r\n/g, ''),
+                              }}></div>
                             <div className={css`
                                 padding: 2px 4px;
                                 border-radius: 4px;
@@ -202,7 +220,7 @@ export const Formats = () => {
                 loop
                 slidesPerView='auto'
             >
-                        {formatsArray.map((item, index) => (
+                        {formatItems && formatItems.map((item, index) => (
                             <SwiperSlide key={index} className={css`
                                 max-width: 180px;
                                 padding: 0 10px; 
@@ -213,7 +231,7 @@ export const Formats = () => {
                                 overflow: hidden;
                                 position: relative;
                             `}>
-                                <img src={formats_ex_1} alt="" />
+                                <img src={item.img} alt="" />
                                 <div className={css`
                                     position: absolute;
                                     left: 0;
@@ -230,7 +248,9 @@ export const Formats = () => {
                                         color: #fff;
                                         font-weight: 500;
                                         line-height: 1.36;
-                                    `}>{item.name}</div>
+                                    `} dangerouslySetInnerHTML={{
+                                        __html: item.name.replace(/\r\n/g, ''),
+                                      }}></div>
                                     <div className={css`
                                         padding: 2px 4px;
                                         border-radius: 4px;

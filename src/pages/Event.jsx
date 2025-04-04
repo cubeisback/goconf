@@ -15,6 +15,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import axios from 'axios';
 
 export const Event = () => {
     const [version, setVersion] = useState(0);
@@ -26,12 +27,42 @@ export const Event = () => {
 
     const [event, setEvent] = useState(null);
     const location = useLocation(); // Получаем информацию о текущем пути
+    const [pageInfo, setPageInfo] = useState(null)
     useEffect(() => {
         const pathParts = location.pathname.split('/');
         const eventId = pathParts[pathParts.length - 1];
+
+        // console.log('asddashjlksdhffdhgjfd;lgkl', eventId)
     
-        getEventById(eventId).then((res) => setEvent(res[0]));
+        // getEventById(eventId).then((res) => setEvent(res[0]));
+
+        axios
+        .get(`https://dev.goconf.ru/backend/wp-json/events/v2/single/?slug=${eventId}`)
+        .then((response) => {
+            setPageInfo(response.data)
+            console.log('page ', response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
     }, [location.pathname]);
+
+
+
+    // const [similarItems, setSimilarItems] = useState(null)
+    // useEffect(() => {
+    //   axios
+    //     .get(`https://dev.goconf.ru/backend/wp-json/events/v2/similar-events/?id={${ID}}`)
+    //     .then((response) => {
+    //         setSimilarItems(response.data)
+    //       console.log('interesting-events ', response.data)
+    //     })
+    //     .catch((error) => {
+    //         console.log(error)
+    //     });
+
+    // }, [])
+    
 
     const promoThemes = css`
         display: flex;
@@ -98,7 +129,7 @@ export const Event = () => {
                 }
             `}>
                 <div className={container}>
-                    {event &&
+                    {pageInfo &&
                     <div className={css`
                         display: flex;
                         gap: 32px;
@@ -115,8 +146,10 @@ export const Event = () => {
                             flex: 1;
                             max-width: 952px;
                         `}>
-                            <img src={event_img} alt="" className={css`margin-bottom: 40px;`} />
-                            <div className={text} dangerouslySetInnerHTML={{ __html: event.text }} />
+                            <img src={pageInfo.fields.cover.url} alt="" className={css`margin-bottom: 40px;`} />
+
+                            {/* <div className={text} dangerouslySetInnerHTML={{ __html: event.text }} /> */}
+                            <div className={text}>{pageInfo.fields.short_text}</div>
                                  
                                 {/* <p>Сразу два уникальных события ждут представителей индустрии в ноябре:</p>
                                 <div>
@@ -207,28 +240,28 @@ export const Event = () => {
                                         background-color: #fff;
                                         overflow: hidden;
                                     `}>
-                                        <img src={event_img} alt="" />
+                                        <img src={''} alt="" />
                                     </SwiperSlide>
                                     <SwiperSlide className={css`
                                         border-radius: 24px;
                                         background-color: #fff;
                                         overflow: hidden;
                                     `}>
-                                        <img src={event_img} alt="" />
+                                        <img src={''} alt="" />
                                     </SwiperSlide>
                                     <SwiperSlide className={css`
                                         border-radius: 24px;
                                         background-color: #fff;
                                         overflow: hidden;
                                     `}>
-                                        <img src={event_img} alt="" />
+                                        <img src={''} alt="" />
                                     </SwiperSlide>
                                     <SwiperSlide className={css`
                                         border-radius: 24px;
                                         background-color: #fff;
                                         overflow: hidden;
                                     `}>
-                                        <img src={event_img} alt="" />
+                                        <img src={''} alt="" />
                                     </SwiperSlide>
                                 </Swiper>
                             </div>
@@ -271,7 +304,7 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>{event.date1} - {event.date2}</p>
+                                `}>{pageInfo.fields.events_start} - {pageInfo.fields.events_end}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -285,7 +318,7 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>{event.city}</p>
+                                `}>{pageInfo.cities[0].name}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -299,7 +332,7 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>{event.address}</p>
+                                `}>{pageInfo.fields.address}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -315,7 +348,7 @@ export const Event = () => {
                                     line-height: 1.16;
                                     font-weight: 500;
                                     color: #8553F9;
-                                `}>{event.price}</p>
+                                `}>{pageInfo.fields.events_cost}</p>
                             </div>
                             <div className={css`
                                 display: flex;
@@ -326,10 +359,14 @@ export const Event = () => {
                                 <p className={css`
                                     line-height: 1.28;
                                 `}>Формат</p>
-                                <p className={css`
+
+                                {pageInfo.formats.map(format => (
+                                    <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>{event.format}</p>
+                                `}>{format.name}</p>
+                                ))}
+                                
                             </div>
                             <div className={css`
                                 display: flex;
@@ -340,12 +377,12 @@ export const Event = () => {
                                 <p className={css`
                                     line-height: 1.28;
                                 `}>Организатор</p>
-                                <NavLink to="/organizer" className={css`
+                                <NavLink to={`/organizer/${pageInfo.company[0].name}`} className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #8553F9;
                                     cursor: pointer;
-                                `}>{event.organization}</NavLink>
+                                `}>{pageInfo.company[0].name}</NavLink>
                             </div>
                             </div>
                             

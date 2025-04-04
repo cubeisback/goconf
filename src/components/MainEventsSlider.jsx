@@ -10,6 +10,7 @@ import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { NavLink } from "react-router";
 import { getAllEvents } from "../db";
+import axios from "axios";
 
 // const eventsArray = [
 //     {
@@ -38,7 +39,7 @@ import { getAllEvents } from "../db";
 //     }
 // ]
 
-export const MainEventsSlider = ({homeData}) => {
+export const MainEventsSlider = () => {
     const theme = useTheme();
 
     const navigationPrevRef = useRef(null);
@@ -48,6 +49,21 @@ export const MainEventsSlider = ({homeData}) => {
 
     useEffect(()=>{
         getAllEvents().then((res)=>setEvents(res));        
+    }, [])
+
+    //get items
+    const [homeData, setHomeData] = useState(null)
+    useEffect(() => {
+      axios
+        .get("https://dev.goconf.ru/backend/wp-json/events/v2/interesting-events/")
+        .then((response) => {
+          setHomeData(response.data)
+          console.log('interesting-events ', response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+
     }, [])
 
     return (
@@ -148,13 +164,13 @@ export const MainEventsSlider = ({homeData}) => {
                             },
                         }}
                     >   
-                        {homeData && homeData.interesting_events.items.map((item, index) => (
+                        {homeData && homeData.items.map((item, index) => (
                             <SwiperSlide key={index} className={css`
                                 border-radius: 24px;
                                 background-color: #fff;
                                 overflow: hidden;
                             `}>
-                                <NavLink to={`/events/${item.slug}`} className={css`
+                                <NavLink to={`/event/${item.slug}`} className={css`
                                     width: 100%;
                                 `}>
                                     <img src={item.cover} alt="" className={css`
@@ -204,7 +220,7 @@ export const MainEventsSlider = ({homeData}) => {
                                     </div>
                                         
                                         
-                                    <NavLink to={`/events/${item.slug}`} className={css`
+                                    <NavLink to={`/event/${item.slug}`} className={css`
                                         font-size: 18px;
                                         font-weight: 500;
                                         line-height: 1.36;
@@ -237,14 +253,14 @@ export const MainEventsSlider = ({homeData}) => {
                                                 line-height: 1.16;    
                                             `}>Россия, {item.city}</div>
                                         </div>
-                                        <NavLink to={`/events/${item.slug}`}>
+                                        <NavLink to={`/event/${item.slug}`}>
                                             <LinkArrow />
                                         </NavLink>
                                     </div>
                                 </div>
                             </SwiperSlide>
                         ))}
-                        {events && events.map((item, index) => (
+                        {/* {events && events.map((item, index) => (
                         <SwiperSlide key={index} className={css`
                             border-radius: 24px;
                             background-color: #fff;
@@ -308,13 +324,13 @@ export const MainEventsSlider = ({homeData}) => {
                                             line-height: 1.16;    
                                         `}>{item.city}</div>
                                     </div>
-                                    <NavLink to={`/events/${item.slug}`}>
+                                    <NavLink to={`/event/${item.slug}`}>
                                         <LinkArrow />
                                     </NavLink>
                                 </div>
                             </div>
                         </SwiperSlide>
-                        ))}
+                        ))} */}
                         
                     </Swiper>
                     </div>

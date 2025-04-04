@@ -51,12 +51,12 @@ export const Filter = ({full}) => {
     const [filtersData, setFiltersData] = useState();
     useEffect(() => {
       axios
-      .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
+      .get("https://dev.goconf.ru/backend/wp-json/events/v2/get-filter/")
       .then((response) => {
         // setData(response.data);
         // setLoading(false);
-        setFiltersData(response.data.front_filter)
-        // console.log('home ', response.data.front_filter)
+        setFiltersData(response.data)
+        console.log('filters ', response.data)
       })
       .catch((error) => {
         console.log(error)
