@@ -377,12 +377,12 @@ export const Event = () => {
                                 <p className={css`
                                     line-height: 1.28;
                                 `}>Организатор</p>
-                                <NavLink to={`/organizer/${pageInfo.company[0].name}`} className={css`
+                                <NavLink to={`/organizer/${pageInfo.company[0] && pageInfo.company[0].name}`} className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #8553F9;
                                     cursor: pointer;
-                                `}>{pageInfo.company[0].name}</NavLink>
+                                `}>{pageInfo.company[0] && pageInfo.company[0].name}</NavLink>
                             </div>
                             </div>
                             
