@@ -23,7 +23,7 @@ export const Footer = () => {
     `}>
         <div>© GoCONF 2025</div>
         <div><a href="mailto:info@goconf.ru">info@goconf.ru</a></div>
-        <div><a href="" target='_blank'>Пользовательское соглашение</a></div>
+        <div><a href="/" target='_blank'>Пользовательское соглашение</a></div>
     </footer>
   );
 }
