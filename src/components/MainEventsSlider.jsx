@@ -9,7 +9,6 @@ import img_ex_1 from '../images/events_1.jpg';
 import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { NavLink } from "react-router";
-import { getAllEvents } from "../db";
 import axios from "axios";
 
 // const eventsArray = [
@@ -46,10 +45,6 @@ export const MainEventsSlider = () => {
     const navigationNextRef = useRef(null);
 
     const [events, setEvents] = useState(null);
-
-    useEffect(()=>{
-        getAllEvents().then((res)=>setEvents(res));        
-    }, [])
 
     //get items
     const [homeData, setHomeData] = useState(null)

@@ -9,7 +9,6 @@ import { MainEventsSlider } from '../components/MainEventsSlider';
 import { Form } from '../components/Form';
 import { MainEvents } from '../components/MainEvents';
 import { motion } from 'framer-motion';
-import { getEventById } from '../db';
 import { NavLink, useLocation } from 'react-router';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';

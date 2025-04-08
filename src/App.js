@@ -13,7 +13,6 @@ import { Event } from "./pages/Event";
 import { User } from "./pages/User";
 import { Faq } from "./pages/Faq";
 import { NotFoundPage } from "./pages/NotFoundPage";
-import { DB } from "./db";
 import { Organizer } from "./pages/Organizer";
 import axios from "axios";
 // TODO отложенная загрузка компонентов
@@ -101,7 +100,7 @@ function App() {
     <ThemeProvider theme={theme}>
     <Global styles={globalStyles} /> 
     <BrowserRouter>
-      <DB/> 
+      {/* <DB/>  */}
       {/* TODO remove db */}
       <Header isLogin={isLogin} windowWidth={windowWidth} />
       <Routes>

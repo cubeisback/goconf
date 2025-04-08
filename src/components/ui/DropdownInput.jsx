@@ -149,10 +149,14 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
               border-radius: 28px;
               background-color: #fff;
               box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
-              width: 100%;
+              width: 150%;
               left: 0;
               top: calc(100% + 4px);
               padding: 12px 14px 12px 0;
+
+              @media(max-width: 1339px) {
+                width: 100%;
+              }
             `}>
             <ul
               className={css`

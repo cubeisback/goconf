@@ -6,7 +6,6 @@ import { ReactComponent as LinkArrow } from '../images/svg/link_arrow.svg';
 import { NavLink } from "react-router";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
-import { getAllEvents } from "../db";
 import axios from "axios";
 
 // const eventsArray = [
@@ -91,9 +90,6 @@ export const MainEvents = ({onPage, similar}) => {
     const [limit, setLimit] = useState(3);
 
     const [events, setEvents] = useState(null);
-    useEffect(()=>{
-        getAllEvents().then((res)=>setEvents(res));        
-    }, [])
 
     const [nearEvents, setNearEvents] = useState(null)
     useEffect(() => {

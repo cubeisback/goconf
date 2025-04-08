@@ -16,10 +16,14 @@ export const Footer = () => {
         align-items: center;
         gap: 32px;
       }
+
+      a {
+        color: #fff;
+      }
     `}>
         <div>© GoCONF 2025</div>
-        <div>info@goconf.ru</div>
-        <div>Пользовательское соглашение</div>
+        <div><a href="mailto:info@goconf.ru">info@goconf.ru</a></div>
+        <div><a href="" target='_blank'>Пользовательское соглашение</a></div>
     </footer>
   );
 }
