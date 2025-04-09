@@ -180,7 +180,7 @@ const resetFilter = () => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={filtersData && filtersData.subjects} handleFilterChange={handleFilterChange} type={'direction'} placeholder={'Тематика'} />
+                      <DropdownInput options={filtersData && filtersData.subjects} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'direction'} placeholder={'Тематика'} />
                     </div>
                     <div className={css`
                       flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
@@ -210,14 +210,14 @@ const resetFilter = () => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={filtersData && filtersData.formats} handleFilterChange={handleFilterChange} type={'format'} placeholder={'Формат'} />
+                      <DropdownInput options={filtersData && filtersData.formats} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'format'} placeholder={'Формат'} />
                     </div>
                     
                     
                     
                     
-                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} type={'start'} />
-                    <Datepicker full={full} title={'Окончание'} fixmob={true} handleFilterChange={handleFilterChange} type={'end'} /> {/*TODO Передалать на экран*/}
+                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'start'} />
+                    <Datepicker full={full} title={'Окончание'} fixmob={true} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'end'} /> {/*TODO Передалать на экран*/}
 
                     {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>Найти</div>}
 

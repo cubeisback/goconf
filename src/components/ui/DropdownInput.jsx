@@ -16,20 +16,24 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
 
   const [keys, setKeys] = useState([]);    // Стейт для ключей
   const [values, setValues] = useState([]); // Стейт для значений
-  
-  
-  useEffect(() => {
-    // if(filterValues) {
-    //   console.log('tut', filterValues)
-    // }
-    
+
+  useEffect(() => {    
     if (options) {
       const keysArray = Object.keys(options);
       const valuesArray = Object.values(options);
       setKeys(keysArray);  // Заполняем стейт ключей
       setValues(valuesArray); // Заполняем стейт значений
+
+      if(filterValues) {
+        const checkedValue = filterValues[type];
+        if(checkedValue) {
+          setSelectedValue(options[checkedValue]);
+          setQuery(options[checkedValue]);
+        }
+      }
     }
-  }, [options]);  // Эффект сработает, когда данные изменятся
+    
+  }, [options, filterValues]);  // Эффект сработает, когда данные изменятся
   
   // Фильтрация опций на основе введенного текста
   const filteredOptions = values.filter(option =>
@@ -53,8 +57,11 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
       setQuery(value);
       setShowFullList(true);
     }
-    handleFilterChange(keys[index], type);
-    console.log(keys[index], type)
+    if(handleFilterChange) {
+      handleFilterChange(keys[index], type);
+      // console.log('asfas', keys[index], type)
+    }
+    
   };
 
   const handleFocus = () => {

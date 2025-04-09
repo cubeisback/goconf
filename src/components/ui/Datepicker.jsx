@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import {ru} from 'date-fns/locale/ru';
 import "react-datepicker/dist/react-datepicker.css"; //TODO remove
 
-const Datepicker = ({full, title, fixmob, handleFilterChange, type}) => {
+const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type}) => {
     const [startDate, setStartDate] = useState();
     const [showDate, setShowDate] = useState(false);
     // const [showSelect, setShowSelect] = useState(false);
@@ -22,6 +22,18 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, type}) => {
         day: (n) => ru.localize.day(n).charAt(0).toUpperCase(),
       },
     };
+
+      // useEffect(() => {
+      //     if(filterValues) {
+      //       console.log('dfgf', filterValues, type, filterValues[type])
+      //       const checkedValue = filterValues[type];
+      //       if(checkedValue) {
+      //         // setSelectedValue(options[checkedValue]);
+      //         // setQuery(options[checkedValue]);
+      //       }
+      //     }
+        
+      // }, [filterValues]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
