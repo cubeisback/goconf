@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import axios from "axios";
 
 
-export const MainEvents = ({onPage, similar, events}) => {
+export const MainEvents = ({onPage, similar, id, events}) => {
     const theme = useTheme();
 
     const [limit, setLimit] = useState(3);
@@ -18,18 +18,29 @@ export const MainEvents = ({onPage, similar, events}) => {
    
     useEffect(() => {
         // if (events === undefined || events === null) {
-          axios
-            .get("https://dev.goconf.ru/backend/wp-json/events/v2/near-events/")
-            .then((response) => {
-              setNearEvents(response.data.items);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+            if(similar) {
+                axios
+                .get(`https://dev.goconf.ru/backend/wp-json/events/v2/similar-events/?id={{${id}}}`)
+                .then((response) => {
+                  setNearEvents(response.data.items);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            } else {
+                axios
+                .get("https://dev.goconf.ru/backend/wp-json/events/v2/near-events/")
+                .then((response) => {
+                  setNearEvents(response.data.items);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
         // } else {
         //   setNearEvents(events);
         // }
-      }, [events]);
+      }, [similar]);
 
     return (
         <div className={css`

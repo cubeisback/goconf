@@ -110,11 +110,11 @@ export const Event = () => {
                         <a href="/">Мероприятия</a>
                         <p>Национальный рекламный форум</p>
                     </div>
-                    {event && <h1 className={pageTitle}>{event.title}</h1> }
+                    {pageInfo && <h1 className={pageTitle}>{pageInfo.data.post_title}</h1> }
                     <div className={promoThemes}>
                         <p>Тематика:</p>
-                        {event && event.themes.map(theme => (
-                            <NavLink key={theme} to="/">{theme}</NavLink>
+                        {pageInfo && pageInfo.subjects.map(theme => (
+                            <NavLink key={theme.term_id} to="/">{theme.name}</NavLink>
                         ))}
                     </div>
                 </div>
@@ -147,8 +147,8 @@ export const Event = () => {
                         `}>
                             <img src={pageInfo.fields.cover.url} alt="" className={css`margin-bottom: 40px;`} />
 
-                            {/* <div className={text} dangerouslySetInnerHTML={{ __html: event.text }} /> */}
-                            <div className={text}>{pageInfo.fields.short_text}</div>
+                            <div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
+                            {/* <div className={text}>{pageInfo.data.short_text}</div> */}
                                  
                                 {/* <p>Сразу два уникальных события ждут представителей индустрии в ноябре:</p>
                                 <div>
@@ -419,7 +419,7 @@ export const Event = () => {
                 </div>
             </div>
 
-            <MainEvents similar={true} />
+            <MainEvents id={pageInfo && pageInfo.data.ID} similar={true} />
 
             <Form />
 
