@@ -1,79 +1,12 @@
 import { css } from '@emotion/css';
 import { container } from '../../pages/ui';
 import { useTheme } from '@emotion/react';
-import formats_ex_1 from '../../images/formats_1.jpg';
+// import formats_ex_1 from '../../images/formats_1.jpg';
 import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import axios from 'axios';
-
-// const formatsArray = [
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-//     {
-//         name: 'Бизнес-семинары',
-//         count: 125
-//     },
-// ]
 
 export const Formats = () => {
     const theme = useTheme();

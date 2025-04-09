@@ -5,9 +5,12 @@ import { MainEvents } from '../components/MainEvents';
 import { Form } from '../components/Form';
 import { ReactComponent as SearchIcon } from '../images/svg/search.svg';
 import { useTheme } from '@emotion/react';
+import { useState } from 'react';
+import { EventsFiltered } from '../components/EventsFiltered';
 
 export const Events = () => {
     const theme = useTheme();
+    const [events, setEvents] = useState(null)
 
     return (
         <>
@@ -54,7 +57,7 @@ export const Events = () => {
                 }
             `}>
                 <div className={container}>
-                    <Filter full={true} />
+                    <Filter full={true} setEvents={setEvents} />
 
                     <div className={css`
                         display: flex;
@@ -84,7 +87,8 @@ export const Events = () => {
                     
                 </div>
 
-                <MainEvents onPage={true} />
+                {/* <MainEvents onPage={true} events={events} /> */}
+                <EventsFiltered onPage={true} events={events} />
 
                 <div className={css`
                         padding: 64px 0;

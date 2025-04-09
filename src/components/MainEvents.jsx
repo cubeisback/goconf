@@ -8,102 +8,28 @@ import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import axios from "axios";
 
-// const eventsArray = [
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     }
-// ]
 
-
-export const MainEvents = ({onPage, similar}) => {
+export const MainEvents = ({onPage, similar, events}) => {
     const theme = useTheme();
 
     const [limit, setLimit] = useState(3);
 
-    const [events, setEvents] = useState(null);
-
     const [nearEvents, setNearEvents] = useState(null)
+   
     useEffect(() => {
-      axios
-        .get("https://dev.goconf.ru/backend/wp-json/events/v2/near-events/")
-        .then((response) => {
-            setNearEvents(response.data.items)
-            console.log('near-events ', response.data)
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-
-    }, [])
+        // if (events === undefined || events === null) {
+          axios
+            .get("https://dev.goconf.ru/backend/wp-json/events/v2/near-events/")
+            .then((response) => {
+              setNearEvents(response.data.items);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        // } else {
+        //   setNearEvents(events);
+        // }
+      }, [events]);
 
     return (
         <div className={css`

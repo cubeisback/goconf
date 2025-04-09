@@ -45,6 +45,10 @@ export const globalStyles = (props) => css`
     // overflow-x: hidden;
   }
 
+  html, body {
+    touch-action: manipulation;
+  }
+
   input,
   button,
   textarea {

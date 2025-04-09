@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ReactComponent as ArrowDown } from '../../images/svg/arrowDown.svg';
 import { useTheme } from '@emotion/react';
 
-const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, type }) => {
+const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, type, filterValues }) => {
   const theme = useTheme();
 
   const [query, setQuery] = useState('');
@@ -19,6 +19,10 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
   
   
   useEffect(() => {
+    // if(filterValues) {
+    //   console.log('tut', filterValues)
+    // }
+    
     if (options) {
       const keysArray = Object.keys(options);
       const valuesArray = Object.values(options);

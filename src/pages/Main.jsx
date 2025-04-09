@@ -3,30 +3,17 @@ import { container } from './ui';
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Formats } from '../components/Formats/Formats';
-import { Filter } from '../components/Filter/Filter';
 import { MainEventsSlider } from '../components/MainEventsSlider';
 import { MainEvents } from '../components/MainEvents';
 import { Form } from '../components/Form';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { FilterOnMain } from '../components/Filter/FilterOnMain';
+import useHomeStore from '../store/useHomeStore';
 
 
 export const Main = () => {
     const theme = useTheme();
 
-    const [homeData, setHomeData] = useState(null)
-    useEffect(() => {
-      axios
-        .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
-        .then((response) => {
-          setHomeData(response.data)
-          console.log('home ', response.data)
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-
-    }, [])
+    const homeData = useHomeStore((state) => state.homeData)
 
     return (
         <>
@@ -168,8 +155,41 @@ export const Main = () => {
                             font-size: 40px;
                             margin-bottom: 24px;
                         }
-                    `}>Афиша бизнес-событий 
-                    <div className={css`display: inline-block; padding-left: 16px;`}>
+
+                        span {
+                            position: relative;
+
+                            &:nth-of-type(1) {
+                                &::before {
+                                    content: '';
+                                    position: absolute;
+                                    left: -15px;
+                                    top: 0;
+                                    width: 117px;
+                                    height: 118px;
+                                    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="117" height="118" viewBox="0 0 117 118" fill="none"><path d="M7.16575 8.95115L0.676199 107.71C0.318542 113.152 4.84611 117.66 10.2873 117.278L108.63 110.371C113.345 110.04 117 106.119 117 101.394V15.2737C117 10.5208 113.304 6.58722 108.561 6.29118L16.707 0.558744C11.7576 0.249861 7.49091 4.00281 7.16575 8.95115Z" fill="%23B3ED73"/></svg>');
+                                    z-index: -1;
+                                    background-size: cover;
+
+                                    @media(max-width: 1439px) {
+                                        width: 76px;
+                                        height: 77px;
+                                        left: -7px;
+                                    }
+                                    @media(max-width: 575px) {
+                                        width: 53px;
+                                        height: 54px;
+                                    }
+                                }
+                            }
+                            &:nth-of-type(2) {
+                                color: ${theme.colors.purple};
+                            }
+                        }
+
+                    `} dangerouslySetInnerHTML={{ __html: homeData && homeData.front_title }} />
+                        {/* Афиша бизнес-событий  */}
+                    {/* <div className={css`display: inline-block; padding-left: 16px;`}>
                     <span className={css`
                         position: relative;
 
@@ -195,8 +215,8 @@ export const Main = () => {
                             }
                         }
                         `}>Go</span><span className={css`color: ${theme.colors.purple}`}>Conf</span>
-                    </div>
-                    </motion.div>
+                    </div> */}
+                    {/* </motion.div> */}
                     <motion.div
                     initial={{ x: 40, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -220,7 +240,7 @@ export const Main = () => {
             </div>
             
             <div className={cx(container, css`@media(max-width: 1439px) {padding: 0;}` )}>
-                <Filter />
+                <FilterOnMain />
             </div>
             <div className={css`
                 position: relative;

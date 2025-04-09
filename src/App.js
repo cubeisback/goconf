@@ -15,6 +15,8 @@ import { Faq } from "./pages/Faq";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { Organizer } from "./pages/Organizer";
 import axios from "axios";
+import useFiltersStore from "./store/useFiltersStore";
+import useHomeStore from "./store/useHomeStore";
 // TODO отложенная загрузка компонентов
 
 
@@ -43,34 +45,17 @@ function App() {
       };
     }, []);
 
-    //fetch
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
     useEffect(() => {
-      // axios
-      //   .get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
-      //   .then((response) => {
-      //     // setData(response.data);
-      //     // setLoading(false);
-      //     // setHomeData(response.data)
-      //     console.log('home ', response.data)
-      //   })
-      //   .catch((error) => {
-      //     setError(error.message);
-      //     setLoading(false);
-      //   });
   
-      // axios
-      //   .get("https://dev.goconf.ru/backend/wp-json/wp/v2/get_all_options/")
-      //   .then((response) => {
-      //     console.log('get_all_options ', response.data)
-      //   })
-      //   .catch((error) => {
-      //     setError(error.message);
-      //     setLoading(false);
-      //   });
+      axios
+        .get("https://dev.goconf.ru/backend/wp-json/wp/v2/get_all_options/")
+        .then((response) => {
+          console.log('get_all_options ', response.data)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
   
       // axios
       //   .get("https://dev.goconf.ru/backend/wp-json/wp/v2/get_primary_menu/?current_url=/events")
@@ -80,28 +65,21 @@ function App() {
       //   .catch((error) => {
       //     setError(error.message);
       //     setLoading(false);
-      //   });
-  
-        // axios
-        // .get("https://dev.goconf.ru/backend/wp-json/events/v2/single/?slug=test")
-        // .then((response) => {
-        //   console.log('single ', response.data)
-        // })
-        // .catch((error) => {
-        //   setError(error.message);
-        //   setLoading(false);
-        // });
-  
-        
+      //   }); 
   
     }, []);
+
+    const fetchFiltersData = useFiltersStore((state) => state.fetchFiltersData)
+    const fetchHomeData = useHomeStore((state) => state.fetchHomeData)
+    useEffect(()=>{
+        fetchFiltersData()
+        fetchHomeData()
+    }, [fetchFiltersData])
 
   return (
     <ThemeProvider theme={theme}>
     <Global styles={globalStyles} /> 
     <BrowserRouter>
-      {/* <DB/>  */}
-      {/* TODO remove db */}
       <Header isLogin={isLogin} windowWidth={windowWidth} />
       <Routes>
         <Route path="/" element={<Main />} />

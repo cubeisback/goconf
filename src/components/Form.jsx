@@ -2,44 +2,10 @@ import { css } from "@emotion/css"
 import { container } from "../pages/ui"
 import { ReactComponent as FormSvg } from '../images/svg/form.svg';
 import DropdownInput from "./ui/DropdownInput";
-import { useEffect, useState } from "react";
-
-const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6'];
+import useFiltersStore from "../store/useFiltersStore";
 
 export const Form = () => {
-
-    //Список городов
-        const [cities, setCities] = useState([]);
-    
-        useEffect(() => {
-          const getCities = async () => {
-            const url = `https://raw.githubusercontent.com/pensnarik/russian-cities/refs/heads/master/russian-cities.json`;
-      
-            try {
-              const response = await fetch(url);
-              const data = await response.json();
-      
-              if (data) {
-                // Сортировка: Москва и Санкт-Петербург всегда на первом месте
-                const sortedCities = data
-                  .map(city => city.name) // Получаем список городов
-                  .sort((a, b) => {
-                    if (a === 'Москва') return -1;  // Москва на первом месте
-                    if (b === 'Москва') return 1;
-                    if (a === 'Санкт-Петербург') return -1; // Санкт-Петербург на втором месте
-                    if (b === 'Санкт-Петербург') return 1;
-                    return a.localeCompare(b); // Остальные города сортируем по алфавиту
-                  });
-      
-                setCities(sortedCities); // Устанавливаем в состояние
-              }
-            } catch (error) {
-              console.error('Ошибка при получении городов:', error);
-            }
-          };
-      
-          getCities();
-        }, []);
+    const filtersData = useFiltersStore((state) => state.filtersData)
 
     return (
         <div className={css`
@@ -118,8 +84,8 @@ export const Form = () => {
                             }
                         `}>
                             <input type="text" placeholder="Ваш E-mail" />
-                            <DropdownInput options={options} placeholder={'Тематика'} />
-                            <DropdownInput options={cities} placeholder={'Город'} />
+                            <DropdownInput options={filtersData && filtersData.subjects} placeholder={'Тематика'} />
+                            <DropdownInput options={filtersData && filtersData.cities} placeholder={'Город'} />
                             
                             
                             <div className={css`

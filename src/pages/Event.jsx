@@ -317,7 +317,7 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>{pageInfo.cities[0].name}</p>
+                                `}>{pageInfo.cities[0] && pageInfo.cities[0].name}</p>
                             </div>
                             <div className={css`
                                 display: flex;

@@ -2,104 +2,32 @@
 import { motion } from 'framer-motion';
 import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { checkBox, filterBtn } from "../../pages/ui";
 import DropdownInput from "../ui/DropdownInput";
 import Datepicker from "../ui/Datepicker";
 import axios from 'axios';
 import { useLocation, useParams } from 'react-router';
 import { useNavigate } from 'react-router';
+import useFiltersStore from '../../store/useFiltersStore';
 
-const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
-
-export const Filter = ({full}) => {
+export const Filter = ({full, setEvents}) => {
     const theme = useTheme();
 
-    //Список городов
-    const [cities, setCities] = useState([]);
-
-    useEffect(() => {
-      const getCities = async () => {
-        const url = `https://raw.githubusercontent.com/pensnarik/russian-cities/refs/heads/master/russian-cities.json`;
-  
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-  
-          if (data) {
-            // Сортировка: Москва и Санкт-Петербург всегда на первом месте
-            const sortedCities = data
-              .map(city => city.name) // Получаем список городов
-              .sort((a, b) => {
-                if (a === 'Москва') return -1;  // Москва на первом месте
-                if (b === 'Москва') return 1;
-                if (a === 'Санкт-Петербург') return -1; // Санкт-Петербург на втором месте
-                if (b === 'Санкт-Петербург') return 1;
-                return a.localeCompare(b); // Остальные города сортируем по алфавиту
-              });
-  
-            setCities(sortedCities); // Устанавливаем в состояние
-          }
-        } catch (error) {
-          console.error('Ошибка при получении городов:', error);
-        }
-      };
-  
-      getCities();
-    }, []);
-
-    const [filtersData, setFiltersData] = useState();
-    useEffect(() => {
-      axios
-      .get("https://dev.goconf.ru/backend/wp-json/events/v2/get-filter/")
-      .then((response) => {
-        // setData(response.data);
-        // setLoading(false);
-        setFiltersData(response.data)
-        console.log('filters ', response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      });
-    },[])
+    const filtersData = useFiltersStore((state) => state.filtersData)
     
 
-  // Запрос по url
-  const { filterParams } = useParams();
-const [filterValues, setFilterValues] = useState({});
-const navigate = useNavigate();
-const [formData, setFormData] = useState({
-  city: null,
-  format: null,
-  direction: null,
-  dateStart: null,
-  dateEnd: null,
-  isOnline: false,
-  isFree: false,
-});
-
-// Обновление состояния formData при изменении filterParams из URL
-useEffect(() => {
-  console.log("filterParams: ", filterParams);  // Проверяем filterParams
-  if (filterParams) {
-    const filters = filterParams.split('/').reduce((acc, param) => {
-      const [key, value] = param.split('_');
-      
-      // Проверяем, что и key, и value существуют, и только тогда добавляем их в объект
-      if (key && value) {
-        acc[key] = value;
-      }
-      
-      return acc;
-    }, {});
-
-    console.log("Parsed filters: ", filters);  // Проверяем разобранные фильтры
-
-    setFilterValues(filters);
-    updateFormData(filters); // Обновляем formData
-  } else {
-    setFilterValues({});
-    setFormData({
+    const location = useLocation();
+    const navigate = useNavigate();
+  
+    // Парсим фильтры из URL
+    const filterParams = useMemo(() => {
+      const pathAfterEvents = location.pathname.replace(/^\/events\/?/, "");
+      return pathAfterEvents ? pathAfterEvents.split("/") : [];
+    }, [location.pathname]);
+  
+    const [filterValues, setFilterValues] = useState({});
+    const [formData, setFormData] = useState({
       city: null,
       format: null,
       direction: null,
@@ -108,75 +36,115 @@ useEffect(() => {
       isOnline: false,
       isFree: false,
     });
-  }
-}, [filterParams]);
-
-// Функция для обновления состояния formData
-const updateFormData = (filters) => {
-  // console.log("Updating formData with: ", filters);  // Проверяем обновление formData
-  setFormData((prevState) => ({
-    ...prevState,
-    city: filters.city || prevState.city,
-    format: filters.format || prevState.format,
-    direction: filters.direction || prevState.direction,
-    dateStart: filters.dateStart || prevState.dateStart,
-    dateEnd: filters.dateEnd || prevState.dateEnd,
-  }));
-};
-
-const handleSubmit = async () => {
-  // console.log('Submitting form with data: ', formData);  // Проверяем актуальные данные
-
-  // try {
-  //   const res = await axios.post(
-  //     "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
-  //     {}, // Пустое тело
-  //     {
-  //       params: formData, // Отправляем параметры как query params
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   );
-  //   console.log('Response with params: ', res);
-  // } catch (err) {
-  //   console.log('Error with params: ', err.message);
-  // }
-
-  try {
-    const res = await axios.post(
-      "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
-      formData, // Отправляем данные в теле запроса
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+  
+    // Обновление formData из URL и отправка запроса
+    useEffect(() => {
+      if (filterParams.length > 0) {
+        const filters = filterParams.reduce((acc, param) => {
+          const [key, value] = param.split("_");
+          if (key && value) {
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
+  
+        console.log("Parsed filters from URL:", filters);
+  
+        setFilterValues(filters);
+        const updatedForm = {
+          city: filters.city || null,
+          format: filters.format || null,
+          direction: filters.direction || null,
+          dateStart: filters.start || null,
+          dateEnd: filters.end || null,
+          isOnline: filters.isOnline === "true",
+          isFree: filters.isFree === "true",
+        };
+        setFormData(updatedForm);
+        handleSubmit(updatedForm); // Отправляем запрос сразу
+      } else {
+        const defaultForm = {
+          city: null,
+          format: null,
+          direction: null,
+          dateStart: null,
+          dateEnd: null,
+          isOnline: false,
+          isFree: false,
+        };
+        setFilterValues({});
+        setFormData(defaultForm);
+        handleSubmit(defaultForm);
       }
-    );
-    console.log('Response with body: ', res);
-  } catch (err) {
-    console.log('Error with body: ', err.message);
-  }
-};
+    }, [filterParams]);
+  
+    // Обновление фильтра и URL
+    const handleFilterChange = (newValue, type) => {
+      const updatedFilters = { ...filterValues, [type]: newValue };
+      setFilterValues(updatedFilters);
+  
+      // Обновляем URL
+      const filterString = Object.entries(updatedFilters)
+        .map(([key, value]) => `${key}_${value}`)
+        .join("/");
+  
+      navigate(`/events/${filterString}`);
+  
+      const updatedForm = {
+        ...formData,
+        [type]: newValue,
+      };
+      setFormData(updatedForm);
+      handleSubmit(updatedForm);
+    };
+  
+    // Отправка запроса
+    const handleSubmit = async (data) => {
+      try {
+        const res = await axios.post(
+          "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Response:", res);
+        setEvents(res.data.events);
+      } catch (err) {
+        console.log("Error:", err.message);
+      }
+    };
+  
+    // Здесь можешь рендерить список events и форму фильтрации
 
-const handleFilterChange = (newFilter, type) => {
-  const updatedFilters = { ...filterValues, [type]: newFilter };
-  setFilterValues(updatedFilters);
+    const handleBooleanFilterChange = (key) => {
+      const updatedForm = {
+        ...formData,
+        [key]: !formData[key],
+      };
+      setFormData(updatedForm);
+      handleSubmit(updatedForm);
+    };
 
-  // Формируем новый URL
-  const filterString = Object.entries(updatedFilters)
-    .map(([key, value]) => `${key}_${value}`)
-    .join('/');
+const resetFilter = () => {
+  // Сброс в начальное состояние
+  const defaultForm = {
+    city: null,
+    format: null,
+    direction: null,
+    dateStart: null,
+    dateEnd: null,
+    isOnline: false,
+    isFree: false,
+  };
 
-  navigate(`/events/${filterString}`); // Обновляем адресную строку
-  updateFormData(updatedFilters); // Обновляем formData после изменения фильтра
-};
-
-useEffect(() => {
-  // if (formData.city || formData.format || formData.direction || formData.dateStart || formData.dateEnd) {
-    handleSubmit(); // Отправляем запрос при каждом изменении formData
-  // }
-}, [formData]); // Срабатывает, когда formData изменяется
+  setFilterValues({});
+  setFormData(defaultForm);
+  navigate("/events"); // Удаляем фильтры из URL
+  handleSubmit(defaultForm); // Делаем новый запрос
+}
 
     return (
         <motion.div
@@ -199,22 +167,6 @@ useEffect(() => {
                       padding-bottom: ${full ? '16px' : '80px'};
                     }
                 `}>
-                    {/* <div className={filterSelector} ref={selectorRef}>
-                        <label onClick={()=>setShowSelect(true)}>
-                            <p ref={labelRef}>Тематика</p>
-                            <ArrowDown />
-                        </label>
-                        <motion.div 
-                        initial={{ pointerEvents: 'none', opacity: 0 }}
-                        animate={{ opacity: showSelect ? 1 : 0, pointerEvents: showSelect ? 'all' : 'none' }}
-                        transition={{ duration: 0.3 }}
-                        style={{position: "absolute", zIndex: 2}}
-                        >
-                            <p onClick={(e)=>changeSel(e)}>Тематика1</p>
-                            <p onClick={(e)=>changeSel(e)}>Тематика2</p>
-                            <p onClick={(e)=>changeSel(e)}>Тематика3</p>
-                        </motion.div>
-                    </div> */}
                     <div className={css`
                       flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
                       max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
@@ -243,7 +195,7 @@ useEffect(() => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} type={'city'} placeholder={'Город'} />
+                      <DropdownInput options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'city'} placeholder={'Город'} />
                     </div>
                     <div className={css`
                       flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
@@ -298,17 +250,18 @@ useEffect(() => {
                           }
                         `}>
                           <div className={checkBox}>
-                            <input type="checkbox" id="expample1" onChange={()=>setFormData((prevState) => ({
-                              ...prevState,
-                              isOnline: !prevState.isOnline,
-                            }))} />
+                            <input type="checkbox" id="expample1" 
+                            checked={formData.isOnline}
+                            onChange={() => handleBooleanFilterChange("isOnline")}
+                             />
+                            
                             <label htmlFor="expample1">Онлайн</label>
                           </div>
                           <div className={checkBox}>
-                            <input type="checkbox" id="expample2" onChange={()=>setFormData((prevState) => ({
-                              ...prevState,
-                              isFree: !prevState.isFree,
-                            }))} />
+                            <input type="checkbox" id="expample2" 
+                            checked={formData.isFree}
+                            onChange={() => handleBooleanFilterChange("isFree")}
+                            />
                             <label htmlFor="expample2">Бесплатное</label>
                           </div>
                         </div>
@@ -333,7 +286,7 @@ useEffect(() => {
                             width: 24px;
                             height: 24px;
                           }
-                        `}>
+                        `} onClick={()=>resetFilter()}>
                           <p>Сбросить фильтр</p>
                         </div>
                       </div>
