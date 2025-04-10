@@ -7,6 +7,7 @@ import { NavLink } from "react-router";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import axios from "axios";
+import { formatDate } from "../functions/functions";
 
 
 export const MainEvents = ({onPage, similar, id, events}) => {
@@ -40,7 +41,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
         // } else {
         //   setNearEvents(events);
         // }
-      }, [similar]);
+      }, [similar, id]);
 
     return (
         <div className={css`
@@ -122,7 +123,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                                     @media(max-width: 575px) {
                                         font-size: 24px;
                                     }
-                                `}>{item.date_start} -<br/> {item.date_end}</div>
+                                `}>{formatDate(item.date_start)} -<br/> {formatDate(item.date_end)}</div>
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;

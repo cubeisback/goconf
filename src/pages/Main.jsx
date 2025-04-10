@@ -187,9 +187,10 @@ export const Main = () => {
                             }
                         }
 
-                    `} dangerouslySetInnerHTML={{ __html: homeData && homeData.front_title }} />
-                        {/* Афиша бизнес-событий  */}
-                    {/* <div className={css`display: inline-block; padding-left: 16px;`}>
+                    `} >
+                        {/* dangerouslySetInnerHTML={{ __html: homeData && homeData.front_title }} */}
+                        Афиша бизнес-событий 
+                    <div className={css`display: inline-block; padding-left: 16px;`}>
                     <span className={css`
                         position: relative;
 
@@ -215,8 +216,8 @@ export const Main = () => {
                             }
                         }
                         `}>Go</span><span className={css`color: ${theme.colors.purple}`}>Conf</span>
-                    </div> */}
-                    {/* </motion.div> */}
+                    </div>
+                    </motion.div>
                     <motion.div
                     initial={{ x: 40, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -230,7 +231,10 @@ export const Main = () => {
                             font-size: 16px;
                             line-height: 1.22;
                         }
-                    `}>{homeData && homeData.front_subtitle}</motion.div>
+                    `}>
+                        {/* {homeData && homeData.front_subtitle} */}
+                        Делаем поиск профессиональных событий удобным, а&nbsp;привлечение участников эффективным
+                    </motion.div>
                 </div>
                 
                 

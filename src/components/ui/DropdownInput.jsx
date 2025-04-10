@@ -26,9 +26,13 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
 
       if(filterValues) {
         const checkedValue = filterValues[type];
-        if(checkedValue) {
+        if (checkedValue) {
           setSelectedValue(options[checkedValue]);
           setQuery(options[checkedValue]);
+        } else {
+          // если значение отсутствует, сбрасываем выбор
+          setSelectedValue(null);
+          setQuery('');
         }
       }
     }
@@ -198,6 +202,7 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
                 }
               `}
             >
+              {/* <li onClick={() => handleSelect('', '', '')}>Все</li> */}
               {(showFullList ? values : filteredOptions).map((option, index) => (
                 <li
                   key={index}

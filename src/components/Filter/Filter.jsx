@@ -11,7 +11,7 @@ import { useLocation, useParams } from 'react-router';
 import { useNavigate } from 'react-router';
 import useFiltersStore from '../../store/useFiltersStore';
 
-export const Filter = ({full, setEvents}) => {
+export const Filter = ({full, setEvents, setPageH1, setPageText}) => {
     const theme = useTheme();
 
     const filtersData = useFiltersStore((state) => state.filtersData)
@@ -128,6 +128,8 @@ export const Filter = ({full, setEvents}) => {
         );
         console.log("Response:", res);
         setEvents(res.data.events);
+        setPageH1(res.data.h1)
+        setPageText(res.data.text)
       } catch (err) {
         console.log("Error:", err.message);
       }
@@ -298,6 +300,11 @@ const resetFilter = () => {
                             background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M2 12C2 6.47715 6.57241 2 12.2128 2C16.3345 2 19.8859 4.39078 21.4995 7.83333M21.4995 7.83333H18.1702M21.4995 7.83333L22 4.22222M22 12C22 17.5229 17.4276 22 11.7872 22C7.66554 22 4.11413 19.6092 2.5005 16.1667M2.5005 16.1667H5.82979M2.5005 16.1667L2 19.7778" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
                             width: 24px;
                             height: 24px;
+                            transition: ${theme.transition};
+                          }
+
+                          &:hover::before {
+                              transform: rotate(180deg);
                           }
                         `} onClick={()=>resetFilter()}>
                           <p>Сбросить фильтр</p>

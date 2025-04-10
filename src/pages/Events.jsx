@@ -11,6 +11,9 @@ import { EventsFiltered } from '../components/EventsFiltered';
 export const Events = () => {
     const theme = useTheme();
     const [events, setEvents] = useState(null)
+    const [pageH1, setPageH1] = useState(null)
+    const [pageText, setPageText] = useState(null)
+    
 
     return (
         <>
@@ -18,9 +21,9 @@ export const Events = () => {
                 <div className={container}>
                     <div className={breadcrumbs}>
                         <a href="/">Главная</a>
-                        <p>Мероприятия</p>
+                        <p>{pageH1 && pageH1}</p>
                     </div>
-                    <h1 className={pageTitle}>Мероприятия</h1>
+                    <h1 className={pageTitle}>{pageH1 && pageH1}</h1>
                     <div className={css`
                         background-color: #fff;
                         border-radius: 28px;
@@ -57,7 +60,7 @@ export const Events = () => {
                 }
             `}>
                 <div className={container}>
-                    <Filter full={true} setEvents={setEvents} />
+                    <Filter full={true} setEvents={setEvents} setPageH1={setPageH1} setPageText={setPageText} />
 
                     <div className={css`
                         display: flex;
@@ -103,10 +106,9 @@ export const Events = () => {
                             p {
                                 color: #47474D;
                             }
-                        `}>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.</p>
-                        </div>
+                        `} dangerouslySetInnerHTML={{ __html: pageText && pageText }} />
+                            
+                        {/* </div> */}
                     </div>
                 </div>
 

@@ -360,7 +360,7 @@ export const Event = () => {
                                 `}>Формат</p>
 
                                 {pageInfo.formats.map(format => (
-                                    <p className={css`
+                                    <p key={format.name} className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                 `}>{format.name}</p>
@@ -420,7 +420,6 @@ export const Event = () => {
             </div>
 
             <MainEvents id={pageInfo && pageInfo.data.ID} similar={true} />
-
             <Form />
 
             <Helper>

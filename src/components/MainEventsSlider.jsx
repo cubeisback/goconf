@@ -10,33 +10,7 @@ import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { NavLink } from "react-router";
 import axios from "axios";
-
-// const eventsArray = [
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     },
-//     {
-//         title: 'Налоговая и юридическая безопасность селлера на маркетплейсах',
-//         tag: 'Конференция',
-//         date: <>26&nbsp;июля 2024&nbsp;-<br/> 09&nbsp;мая 2025</>,
-//         place: 'Россия, Екатеринбург',
-//     }
-// ]
+import { formatDate } from "../functions/functions";
 
 export const MainEventsSlider = () => {
     const theme = useTheme();
@@ -241,12 +215,12 @@ export const MainEventsSlider = () => {
                                                 @media(max-width: 575px) {
                                                     font-size: 24px;
                                                 }
-                                            `}>{item.date_start} -<br/> {item.date_end}</div>
+                                            `}>{formatDate(item.date_start)} -<br/> {formatDate(item.date_end)}</div>
                                             <div className={css`
                                                 color: #47474D;
                                                 font-size: 14px;
                                                 line-height: 1.16;    
-                                            `}>Россия, {item.city}</div>
+                                            `}>{item.city}</div>
                                         </div>
                                         <NavLink to={`/event/${item.slug}`}>
                                             <LinkArrow />

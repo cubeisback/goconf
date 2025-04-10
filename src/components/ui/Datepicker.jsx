@@ -10,7 +10,6 @@ import "react-datepicker/dist/react-datepicker.css"; //TODO remove
 const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type}) => {
     const [startDate, setStartDate] = useState(null);
     const [showDate, setShowDate] = useState(false);
-    // const [showSelect, setShowSelect] = useState(false);
     const datePickerRef = useRef(null);
 
     const customRu = {
@@ -24,11 +23,22 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
     };
 
       useEffect(() => {
+          // if(filterValues) {
+          //   const checkedValue = filterValues[type];
+          //   if(checkedValue) {
+          //     // console.log('dfgf', filterValues[type])
+          //     setStartDate(filterValues[type])
+          //   }
+
+            
+          // }
+
           if(filterValues) {
             const checkedValue = filterValues[type];
-            if(checkedValue) {
-              console.log('dfgf', filterValues[type])
+            if (checkedValue) {
               setStartDate(filterValues[type])
+            } else {
+              setStartDate(null)
             }
           }
       }, [filterValues]);
@@ -46,6 +56,11 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
           document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    function parseDateString(dateString) {
+      const [day, month, year] = dateString.split('.');
+      return new Date(`${year}-${month}-${day}`);
+    }
 
     return (
         <div className={cx(filterSelector, css`
@@ -84,7 +99,7 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
                         }
                     `}>
                   <DatePicker 
-                    // selected={startDate && startDate} 
+                    selected={startDate ? parseDateString(startDate) : null} 
                     locale={customRu}
                     onChange={(date) => {
                         const day = String(date.getDate()).padStart(2, '0');
@@ -97,9 +112,7 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
                           setShowDate(false);
                         }, 0)
                         handleFilterChange(formattedDate, type)
-                        // console.log(formattedDate)
-                        }
-                    } 
+                    }}
                     inline
                 />
                 </div>

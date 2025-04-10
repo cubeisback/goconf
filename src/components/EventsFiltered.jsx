@@ -6,6 +6,7 @@ import { ReactComponent as LinkArrow } from '../images/svg/link_arrow.svg';
 import { NavLink } from "react-router";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
+import { formatDate } from "../functions/functions";
 
 
 export const EventsFiltered = ({onPage, similar, events}) => {
@@ -99,7 +100,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                     @media(max-width: 575px) {
                                         font-size: 24px;
                                     }
-                                `}>{item.date_start} -<br/> {item.date_end}</div>
+                                `}>{formatDate(item.date_start)} -<br/> {formatDate(item.date_end)}</div>
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
