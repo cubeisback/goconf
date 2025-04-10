@@ -28,10 +28,18 @@ const handleFilterChange = (newFilter, type) => {
     const updatedFilters = { ...filterValues, [type]: newFilter };
     setFilterValues(updatedFilters);
 
-    const filterString = Object.entries(updatedFilters)
-        .map(([key, value]) => `${key}_${value}`)
+    const order = ['direction', 'city', 'format', 'start', 'end'];
+
+    // const filterString = Object.entries(updatedFilters)
+    //     .map(([key, value]) => `${key}_${value}`)
+    //     .join('/');
+    // setFilterUrl(filterString);
+
+    const filterString = order
+        .filter(key => updatedFilters[key]) // исключаем неустановленные значения
+        .map(key => `${key}_${updatedFilters[key]}`)
         .join('/');
-    
+
     setFilterUrl(filterString);
 }
 

@@ -167,7 +167,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                                     width: max-content;
                                 `}>
                                     {item.format.map(theme => (
-                                        <NavLink key={theme} to={`/event/${theme.slug}`}>{theme.name}</NavLink>
+                                        <NavLink key={theme} to={`/events/format_${theme.slug}`}>{theme.name}</NavLink>
                                     ))}
                                     </div>
                                 <div className={css`
@@ -208,8 +208,8 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                                         }
                                     }
                                 `}>
-                                    {item.format.map(theme => (
-                                        <NavLink key={theme} to={`/event/${theme.slug}`}>{theme.name}</NavLink>
+                                    {item.subject.map(theme => (
+                                        <NavLink key={theme} to={`/events/direction_${theme.slug}`}>{theme.name}</NavLink>
                                     ))}
                                 </div>
                                 <NavLink to={`/event/${item.slug}`} className={css`

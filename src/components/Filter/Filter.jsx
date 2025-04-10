@@ -101,9 +101,16 @@ export const Filter = ({full, setEvents, setPageH1, setPageText}) => {
       const updatedFilters = { ...filterValues, [type]: newValue };
       setFilterValues(updatedFilters);
     
-      const filterString = Object.entries(updatedFilters)
-        .map(([key, value]) => `${key}_${value}`)
-        .join("/");
+      // const filterString = Object.entries(updatedFilters)
+      //   .map(([key, value]) => `${key}_${value}`)
+      //   .join("/");
+
+        const order = ['direction', 'city', 'format', 'start', 'end'];
+
+      const filterString = order
+        .filter(key => updatedFilters[key])
+        .map(key => `${key}_${updatedFilters[key]}`)
+        .join('/');
     
       navigate(`/events/${filterString}`);
     

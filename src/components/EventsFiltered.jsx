@@ -143,8 +143,8 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                     padding: 3px 8px 5px;
                                     width: max-content;
                                 `}>
-                                    {item.subject.map(theme => (
-                                        <NavLink key={theme} to={`/events/direction_${theme.slug}`}>{theme.name}</NavLink>
+                                    {item.format.map(theme => (
+                                        <NavLink key={theme} to={`/events/format_${theme.slug}`}>{theme.name}</NavLink>
                                     ))}
                                     </div>
                                 <div className={css`
@@ -185,8 +185,8 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                         }
                                     }
                                 `}>
-                                    {item.format.map(theme => (
-                                        <NavLink key={theme} to={`/events/format_${theme.slug}`}>{theme.name}</NavLink>
+                                    {item.subject.map(theme => (
+                                        <NavLink key={theme} to={`/events/direction_${theme.slug}`}>{theme.name}</NavLink>
                                     ))}
                                 </div>
                                 <NavLink to={`/event/${item.slug}`} className={css`
