@@ -143,8 +143,8 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                     padding: 3px 8px 5px;
                                     width: max-content;
                                 `}>
-                                    {item.format.map(theme => (
-                                        <NavLink key={theme} to={`/event/${theme.slug}`}>{theme.name}</NavLink>
+                                    {item.subject.map(theme => (
+                                        <NavLink key={theme} to={`/events/direction_${theme.slug}`}>{theme.name}</NavLink>
                                     ))}
                                     </div>
                                 <div className={css`
@@ -186,14 +186,15 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                     }
                                 `}>
                                     {item.format.map(theme => (
-                                        <NavLink key={theme} to={`/event/${theme.slug}`}>{theme.name}</NavLink>
+                                        <NavLink key={theme} to={`/events/format_${theme.slug}`}>{theme.name}</NavLink>
                                     ))}
                                 </div>
                                 <NavLink to={`/event/${item.slug}`} className={css`
                                     font-size: 18px;
                                     font-weight: 500;
                                     line-height: 1.36;    
-                                `}>{item.title}</NavLink>
+                                `} dangerouslySetInnerHTML={{ __html: item.title }} />
+                                    {/* {item.title}</NavLink> */}
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
@@ -202,8 +203,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                         display: none;
                                     }
                                 `}>
-                                    {/* {item.previewText} */}
-                                    Previewtext
+                                    {item.short_text}
                                 </div>
                             </div>
                             <NavLink to={`/event/${item.slug}`} className={css`

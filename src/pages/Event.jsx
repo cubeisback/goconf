@@ -106,15 +106,15 @@ export const Event = () => {
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>
-                        <a href="/">Главная</a>
-                        <a href="/">Мероприятия</a>
-                        <p>Национальный рекламный форум</p>
+                        <NavLink href="/">Главная</NavLink>
+                        <NavLink to="/events">Мероприятия</NavLink>
+                        <p>{pageInfo && pageInfo.data.post_title}</p>
                     </div>
                     {pageInfo && <h1 className={pageTitle}>{pageInfo.data.post_title}</h1> }
                     <div className={promoThemes}>
                         <p>Тематика:</p>
                         {pageInfo && pageInfo.subjects.map(theme => (
-                            <NavLink key={theme.term_id} to="/">{theme.name}</NavLink>
+                            <NavLink key={theme.term_id} to={`/events/direction_${theme.slug}`}>{theme.name}</NavLink>
                         ))}
                     </div>
                 </div>
@@ -149,22 +149,6 @@ export const Event = () => {
 
                             <div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
                             {/* <div className={text}>{pageInfo.data.short_text}</div> */}
-                                 
-                                {/* <p>Сразу два уникальных события ждут представителей индустрии в ноябре:</p>
-                                <div>
-                                    <p>🌟12-15 ноября — Неделя рекламы в Москве;</p>
-                                    <p>🌟13-15 ноября — НРФ’8.</p>
-                                </div>
-                                <p>В этом году главная тема деловой программы НРФ: «Бизнес, потребители, государство».</p>
-                                <div>12 ноября — Саммит по взаимодействию индустрии с органами государственной власти</div>
-                                <p>Эксперты со стороны органов государственной власти и рекламной индустрии обсудят законодательные инициативы, актуальные вопросы нормативно-правового регулирования и правоприменительные практики, акты саморегулирования рынка.</p>
-                                <div>13 ноября — День digital</div>
-                                <p>Дискуссия будет посвящена новым инструментам цифровых коммуникаций и актуальным подходам в интерактивной рекламе.</p>
-                                <div>14 ноября — День контента и креатива</div>
-                                <p>На площадке форума выступят российские и зарубежные эксперты. Также пройдет официальная церемония награждения победителей фестиваля Red Apple.</p>
-                                <div>15 ноября — День стратегических инициатив</div>
-                                <p>Ключевые игроки рекламного рынка обсудят цели и задачи российского маркетинга, узнаваемость отечественных брендов и тренды в поведении потребителей.</p> */}
-                            {/* </div> */}
 
                             {version === 3 && 
                             
@@ -305,6 +289,7 @@ export const Event = () => {
                                     line-height: 1.16;
                                 `}>{pageInfo.fields.events_start} - {pageInfo.fields.events_end}</p>
                             </div>
+                            {pageInfo.cities[0] && 
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -319,6 +304,8 @@ export const Event = () => {
                                     line-height: 1.16;
                                 `}>{pageInfo.cities[0] && pageInfo.cities[0].name}</p>
                             </div>
+                            }
+                            {pageInfo.fields.address &&
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -333,6 +320,8 @@ export const Event = () => {
                                     line-height: 1.16;
                                 `}>{pageInfo.fields.address}</p>
                             </div>
+                            }
+                            {pageInfo.fields.events_cost &&
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -347,8 +336,10 @@ export const Event = () => {
                                     line-height: 1.16;
                                     font-weight: 500;
                                     color: #8553F9;
-                                `}>{pageInfo.fields.events_cost}</p>
+                                `}>{pageInfo.fields.events_cost} руб.</p>
                             </div>
+                            }
+                            {pageInfo.formats && 
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -360,13 +351,16 @@ export const Event = () => {
                                 `}>Формат</p>
 
                                 {pageInfo.formats.map(format => (
-                                    <p key={format.name} className={css`
-                                    font-size: 14px;
-                                    line-height: 1.16;
-                                `}>{format.name}</p>
+                                    <NavLink to={`/events/format_${format.slug}`} key={format.name} className={css`
+                                        font-size: 14px;
+                                        line-height: 1.16;
+                                        color: #8553F9;
+                                        cursor: pointer;
+                                    `}>{format.name}</NavLink>
                                 ))}
-                                
                             </div>
+                            }
+                            {pageInfo.company[0] && 
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -376,13 +370,14 @@ export const Event = () => {
                                 <p className={css`
                                     line-height: 1.28;
                                 `}>Организатор</p>
-                                <NavLink to={`/organizer/${pageInfo.company[0] && pageInfo.company[0].name}`} className={css`
+                                <NavLink to={`/organizer/${pageInfo.company[0] && pageInfo.company[0].slug}`} className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #8553F9;
                                     cursor: pointer;
                                 `}>{pageInfo.company[0] && pageInfo.company[0].name}</NavLink>
                             </div>
+                            }
                             </div>
                             
                             {version === 2 && <a href="/" className={css`

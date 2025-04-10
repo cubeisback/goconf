@@ -198,7 +198,8 @@ export const MainEventsSlider = () => {
                                         display: -webkit-box;
                                         -webkit-box-orient: vertical;
                                         overflow: hidden;    
-                                    `}>{item.title}</NavLink>
+                                    `} dangerouslySetInnerHTML={{ __html: item.title }} />
+                                    {/* {item.title}</NavLink> */}
                                     <div className={css`
                                         display: flex;
                                         align-items: flex-end;

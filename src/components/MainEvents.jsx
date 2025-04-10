@@ -216,7 +216,8 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                                     font-size: 18px;
                                     font-weight: 500;
                                     line-height: 1.36;    
-                                `}>{item.title}</NavLink>
+                                `} dangerouslySetInnerHTML={{ __html: item.title }} />
+                                {/* {item.title}</NavLink> */}
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
@@ -225,8 +226,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                                         display: none;
                                     }
                                 `}>
-                                    {/* {item.previewText} */}
-                                    Previewtext
+                                    {item.short_text}
                                 </div>
                             </div>
                             <NavLink to={`/event/${item.slug}`} className={css`
