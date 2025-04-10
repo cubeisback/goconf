@@ -8,7 +8,7 @@ import {ru} from 'date-fns/locale/ru';
 import "react-datepicker/dist/react-datepicker.css"; //TODO remove
 
 const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type}) => {
-    const [startDate, setStartDate] = useState();
+    const [startDate, setStartDate] = useState(null);
     const [showDate, setShowDate] = useState(false);
     // const [showSelect, setShowSelect] = useState(false);
     const datePickerRef = useRef(null);
@@ -23,17 +23,15 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
       },
     };
 
-      // useEffect(() => {
-      //     if(filterValues) {
-      //       console.log('dfgf', filterValues, type, filterValues[type])
-      //       const checkedValue = filterValues[type];
-      //       if(checkedValue) {
-      //         // setSelectedValue(options[checkedValue]);
-      //         // setQuery(options[checkedValue]);
-      //       }
-      //     }
-        
-      // }, [filterValues]);
+      useEffect(() => {
+          if(filterValues) {
+            const checkedValue = filterValues[type];
+            if(checkedValue) {
+              console.log('dfgf', filterValues[type])
+              setStartDate(filterValues[type])
+            }
+          }
+      }, [filterValues]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -86,7 +84,7 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
                         }
                     `}>
                   <DatePicker 
-                    // selected={startDate} 
+                    // selected={startDate && startDate} 
                     locale={customRu}
                     onChange={(date) => {
                         const day = String(date.getDate()).padStart(2, '0');

@@ -15,7 +15,6 @@ export const Filter = ({full, setEvents}) => {
     const theme = useTheme();
 
     const filtersData = useFiltersStore((state) => state.filtersData)
-    
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -79,23 +78,40 @@ export const Filter = ({full, setEvents}) => {
     }, [filterParams]);
   
     // Обновление фильтра и URL
+    // const handleFilterChange = (newValue, type) => {
+    //   const updatedFilters = { ...filterValues, [type]: newValue };
+    //   setFilterValues(updatedFilters);
+  
+    //   // Обновляем URL
+    //   const filterString = Object.entries(updatedFilters)
+    //     .map(([key, value]) => `${key}_${value}`)
+    //     .join("/");
+  
+    //   navigate(`/events/${filterString}`);
+  
+    //   const updatedForm = {
+    //     ...formData,
+    //     [type]: newValue,
+    //   };
+    //   setFormData(updatedForm);
+    //   handleSubmit(updatedForm);
+    // };
+
     const handleFilterChange = (newValue, type) => {
       const updatedFilters = { ...filterValues, [type]: newValue };
       setFilterValues(updatedFilters);
-  
-      // Обновляем URL
+    
       const filterString = Object.entries(updatedFilters)
         .map(([key, value]) => `${key}_${value}`)
         .join("/");
-  
+    
       navigate(`/events/${filterString}`);
-  
-      const updatedForm = {
-        ...formData,
-        [type]: newValue,
-      };
-      setFormData(updatedForm);
-      handleSubmit(updatedForm);
+    
+      // Здесь больше не вызываем handleSubmit — это сделает useEffect
+      setFormData(prev => ({
+        ...prev,
+        [type]: newValue
+      }));
     };
   
     // Отправка запроса
@@ -118,7 +134,6 @@ export const Filter = ({full, setEvents}) => {
     };
   
     // Здесь можешь рендерить список events и форму фильтрации
-
     const handleBooleanFilterChange = (key) => {
       const updatedForm = {
         ...formData,
@@ -218,8 +233,6 @@ const resetFilter = () => {
                     
                     <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'start'} />
                     <Datepicker full={full} title={'Окончание'} fixmob={true} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'end'} /> {/*TODO Передалать на экран*/}
-
-                    {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>Найти</div>}
 
                     {full && 
                       <div className={css`

@@ -20,7 +20,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
         // if (events === undefined || events === null) {
             if(similar) {
                 axios
-                .get(`https://dev.goconf.ru/backend/wp-json/events/v2/similar-events/?id={{${id}}}`)
+                .get(`https://dev.goconf.ru/backend/wp-json/events/v2/similar-events/?id=${id}`)
                 .then((response) => {
                   setNearEvents(response.data.items);
                 })
