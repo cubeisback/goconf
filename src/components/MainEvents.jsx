@@ -13,7 +13,7 @@ import { formatDate } from "../functions/functions";
 export const MainEvents = ({onPage, similar, id, events}) => {
     const theme = useTheme();
 
-    const [limit, setLimit] = useState(3);
+    const [limit, setLimit] = useState(5);
 
     const [nearEvents, setNearEvents] = useState(null)
    
@@ -250,6 +250,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                 </div>
 
                 {!similar &&
+                nearEvents && limit < nearEvents.length && (
                     <div className={css`
                         margin: 0 auto;
                         padding: 14px 32px;
@@ -266,7 +267,8 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                             background-color: ${theme.colors.purple};
                             color: #fff;
                         }
-                    `} onClick={()=>setLimit(prev => prev+3)}>Показать еще +</div>
+                    `} onClick={()=>setLimit(prev => prev+5)}>Показать еще +</div>
+                )
                 }
             </div>
         </div>
