@@ -5,8 +5,10 @@ import { MainEvents } from '../components/MainEvents';
 import { Form } from '../components/Form';
 import { ReactComponent as SearchIcon } from '../images/svg/search.svg';
 import { useTheme } from '@emotion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EventsFiltered } from '../components/EventsFiltered';
+import axios from 'axios';
+import { NavLink } from 'react-router';
 
 export const Events = () => {
     const theme = useTheme();
@@ -14,6 +16,19 @@ export const Events = () => {
     const [pageH1, setPageH1] = useState(null)
     const [pageText, setPageText] = useState(null)
     
+    const [formatItems, setFormatItems] = useState(null)
+    useEffect(() => {
+      axios
+        .get("https://dev.goconf.ru/backend/wp-json/events/v2/popular-formats/")
+        .then((response) => {
+            setFormatItems(response.data.items)
+            console.log('popular-formats ', response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+
+    }, [])
 
     return (
         <>
@@ -62,12 +77,13 @@ export const Events = () => {
                 <div className={container}>
                     <Filter full={true} setEvents={setEvents} setPageH1={setPageH1} setPageText={setPageText} />
 
+                    
                     <div className={css`
                         display: flex;
                         gap: 16px;
                         flex-wrap: wrap;
 
-                        div {
+                        a {
                             padding: 7px 12px 9px;
                             border-radius: 8px;
                             background-color: #F5F7FA;
@@ -79,13 +95,21 @@ export const Events = () => {
                             &:hover {
                                 background-color: ${theme.colors.green};
                             }
+
+                            br {
+                                display: none;
+                            }
                         }
                     `}>
-                        <div>Конференции по&nbsp;маркетингу</div>
+                        {/* <div>Конференции по&nbsp;маркетингу</div>
                         <div>Бизнес-семинары</div>
                         <div>Конференции в Москве</div>
                         <div>Выставки в Санкт-Петербурге</div>
-                        <div>Конференции в Москве</div>
+                        <div>Конференции в Москве</div> */}
+
+                    {formatItems && formatItems.map((item, index) => (
+                        <NavLink to={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`} key={index} dangerouslySetInnerHTML={{ __html: item.name }} />
+                    ))}
                     </div>
                     
                 </div>

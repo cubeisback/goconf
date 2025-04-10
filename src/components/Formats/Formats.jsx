@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import axios from 'axios';
+import { NavLink } from 'react-router';
 
 export const Formats = () => {
     const theme = useTheme();
@@ -103,7 +104,7 @@ export const Formats = () => {
                 }
             `}>
                 {formatItems && formatItems.map((item, index) => (
-                    <div key={index} className={css`
+                    <NavLink to={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`} key={index} className={css`
                         max-width: 224px;
                         border-radius: 24px;
                         overflow: hidden;
@@ -144,7 +145,7 @@ export const Formats = () => {
                                 width: max-content;
                             `}>{item.count} событий</div>
                         </div>
-                    </div>
+                    </NavLink>
                 ))}
             </div>
             </div>
@@ -158,7 +159,7 @@ export const Formats = () => {
                                 max-width: 180px;
                                 padding: 0 10px; 
                             `}>
-                            <div key={index} className={css`
+                            <NavLink to={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`} className={css`
                                 max-width: 224px;
                                 border-radius: 24px;
                                 overflow: hidden;
@@ -194,7 +195,7 @@ export const Formats = () => {
                                         width: max-content;
                                     `}>{item.count} событий</div>
                                 </div>
-                            </div>
+                            </NavLink>
                             </SwiperSlide>
                         ))}
             </Swiper>
