@@ -15,6 +15,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import axios from 'axios';
+import { formatPrice } from '../functions/functions';
 
 export const Event = () => {
     const [version, setVersion] = useState(0);
@@ -99,6 +100,20 @@ export const Event = () => {
             font-weight: 500;
             line-height: 1.36;
         }
+        & > h2 {
+            font-size: 24px;
+            line-height: 1.34;
+        }
+        & > h3 {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        & > h4 {
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.36;
+        }
     `;
 
     return (
@@ -145,7 +160,9 @@ export const Event = () => {
                             flex: 1;
                             max-width: 952px;
                         `}>
-                            <img src={pageInfo.fields.cover.url} alt="" className={css`margin-bottom: 40px;`} />
+                            <div className={css`max-height: 400px;overflow: hidden;margin-bottom: 40px;`}>
+                                <img src={pageInfo.fields.anons.url} alt="" className={css`object-fit: cover;width:100%;height:100%;`} />
+                            </div>
 
                             <div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
                             {/* <div className={text}>{pageInfo.data.short_text}</div> */}
@@ -305,7 +322,6 @@ export const Event = () => {
                                 `}>{pageInfo.cities[0] && pageInfo.cities[0].name}</p>
                             </div>
                             }
-                            {pageInfo.fields.address &&
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -318,10 +334,9 @@ export const Event = () => {
                                 <p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>{pageInfo.fields.address}</p>
+                                `}>{pageInfo.fields.online ? 'Онлайн-событие' : pageInfo.fields.address}</p>
                             </div>
-                            }
-                            {pageInfo.fields.events_cost &&
+                            
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -336,9 +351,8 @@ export const Event = () => {
                                     line-height: 1.16;
                                     font-weight: 500;
                                     color: #8553F9;
-                                `}>{pageInfo.fields.events_cost} руб.</p>
+                                `}>{pageInfo.fields.free ? 'Бесплатно' : formatPrice(pageInfo.fields.events_cost) + ' руб.'}</p>
                             </div>
-                            }
                             {pageInfo.formats && 
                             <div className={css`
                                 display: flex;

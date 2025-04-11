@@ -11,7 +11,7 @@ import { useLocation, useParams } from 'react-router';
 import { useNavigate } from 'react-router';
 import useFiltersStore from '../../store/useFiltersStore';
 
-export const Filter = ({full, setEvents, setPageH1, setPageText}) => {
+export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText}) => {
     const theme = useTheme();
 
     const filtersData = useFiltersStore((state) => state.filtersData)
@@ -135,8 +135,9 @@ export const Filter = ({full, setEvents, setPageH1, setPageText}) => {
         );
         console.log("Response:", res);
         setEvents(res.data.events);
-        setPageH1(res.data.h1)
-        setPageText(res.data.text)
+        setTotal(res.data.total);
+        setPageH1(res.data.h1);
+        setPageText(res.data.text);
       } catch (err) {
         console.log("Error:", err.message);
       }
@@ -179,7 +180,7 @@ const resetFilter = () => {
                     width: 100%;
                     border-radius: 28px;
                     background-color: ${theme.colors.purple};
-                    margin-bottom: ${full ? '16px' : '95px' };
+                    margin-bottom: ${full ? '24px' : '95px' };
                     display: flex;
                     gap: 16px;
                     padding: 16px;
@@ -192,8 +193,8 @@ const resetFilter = () => {
                     }
                 `}>
                     <div className={css`
-                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
-                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
+                      flex:  ${full ? '1' : '0 1 calc(16.666666% - 13.333333px)' };
+                      max-width: ${full ? '' : 'calc(16.666666% - 13.333333px)'};
 
                       @media(max-width: 1339px) {
                         flex: 0 1 calc(33.3333333% - 10.666666px);
@@ -204,11 +205,11 @@ const resetFilter = () => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={filtersData && filtersData.subjects} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'direction'} placeholder={'Тематика'} />
+                      <DropdownInput full={full} options={filtersData && filtersData.subjects} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'direction'} placeholder={'Тематика'} />
                     </div>
                     <div className={css`
-                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
-                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
+                      flex: ${full ? '1' : '0 1 calc(16.666666% - 13.333333px)' };
+                      max-width: ${full ? '' : 'calc(16.666666% - 13.333333px)'};
 
                       @media(max-width: 1339px) {
                         flex: 0 1 calc(33.3333333% - 10.666666px);
@@ -219,11 +220,11 @@ const resetFilter = () => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'city'} placeholder={'Город'} />
+                      <DropdownInput full={full} options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'city'} placeholder={'Город'} />
                     </div>
                     <div className={css`
-                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
-                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
+                      flex: ${full ? '1' : '0 1 calc(16.666666% - 13.333333px)' };
+                      max-width: ${full ? '' : 'calc(16.666666% - 13.333333px)'};
 
                       @media(max-width: 1339px) {
                         flex: 0 1 calc(33.3333333% - 10.666666px);
@@ -234,7 +235,7 @@ const resetFilter = () => {
                         max-width: 100%;
                       }
                     `}>
-                      <DropdownInput options={filtersData && filtersData.formats} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'format'} placeholder={'Формат'} />
+                      <DropdownInput full={full} options={filtersData && filtersData.formats} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'format'} placeholder={'Формат'} />
                     </div>
                     
                     

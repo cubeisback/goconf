@@ -13,6 +13,7 @@ import { NavLink } from 'react-router';
 export const Events = () => {
     const theme = useTheme();
     const [events, setEvents] = useState(null)
+    const [total, setTotal] = useState(null)
     const [pageH1, setPageH1] = useState(null)
     const [pageText, setPageText] = useState(null)
     
@@ -75,9 +76,9 @@ export const Events = () => {
                 }
             `}>
                 <div className={container}>
-                    <Filter full={true} setEvents={setEvents} setPageH1={setPageH1} setPageText={setPageText} />
+                    <Filter full={true} setEvents={setEvents} setTotal={setTotal} setPageH1={setPageH1} setPageText={setPageText} />
 
-                    
+                    {total ? <p className={css`padding-bottom: 24px;`}>Найдено событий: {total}</p> : null}
                     <div className={css`
                         display: flex;
                         gap: 16px;

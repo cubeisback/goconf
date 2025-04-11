@@ -1,14 +1,15 @@
 import { NavLink, useLocation, useNavigate } from "react-router";
 import { ReactComponent as Logo } from '../../images/svg/logo.svg';
 import { ReactComponent as UserIcon } from '../../images/svg/user.svg';
+import { ReactComponent as UserIcon32 } from '../../images/svg/user32.svg';
 import { ReactComponent as NotificationIcon } from '../../images/svg/notification.svg';
 import { ReactComponent as NotificationImg } from '../../images/svg/notification_img.svg';
 import { ReactComponent as SearchIcon } from '../../images/svg/search.svg';
 import { ReactComponent as SettingsIcon } from '../../images/svg/settings.svg';
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button, DoubleLink } from "../../pages/ui";
-import { css } from '@emotion/css';
+import { Button, DoubleLink, input } from "../../pages/ui";
+import { css, cx } from '@emotion/css';
 import { Modal } from "../ui/Modal";
 import { useTheme } from "@emotion/react";
 
@@ -201,11 +202,11 @@ export const Header = ({isLogin, windowWidth}) => {
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 136px;
-          `} to="/lk"> {windowWidth > 575 ? 'Александр Романов' : <UserIcon />}</NavLink>
+          `} to="/lk"> {windowWidth > 575 ? 'Александр Романов' : <UserIcon32 />}</NavLink>
           </>
           :
           <div onClick={()=>setIsModalOpen(true)} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>
-            <UserIcon />
+            {windowWidth > 575 ? <UserIcon /> : <UserIcon32 /> }
             {windowWidth > 575 && <p>Войти</p> }
           </div>
           }
@@ -313,6 +314,10 @@ export const Header = ({isLogin, windowWidth}) => {
           height: 100vh;
           z-index: 2;
           padding-top: 90px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding-bottom: 60px;
         `}
       >
         <div className={css`
@@ -322,6 +327,25 @@ export const Header = ({isLogin, windowWidth}) => {
           gap: 32px;
           padding: 24px 16px;
         `}>
+          <div className={css`
+                                  background-color: #fff;
+                                  border-radius: 28px;
+                                  padding: 14px 16px;
+                                  width: 608px;
+                                  font-size: 14px;
+                                  line-height: 1.16;
+                                  display: flex;
+                                  gap: 8px;
+                                  align-items: center;
+                                  border: 1px solid #EDEDEE;
+          
+                                  @media(max-width: 640px) {
+                                      width: 100%;
+                                  }
+                              `}>
+                                  <input className={cx(input, css`padding: 0 4px;`)} type="text" placeholder='Поиск по мероприятиям' />
+                                  <SearchIcon className={css`cursor: pointer;`} />
+                              </div>
             <NavLink to="/events" className={DoubleLink} onClick={()=>setBurger(false)}>
               <span>Мероприятия</span><span>Мероприятия</span>
             </NavLink>
@@ -334,6 +358,23 @@ export const Header = ({isLogin, windowWidth}) => {
             <NavLink to="/faq" className={DoubleLink} onClick={()=>setBurger(false)}>
               <span>FAQ</span><span>FAQ</span>
             </NavLink>
+        </div>
+        <div className={css`
+          display: flex;
+          flex-direction: column;
+          gap: 32px;
+          align-items: center;
+        `}>
+          <NavLink to="/lk/add">
+              <Button>
+                <p>
+                  <span>Разместить событие</span>
+                  <span>Разместить событие</span>
+                </p>
+              </Button>
+            </NavLink>
+          <NavLink>Пользовательское соглашение</NavLink>
+          <div>© GoCONF 2025</div>
         </div>
       </motion.div>
     }

@@ -64,8 +64,8 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
 
     return (
         <div className={cx(filterSelector, css`
-            flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
-            max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
+            flex: 0 1 ${full ? '180px' : 'calc(16.666666% - 13.333333px)' };
+            max-width: ${full ? '180px' : 'calc(16.666666% - 13.333333px)'};
             display: flex;
             align-items: center;
             justify-content: space-between;

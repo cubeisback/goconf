@@ -221,7 +221,7 @@ export const MainEventsSlider = () => {
                                                 color: #47474D;
                                                 font-size: 14px;
                                                 line-height: 1.16;    
-                                            `}>{item.city}</div>
+                                            `}>{item.online ? 'Онлайн-событие' : item.city}</div>
                                         </div>
                                         <NavLink to={`/event/${item.slug}`}>
                                             <LinkArrow />

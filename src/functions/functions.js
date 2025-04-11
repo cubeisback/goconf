@@ -8,3 +8,8 @@ export function formatDate(dateString) {
           year: 'numeric'
         }).format(date).replace(' г.', '');
 }
+
+export function formatPrice(price) {
+  const str = String(price).replace(/\D/g, '');
+  return str.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}

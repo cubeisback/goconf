@@ -46,6 +46,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                 <div className={css`
                     margin-bottom: 32px;
                 `}>
+                    {nearEvents && nearEvents.length === 0 ? <p className={css`font-size: 18px;`}>По заданным параметрам событий не найдено</p> : null}
                     {nearEvents && nearEvents.slice(0, limit).map((item, index) => (
                         <motion.div 
                             initial={{ y: 50, opacity: 0 }}
@@ -105,7 +106,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #47474D;
-                                `}>{item.city}</div>
+                                `}>{item.online ? 'Онлайн-событие' : item.city}</div>
                             </div>
                             <NavLink to={`/event/${item.slug}`} className={css`
                                 flex: 0 1 300px;
@@ -143,8 +144,8 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                     padding: 3px 8px 5px;
                                     width: max-content;
                                 `}>
-                                    {item.format.map(theme => (
-                                        <NavLink key={theme} to={`/events/format_${theme.slug}`}>{theme.name}</NavLink>
+                                    {item.format.map((format, index) => (
+                                        <NavLink key={index} to={`/events/format_${format.slug}`}>{format.name}</NavLink>
                                     ))}
                                     </div>
                                 <div className={css`
@@ -185,8 +186,8 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                         }
                                     }
                                 `}>
-                                    {item.subject.map(theme => (
-                                        <NavLink key={theme} to={`/events/direction_${theme.slug}`}>{theme.name}</NavLink>
+                                    {item.subject.map((direction, index) => (
+                                        <NavLink key={index} to={`/events/direction_${direction.slug}`}>{direction.name}</NavLink>
                                     ))}
                                 </div>
                                 <NavLink to={`/event/${item.slug}`} className={css`

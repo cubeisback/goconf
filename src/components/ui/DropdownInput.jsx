@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ReactComponent as ArrowDown } from '../../images/svg/arrowDown.svg';
 import { useTheme } from '@emotion/react';
 
-const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, type, filterValues }) => {
+const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChange, type, filterValues }) => {
   const theme = useTheme();
 
   const [query, setQuery] = useState('');
@@ -65,7 +65,8 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
       handleFilterChange(keys[index], type);
       // console.log('asfas', keys[index], type)
     }
-    
+    console.log('values', values)
+    console.log('filteredOptions', filteredOptions)
   };
 
   const handleFocus = () => {
@@ -164,7 +165,7 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
               border-radius: 28px;
               background-color: #fff;
               box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
-              width: 150%;
+              width: ${full ? '100%' : '150%'};
               left: 0;
               top: calc(100% + 4px);
               padding: 12px 14px 12px 0;
@@ -203,23 +204,26 @@ const DropdownInput = ({ options, placeholder, isSimple, handleFilterChange, typ
               `}
             >
               {/* <li onClick={() => handleSelect('', '', '')}>Все</li> */}
-              {(showFullList ? values : filteredOptions).map((option, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleSelect(option, type, index)}
-                  className={css`
-                    padding: 8px;
-                    cursor: pointer;
-                    color: ${option === selectedValue ? `${theme.colors.purple}` : `${theme.colors.font}`};
+              {(showFullList ? values : filteredOptions).map((option) => {
+                const originalIndex = values.indexOf(option);
+                return (
+                  <li
+                    key={originalIndex}
+                    onClick={() => handleSelect(option, type, originalIndex)}
+                    className={css`
+                      padding: 8px;
+                      cursor: pointer;
+                      color: ${option === selectedValue ? `${theme.colors.purple}` : `${theme.colors.font}`};
 
-                    &:hover {
-                      color: ${theme.colors.purple};
-                    }
-                  `}
-                >
-                  {option}
-                </li>
-              ))}
+                      &:hover {
+                        color: ${theme.colors.purple};
+                      }
+                    `}
+                  >
+                    {option}
+                  </li>
+                );
+              })}
             </ul>
           </motion.div>
         )}
