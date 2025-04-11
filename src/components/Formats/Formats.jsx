@@ -41,6 +41,10 @@ export const Formats = () => {
         });
 
     }, [])
+
+    const duplicatedItems = formatItems
+  ? Array(Math.ceil(20 / formatItems.length)).fill(formatItems).flat()
+  : [];
     
 
     return (
@@ -88,66 +92,79 @@ export const Formats = () => {
             <div className={css`
                 // overflow-x: hidden;
             `}>
-            <div className={css`
-                display: flex;
-                gap: 24px;
-                width: 10000px;
-                animation: scroll-left 20s linear infinite;
+            
+                {formatItems && (
+  <div className={css`
+    display: flex;
+    flex-wrap: nowrap;
+    animation: scroll-left 20s linear infinite;
 
-                @keyframes scroll-left {
-                    0% {
-                        transform: translateX(0);
-                    }
-                    100% {
-                        transform: translateX(-1240px);
-                    }
-                }
-            `}>
-                {formatItems && formatItems.map((item, index) => (
-                    <NavLink to={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`} key={index} className={css`
-                        max-width: 224px;
-                        border-radius: 24px;
-                        overflow: hidden;
-                        position: relative;
-                        transition: ${theme.transition};
+    @keyframes scroll-left {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+  `}>
+    {duplicatedItems.map((item, index) =>  {
+        const isLastInFirstHalf = index === Math.floor(duplicatedItems.length / 2) - 1;
+    return (
+      <NavLink
+        to={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`}
+        key={index}
+        className={css`
+          min-width: 224px;
+          max-width: 224px;
+          flex-shrink: 0;
+          border-radius: 24px;
+          overflow: hidden;
+          position: relative;
+          transition: ${theme.transition};
+           ${!isLastInFirstHalf ? 'margin-right: 24px;' : ''}
 
-                        &:hover {
-                            transform: scale(1.05);
-                        }
-                    `}>
-                        <img src={item.img} alt="" />
-                        <div className={css`
-                            position: absolute;
-                            left: 0;
-                            top: 0;
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-between;
-                            padding: 16px;
-                        `}>
-                            <div className={css`
-                                font-size: 18px;
-                                color: #fff;
-                                font-weight: 500;
-                                line-height: 1.36;
-                            `} dangerouslySetInnerHTML={{
-                                __html: item.name.replace(/\r\n/g, ''),
-                              }}></div>
-                            <div className={css`
-                                padding: 2px 4px;
-                                border-radius: 4px;
-                                background: rgba(255, 255, 255, 0.08);
-                                backdrop-filter: blur(8px);
-                                line-height: 1.28;
-                                color: #fff;
-                                width: max-content;
-                            `}>{item.count} событий</div>
-                        </div>
-                    </NavLink>
-                ))}
-            </div>
+          &:hover {
+            transform: scale(1.05);
+          }
+        `}
+      >
+        <img src={item.img} alt="" />
+        <div className={css`
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 16px;
+        `}>
+          <div className={css`
+            font-size: 18px;
+            color: #fff;
+            font-weight: 500;
+            line-height: 1.36;
+          `} dangerouslySetInnerHTML={{
+            __html: item.name.replace(/\r\n/g, ''),
+          }}></div>
+          <div className={css`
+            padding: 2px 4px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            line-height: 1.28;
+            color: #fff;
+            width: max-content;
+          `}>{item.count} событий</div>
+        </div>
+      </NavLink>
+      
+    )})}
+  </div>
+)}
+
             </div>
             : 
             <Swiper 
