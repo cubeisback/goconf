@@ -322,6 +322,7 @@ export const Event = () => {
                                 `}>{pageInfo.cities[0] && pageInfo.cities[0].name}</p>
                             </div>
                             }
+                            {pageInfo.fields.online || pageInfo.fields.address ?
                             <div className={css`
                                 display: flex;
                                 flex-direction: column;
@@ -336,6 +337,8 @@ export const Event = () => {
                                     line-height: 1.16;
                                 `}>{pageInfo.fields.online ? 'Онлайн-событие' : pageInfo.fields.address}</p>
                             </div>
+                            : null
+                            }
                             
                             <div className={css`
                                 display: flex;
