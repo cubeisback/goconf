@@ -101,7 +101,32 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                     @media(max-width: 575px) {
                                         font-size: 24px;
                                     }
-                                `}>{formatDate(item.date_start)} -<br/> {formatDate(item.date_end)}</div>
+                                `}>
+									{
+									(() => {
+										const [d1, m1, y1] = item.date_start.split('.');
+										const [d2, m2, y2] = item.date_end.split('.');
+
+										if (item.date_start === item.date_end) {
+										return formatDate(item.date_start);
+										} else if (m1 === m2 && y1 === y2) {
+										// Берём отформатированную дату и убираем оттуда число, оставляя "июня 2025"
+										const formatted = formatDate(item.date_start);
+										const [, monthAndYear] = formatted.split(' ', 2); // может вернуть только месяц
+										const rest = formatted.slice(formatted.indexOf(' ') + 1); // "июня 2025"
+										return `${d1}–${d2} ${rest}`;
+										} else {
+										return (
+											<>
+											{formatDate(item.date_start)} -<br />
+											{formatDate(item.date_end)}
+											</>
+										);
+										}
+									})()
+									}
+									{/* {formatDate(item.date_start)} -<br/> {formatDate(item.date_end)} */}
+								</div>
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
