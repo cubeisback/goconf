@@ -41,7 +41,10 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
   
   // Фильтрация опций на основе введенного текста
   const filteredOptions = values.filter(option =>
-    option.toLowerCase().includes(query.toLowerCase())
+  	{
+		option.includes(query) && option.toLowerCase().includes(query.toLowerCase())
+	}
+    
   );
 
   const handleChange = (event) => {

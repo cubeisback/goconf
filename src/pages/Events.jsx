@@ -5,10 +5,11 @@ import { MainEvents } from '../components/MainEvents';
 import { Form } from '../components/Form';
 import { ReactComponent as SearchIcon } from '../images/svg/search.svg';
 import { useTheme } from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { EventsFiltered } from '../components/EventsFiltered';
 import axios from 'axios';
 import { NavLink } from 'react-router';
+import { DocumentDescription, DocumentTitle } from '../functions/DocumentMeta';
 
 export const Events = () => {
     const theme = useTheme();
@@ -16,6 +17,8 @@ export const Events = () => {
     const [total, setTotal] = useState(null)
     const [pageH1, setPageH1] = useState(null)
     const [pageText, setPageText] = useState(null)
+	const [seoTitle, setSeoTitle] = useState(null)
+	const [seoDescription, setSeoDescription] = useState(null)
     
     const [formatItems, setFormatItems] = useState(null)
     useEffect(() => {
@@ -31,8 +34,33 @@ export const Events = () => {
 
     }, [])
 
+	const [query, setQuery] = useState('');
+	  
+	const handleSubmit = useCallback(async (e) => {
+		e.preventDefault();
+		// const trimmed = query.trim();
+		// if (!trimmed) return;
+		// console.log('tuta', encodeURIComponent(trimmed))
+	
+		try {
+		  const response = await axios.post(
+			"https://dev.goconf.ru/backend/wp-json/events/v2/search/",
+			{search: query}
+		  );
+		  setEvents(response.data.events);
+		  setTotal(response.data.total);
+		  setSeoTitle(response.data.seo.title);
+		  setSeoDescription(response.data.seo.description);
+		  console.log('из поиска ', response.data);
+		} catch (error) {
+		  console.error('Ошибка при поиске:', error);
+		}
+	}, [query, setFormatItems]);
+
     return (
         <>
+		<DocumentTitle value={seoTitle} />
+		<DocumentDescription value={seoDescription} />
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>
@@ -40,7 +68,7 @@ export const Events = () => {
                         <p>{pageH1 && pageH1}</p>
                     </div>
                     <h1 className={pageTitle}>{pageH1 && pageH1}</h1>
-                    <div className={css`
+					<form onSubmit={handleSubmit} className={css`
                         background-color: #fff;
                         border-radius: 28px;
                         padding: 14px 16px;
@@ -54,10 +82,22 @@ export const Events = () => {
                         @media(max-width: 640px) {
                             width: 100%;
                         }
+
+						& > button {
+						    background: transparent;
+    						display: flex;
+						}
                     `}>
-                        <input className={cx(input, css`padding: 0 4px;`)} type="text" placeholder='Поиск по мероприятиям' />
-                        <SearchIcon className={css`cursor: pointer;`} />
-                    </div>
+							<input 
+								className={cx(input, css`padding: 0 4px;`)}
+								type="text" placeholder='Поиск по мероприятиям' 
+								value={query} 
+								onChange={(e) => setQuery(e.target.value)} 
+							/>
+							<button type='submit'>
+								<SearchIcon className={css`cursor: pointer;`} />
+							</button>
+					</form>
                 </div>
             </div>
 
@@ -76,7 +116,7 @@ export const Events = () => {
                 }
             `}>
                 <div className={container}>
-                    <Filter full={true} setEvents={setEvents} setTotal={setTotal} setPageH1={setPageH1} setPageText={setPageText} />
+                    <Filter full={true} setEvents={setEvents} setTotal={setTotal} setPageH1={setPageH1} setPageText={setPageText} setQuery={setQuery} setSeoDescription={setSeoDescription} setSeoTitle={setSeoTitle} />
 
                     {total ? <p className={css`padding-bottom: 24px;`}>Найдено событий: {total}</p> : null}
                     <div className={css`
@@ -100,6 +140,10 @@ export const Events = () => {
                             br {
                                 display: none;
                             }
+
+							&.active {
+								background-color: ${theme.colors.green};
+							}
                         }
                     `}>
                         {/* <div>Конференции по&nbsp;маркетингу</div>

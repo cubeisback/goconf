@@ -19,18 +19,18 @@ export const MainEventsSlider = () => {
     const navigationNextRef = useRef(null);
 
     const [events, setEvents] = useState(null);
-
-    //get items
-    const [homeData, setHomeData] = useState(null)
+	const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
       axios
         .get("https://dev.goconf.ru/backend/wp-json/events/v2/interesting-events/")
         .then((response) => {
-          setHomeData(response.data)
-          console.log('interesting-events ', response.data)
+			setEvents(response.data);
+			setIsLoading(false);
+          	console.log('interesting-events ', response.data)
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error);
+			setIsLoading(false);
         });
 
     }, [])
@@ -133,7 +133,33 @@ export const MainEventsSlider = () => {
                             },
                         }}
                     >   
-                        {homeData && homeData.items.map((item, index) => (
+					{isLoading ? (
+  // Скелетоны (например, 3 заглушки)
+  <>
+  <div className={css`display: flex;
+	gap: 32px;`}>
+    {[...Array(3)].map((_, i) => (
+      <div key={i} className={css`
+	  	background: #eee;
+		padding: 1rem;
+		margin-bottom: 1rem;
+		border-radius: 8px;
+		animation: pulse 1.5s infinite;
+		height: 473px;
+		width: 33%;
+
+		@keyframes pulse {
+			0% { opacity: 1 }
+			50% { opacity: 0.5 }
+			100% { opacity: 1 }
+			}
+	  `}>
+      </div>
+    ))}
+	</div>
+  </>
+) : 
+                        events && events.items.map((item, index) => (
                             <SwiperSlide key={index} className={css`
                                 border-radius: 24px;
                                 background-color: #fff;

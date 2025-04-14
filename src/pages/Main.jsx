@@ -266,7 +266,7 @@ export const Main = () => {
                 }
             `}>
                 <div className={cx(container, css`@media(max-width: 1439px) {padding: 0;}` )}>
-                    <MainEventsSlider homeData={homeData} />
+                    <MainEventsSlider />
                 </div>
             </div>
             

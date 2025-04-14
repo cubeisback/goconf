@@ -14,6 +14,7 @@ const useHomeStore = create((set, get) => ({
     try {
       const response = await axios.get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
       set({ homeData: response.data, hasLoadedHome: true })
+	  console.log('home', response)
     } catch (error) {
       console.error('Ошибка при получении home:', error)
       set({ error })

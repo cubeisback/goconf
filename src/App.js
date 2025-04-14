@@ -57,16 +57,6 @@ function App() {
           console.log(error)
         });
   
-      // axios
-      //   .get("https://dev.goconf.ru/backend/wp-json/wp/v2/get_primary_menu/?current_url=/events")
-      //   .then((response) => {
-      //     console.log('menu ', response.data)
-      //   })
-      //   .catch((error) => {
-      //     setError(error.message);
-      //     setLoading(false);
-      //   }); 
-  
     }, []);
 
     const fetchFiltersData = useFiltersStore((state) => state.fetchFiltersData)

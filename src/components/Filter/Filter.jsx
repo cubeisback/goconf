@@ -11,7 +11,7 @@ import { useLocation, useParams } from 'react-router';
 import { useNavigate } from 'react-router';
 import useFiltersStore from '../../store/useFiltersStore';
 
-export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText}) => {
+export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQuery, setSeoTitle, setSeoDescription}) => {
     const theme = useTheme();
 
     const filtersData = useFiltersStore((state) => state.filtersData)
@@ -138,6 +138,8 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText}) => {
         setTotal(res.data.total);
         setPageH1(res.data.h1);
         setPageText(res.data.text);
+		setSeoTitle(res.data.seo.title);
+		setSeoDescription(res.data.seo.description);
       } catch (err) {
         console.log("Error:", err.message);
       }
@@ -165,6 +167,7 @@ const resetFilter = () => {
     isFree: false,
   };
 
+  setQuery(''); // Удаляем значение поиска
   setFilterValues({});
   setFormData(defaultForm);
   navigate("/events"); // Удаляем фильтры из URL
