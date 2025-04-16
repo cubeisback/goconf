@@ -3,6 +3,7 @@ import { Form } from '../components/Form';
 import { breadcrumbs, Button, container, pagePromo, pageTitle } from './ui';
 import { css, cx } from '@emotion/css';
 import example_img from '../images/example.png';
+import { NavLink } from 'react-router';
 
 export const Org = () => {
     const [active, setActive] = useState(1)
@@ -58,7 +59,7 @@ export const Org = () => {
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>
-                        <a href="/">Главная</a>
+                        <NavLink to="/">Главная</NavLink>
                         <p>Организаторам</p>
                     </div>
                     <h1 className={cx(pageTitle, css`text-align:center;`)}>Организаторам</h1>

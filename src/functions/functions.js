@@ -13,3 +13,9 @@ export function formatPrice(price) {
   const str = String(price).replace(/\D/g, '');
   return str.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
+
+export function decodeHtmlEntities(str) {
+	const parser = new DOMParser();
+	const doc = parser.parseFromString(str, 'text/html');
+	return doc.documentElement.textContent;
+}

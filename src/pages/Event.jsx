@@ -15,7 +15,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import axios from 'axios';
-import { formatPrice } from '../functions/functions';
+import { decodeHtmlEntities, formatPrice } from '../functions/functions';
+import { DocumentDescription, DocumentTitle } from '../functions/DocumentMeta';
 
 export const Event = () => {
     const [version, setVersion] = useState(0);
@@ -24,6 +25,9 @@ export const Event = () => {
 
     const navigationPrevRef = useRef(null);
     const navigationNextRef = useRef(null);
+
+	const [seoTitle, setSeoTitle] = useState(null)
+	const [seoDescription, setSeoDescription] = useState(null)
 
     const [event, setEvent] = useState(null);
     const location = useLocation(); // Получаем информацию о текущем пути
@@ -40,6 +44,8 @@ export const Event = () => {
         .get(`https://dev.goconf.ru/backend/wp-json/events/v2/single/?slug=${eventId}`)
         .then((response) => {
             setPageInfo(response.data)
+			setSeoTitle(response.data.seo.title)
+			setSeoDescription(response.data.seo.description)
             console.log('page ', response.data)
         })
         .catch((error) => {
@@ -118,6 +124,8 @@ export const Event = () => {
 
     return (
         <>
+		<DocumentTitle value={decodeHtmlEntities(seoTitle)} />
+		<DocumentDescription value={decodeHtmlEntities(seoDescription)} />
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>

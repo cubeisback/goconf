@@ -4,6 +4,7 @@ import { ReactComponent as About2 } from '../images/svg/about_2.svg';
 import { ReactComponent as About3 } from '../images/svg/about_3.svg';
 import { breadcrumbs, container, pagePromo, pageTitle } from './ui';
 import { Form } from '../components/Form';
+import { NavLink } from 'react-router';
 
 export const About = () => {
 
@@ -12,7 +13,7 @@ export const About = () => {
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>
-                        <a href="/">Главная</a>
+                        <NavLink to="/">Главная</NavLink>
                         <p>О проекте</p>
                     </div>
                     <h1 className={cx(pageTitle, css`text-align:center;`)}>О проекте <span style={{color: '#8553F9'}}>GoCONF</span></h1>

@@ -5,6 +5,7 @@ import { useTheme } from '@emotion/react';
 import { Form } from '../components/Form';
 import { MainEvents } from '../components/MainEvents';
 import { motion } from 'framer-motion';
+import { NavLink } from 'react-router';
 
 export const Organizer = () => {
 
@@ -30,8 +31,8 @@ export const Organizer = () => {
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>
-                        <a href="/">Главная</a>
-                        <a href="/">Организаторы</a>
+                        <NavLink to="/">Главная</NavLink>
+                        <NavLink to="/org">Организаторы</NavLink>
                         <p>АКАР</p>
                     </div>
                     <h1 className={pageTitle}>АКАР</h1>

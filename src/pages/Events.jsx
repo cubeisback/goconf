@@ -64,7 +64,7 @@ export const Events = () => {
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>
-                        <a href="/">Главная</a>
+                        <NavLink to="/">Главная</NavLink>
                         <p>{pageH1 && pageH1}</p>
                     </div>
                     <h1 className={pageTitle}>{pageH1 && pageH1}</h1>

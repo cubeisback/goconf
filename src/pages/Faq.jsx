@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ReactComponent as PlusIcon } from '../images/svg/plus.svg';
 import { ReactComponent as MinusIcon } from '../images/svg/minus.svg';
 import { Form } from '../components/Form';
+import { NavLink } from "react-router";
 
 const faqArray = [
     {
@@ -41,7 +42,7 @@ export const Faq = () => {
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>
-                        <a href="/">Главная</a>
+                        <NavLink to="/">Главная</NavLink>
                         <p>FAQ</p>
                     </div>
                     <h1 className={cx(pageTitle, css`text-align: center;`)}>FAQ</h1>
