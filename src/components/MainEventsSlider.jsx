@@ -22,7 +22,7 @@ export const MainEventsSlider = () => {
 	const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
       axios
-        .get("https://dev.goconf.ru/backend/wp-json/events/v2/interesting-events/")
+        .get("https://dev.goconf.ru/wp-json/events/v2/interesting-events/")
         .then((response) => {
 			setEvents(response.data);
 			setIsLoading(false);

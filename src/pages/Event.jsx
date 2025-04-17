@@ -41,7 +41,7 @@ export const Event = () => {
         // getEventById(eventId).then((res) => setEvent(res[0]));
 
         axios
-        .get(`https://dev.goconf.ru/backend/wp-json/events/v2/single/?slug=${eventId}`)
+        .get(`https://dev.goconf.ru/wp-json/events/v2/single/?slug=${eventId}`)
         .then((response) => {
             setPageInfo(response.data)
 			setSeoTitle(response.data.seo.title)
@@ -58,7 +58,7 @@ export const Event = () => {
     // const [similarItems, setSimilarItems] = useState(null)
     // useEffect(() => {
     //   axios
-    //     .get(`https://dev.goconf.ru/backend/wp-json/events/v2/similar-events/?id={${ID}}`)
+    //     .get(`https://dev.goconf.ru/wp-json/events/v2/similar-events/?id={${ID}}`)
     //     .then((response) => {
     //         setSimilarItems(response.data)
     //       console.log('interesting-events ', response.data)

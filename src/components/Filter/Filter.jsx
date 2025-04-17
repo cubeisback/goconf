@@ -125,7 +125,7 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
     const handleSubmit = async (data) => {
       try {
         const res = await axios.post(
-          "https://dev.goconf.ru/backend/wp-json/events/v2/filter/",
+          "https://dev.goconf.ru/wp-json/events/v2/filter/",
           data,
           {
             headers: {

@@ -12,7 +12,7 @@ const useHomeStore = create((set, get) => ({
 
     set({ loading: true, error: null })
     try {
-      const response = await axios.get("https://dev.goconf.ru/backend/wp-json/pages/v2/home/")
+      const response = await axios.get("https://dev.goconf.ru/wp-json/pages/v2/home/")
       set({ homeData: response.data, hasLoadedHome: true })
 	  console.log('home', response)
     } catch (error) {

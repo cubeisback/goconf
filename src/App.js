@@ -49,7 +49,7 @@ function App() {
     useEffect(() => {
   
       axios
-        .get("https://dev.goconf.ru/backend/wp-json/wp/v2/get_all_options/")
+        .get("https://dev.goconf.ru/wp-json/wp/v2/get_all_options/")
         .then((response) => {
           console.log('get_all_options ', response.data)
         })

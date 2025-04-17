@@ -23,7 +23,7 @@ export const Events = () => {
     const [formatItems, setFormatItems] = useState(null)
     useEffect(() => {
       axios
-        .get("https://dev.goconf.ru/backend/wp-json/events/v2/popular-formats/")
+        .get("https://dev.goconf.ru/wp-json/events/v2/popular-formats/")
         .then((response) => {
             setFormatItems(response.data.items)
             console.log('popular-formats ', response.data)
@@ -44,7 +44,7 @@ export const Events = () => {
 	
 		try {
 		  const response = await axios.post(
-			"https://dev.goconf.ru/backend/wp-json/events/v2/search/",
+			"https://dev.goconf.ru/wp-json/events/v2/search/",
 			{search: query}
 		  );
 		  setEvents(response.data.events);
