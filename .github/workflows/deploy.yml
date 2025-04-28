@@ -1,0 +1,44 @@
+name: Deploy goconf Next.js App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY_DEV }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
+          chmod 600 ~/.ssh/goconf_key
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+
+      - name: Deploy project to server
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+        run: |
+          rsync -avz --delete --exclude=".git" --exclude="node_modules" -e "ssh -i ~/.ssh/goconf_key" ./ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
+
+      - name: Run deploy script on server
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+        run: |
+          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
+            cd /home/thunder/web/dev.goconf.ru/app
+            npm install
+            npm run build
+            pm2 restart goconf || pm2 start npm --name "goconf" -- start
+          EOF
