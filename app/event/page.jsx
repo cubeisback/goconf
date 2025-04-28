@@ -1,26 +1,27 @@
 "use client"
 
 import { breadcrumbs, Button, container, pagePromo, pageTitle } from "@/styles/ui";
-import event_img from '/public/images/event_ex.jpg'
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
-import { Helper } from '../components/ui/Helper';
+import { Helper } from '@/components/ui/Helper';
 import { useEffect, useRef, useState } from 'react';
-import { MainEventsSlider } from '../components/MainEventsSlider';
-import { Form } from '../components/Form';
-import { MainEvents } from '../components/MainEvents';
+import { MainEventsSlider } from '@/components/MainEventsSlider';
+import { Form } from '@/components/Form';
+import { MainEvents } from '@/components/MainEvents';
 import { motion } from 'framer-motion';
-import { NavLink, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import axios from 'axios';
-import { decodeHtmlEntities, formatPrice } from '../functions/functions';
-import { DocumentDescription, DocumentTitle } from '../functions/DocumentMeta';
+import { decodeHtmlEntities, formatPrice } from '@/functions/functions';
+// import { DocumentDescription, DocumentTitle } from '@/functions/DocumentMeta';
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
-export const Event = () => {
+const Event = () => {
     const [version, setVersion] = useState(0);
 
     const theme = useTheme();
@@ -28,32 +29,45 @@ export const Event = () => {
     const navigationPrevRef = useRef(null);
     const navigationNextRef = useRef(null);
 
-	const [seoTitle, setSeoTitle] = useState(null)
-	const [seoDescription, setSeoDescription] = useState(null)
+	// const [seoTitle, setSeoTitle] = useState(null)
+	// const [seoDescription, setSeoDescription] = useState(null)
 
     const [event, setEvent] = useState(null);
-    const location = useLocation(); // Получаем информацию о текущем пути
-    const [pageInfo, setPageInfo] = useState(null)
-    useEffect(() => {
-        const pathParts = location.pathname.split('/');
-        const eventId = pathParts[pathParts.length - 1];
+    // const location = useLocation();
+    // const [pageInfo, setPageInfo] = useState(null)
+    // useEffect(() => {
+    //     const pathParts = location.pathname.split('/');
+    //     const eventId = pathParts[pathParts.length - 1];
 
-        // console.log('asddashjlksdhffdhgjfd;lgkl', eventId)
-    
-        // getEventById(eventId).then((res) => setEvent(res[0]));
+    //     axios
+    //     .get(`https://dev.goconf.ru/wp-json/events/v2/single/?slug=${eventId}`)
+    //     .then((response) => {
+    //         setPageInfo(response.data)
+	// 		setSeoTitle(response.data.seo.title)
+	// 		setSeoDescription(response.data.seo.description)
+    //         console.log('page ', response.data)
+    //     })
+    //     .catch((error) => {
+    //         console.log(error)
+    //     });
+    // }, [location.pathname]);
 
-        axios
-        .get(`https://dev.goconf.ru/wp-json/events/v2/single/?slug=${eventId}`)
-        .then((response) => {
-            setPageInfo(response.data)
-			setSeoTitle(response.data.seo.title)
-			setSeoDescription(response.data.seo.description)
-            console.log('page ', response.data)
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-    }, [location.pathname]);
+	const { slug } = useParams(); // получаем параметр пути
+  	const [pageInfo, setPageInfo] = useState(null);
+	useEffect(() => {
+		if (!slug) return;
+	
+		axios
+		  .get(`https://dev.goconf.ru/wp-json/events/v2/single/?slug=${slug}`)
+		  .then((response) => {
+			setPageInfo(response.data);
+			// Здесь тоже можно вызывать функции для SEO если нужно
+			console.log('page ', response.data);
+		  })
+		  .catch((error) => {
+			console.log(error);
+		  });
+	}, [slug]);
 
 
 
@@ -126,20 +140,20 @@ export const Event = () => {
 
     return (
         <>
-		<DocumentTitle value={decodeHtmlEntities(seoTitle)} />
-		<DocumentDescription value={decodeHtmlEntities(seoDescription)} />
+		{/* <DocumentTitle value={decodeHtmlEntities(seoTitle)} /> */}
+		{/* <DocumentDescription value={decodeHtmlEntities(seoDescription)} /> */}
             <div className={pagePromo}>
                 <div className={container}>
                     <div className={breadcrumbs}>
-                        <NavLink href="/">Главная</NavLink>
-                        <NavLink to="/events">Мероприятия</NavLink>
+                        <Link href="/">Главная</Link>
+                        <Link href="/events">Мероприятия</Link>
                         <p>{pageInfo && pageInfo.data.post_title}</p>
                     </div>
                     {pageInfo && <h1 className={pageTitle}>{pageInfo.data.post_title}</h1> }
                     <div className={promoThemes}>
                         <p>Тематика:</p>
                         {pageInfo && pageInfo.subjects.map(theme => (
-                            <NavLink key={theme.term_id} to={`/events/direction_${theme.slug}`}>{theme.name}</NavLink>
+                            <Link key={theme.term_id} Nav={`/events/direction_${theme.slug}`}>{theme.name}</Link>
                         ))}
                     </div>
                 </div>
@@ -378,12 +392,12 @@ export const Event = () => {
                                 `}>Формат</p>
 
                                 {pageInfo.formats.map(format => (
-                                    <NavLink to={`/events/format_${format.slug}`} key={format.name} className={css`
+                                    <Link Nav={`/events/format_${format.slug}`} key={format.name} className={css`
                                         font-size: 14px;
                                         line-height: 1.16;
                                         color: #8553F9;
                                         cursor: pointer;
-                                    `}>{format.name}</NavLink>
+                                    `}>{format.name}</Link>
                                 ))}
                             </div>
                             }
@@ -397,12 +411,12 @@ export const Event = () => {
                                 <p className={css`
                                     line-height: 1.28;
                                 `}>Организатор</p>
-                                <NavLink to={`/organizer/${pageInfo.company[0] && pageInfo.company[0].slug}`} className={css`
+                                <Link Nav={`/organizer/${pageInfo.company[0] && pageInfo.company[0].slug}`} className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: #8553F9;
                                     cursor: pointer;
-                                `}>{pageInfo.company[0] && pageInfo.company[0].name}</NavLink>
+                                `}>{pageInfo.company[0] && pageInfo.company[0].name}</Link>
                             </div>
                             }
                             </div>
@@ -453,3 +467,5 @@ export const Event = () => {
         </>
     );
 }
+
+export default Event;
