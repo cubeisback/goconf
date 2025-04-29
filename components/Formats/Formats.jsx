@@ -32,7 +32,7 @@ export const Formats = () => {
     const [formatItems, setFormatItems] = useState(null)
     useEffect(() => {
       axios
-        .get("https://dev.goconf.ru/wp-json/events/v2/popular-formats/")
+        .get("/api/backend/wp-json/events/v2/popular-formats/")
         .then((response) => {
             setFormatItems(response.data.items)
             console.log('popular-formats ', response.data)

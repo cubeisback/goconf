@@ -9,6 +9,16 @@ const nextConfig = {
   
 	  return config;
 	},
-};
   
-module.exports = nextConfig;
+	async rewrites() {
+		return [
+		  {
+			source: '/api/backend/:path*',
+			destination: 'https://dev.goconf.ru/backend/:path*',
+		  },
+		];
+	},
+  };
+  
+  module.exports = nextConfig;
+  

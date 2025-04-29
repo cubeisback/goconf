@@ -167,7 +167,9 @@ const Events = () => {
                 </div>
 
                 {/* <MainEvents onPage={true} events={events} /> */}
+				<p>2</p>
                 <EventsFiltered onPage={true} events={events} />
+				<p>1</p>
 
                 <div className={css`
                         padding: 64px 0;
