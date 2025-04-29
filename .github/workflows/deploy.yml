@@ -24,45 +24,44 @@ jobs:
           chmod 600 ~/.ssh/goconf_key
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: Deploy project to server
+      - name: Clean old project files
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
             set -e
-
-            echo "Cleaning previous app files..."
+            echo "Removing old app files..."
             rm -rf /home/thunder/web/dev.goconf.ru/app/*
-
+            echo "Removing old static files..."
+            rm -rf /home/thunder/web/dev.goconf.ru/public_html/_next
           EOF
 
-          echo "Uploading project files..."
+      - name: Upload new project files
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+        run: |
           rsync -avz --delete --exclude=".git" --exclude="node_modules" -e "ssh -i ~/.ssh/goconf_key" ./ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
 
-      - name: Build project and restart pm2
+      - name: Install, Build and Restart App
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
             set -e
-
             cd /home/thunder/web/dev.goconf.ru/app
-
             echo "Installing dependencies..."
             npm install
-
             echo "Building project..."
             npm run build
-
-            echo "Restarting pm2 process..."
-            pm2 describe goconf > /dev/null 2>&1
+            echo "Restarting PM2 process..."
+            pm2 describe goconf-dev > /dev/null 2>&1
             if [ $? -eq 0 ]; then
-              pm2 restart goconf
+              pm2 restart goconf-dev
             else
-              pm2 start "npm -- start" --name "goconf"
+              pm2 start npm --name "goconf-dev" -- start
             fi
-
             pm2 save
           EOF
