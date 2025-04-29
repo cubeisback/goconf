@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import axios from 'axios';
 import Link from 'next/link';
+import { getApiUrl } from '@/functions/functions';
 
 export const Formats = () => {
     const theme = useTheme();
@@ -32,7 +33,8 @@ export const Formats = () => {
     const [formatItems, setFormatItems] = useState(null)
     useEffect(() => {
       axios
-        .get("/api/backend/wp-json/events/v2/popular-formats/")
+        // .get("/api/backend/wp-json/events/v2/popular-formats/")
+		.get(getApiUrl("/backend/wp-json/events/v2/popular-formats/"))
         .then((response) => {
             setFormatItems(response.data.items)
             console.log('popular-formats ', response.data)

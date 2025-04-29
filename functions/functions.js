@@ -19,3 +19,12 @@ export function decodeHtmlEntities(str) {
 	const doc = parser.parseFromString(str, 'text/html');
 	return doc.documentElement.textContent;
 }
+
+
+export const getApiUrl = (url) => {
+	if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+	  return `https://dev.goconf.ru${url}`;
+	}
+	return url;
+};
+  
