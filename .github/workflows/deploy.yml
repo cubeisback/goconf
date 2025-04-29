@@ -35,12 +35,6 @@ jobs:
             echo "Cleaning previous app files..."
             rm -rf /home/thunder/web/dev.goconf.ru/app/*
 
-            echo "Cleaning previous _next files..."
-            rm -rf /home/thunder/web/dev.goconf.ru/public_html/_next
-
-            echo "Creating fresh _next folders..."
-            mkdir -p /home/thunder/web/dev.goconf.ru/public_html/_next/static
-            mkdir -p /home/thunder/web/dev.goconf.ru/public_html/_next/server/app
           EOF
 
           echo "Uploading project files..."
@@ -62,16 +56,12 @@ jobs:
             echo "Building project..."
             npm run build
 
-            echo "Copying static files to public_html..."
-            cp -r .next/static/* /home/thunder/web/dev.goconf.ru/public_html/_next/static/
-            cp -r .next/server/app/* /home/thunder/web/dev.goconf.ru/public_html/_next/server/app/
-
             echo "Restarting pm2 process..."
             pm2 describe goconf > /dev/null 2>&1
             if [ $? -eq 0 ]; then
               pm2 restart goconf
             else
-              pm2 start npm --name "goconf" -- start
+              pm2 start "npm -- start" --name "goconf"
             fi
 
             pm2 save
