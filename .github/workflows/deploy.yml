@@ -30,6 +30,10 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP "rm -rf /home/thunder/web/dev.goconf.ru/app/*"
+          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP "
+           rm -rf /home/thunder/web/dev.goconf.ru/app/* &&
+           rm -rf /home/thunder/web/dev.goconf.ru/public_html/_next
+          "
           rsync -avz --delete --exclude=".git" --exclude="node_modules" -e "ssh -i ~/.ssh/goconf_key" ./ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
 
       - name: Run build and restart on server
