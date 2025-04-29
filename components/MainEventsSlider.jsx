@@ -12,7 +12,7 @@ import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 // import { NavLink } from "react-router";
 import axios from "axios";
-import { formatDate } from "../functions/functions";
+import { formatDate, getApiUrl } from "../functions/functions";
 import Link from "next/link";
 
 export const MainEventsSlider = () => {
@@ -25,7 +25,7 @@ export const MainEventsSlider = () => {
 	const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
       axios
-        .get("https://dev.goconf.ru/wp-json/events/v2/interesting-events/")
+        .get(getApiUrl("/backend/wp-json/events/v2/interesting-events/"))
         .then((response) => {
 			setEvents(response.data);
 			setIsLoading(false);

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import axios from 'axios'
+import { getApiUrl } from '@/functions/functions'
 
 const useHomeStore = create((set, get) => ({
   homeData: null,
@@ -12,7 +13,7 @@ const useHomeStore = create((set, get) => ({
 
     set({ loading: true, error: null })
     try {
-      const response = await axios.get("https://dev.goconf.ru/wp-json/pages/v2/home/")
+      const response = await axios.get(getApiUrl("/backend/wp-json/pages/v2/home/"))
       set({ homeData: response.data, hasLoadedHome: true })
 	  console.log('home', response)
     } catch (error) {

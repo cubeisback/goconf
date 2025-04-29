@@ -8,7 +8,7 @@ import LinkArrow from "@/public/images/svg/link_arrow.svg";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import axios from "axios";
-import { formatDate } from "../functions/functions";
+import { formatDate, getApiUrl } from "../functions/functions";
 import Link from "next/link";
 
 
@@ -23,7 +23,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
         // if (events === undefined || events === null) {
             if(similar) {
                 axios
-                .get(`https://dev.goconf.ru/wp-json/events/v2/similar-events/?id=${id}`)
+                .get(getApiUrl(`/backend/wp-json/events/v2/similar-events/?id=${id}`))
                 .then((response) => {
                   setNearEvents(response.data.items);
                 })
@@ -32,7 +32,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                 });
             } else {
                 axios
-                .get("https://dev.goconf.ru/wp-json/events/v2/near-events/")
+                .get(getApiUrl("/backend/wp-json/events/v2/near-events/"))
                 .then((response) => {
                   setNearEvents(response.data.items);
                 })
