@@ -29,16 +29,40 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
+          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
+            set -e
+
+            echo "Cleaning previous app files..."
+            rm -rf /home/thunder/web/dev.goconf.ru/app/*
+
+          EOF
+
+          echo "Uploading project files..."
           rsync -avz --delete --exclude=".git" --exclude="node_modules" -e "ssh -i ~/.ssh/goconf_key" ./ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
 
-      - name: Run deploy script on server
+      - name: Build project and restart pm2
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
+            set -e
+
             cd /home/thunder/web/dev.goconf.ru/app
+
+            echo "Installing dependencies..."
             npm install
+
+            echo "Building project..."
             npm run build
-            pm2 restart goconf || pm2 start npm --name "goconf" -- start
+
+            echo "Restarting pm2 process..."
+            pm2 describe goconf > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+              pm2 restart goconf
+            else
+              pm2 start "npm -- start" --name "goconf"
+            fi
+
+            pm2 save
           EOF
