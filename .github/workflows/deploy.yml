@@ -24,30 +24,36 @@ jobs:
           chmod 600 ~/.ssh/goconf_key
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: Clean server folders before upload
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
-        run: |
-          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP "
-            rm -rf /home/thunder/web/dev.goconf.ru/app/* &&
-            rm -rf /home/thunder/web/dev.goconf.ru/public_html/_next
-          "
-
-      - name: Upload project to server
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
-        run: |
-          rsync -avz --delete --exclude=".git" --exclude="node_modules" -e "ssh -i ~/.ssh/goconf_key" ./ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
-
-      - name: Build and restart project
+      - name: Deploy project to server
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
             set -e
+
+            echo "Cleaning previous app files..."
+            rm -rf /home/thunder/web/dev.goconf.ru/app/*
+
+            echo "Cleaning previous _next files..."
+            rm -rf /home/thunder/web/dev.goconf.ru/public_html/_next
+
+            echo "Creating fresh _next folders..."
+            mkdir -p /home/thunder/web/dev.goconf.ru/public_html/_next/static
+            mkdir -p /home/thunder/web/dev.goconf.ru/public_html/_next/server/app
+          EOF
+
+          echo "Uploading project files..."
+          rsync -avz --delete --exclude=".git" --exclude="node_modules" -e "ssh -i ~/.ssh/goconf_key" ./ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
+
+      - name: Build project and restart pm2
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+        run: |
+          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
+            set -e
+
             cd /home/thunder/web/dev.goconf.ru/app
 
             echo "Installing dependencies..."
@@ -56,16 +62,17 @@ jobs:
             echo "Building project..."
             npm run build
 
-            echo "Copying .next/static to public_html/_next/static..."
-            mkdir -p /home/thunder/web/dev.goconf.ru/public_html/_next
-            cp -r .next/static /home/thunder/web/dev.goconf.ru/public_html/_next/
+            echo "Copying static files to public_html..."
+            cp -r .next/static/* /home/thunder/web/dev.goconf.ru/public_html/_next/static/
+            cp -r .next/server/app/* /home/thunder/web/dev.goconf.ru/public_html/_next/server/app/
 
-            echo "Restarting pm2..."
+            echo "Restarting pm2 process..."
             pm2 describe goconf > /dev/null 2>&1
             if [ $? -eq 0 ]; then
               pm2 restart goconf
             else
               pm2 start npm --name "goconf" -- start
             fi
+
             pm2 save
           EOF
