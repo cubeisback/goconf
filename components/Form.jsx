@@ -2,8 +2,8 @@ import { css } from "@emotion/css"
 import { container } from "@/styles/ui"
 import FormSvg from "@/public/images/svg/form.svg";
 
-import DropdownInput from "./ui/DropdownInput";
-import useFiltersStore from "../store/useFiltersStore";
+import DropdownInput from "@/components/ui/DropdownInput";
+import useFiltersStore from "@/store/useFiltersStore";
 
 export const Form = () => {
     const filtersData = useFiltersStore((state) => state.filtersData)

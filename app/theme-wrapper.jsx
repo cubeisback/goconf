@@ -9,6 +9,7 @@ import useFiltersStore from "@/store/useFiltersStore"
 import useHomeStore from "@/store/useHomeStore"
 import { useEffect, useState } from "react"
 import { cache } from "@/styles/emotion-cache"
+import { Footer } from '@/components/Footer/Footer'
 
 export default function ThemeWrapper({ children }) {
 	const [isLogin, setIsLogin] = useState(false);
@@ -39,6 +40,7 @@ export default function ThemeWrapper({ children }) {
 			<Global styles={globalStyles} />
 			<Header isLogin={isLogin} windowWidth={windowWidth} />
 			{children}
+			<Footer />
 		</ThemeProvider>
 		</CacheProvider>
 	)

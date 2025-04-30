@@ -4,12 +4,12 @@ import { motion } from 'framer-motion';
 import { container } from "@/styles/ui";
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
-import { Formats } from '../components/Formats/Formats';
-import { MainEventsSlider } from '../components/MainEventsSlider';
-import { MainEvents } from '../components/MainEvents';
-import { Form } from '../components/Form';
-import { FilterOnMain } from '../components/Filter/FilterOnMain';
-import useHomeStore from '../store/useHomeStore';
+import { Formats } from '@/components/Formats/Formats';
+import { MainEventsSlider } from '@/components/MainEventsSlider';
+import { MainEvents } from '@/components/MainEvents';
+import { Form } from '@/components/Form';
+import { FilterOnMain } from '@/components/Filter/FilterOnMain';
+import useHomeStore from '@/store/useHomeStore';
 
 
 export default function Main() {

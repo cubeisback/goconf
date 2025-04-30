@@ -8,7 +8,7 @@ import LinkArrow from "@/public/images/svg/link_arrow.svg";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import axios from "axios";
-import { formatDate, getApiUrl } from "../functions/functions";
+import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 
 

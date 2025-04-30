@@ -12,7 +12,7 @@ import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 // import { NavLink } from "react-router";
 import axios from "axios";
-import { formatDate, getApiUrl } from "../functions/functions";
+import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 
 export const MainEventsSlider = () => {

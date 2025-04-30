@@ -21,10 +21,25 @@ export function decodeHtmlEntities(str) {
 }
 
 
+// export const getApiUrl = (url) => {
+// 	if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+// 	  return `https://dev.goconf.ru${url}`;
+// 	}
+// 	return url;
+// };
+
 export const getApiUrl = (url) => {
-	if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+	if (typeof window === "undefined") {
+	  // SSR (на сервере) — всегда отдаём полный URL
 	  return `https://dev.goconf.ru${url}`;
 	}
+  
+	if (window.location.hostname === "localhost") {
+	  return `https://dev.goconf.ru${url}`;
+	}
+  
+	// На клиенте, если не localhost
 	return url;
-};
+  };
+  
   

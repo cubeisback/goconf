@@ -13,6 +13,7 @@ import axios from 'axios';
 // import { useNavigate } from 'react-router';
 import useFiltersStore from '../../store/useFiltersStore';
 import { usePathname, useRouter } from 'next/navigation';
+import { getApiUrl } from '@/functions/functions';
 
 export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQuery, setSeoTitle, setSeoDescription}) => {
     const theme = useTheme();
@@ -135,7 +136,7 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
     const handleSubmit = async (data) => {
       try {
         const res = await axios.post(
-          "https://dev.goconf.ru/wp-json/events/v2/filter/",
+          getApiUrl("/backend/wp-json/events/v2/filter/"),
           data,
           {
             headers: {

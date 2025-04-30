@@ -4,12 +4,10 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { css, cx } from '@emotion/css';
 import { Button, checkBox } from '@/styles/ui';
-import { NavLink } from 'react-router';
 import { useTheme } from '@emotion/react';
-const Google = () => (
-  <img src="../../images/svg/google.svg" alt="Google" />
-);
+import Google from "@/public/images/svg/google.svg";
 import { PasswordInput } from '@/components/ui/PasswordInput';
+import Link from 'next/link';
 
 const modalBackdrop = css`
   position: fixed;
@@ -216,9 +214,9 @@ export const Modal = ({ isOpen, onClose }) => {
                     </div>
                   </form>
 
-                  <NavLink to="/lk" className={css`width: 100%;`}>
+                  <Link href="/lk" className={css`width: 100%;`}>
                     <Button onClick={onClose} className={css`width: 100%!important;margin-bottom: 16px;`}>Войти</Button>
-                  </NavLink>
+                  </Link>
                   <div className={css`
                     color: ${theme.colors.purple};
                     font-size: 14px;
@@ -230,7 +228,7 @@ export const Modal = ({ isOpen, onClose }) => {
                 
                 <div className={modalContentBottom}>
                   <div className={css`font-size: 14px;line-height: 1.16;`}>Еще нет аккаунта?&nbsp;<div className={css`color: ${theme.colors.purple};display: inline;cursor:pointer;`} onClick={()=>setView(2)}>Зарегистрироваться</div></div>
-                  <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <NavLink to="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</NavLink> и&nbsp;<NavLink to="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</NavLink></div>
+                  <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
                 </div>
                 </>
                 : view === 2 ?
@@ -256,7 +254,7 @@ export const Modal = ({ isOpen, onClose }) => {
                   </div>
                   <div className={modalContentBottom}>
                     <div className={css`font-size: 14px;line-height: 1.16;`}>Уже есть аккаунт?&nbsp;<div className={css`color: ${theme.colors.purple};display: inline;cursor:pointer;`} onClick={()=>setView(1)}>Войти</div></div>
-                    <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <NavLink to="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</NavLink> и&nbsp;<NavLink to="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</NavLink></div>
+                    <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
                   </div>
                 </>
                 : 
@@ -295,7 +293,7 @@ export const Modal = ({ isOpen, onClose }) => {
                   </div>
                   <div className={modalContentBottom}>
                     <div className={css`font-size: 14px;line-height: 1.16;`}>Уже есть аккаунт?&nbsp;<div className={css`color: ${theme.colors.purple};display: inline;cursor:pointer;`} onClick={()=>setView(1)}>Войти</div></div>
-                    <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <NavLink to="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</NavLink> и&nbsp;<NavLink to="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</NavLink></div>
+                    <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
                   </div>
                 </>
                 }
