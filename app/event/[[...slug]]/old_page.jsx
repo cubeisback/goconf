@@ -153,7 +153,7 @@ const Event = () => {
                     <div className={promoThemes}>
                         <p>Тематика:</p>
                         {pageInfo && pageInfo.subjects.map(theme => (
-                            <Link key={theme.term_id} Nav={`/events/direction_${theme.slug}`}>{theme.name}</Link>
+                            <Link key={theme.term_id} href={`/events/direction_${theme.slug}`}>{theme.name}</Link>
                         ))}
                     </div>
                 </div>
@@ -392,7 +392,7 @@ const Event = () => {
                                 `}>Формат</p>
 
                                 {pageInfo.formats.map(format => (
-                                    <Link Nav={`/events/format_${format.slug}`} key={format.name} className={css`
+                                    <Link href={`/events/format_${format.slug}`} key={format.name} className={css`
                                         font-size: 14px;
                                         line-height: 1.16;
                                         color: #8553F9;
