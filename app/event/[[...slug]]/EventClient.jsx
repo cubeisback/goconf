@@ -21,7 +21,7 @@ import { decodeHtmlEntities, formatPrice } from '@/functions/functions';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-const EventClient = () => {
+export default function EventClient({ params }) {
 	const [version, setVersion] = useState(0);
 
 	const theme = useTheme();
@@ -467,5 +467,3 @@ const EventClient = () => {
 		</>
 	);
 }
-
-export default EventClient;
