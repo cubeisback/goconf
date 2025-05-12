@@ -1,0 +1,251 @@
+"use client"
+
+import Link from "next/link";
+
+import { css, cx } from "@emotion/css";
+import { container} from "@/styles/ui";
+import { useEffect } from "react";
+import { useTheme } from "@emotion/react";
+import UserIcon from "@/public/images/svg/user.svg";
+import EventsIcon from "@/public/images/svg/events.svg";
+import OrgIcon from "@/public/images/svg/people.svg";
+import CartIcon from "@/public/images/svg/cart.svg";
+import ExitIcon from "@/public/images/svg/exit.svg";
+import EditIcon from "@/public/images/svg/edit.svg";
+import StatusIcon from "@/public/images/svg/status.svg";
+import { useLocation } from "react-router";
+import { motion } from 'framer-motion';
+import UserMain from "./main/page";
+import UserEvents from "./events/page";
+import UserOrg from "./org/page";
+import UserAdd from "./add/page";
+import UserNotifications from "./notifications/page";
+import UserOrders from "./orders/page";
+import UserStatus from "./status/page";
+import { usePathname } from "next/navigation";
+
+const User = ({page, setIsLogin, windowWidth}) => {
+    const theme = useTheme();
+    // const location = useLocation();
+	// const isActive = (path) => location.pathname === path;
+	const pathname = usePathname();
+	const isActive = (path) => pathname === path;
+
+    const menuItem = css`
+        padding: 12px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 18px;
+        transition: ${theme.transition};
+
+        @media(max-width: 1023px) {
+            flex-direction: column;
+            gap: 8px;
+            font-size: 14px;
+            text-align: center;
+            flex: 0 1 calc(25% - 6px);
+            max-width: calc(25% - 6px);
+        }
+        @media(max-width: 767px) {
+            flex: 0 1 48px;
+            max-width: 48px;
+            border-radius: 100%;
+            justify-content: center;
+            padding: 0;
+        }
+
+        &:hover {
+            background-color: #F5F7FA;
+
+            @media(max-width: 767px) {
+                background-color: transparent;
+            }
+        }
+
+        & > svg {
+            @media(max-width: 767px) {
+                padding: 12px;
+                width: 48px;
+                height: 48px;
+                border-radius: 100%;
+            }
+        }
+
+        & > p {
+            line-height: 1.28;
+
+            @media(max-width: 767px) {
+                // display: none;
+                font-size: 9px;
+            }
+        }
+        
+    `;
+
+    const activeMenuItem = css`
+        svg {
+            background-color: #F5F7FA;
+        }
+    `;
+
+    useEffect(()=>{
+        // setIsLogin(true);
+		//TODO Добавить логирование в стейт
+    });
+
+    return (
+        <div className={css`
+            padding: 120px 0;
+            background-color: #F5F7FA;
+
+            min-height: calc(100vh - 84px);
+
+            @media(max-width: 575px) {
+                padding-bottom: 64px;
+            }
+        `}>
+			<p>1</p>
+            <div className={container}>
+				<p>2</p>
+                <div
+                    className={css`
+                    display: flex;
+                    gap: 64px;
+                `}>
+                    {windowWidth > 1023 ?
+                    <motion.div className={css`
+                        flex: 0 1 296px;
+                        max-width: 296px;
+                        padding: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+                        border-radius: 28px;
+                        background-color: #fff;
+                        box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+                        min-height: 448px;
+                        height: max-content;
+                        position: sticky;
+                        top: 100px;
+                    `}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }} 
+                    transition={{ duration: .3 }}>
+                        <div className={css`
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+                            border-bottom: 1px solid #D7DADD;
+                            margin-bottom: 8px;
+                            padding-bottom: 8px;
+                        `}>
+                            <Link  href="/lk" className={cx(menuItem, isActive('/lk') && activeMenuItem)}>
+                                <UserIcon />
+                                <p>Мой профиль</p>
+                            </Link>
+                            <Link  href="/lk/events" className={cx(menuItem, isActive('/lk/events') && activeMenuItem)}>
+                                <EventsIcon />
+                                <p>Мои мероприятия</p>
+                            </Link>
+                            <Link  href="/lk/org" className={cx(menuItem, isActive('/lk/org') && activeMenuItem)}>
+                                <OrgIcon />
+                                <p>Организаторы</p>
+                            </Link>
+                            <Link  href="/lk/orders" className={cx(menuItem, isActive('/lk/orders') && activeMenuItem)}>
+                                <CartIcon />
+                                <p>Заказы</p>
+                            </Link>
+                        </div>
+                        <div className={cx(menuItem, css`
+                            flex-direction: column;align-items:flex-start;
+                            cursor: default;
+
+                            &:hover {
+                                background-color: transparent;
+                            }
+                        `)}>
+                            <div className={css`
+                                color: #47474D;
+                                font-size: 14px;
+                                line-height:1.16;
+                            `}>Статус профиля:</div>
+                            <Link  href="/lk/status" className={css`
+                                color: ${theme.colors.purple};
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                width: 100%;
+                            `}>Базовый <EditIcon /></Link>
+                        </div>
+                        <div className={cx(menuItem, css`
+                            margin-top: auto;
+                        `)}>
+                            <ExitIcon />
+                            <p>Выйти</p>
+                        </div>
+
+                    </motion.div>
+                    :
+                    <motion.div 
+                    initial={{ opacity: 0, y: 100 }}
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ duration: .3 }}
+                    className={css`
+                        position: fixed;
+                        bottom: 24px;
+                        width: calc(100vw - 64px);
+                        left: 32px;
+                        background-color: #fff;
+                        border-radius: 28px;
+                        box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+                        z-index: 1;
+                        padding: 8px;
+                        display: flex;
+                        justify-content: space-between;
+
+                        @media(max-width: 767px) {
+                            left: 0;
+                            bottom: 0;
+                            width: 100vw;
+                            border-radius: 0;
+                            padding: 8px 24px;
+                        }
+                    `}>
+                        <Link  href="/lk" className={cx(menuItem, isActive('/lk') && activeMenuItem)}>
+                            <UserIcon />
+                            <p>Профиль</p>
+                        </Link>
+                        <Link  href="/lk/events" className={cx(menuItem, isActive('/lk/events') && activeMenuItem)}>
+                            <EventsIcon />
+                            <p>Мероприятия</p>
+                        </Link>
+                        <Link  href="/lk/org" className={cx(menuItem, isActive('/lk/org') && activeMenuItem)}>
+                            <OrgIcon />
+                            <p>Организаторы</p>
+                        </Link>
+                        <Link  href="/lk/orders" className={cx(menuItem, isActive('/lk/orders') && activeMenuItem)}>
+                            <CartIcon />
+                            <p>Заказы</p>
+                        </Link>
+                        <Link  href="/lk/status" className={cx(menuItem, isActive('/lk/status') && activeMenuItem)}>
+                            <StatusIcon />
+                            <p>Статус</p>
+                        </Link>
+                    </motion.div>
+                    }
+                    {page === 1 && <UserMain />}
+                    {page === 2 && <UserEvents />}
+                    {page === 3 && <UserOrg />}
+                    {page === 4 && <UserAdd />}
+                    {page === 5 && <UserNotifications />}
+                    {page === 6 && <UserOrders />}
+                    {page === 7 && <UserStatus />}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default User;

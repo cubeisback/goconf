@@ -9,13 +9,9 @@ import { MainEventsSlider } from '@/components/MainEventsSlider';
 import { MainEvents } from '@/components/MainEvents';
 import { Form } from '@/components/Form';
 import { FilterOnMain } from '@/components/Filter/FilterOnMain';
-import useHomeStore from '@/store/useHomeStore';
-
 
 export default function Main() {
     const theme = useTheme();
-
-    const homeData = useHomeStore((state) => state.homeData)
 
     return (
         <>
@@ -190,7 +186,6 @@ export default function Main() {
                         }
 
                     `} >
-                        {/* dangerouslySetInnerHTML={{ __html: homeData && homeData.front_title }} */}
                         Афиша бизнес-событий 
                     <div className={css`display: inline-block; padding-left: 16px;`}>
                     <span className={css`
@@ -234,12 +229,9 @@ export default function Main() {
                             line-height: 1.22;
                         }
                     `}>
-                        {/* {homeData && homeData.front_subtitle} */}
                         Делаем поиск профессиональных событий удобным, а&nbsp;привлечение участников эффективным
                     </motion.div>
                 </div>
-                
-                
 
                 
 

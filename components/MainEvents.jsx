@@ -4,7 +4,6 @@ import { css } from "@emotion/css";
 import { container } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
 import LinkArrow from "@/public/images/svg/link_arrow.svg";
-// import { NavLink } from "react-router";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import axios from "axios";
@@ -246,7 +245,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                                     font-weight: 500;
                                     line-height: 1.36;    
                                 `} dangerouslySetInnerHTML={{ __html: item.title }} />
-                                {/* {item.title}</NavLink> */}
+                                
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
