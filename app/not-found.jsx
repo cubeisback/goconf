@@ -1,7 +1,9 @@
+'use client'
+
 import { css } from "@emotion/css";
 import { Button, container } from "@/styles/ui";
 import Img404 from "@/public/images/svg/404.svg";
-import { MainEvents } from "../components/MainEvents";
+import { MainEvents } from "@/components/MainEvents";
 
 
 export default function NotFoundPage() {
