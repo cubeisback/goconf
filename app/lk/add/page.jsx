@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { css, cx } from "@emotion/css";
-import { Button, input, textarea, userMain } from "@/styles/ui";
+import { Button, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from "react";
 import DropdownInput from "@/components/ui/DropdownInput";
@@ -12,8 +12,10 @@ import AvatarIcon from "@/public/images/svg/avatar.svg";
 import EditIcon from "@/public/images/svg/edit.svg";
 import RemoveIcon from "@/public/images/svg/remove.svg";
 import { AnimatedSwitch } from "../notifications/page";
-import EditorComponent from "@/components/ui/Editor";
+// import EditorComponent from "@/components/ui/Editor";
 import img_ex_1 from '/public/images/events_1.jpg';
+import LkMenu from "@/components/ui/LkMenu";
+import Image from "next/image";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6'];
 
@@ -43,7 +45,15 @@ const UserAdd = () => {
     
 
     return(
-        <>
+        <div className={lkContainer}>
+            <div className={container}>
+                <div
+                    className={css`
+                    display: flex;
+                    gap: 64px;
+                `}>
+                    <LkMenu />
+                
         <motion.div 
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }} 
@@ -157,12 +167,12 @@ const UserAdd = () => {
                 <div>
                     <p>Организатор</p>
                     <DropdownInput options={options} placeholder={'Выбрать организатора'} />
-                    <p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link  href="/lk/org" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
+                    <p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/lk/org" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
                 </div>
                 <div>
                     <p>Ссылка на сайт мероприятия</p>
                     <input className={input} type="text" placeholder="Александр" />
-                    <p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
+                    <p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
                 </div>
             </div>
 
@@ -263,7 +273,7 @@ const UserAdd = () => {
                 <div>
                     <p>Статус мероприятия</p>
                     <DropdownInput options={options} placeholder={'Выбрать организатора'} />
-                    <p className={css`color: #6C6C71;`}>Публикация нескольких мероприятий доступна пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
+                    <p className={css`color: #6C6C71;`}>Публикация нескольких мероприятий доступна пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
                 </div>
             </div>
 
@@ -274,7 +284,8 @@ const UserAdd = () => {
                 line-height: 1.2;
             `}>Описание</div>
 
-            <EditorComponent />
+            {/* <EditorComponent /> */}
+			<p>EDITOR</p>
             
         </motion.div>
         }
@@ -424,7 +435,7 @@ const UserAdd = () => {
                             `}>
                                 <p>Ссылка на трансляцию</p>
                                 <input className={input} type="text" placeholder="https://" />
-                                <p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
+                                <p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
                             </div>
                         </div>
                     </motion.div>
@@ -474,6 +485,7 @@ const UserAdd = () => {
                         img {
                             border-radius: 16px;
                             margin-bottom: 8px;
+							object-fit: cover;
                         }
                         
                         div {
@@ -485,7 +497,7 @@ const UserAdd = () => {
                     }
                 `}>
                     <div>
-                        <img src={img_ex_1} alt="" />
+						<Image src={img_ex_1} alt="" />
                         <div>
                             <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
                             <div>
@@ -495,7 +507,7 @@ const UserAdd = () => {
                         </div>
                     </div>
                     <div>
-                        <img src={img_ex_1} alt="" />
+                        <Image src={img_ex_1} alt="" />
                         <div>
                             <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
                             <div>
@@ -505,7 +517,7 @@ const UserAdd = () => {
                         </div>
                     </div>
                     <div>
-                        <img src={img_ex_1} alt="" />
+                        <Image src={img_ex_1} alt="" />
                         <div>
                             <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
                             <div>
@@ -515,7 +527,7 @@ const UserAdd = () => {
                         </div>
                     </div>
                     <div>
-                        <img src={img_ex_1} alt="" />
+                        <Image src={img_ex_1} alt="" />
                         <div>
                             <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
                             <div>
@@ -525,7 +537,7 @@ const UserAdd = () => {
                         </div>
                     </div>
                     <div>
-                        <img src={img_ex_1} alt="" />
+                        <Image src={img_ex_1} alt="" />
                         <div>
                             <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
                             <div>
@@ -566,7 +578,9 @@ const UserAdd = () => {
         </div>
         </motion.div>
         
-        </>
+        </div>
+            </div>
+        </div>
     )
 };
 

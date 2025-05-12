@@ -325,3 +325,14 @@ export const inputRadioActive = css`
     border-color: #8553F9;
   }
 `;
+
+export const lkContainer = css`
+            padding: 120px 0;
+            background-color: #F5F7FA;
+
+            min-height: calc(100vh - 84px);
+
+            @media(max-width: 575px) {
+                padding-bottom: 64px;
+            }
+`;

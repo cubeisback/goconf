@@ -10,6 +10,8 @@ import { useTheme } from "@emotion/react";
 import { useState } from "react";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 
+//TODO перенести весь компонент в основной page.jsx
+
 const UserMain = () => {
     const theme = useTheme();
 

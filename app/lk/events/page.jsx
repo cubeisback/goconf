@@ -1,7 +1,7 @@
 "use client"
 
 import { css, cx } from "@emotion/css";
-import { Button, inputRadio, inputRadioActive, userMain } from "@/styles/ui";
+import { Button, container, inputRadio, inputRadioActive, lkContainer, userMain } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import CheckIcon from "@/public/images/svg/check.svg";
 import UpIcon from "@/public/images/svg/up.svg";
 import InfoIcon from "@/public/images/svg/info.svg";
 import DropdownInput from "@/components/ui/DropdownInput";
+import LkMenu from "@/components/ui/LkMenu";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
@@ -36,7 +37,15 @@ const UserEvents = () => {
     const [radios, setRadios] = useState(1);
 
     return(
-        <>
+        <div className={lkContainer}>
+            <div className={container}>
+                <div
+                    className={css`
+                    display: flex;
+                    gap: 64px;
+                `}>
+                    <LkMenu />
+                
         {view === 1 && 
         <motion.div className={userMain}
         initial={{ opacity: 0, x: 50 }}
@@ -666,7 +675,10 @@ const UserEvents = () => {
                 </div>
         </motion.div>
         }
-        </>
+        
+		</div>
+            </div>
+        </div>
     )
 };
 

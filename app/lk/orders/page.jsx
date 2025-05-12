@@ -5,9 +5,10 @@ import Link from "next/link";
 import { css, cx } from "@emotion/css";
 import { motion } from 'framer-motion';
 import { useState } from "react";
-import { userMain } from "@/styles/ui";
+import { container, lkContainer, userMain } from "@/styles/ui";
 import EditIcon from "@/public/images/svg/edit.svg";
 import { useTheme } from "@emotion/react";
+import LkMenu from "@/components/ui/LkMenu";
 
 const UserOrders = () => {
     const theme = useTheme();
@@ -26,6 +27,15 @@ const UserOrders = () => {
         `;
 
     return (
+		<div className={lkContainer}>
+            <div className={container}>
+                <div
+                    className={css`
+                    display: flex;
+                    gap: 64px;
+                `}>
+                    <LkMenu />
+                
         <div className={userMain}>
             <motion.div
             initial={{ opacity: 0, x: 50 }}
@@ -178,6 +188,10 @@ const UserOrders = () => {
         </motion.div>
         }
 
+        </div>
+
+		</div>
+            </div>
         </div>
     )
 }

@@ -7,24 +7,12 @@ import { Header } from "@/components/header/Header"
 import { globalStyles } from "@/styles/globals"
 import useFiltersStore from "@/store/useFiltersStore"
 import useHomeStore from "@/store/useHomeStore"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { cache } from "@/styles/emotion-cache"
 import { Footer } from '@/components/Footer/Footer'
+import WindowSizeProvider from '@/components/Providers/WindowSizeProvider'
 
 export default function ThemeWrapper({ children }) {
-	const [isLogin, setIsLogin] = useState(false);
-
-	//ширина экрана
-    const [windowWidth, setWindowWidth] = useState(0);
-
-	useEffect(() => {
-		setWindowWidth(window.innerWidth);
-	
-		const handleResize = () => setWindowWidth(window.innerWidth);
-		window.addEventListener("resize", handleResize);
-	
-		return () => window.removeEventListener("resize", handleResize);
-	  }, []);
 
 	const fetchFiltersData = useFiltersStore((state) => state.fetchFiltersData)
 	const fetchHomeData = useHomeStore((state) => state.fetchHomeData)
@@ -35,13 +23,15 @@ export default function ThemeWrapper({ children }) {
 	}, [fetchFiltersData])
 
 	return (
-		<CacheProvider value={cache}>
-		<ThemeProvider theme={theme}>
-			<Global styles={globalStyles} />
-			<Header isLogin={isLogin} windowWidth={windowWidth} />
-			{children}
-			<Footer />
-		</ThemeProvider>
-		</CacheProvider>
+		<WindowSizeProvider>
+			<CacheProvider value={cache}>
+				<ThemeProvider theme={theme}>
+					<Global styles={globalStyles} />
+					<Header/>
+					{children}
+					<Footer />
+				</ThemeProvider>
+			</CacheProvider>
+		</WindowSizeProvider>
 	)
 }

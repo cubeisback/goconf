@@ -1,14 +1,16 @@
 "use client"
 
 import { css, cx } from "@emotion/css";
-import { Button, input, textarea, userMain } from "@/styles/ui";
+import { Button, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useState } from "react";
 import EditIcon from "@/public/images/svg/edit.svg";
 import RemoveIcon from "@/public/images/svg/remove.svg";
 import AvatarIcon from "@/public/images/svg/avatar.svg";
-import org_1 from '/public/images/org_1.png';
-import EditorComponent from "@/components/ui/Editor";
+import Image from 'next/image'
+import org_1 from '@/public/images/org_1.png';
+import LkMenu from "@/components/ui/LkMenu";
+// import EditorComponent from "@/components/ui/Editor";
 
 const UserOrg = () => {
     const [view, setView] = useState(1);
@@ -19,7 +21,15 @@ const UserOrg = () => {
     };
 
     return (
-        <>
+        <div className={lkContainer}>
+            <div className={container}>
+                <div
+                    className={css`
+                    display: flex;
+                    gap: 64px;
+                `}>
+                    <LkMenu />
+                
         {view === 1 &&
         <motion.div className={userMain}
         initial={{ opacity: 0, x: 50 }}
@@ -75,7 +85,7 @@ const UserOrg = () => {
                     </div>
                     <div className={css`display: flex; gap: 24px;`}>
                         <div className={css`flex: 0 1 96px;`}>
-                            <img src={org_1} alt="" />
+							<Image src={org_1} alt="" />
                         </div>
                         <div className={css`flex:1;`}>
                             <div className={css`font-size:20px;font-weight:500;line-height:1.4;margin-bottom: 8px;`}>ООО «ЦРБК»</div>
@@ -105,7 +115,7 @@ const UserOrg = () => {
                     </div>
                     <div className={css`display: flex; gap: 24px;`}>
                         <div className={css`flex: 0 1 96px;`}>
-                            <img src={org_1} alt="" />
+                            <Image src={org_1} alt="" />
                         </div>
                         <div className={css`flex:1;`}>
                             <div className={css`font-size:20px;font-weight:500;line-height:1.4;margin-bottom: 8px;`}>ООО «ЦРБК»</div>
@@ -135,7 +145,7 @@ const UserOrg = () => {
                     </div>
                     <div className={css`display: flex; gap: 24px;`}>
                         <div className={css`flex: 0 1 96px;`}>
-                            <img src={org_1} alt="" />
+                            <Image src={org_1} alt="" />
                         </div>
                         <div className={css`flex:1;`}>
                             <div className={css`font-size:20px;font-weight:500;line-height:1.4;margin-bottom: 8px;`}>ООО «ЦРБК»</div>
@@ -194,7 +204,8 @@ const UserOrg = () => {
                 <div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{text.length} / 200</div>
             </div>
         
-            <EditorComponent />
+            {/* <EditorComponent /> */}
+			<p>EDITOR</p>
 
             <div className={css`
                 font-family: Impact;
@@ -253,7 +264,9 @@ const UserOrg = () => {
         </motion.div>
         }
 
-        </>
+        </div>
+            </div>
+        </div>
     )
 }
 

@@ -16,9 +16,10 @@ import { Modal } from "@/components/ui/Modal";
 import { useTheme } from "@emotion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import useWindowSizeStore from "@/store/useWindowSizeStore";
 
-export const Header = ({isLogin, windowWidth}) => {
-
+export const Header = ({isLogin}) => {
+	const width = useWindowSizeStore((state) => state.width);
 	const theme = useTheme();
 
 	const [notifications, setNotifications] = useState(false);
@@ -105,7 +106,7 @@ export const Header = ({isLogin, windowWidth}) => {
       }
     `}>
         <Link href="/" className={css`@media(max-width: 575px) { svg {height: 48px; width: 108px;} }`}><Logo /></Link>
-        {windowWidth > 1439 &&
+        {width > 1439 &&
         <nav className={css`
           display: flex;
           gap: 32px;
@@ -136,7 +137,7 @@ export const Header = ({isLogin, windowWidth}) => {
             gap: 24px;
           }
         `}>
-          {windowWidth > 575 && 
+          {width > 575 && 
           <div className={css`
             position: relative;
             height: 48px;
@@ -181,7 +182,7 @@ export const Header = ({isLogin, windowWidth}) => {
             
           </div>
           }
-          {windowWidth > 768 && 
+          {width > 768 && 
             <Link href="/lk/add">
               <Button>
                 <p>
@@ -201,15 +202,15 @@ export const Header = ({isLogin, windowWidth}) => {
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 136px;
-          `} href="/lk"> {windowWidth > 575 ? 'Александр Романов' : <UserIcon32 />}</Link>
+          `} href="/lk"> {width > 575 ? 'Александр Романов' : <UserIcon32 />}</Link>
           </>
           :
           <div onClick={()=>setIsModalOpen(true)} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>
-            {windowWidth > 575 ? <UserIcon /> : <UserIcon32 /> }
-            {windowWidth > 575 && <p>Войти</p> }
+            {width > 575 ? <UserIcon /> : <UserIcon32 /> }
+            {width > 575 && <p>Войти</p> }
           </div>
           }
-          {windowWidth < 1440 && 
+          {width < 1440 && 
           <div className={css`
             position: relative;
             display: flex;

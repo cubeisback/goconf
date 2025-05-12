@@ -1,9 +1,10 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { Button } from "@/styles/ui";
+import { Button, container, lkContainer } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useState } from "react";
+import LkMenu from "@/components/ui/LkMenu";
 
 
 export const AnimatedSwitch = ({ label, initialChecked = false }) => {
@@ -45,7 +46,15 @@ export const AnimatedSwitch = ({ label, initialChecked = false }) => {
 const UserNotifications = () => {
 
     return(
-        <>
+        <div className={lkContainer}>
+            <div className={container}>
+                <div
+                    className={css`
+                    display: flex;
+                    gap: 64px;
+                `}>
+                    <LkMenu />
+                
         <motion.div 
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }} 
@@ -76,7 +85,9 @@ const UserNotifications = () => {
             <Button>Сохранить изменения</Button>
         </motion.div>
         
-        </>
+        </div>
+            </div>
+        </div>
     )
 };
 

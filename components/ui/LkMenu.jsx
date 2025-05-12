@@ -1,11 +1,9 @@
-"use client"
-
-import Link from "next/link";
-
+import useWindowSizeStore from "@/store/useWindowSizeStore";
+import { motion } from 'framer-motion';
 import { css, cx } from "@emotion/css";
-import { container} from "@/styles/ui";
-import { useEffect } from "react";
+import Link from "next/link";
 import { useTheme } from "@emotion/react";
+import { usePathname } from "next/navigation";
 import UserIcon from "@/public/images/svg/user.svg";
 import EventsIcon from "@/public/images/svg/events.svg";
 import OrgIcon from "@/public/images/svg/people.svg";
@@ -13,25 +11,13 @@ import CartIcon from "@/public/images/svg/cart.svg";
 import ExitIcon from "@/public/images/svg/exit.svg";
 import EditIcon from "@/public/images/svg/edit.svg";
 import StatusIcon from "@/public/images/svg/status.svg";
-import { useLocation } from "react-router";
-import { motion } from 'framer-motion';
-import UserMain from "./main/page";
-import UserEvents from "./events/page";
-import UserOrg from "./org/page";
-import UserAdd from "./add/page";
-import UserNotifications from "./notifications/page";
-import UserOrders from "./orders/page";
-import UserStatus from "./status/page";
-import { usePathname } from "next/navigation";
 
-const User = ({page, setIsLogin, windowWidth}) => {
-    const theme = useTheme();
-    // const location = useLocation();
-	// const isActive = (path) => location.pathname === path;
+export default function LkMenu () {
+	const width = useWindowSizeStore((state) => state.width);
 	const pathname = usePathname();
-	const isActive = (path) => pathname === path;
+	const theme = useTheme();
 
-    const menuItem = css`
+	const menuItem = css`
         padding: 12px;
         display: flex;
         gap: 16px;
@@ -58,10 +44,9 @@ const User = ({page, setIsLogin, windowWidth}) => {
 
         &:hover {
             background-color: #F5F7FA;
-
-            @media(max-width: 767px) {
-                background-color: transparent;
-            }
+        }
+		@media(max-width: 767px) {
+            background-color: transparent;
         }
 
         & > svg {
@@ -77,7 +62,6 @@ const User = ({page, setIsLogin, windowWidth}) => {
             line-height: 1.28;
 
             @media(max-width: 767px) {
-                // display: none;
                 font-size: 9px;
             }
         }
@@ -85,36 +69,18 @@ const User = ({page, setIsLogin, windowWidth}) => {
     `;
 
     const activeMenuItem = css`
-        svg {
-            background-color: #F5F7FA;
+        background-color: #F5F7FA;
+
+		@media(max-width: 767px) {
+			svg {
+            	background-color: #F5F7FA;
+			}
         }
     `;
-
-    useEffect(()=>{
-        // setIsLogin(true);
-		//TODO Добавить логирование в стейт
-    });
-
-    return (
-        <div className={css`
-            padding: 120px 0;
-            background-color: #F5F7FA;
-
-            min-height: calc(100vh - 84px);
-
-            @media(max-width: 575px) {
-                padding-bottom: 64px;
-            }
-        `}>
-			<p>1</p>
-            <div className={container}>
-				<p>2</p>
-                <div
-                    className={css`
-                    display: flex;
-                    gap: 64px;
-                `}>
-                    {windowWidth > 1023 ?
+	
+	return (
+		<>
+		{width > 1023 ?
                     <motion.div className={css`
                         flex: 0 1 296px;
                         max-width: 296px;
@@ -141,19 +107,19 @@ const User = ({page, setIsLogin, windowWidth}) => {
                             margin-bottom: 8px;
                             padding-bottom: 8px;
                         `}>
-                            <Link  href="/lk" className={cx(menuItem, isActive('/lk') && activeMenuItem)}>
+                            <Link  href="/lk" className={cx(menuItem, pathname === '/lk' && activeMenuItem)}>
                                 <UserIcon />
                                 <p>Мой профиль</p>
                             </Link>
-                            <Link  href="/lk/events" className={cx(menuItem, isActive('/lk/events') && activeMenuItem)}>
+                            <Link  href="/lk/events" className={cx(menuItem, pathname === '/lk/events' && activeMenuItem)}>
                                 <EventsIcon />
                                 <p>Мои мероприятия</p>
                             </Link>
-                            <Link  href="/lk/org" className={cx(menuItem, isActive('/lk/org') && activeMenuItem)}>
+                            <Link  href="/lk/org" className={cx(menuItem, pathname === '/lk/org' && activeMenuItem)}>
                                 <OrgIcon />
                                 <p>Организаторы</p>
                             </Link>
-                            <Link  href="/lk/orders" className={cx(menuItem, isActive('/lk/orders') && activeMenuItem)}>
+                            <Link  href="/lk/orders" className={cx(menuItem, pathname === '/lk/orders' && activeMenuItem)}>
                                 <CartIcon />
                                 <p>Заказы</p>
                             </Link>
@@ -189,7 +155,7 @@ const User = ({page, setIsLogin, windowWidth}) => {
                     </motion.div>
                     :
                     <motion.div 
-                    initial={{ opacity: 0, y: 100 }}
+                    initial={{ opacity: 0, y: 100 }} //TODO чекнуть почему анимации после обновления не работают
                     animate={{ opacity: 1, y: 0 }} 
                     transition={{ duration: .3 }}
                     className={css`
@@ -213,39 +179,28 @@ const User = ({page, setIsLogin, windowWidth}) => {
                             padding: 8px 24px;
                         }
                     `}>
-                        <Link  href="/lk" className={cx(menuItem, isActive('/lk') && activeMenuItem)}>
+                        <Link  href="/lk" className={cx(menuItem, pathname === '/lk' && activeMenuItem)}>
                             <UserIcon />
                             <p>Профиль</p>
                         </Link>
-                        <Link  href="/lk/events" className={cx(menuItem, isActive('/lk/events') && activeMenuItem)}>
+                        <Link  href="/lk/events" className={cx(menuItem, pathname === '/lk/events' && activeMenuItem)}>
                             <EventsIcon />
                             <p>Мероприятия</p>
                         </Link>
-                        <Link  href="/lk/org" className={cx(menuItem, isActive('/lk/org') && activeMenuItem)}>
+                        <Link  href="/lk/org" className={cx(menuItem, pathname === '/lk/org' && activeMenuItem)}>
                             <OrgIcon />
                             <p>Организаторы</p>
                         </Link>
-                        <Link  href="/lk/orders" className={cx(menuItem, isActive('/lk/orders') && activeMenuItem)}>
+                        <Link  href="/lk/orders" className={cx(menuItem, pathname === '/lk/orders' && activeMenuItem)}>
                             <CartIcon />
                             <p>Заказы</p>
                         </Link>
-                        <Link  href="/lk/status" className={cx(menuItem, isActive('/lk/status') && activeMenuItem)}>
+                        <Link  href="/lk/status" className={cx(menuItem, pathname === '/lk/status' && activeMenuItem)}>
                             <StatusIcon />
                             <p>Статус</p>
                         </Link>
                     </motion.div>
                     }
-                    {page === 1 && <UserMain />}
-                    {page === 2 && <UserEvents />}
-                    {page === 3 && <UserOrg />}
-                    {page === 4 && <UserAdd />}
-                    {page === 5 && <UserNotifications />}
-                    {page === 6 && <UserOrders />}
-                    {page === 7 && <UserStatus />}
-                </div>
-            </div>
-        </div>
-    );
+		</>
+	)
 }
-
-export default User;
