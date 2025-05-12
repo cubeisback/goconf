@@ -47,7 +47,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                 <div className={css`
                     margin-bottom: 32px;
                 `}>
-                    {nearEvents && nearEvents.length === 0 ? <p className={css`font-size: 18px;`}>По заданным параметрам событий не найдено</p> : null}
+                    {/* {nearEvents && nearEvents.length === 0 ? <p className={css`font-size: 18px;`}>По заданным параметрам событий не найдено</p> : null} */}
                     {nearEvents && nearEvents.slice(0, limit).map((item, index) => (
                         <motion.div 
                             initial={{ y: 50, opacity: 0 }}
@@ -225,6 +225,11 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
+									display: -webkit-box;
+									-webkit-line-clamp: 3;
+									-webkit-box-orient: vertical;
+									overflow: hidden;
+									text-overflow: ellipsis;
 
                                     @media(max-width: 575px) {
                                         display: none;

@@ -249,6 +249,11 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                                 <div className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
+									display: -webkit-box;
+									-webkit-line-clamp: 3;
+									-webkit-box-orient: vertical;
+									overflow: hidden;
+									text-overflow: ellipsis;
 
                                     @media(max-width: 575px) {
                                         display: none;

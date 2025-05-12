@@ -117,8 +117,9 @@ export default function EventsClient({ params }) {
 						setSeoDescription={setSeoDescription}
 						setSeoTitle={setSeoTitle}
 					/>
-
-					{total && <p className={css`padding-bottom: 24px;`}>Найдено событий: {total}</p>}
+						
+					{/* {total && <p className={css`padding-bottom: 24px;`}>Найдено событий: {total}</p>} */}
+					<p className={css`padding-bottom: 24px;`}>{total ? `Найдено событий: ${total}` : 'По заданным параметрам событий не найдено'}</p>
 
 					<div className={css`
 						display: flex;
