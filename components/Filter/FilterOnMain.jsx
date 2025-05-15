@@ -29,7 +29,7 @@ export const FilterOnMain = ({full, setEvents}) => {
 		const updatedFilters = { ...filterValues, [type]: newFilter };
 		setFilterValues(updatedFilters);
 
-		const order = ['direction', 'city', 'format', 'start', 'end'];
+		const order = ['direction', 'city', 'format'];
 
 		const filterString = order
 			.filter(key => updatedFilters[key])

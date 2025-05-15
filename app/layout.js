@@ -18,9 +18,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ru">
       <body>
-        <ThemeWrapper>
-          {children}
-        </ThemeWrapper>
+			<ThemeWrapper>
+			{children}
+			</ThemeWrapper>
       </body>
     </html>
   );

@@ -1,6 +1,5 @@
 "use client"
 
-import { CacheProvider } from '@emotion/react'
 import { Global, ThemeProvider } from "@emotion/react"
 import theme from "@/styles/theme"
 import { Header } from "@/components/header/Header"
@@ -8,7 +7,6 @@ import { globalStyles } from "@/styles/globals"
 import useFiltersStore from "@/store/useFiltersStore"
 import useHomeStore from "@/store/useHomeStore"
 import { useEffect } from "react"
-import { cache } from "@/styles/emotion-cache"
 import { Footer } from '@/components/Footer/Footer'
 import WindowSizeProvider from '@/components/Providers/WindowSizeProvider'
 
@@ -24,14 +22,12 @@ export default function ThemeWrapper({ children }) {
 
 	return (
 		<WindowSizeProvider>
-			<CacheProvider value={cache}>
-				<ThemeProvider theme={theme}>
-					<Global styles={globalStyles} />
-					<Header/>
-					{children}
-					<Footer />
-				</ThemeProvider>
-			</CacheProvider>
+			<ThemeProvider theme={theme}>
+				<Global styles={globalStyles} />
+				<Header/>
+				{children}
+				<Footer />
+			</ThemeProvider>
 		</WindowSizeProvider>
 	)
 }
