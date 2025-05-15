@@ -12,6 +12,8 @@ import ExitIcon from "@/public/images/svg/exit.svg";
 import EditIcon from "@/public/images/svg/edit.svg";
 import StatusIcon from "@/public/images/svg/status.svg";
 
+//TODO переделать эту часть с меню в ЛК, чтобы он не был на каждой странице отдельно
+
 export default function LkMenu () {
 	const width = useWindowSizeStore((state) => state.width);
 	const pathname = usePathname();
@@ -64,6 +66,9 @@ export default function LkMenu () {
             @media(max-width: 767px) {
                 font-size: 9px;
             }
+			@media(max-width: 575px) {
+				display: none;
+			}
         }
         
     `;

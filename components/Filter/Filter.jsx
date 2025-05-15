@@ -1,16 +1,13 @@
 // "use client"
 
-
 import { motion } from 'framer-motion';
 import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { useEffect, useMemo, useState } from "react";
-import { checkBox, filterBtn } from "@/styles/ui";
+import { checkBox } from "@/styles/ui";
 import DropdownInput from "../ui/DropdownInput";
 import Datepicker from "../ui/Datepicker";
 import axios from 'axios';
-// import { useLocation } from 'react-router';
-// import { useNavigate } from 'react-router';
 import useFiltersStore from '../../store/useFiltersStore';
 import { usePathname, useRouter } from 'next/navigation';
 import { getApiUrl } from '@/functions/functions';
@@ -21,16 +18,9 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
     const filtersData = useFiltersStore((state) => state.filtersData)
 	console.log('asd', filtersData)
 
-    // const location = useLocation();
-    // const navigate = useNavigate();
 	const router = useRouter();
 	const pathname = usePathname();
-  
-    // Парсим фильтры из URL
-    // const filterParams = useMemo(() => {
-    //   const pathAfterEvents = location.pathname.replace(/^\/events\/?/, "");
-    //   return pathAfterEvents ? pathAfterEvents.split("/") : [];
-    // }, [location.pathname]);
+
 	const filterParams = useMemo(() => {
 		const pathAfterEvents = pathname.replace(/^\/events\/?/, "");
 		return pathAfterEvents ? pathAfterEvents.split("/") : [];
@@ -87,49 +77,24 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
         handleSubmit(defaultForm);
       }
     }, [filterParams]);
-  
-    // Обновление фильтра и URL
-    // const handleFilterChange = (newValue, type) => {
-    //   const updatedFilters = { ...filterValues, [type]: newValue };
-    //   setFilterValues(updatedFilters);
-  
-    //   // Обновляем URL
-    //   const filterString = Object.entries(updatedFilters)
-    //     .map(([key, value]) => `${key}_${value}`)
-    //     .join("/");
-  
-    //   navigate(`/events/${filterString}`);
-  
-    //   const updatedForm = {
-    //     ...formData,
-    //     [type]: newValue,
-    //   };
-    //   setFormData(updatedForm);
-    //   handleSubmit(updatedForm);
-    // };
 
     const handleFilterChange = (newValue, type) => {
-      const updatedFilters = { ...filterValues, [type]: newValue };
-      setFilterValues(updatedFilters);
-    
-      // const filterString = Object.entries(updatedFilters)
-      //   .map(([key, value]) => `${key}_${value}`)
-      //   .join("/");
+      	const updatedFilters = { ...filterValues, [type]: newValue };
+      	setFilterValues(updatedFilters);
 
-        const order = ['direction', 'city', 'format', 'start', 'end'];
+    	const order = ['direction', 'city', 'format'];
 
-      const filterString = order
-        .filter(key => updatedFilters[key])
-        .map(key => `${key}_${updatedFilters[key]}`)
-        .join('/');
+		const filterString = order
+			.filter(key => updatedFilters[key])
+			.map(key => `${key}_${updatedFilters[key]}`)
+			.join('/');
     
 		router.push(`/events/${filterString}`);
     
-      // Здесь больше не вызываем handleSubmit — это сделает useEffect
-      setFormData(prev => ({
-        ...prev,
-        [type]: newValue
-      }));
+		setFormData(prev => ({
+			...prev,
+			[type]: newValue
+		}));
     };
   
     // Отправка запроса
@@ -166,23 +131,34 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
       handleSubmit(updatedForm);
     };
 
-const resetFilter = () => {
-  // Сброс в начальное состояние
-  const defaultForm = {
-    city: null,
-    format: null,
-    direction: null,
-    dateStart: null,
-    dateEnd: null,
-    isOnline: false,
-    isFree: false,
-  };
+	const handleDateChange = (newValue, type) => {
+	const updatedForm = {
+		...formData,
+		[type === 'start' ? 'dateStart' : 'dateEnd']: newValue,
+	};
 
-  setQuery(''); // Удаляем значение поиска
-  setFilterValues({});
-  setFormData(defaultForm);
-  router.push("/events"); // Удаляем фильтры из URL
-  handleSubmit(defaultForm); // Делаем новый запрос
+	setFormData(updatedForm);
+	handleSubmit(updatedForm);
+	};
+
+
+const resetFilter = () => {
+	// Сброс в начальное состояние
+	const defaultForm = {
+		city: null,
+		format: null,
+		direction: null,
+		dateStart: null,
+		dateEnd: null,
+		isOnline: false,
+		isFree: false,
+	};
+
+	setQuery(''); // Удаляем значение поиска
+	setFilterValues({});
+	setFormData(defaultForm);
+	router.push("/events"); // Удаляем фильтры из URL
+	handleSubmit(defaultForm); // Делаем новый запрос
 }
 
     return (
@@ -255,8 +231,8 @@ const resetFilter = () => {
                     
                     
                     
-                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'start'} />
-                    <Datepicker full={full} title={'Окончание'} fixmob={true} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'end'} /> {/*TODO Передалать на экран*/}
+                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleDateChange} filterValues={filterValues} type={'start'} />
+                    <Datepicker full={full} title={'Окончание'} fixmob={true} handleFilterChange={handleDateChange} filterValues={filterValues} type={'end'} /> {/*TODO Передалать на экран*/}
 
                     {full && 
                       <div className={css`

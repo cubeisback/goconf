@@ -15,35 +15,29 @@ export const FilterOnMain = ({full, setEvents}) => {
     const theme = useTheme();
 
     const filtersData = useFiltersStore((state) => state.filtersData)
-    
 
 	const router = useRouter();
 
-const [filterUrl, setFilterUrl] = useState(null)
-const handleSubmit = () => {
-    filterUrl &&
-    router.push(`/events/${filterUrl}`);
-};
+	const [filterUrl, setFilterUrl] = useState(null)
+	const handleSubmit = () => {
+		filterUrl &&
+		router.push(`/events/${filterUrl}`);
+	};
 
-const [filterValues, setFilterValues] = useState({});
-const handleFilterChange = (newFilter, type) => {
-    const updatedFilters = { ...filterValues, [type]: newFilter };
-    setFilterValues(updatedFilters);
+	const [filterValues, setFilterValues] = useState({});
+	const handleFilterChange = (newFilter, type) => {
+		const updatedFilters = { ...filterValues, [type]: newFilter };
+		setFilterValues(updatedFilters);
 
-    const order = ['direction', 'city', 'format', 'start', 'end'];
+		const order = ['direction', 'city', 'format', 'start', 'end'];
 
-    // const filterString = Object.entries(updatedFilters)
-    //     .map(([key, value]) => `${key}_${value}`)
-    //     .join('/');
-    // setFilterUrl(filterString);
+		const filterString = order
+			.filter(key => updatedFilters[key])
+			.map(key => `${key}_${updatedFilters[key]}`)
+			.join('/');
 
-    const filterString = order
-        .filter(key => updatedFilters[key]) // исключаем неустановленные значения
-        .map(key => `${key}_${updatedFilters[key]}`)
-        .join('/');
-
-    setFilterUrl(filterString);
-}
+		setFilterUrl(filterString);
+	}
 
     return (
         <motion.div

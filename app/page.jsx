@@ -9,14 +9,12 @@ import { MainEventsSlider } from '@/components/MainEventsSlider';
 import { MainEvents } from '@/components/MainEvents';
 import { Form } from '@/components/Form';
 import { FilterOnMain } from '@/components/Filter/FilterOnMain';
-
 export default function Main() {
     const theme = useTheme();
 
     return (
         <>
             <div className={container}>
-                
                 <div className={css`
                     padding-top: 300px;
                     padding-bottom: 80px;
