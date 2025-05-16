@@ -209,7 +209,6 @@ export const Header = ({isLogin}) => {
             {width > 575 ? <UserIcon /> : <UserIcon32 /> }
             {width > 575 && <p>
 				<span>Войти</span>
-				<span>Войти</span>
 			</p> }
           </div>
           }

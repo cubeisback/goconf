@@ -114,7 +114,6 @@ export const FilterOnMain = ({full, setEvents}) => {
 
                     {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>
 						<span>Найти</span>
-						<span>Найти</span>
 					</div>}
                     
         </motion.div>

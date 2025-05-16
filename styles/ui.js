@@ -86,6 +86,50 @@ export const Button = styled.div`
   }
 `;
 
+export const ButtonMore = styled.div`
+  margin: 0 auto;
+                        padding: 14px 32px;
+                        border-radius: 28px;
+                        border: 2px solid ${({ theme }) => theme.colors.purple};
+                        background-color: #fff;
+                        width: max-content;
+                        
+                        line-height: 1.28;
+                        cursor: pointer;
+                        transition: ${({ theme }) => theme.transition};  
+                        
+                        &:hover {
+                            background-color: ${({ theme }) => theme.colors.purple};
+                        }
+
+  @media (max-width: 575px) {
+    width: 100%;
+  }
+
+  p {
+    height: 21px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    span {
+      display: block;
+      min-width: max-content;
+      transition: ${({ theme }) => theme.transition};
+      color: ${({ theme }) => theme.colors.purple};
+
+      &:nth-of-type(2) {
+        transform: translateY(100%);
+        color: #fff;
+      }
+    }
+  }
+
+  &:hover p span {
+    transform: translateY(-100%);
+  }
+`;
+
 export const inputItem = css`
   flex: 0 1 calc(50% - 12px);
   max-width: calc(50% - 12px);

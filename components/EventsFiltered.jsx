@@ -1,7 +1,7 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { container } from "@/styles/ui";
+import { ButtonMore, container } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
 import LinkArrow from "@/public/images/svg/link_arrow.svg";
 import { useEffect, useState } from "react";
@@ -260,23 +260,12 @@ export const EventsFiltered = ({onPage, similar, events}) => {
 
                 {!similar &&
                 nearEvents && limit < nearEvents.length && (
-                    <div className={css`
-                        margin: 0 auto;
-                        padding: 14px 32px;
-                        border-radius: 28px;
-                        border: 2px solid ${theme.colors.purple};
-                        background-color: #fff;
-                        width: max-content;
-                        color: ${theme.colors.purple};
-                        line-height: 1.28;
-                        cursor: pointer;
-                        transition: ${theme.transition};  
-                        
-                        &:hover {
-                            background-color: ${theme.colors.purple};
-                            color: #fff;
-                        }
-                    `} onClick={()=>setLimit(prev => prev+5)}>Показать еще +</div>
+                    <ButtonMore onClick={()=>setLimit(prev => prev+5)}>
+						<p>
+							<span>Показать еще +</span>
+							<span>Показать еще +</span>
+						</p>
+					</ButtonMore>
                 )
                 }
             </div>
