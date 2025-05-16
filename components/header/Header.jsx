@@ -375,7 +375,7 @@ export const Header = ({isLogin}) => {
                 </p>
               </Button>
             </Link>
-          <Link>Пользовательское соглашение</Link>
+          <Link href="">Пользовательское соглашение</Link>
           <div>© GoCONF 2025</div>
         </div>
       </motion.div>

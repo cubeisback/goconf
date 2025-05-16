@@ -11,6 +11,7 @@ import axios from 'axios';
 import useFiltersStore from '../../store/useFiltersStore';
 import { usePathname, useRouter } from 'next/navigation';
 import { getApiUrl } from '@/functions/functions';
+import { useDateStore } from '@/store/useDateStore';
 
 export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQuery, setSeoTitle, setSeoDescription}) => {
     const theme = useTheme();
@@ -39,43 +40,91 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
   
     // Обновление formData из URL и отправка запроса
     useEffect(() => {
-      if (filterParams.length > 0) {
-        const filters = filterParams.reduce((acc, param) => {
-          const [key, value] = param.split("_");
-          if (key && value) {
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
-  
-        console.log("Parsed filters from URL:", filters);
-  
-        setFilterValues(filters);
-        const updatedForm = {
-          city: filters.city || null,
-          format: filters.format || null,
-          direction: filters.direction || null,
-          dateStart: filters.start || null,
-          dateEnd: filters.end || null,
-          isOnline: filters.isOnline === "true",
-          isFree: filters.isFree === "true",
-        };
-        setFormData(updatedForm);
-        handleSubmit(updatedForm); // Отправляем запрос сразу
-      } else {
-        const defaultForm = {
-          city: null,
-          format: null,
-          direction: null,
-          dateStart: null,
-          dateEnd: null,
-          isOnline: false,
-          isFree: false,
-        };
-        setFilterValues({});
-        setFormData(defaultForm);
-        handleSubmit(defaultForm);
-      }
+		if (typeof window !== 'undefined') {
+			const sessionDate = window.sessionStorage.getItem('date-store');
+			
+			if (filterParams.length > 0) {
+
+				// if (sessionDate) {
+				// 	const parsed = JSON.parse(sessionDate);
+				// 		setStartDate(parsed?.state?.mainDates?.dateStart);
+				// 		setStartDate(parsed?.state?.mainDates?.dateEnd);
+				// } else {
+				
+				// }
+
+				const filters = filterParams.reduce((acc, param) => {
+				const [key, value] = param.split("_");
+				if (key && value) {
+					acc[key] = value;
+				}
+				return acc;
+				}, {});
+		
+				console.log("Parsed filters from URL:", filters);
+		
+				setFilterValues(filters);
+
+				if (sessionDate) {
+					const parsed = JSON.parse(sessionDate);
+					const updatedForm = {
+					city: filters.city || null,
+					format: filters.format || null,
+					direction: filters.direction || null,
+					dateStart: filters.start || parsed?.state?.mainDates?.dateStart,
+					dateEnd: filters.end || parsed?.state?.mainDates?.dateEnd,
+					isOnline: filters.isOnline === "true",
+					isFree: filters.isFree === "true",
+					};
+					setFormData(updatedForm);
+					handleSubmit(updatedForm); // Отправляем запрос сразу
+				} else {
+					const updatedForm = {
+					city: filters.city || null,
+					format: filters.format || null,
+					direction: filters.direction || null,
+					dateStart: filters.start || null,
+					dateEnd: filters.end || null,
+					isOnline: filters.isOnline === "true",
+					isFree: filters.isFree === "true",
+					};
+					setFormData(updatedForm);
+					handleSubmit(updatedForm); // Отправляем запрос сразу
+				}
+				
+			} else {
+				if (sessionDate) {
+					const parsed = JSON.parse(sessionDate);
+					const defaultForm = {
+					city: null,
+					format: null,
+					direction: null,
+					dateStart: parsed?.state?.mainDates?.dateStart,
+					dateEnd: parsed?.state?.mainDates?.dateEnd,
+					isOnline: false,
+					isFree: false,
+					};
+					setFilterValues({});
+					setFormData(defaultForm);
+					handleSubmit(defaultForm);
+				} else {
+					const defaultForm = {
+					city: null,
+					format: null,
+					direction: null,
+					dateStart: null,
+					dateEnd: null,
+					isOnline: false,
+					isFree: false,
+					};
+					setFilterValues({});
+					setFormData(defaultForm);
+					handleSubmit(defaultForm);	
+				}
+				
+			}
+		}
+      
     }, [filterParams]);
 
     const handleFilterChange = (newValue, type) => {
@@ -99,6 +148,7 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
   
     // Отправка запроса
     const handleSubmit = async (data) => {
+		console.log('запрос ушел ')
       try {
         const res = await axios.post(
           getApiUrl("/backend/wp-json/events/v2/filter/"),
@@ -116,6 +166,7 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
         setPageText(res.data.text);
 		setSeoTitle(res.data.seo.title);
 		setSeoDescription(res.data.seo.description);
+		useDateStore.getState().resetMainDates();
       } catch (err) {
         console.log("Error:", err.message);
       }

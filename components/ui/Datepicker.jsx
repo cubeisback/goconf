@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 import {ru} from 'date-fns/locale/ru';
 import "react-datepicker/dist/react-datepicker.css"; //TODO remove
 
-const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type}) => {
+const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type, setStoreDate}) => {
     const [startDate, setStartDate] = useState(null);
     const [showDate, setShowDate] = useState(false);
     const datePickerRef = useRef(null);
@@ -21,31 +21,50 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
       localize: {
         ...ru.localize,
         month: (n) => ru.localize.month(n).charAt(0).toUpperCase() + ru.localize.month(n).slice(1),
-        // day: (n) => ru.localize.day(n).charAt(0).toUpperCase() + ru.localize.day(n).slice(1),
         day: (n) => ru.localize.day(n).charAt(0).toUpperCase(),
       },
     };
 
-      useEffect(() => {
-          // if(filterValues) {
-          //   const checkedValue = filterValues[type];
-          //   if(checkedValue) {
-          //     // console.log('dfgf', filterValues[type])
-          //     setStartDate(filterValues[type])
-          //   }
+    //   useEffect(() => {
+    //       if(filterValues) {
+    //         const checkedValue = filterValues[type];
+    //         if (checkedValue) {
+    //           setStartDate(filterValues[type])
+    //         } else {
+    //           setStartDate(null)
+    //         }
+    //       }
+    //   }, [filterValues]);
+	useEffect(() => {
+  if (filterValues && filterValues[type]) {
+    setStartDate(filterValues[type]);
+  } else {
+    // Попытка получить дату из sessionStorage
+	if (typeof window !== 'undefined') {
+		const sessionDate = window.sessionStorage.getItem('date-store');
+		if (sessionDate) {
+			const parsed = JSON.parse(sessionDate);
+			// onesadasd = parsed?.state?.mainDates?.dateStart || null;
+      		// dateEnd = parsed?.state?.mainDates?.dateEnd || null;
+			console.log(parsed?.state?.mainDates?.dateStart, 'ASDGAJSDJASHDASHD')
+			if(type == 'start') {
+				setStartDate(parsed?.state?.mainDates?.dateStart);
+			} else {
+				setStartDate(parsed?.state?.mainDates?.dateEnd);
+			}
 
-            
-          // }
+		// setStartDate(sessionDate);
+		// handleFilterChange(sessionDate, type); // Запустить обработчик фильтрации
+		// setStoreDate && setStoreDate(sessionDate); // Синхронизировать со store
+		} else {
+		setStartDate(null);
+		console.log('nononono')
+		}
+	}
+    
+  }
+}, [filterValues]);
 
-          if(filterValues) {
-            const checkedValue = filterValues[type];
-            if (checkedValue) {
-              setStartDate(filterValues[type])
-            } else {
-              setStartDate(null)
-            }
-          }
-      }, [filterValues]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -116,6 +135,8 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
                           setShowDate(false);
                         }, 0)
                         handleFilterChange(formattedDate, type)
+						// console.log('type', type)
+						setStoreDate && setStoreDate(formattedDate)
                     }}
                     inline
                 />

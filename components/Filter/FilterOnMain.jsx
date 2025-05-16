@@ -10,17 +10,30 @@ import DropdownInput from "@/components/ui/DropdownInput";
 import Datepicker from "@/components/ui/Datepicker";
 import { useRouter } from "next/navigation";
 import useFiltersStore from '@/store/useFiltersStore';
+import { useDateStore } from '@/store/useDateStore';
 
 export const FilterOnMain = ({full, setEvents}) => {
     const theme = useTheme();
 
     const filtersData = useFiltersStore((state) => state.filtersData)
+	
+	const setDateStart = useDateStore((state) => state.setDateStart);
+  	const setDateEnd = useDateStore((state) => state.setDateEnd);
+	const handleStartDateChange = (date) => {
+	    setDateStart(date); // сохраняем дату начала
+		console.log('votdata', date)
+	};
+
+	const handleEndDateChange = (date) => {
+		setDateEnd(date); // сохраняем дату конца
+		console.log('votdata', date)
+	};
 
 	const router = useRouter();
 
-	const [filterUrl, setFilterUrl] = useState(null)
+	const [filterUrl, setFilterUrl] = useState('')
 	const handleSubmit = () => {
-		filterUrl &&
+		// filterUrl &&
 		router.push(`/events/${filterUrl}`);
 	};
 
@@ -109,8 +122,8 @@ export const FilterOnMain = ({full, setEvents}) => {
                     
                     
                     
-                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} type={'start'} />
-                    <Datepicker full={full} title={'Окончание'} handleFilterChange={handleFilterChange} type={'end'} fixmob={true} /> {/*TODO Передалать на экран*/}
+                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} setStoreDate={handleStartDateChange} type={'start'} />
+                    <Datepicker full={full} title={'Окончание'} handleFilterChange={handleFilterChange} setStoreDate={handleEndDateChange} type={'end'} fixmob={true} /> {/*TODO Передалать на экран*/}
 
                     {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>
 						<span>Найти</span>

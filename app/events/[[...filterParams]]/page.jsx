@@ -1,6 +1,6 @@
 // app/events/[[...filterParams]]/page.jsx
 
-import { Metadata } from 'next';
+// import { Metadata } from 'next';
 import EventsClient from './EventsClient';
 import { getSeoDataFromParams } from '@/lib/getSeoData';
 
