@@ -31,12 +31,14 @@ export const Formats = () => {
     }, []);
 
     const [formatItems, setFormatItems] = useState(null)
+	const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
       axios
         // .get("/api/backend/wp-json/events/v2/popular-formats/")
 		.get(getApiUrl("/backend/wp-json/events/v2/popular-formats/"))
         .then((response) => {
             setFormatItems(response.data.items)
+			setIsLoading(false)
             console.log('popular-formats ', response.data)
         })
         .catch((error) => {
@@ -92,6 +94,32 @@ export const Formats = () => {
                 `}>Самые интересные бизнес-мероприятия различных форматов от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div> */}
             </div>
             {windowWidth > 767 ?
+			isLoading ? (
+  // Скелетоны (например, 3 заглушки)
+  <>
+  <div className={css`display: flex;
+	gap: 32px;`}>
+    {[...Array(3)].map((_, i) => (
+      <div key={i} className={css`
+	  	background: #eee;
+		padding: 1rem;
+		margin-bottom: 1rem;
+		border-radius: 8px;
+		animation: pulse 1.5s infinite;
+		height: 473px;
+		width: 33%;
+
+		@keyframes pulse {
+			0% { opacity: 1 }
+			50% { opacity: 0.5 }
+			100% { opacity: 1 }
+			}
+	  `}>
+      </div>
+    ))}
+	</div>
+  </>
+) :
             <div className={css`
                 // overflow-x: hidden;
             `}>
