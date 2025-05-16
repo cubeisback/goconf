@@ -16,7 +16,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import axios from 'axios';
-import { decodeHtmlEntities, formatPrice } from '@/functions/functions';
+import { decodeHtmlEntities, formatDate, formatPrice } from '@/functions/functions';
 // import { DocumentDescription, DocumentTitle } from '@/functions/DocumentMeta';
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -328,7 +328,32 @@ export default function EventClient({ params }) {
 								<p className={css`
 									font-size: 14px;
 									line-height: 1.16;
-								`}>{pageInfo.fields.events_start} - {pageInfo.fields.events_end}</p>
+								`}>
+									{/* {pageInfo.fields.events_start} - {pageInfo.fields.events_end} */}
+									{
+									(() => {
+										const [d1, m1, y1] = pageInfo.fields.events_start.split('.');
+										const [d2, m2, y2] = pageInfo.fields.events_end.split('.');
+
+										if (pageInfo.fields.events_start === pageInfo.fields.events_end) {
+										return formatDate(pageInfo.fields.events_start);
+										} else if (m1 === m2 && y1 === y2) {
+										// Берём отформатированную дату и убираем оттуда число, оставляя "июня 2025"
+										const formatted = formatDate(pageInfo.fields.events_start);
+										const [, monthAndYear] = formatted.split(' ', 2); // может вернуть только месяц
+										const rest = formatted.slice(formatted.indexOf(' ') + 1); // "июня 2025"
+										return `${d1}–${d2} ${rest}`;
+										} else {
+										return (
+											<>
+											{formatDate(pageInfo.fields.events_start)} -<br />
+											{formatDate(pageInfo.fields.events_end)}
+											</>
+										);
+										}
+									})()
+									}
+								</p>
 							</div>
 							{pageInfo.cities[0] && 
 							<div className={css`

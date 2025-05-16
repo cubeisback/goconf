@@ -1,10 +1,7 @@
-import { css } from '@emotion/css';
+import styled from '@emotion/styled';
 
-export const Footer = () => {
-
-  return (
-    <footer className={css`
-      padding: 32px 64px;
+const FooterS = styled.footer`
+padding: 32px 64px;
       background-color: #191921;
       color: #fff;
       display: flex;
@@ -20,10 +17,15 @@ export const Footer = () => {
       a {
         color: #fff;
       }
-    `}>
+`
+
+export const Footer = () => {
+
+  return (
+    <FooterS>
         <div>© GoCONF 2025</div>
         <div><a href="mailto:info@goconf.ru">info@goconf.ru</a></div>
         <div><a href="/" target='_blank'>Пользовательское соглашение</a></div>
-    </footer>
+    </FooterS>
   );
 }

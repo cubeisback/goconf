@@ -85,8 +85,8 @@ export const Form = () => {
                             }
                         `}>
                             <input type="text" placeholder="Ваш E-mail" />
-                            <DropdownInput options={filtersData && filtersData.subjects} placeholder={'Тематика'} />
-                            <DropdownInput options={filtersData && filtersData.cities} placeholder={'Город'} />
+                            <DropdownInput options={filtersData && filtersData.subjects} placeholder={'Тематика'} type={'direction'} />
+                            <DropdownInput options={filtersData && filtersData.cities} placeholder={'Город'} type={'city'} />
                             
                             
                             <div className={css`

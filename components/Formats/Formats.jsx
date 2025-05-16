@@ -122,6 +122,7 @@ export const Formats = () => {
 ) :
             <div className={css`
                 // overflow-x: hidden;
+				min-height: 325px;
             `}>
             
                 {formatItems && (

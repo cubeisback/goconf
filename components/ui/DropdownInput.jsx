@@ -67,7 +67,7 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
     }
     if(handleFilterChange) {
       handleFilterChange(keys[index], type);
-      // console.log('asfas', keys[index], type)
+    //   console.log('asfas', keys[index], type)
     }
     console.log('values', values)
     console.log('filteredOptions', filteredOptions)
@@ -207,7 +207,11 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
                 }
               `}
             >
-              {/* <li onClick={() => handleSelect('', '', '')}>Все</li> */}
+              <li onClick={() => handleSelect('', type, 99999)}>
+				{type == 'direction' && 'Все тематики'}
+				{type == 'city' && 'Все города'}
+				{type == 'format' && 'Все форматы'}
+			  </li>
               {(showFullList ? values : filteredOptions).map((option) => {
                 const originalIndex = values.indexOf(option);
                 return (

@@ -112,7 +112,10 @@ export const FilterOnMain = ({full, setEvents}) => {
                     <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} type={'start'} />
                     <Datepicker full={full} title={'Окончание'} handleFilterChange={handleFilterChange} type={'end'} fixmob={true} /> {/*TODO Передалать на экран*/}
 
-                    {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>Найти</div>}
+                    {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>
+						<span>Найти</span>
+						<span>Найти</span>
+					</div>}
                     
         </motion.div>
     )
