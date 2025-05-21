@@ -58,7 +58,6 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
 		// setStoreDate && setStoreDate(sessionDate); // Синхронизировать со store
 		} else {
 		setStartDate(null);
-		console.log('nononono')
 		}
 	}
     

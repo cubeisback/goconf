@@ -8,6 +8,8 @@ import { useTheme } from '@emotion/react';
 import Google from "@/public/images/svg/google.svg";
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import Link from 'next/link';
+import axios from 'axios';
+import { getApiUrl } from '@/functions/functions';
 
 const modalBackdrop = css`
   position: fixed;
@@ -131,7 +133,99 @@ const modalTextWithLine = css`
 `;
 
 export const Modal = ({ isOpen, onClose }) => {
-  const theme = useTheme();
+  	const theme = useTheme();
+
+
+  	// const handleSubmit = async (data) => {
+	// 	console.log('запрос ушел ')
+	// 	try {
+	// 	  const res = await axios.post(
+	// 		getApiUrl("/backend/wp-json/events/v2/filter/"),
+	// 		data,
+	// 		{
+	// 		  headers: {
+	// 			"Content-Type": "application/json",
+	// 		  },
+	// 		}
+	// 	  );
+	// 	  console.log("Response:", res);
+	// 	  setEvents(res.data.events);
+	// 	  setTotal(res.data.total);
+	// 	  setPageH1(res.data.h1);
+	// 	  setPageText(res.data.text);
+	// 	setSeoTitle(res.data.seo.title);
+	// 	setSeoDescription(res.data.seo.description);
+	// 	useDateStore.getState().resetMainDates();
+	// 	} catch (err) {
+	// 	  console.log("Error:", err.message);
+	// 	}
+	// };
+
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+
+	const [regResponse, setRegResponse] = useState(null)
+
+	const handleSubmit = async(e) => {
+		e.preventDefault();
+
+		// Простейшая валидация
+		if (password !== confirmPassword) {
+		alert("Пароли не совпадают");
+		return;
+		}
+
+		try {
+			const response = await axios.post(
+				getApiUrl("/backend/wp-json/users/v2/register/"), {
+				firstname: firstName,
+				lastname: lastName,
+				password: password,
+				confirm_password: confirmPassword,
+				email: email,
+			});
+
+			if (response.status === 200) {
+				alert("Вы успешно зарегистрированы!");
+				console.log(response)
+				setRegResponse(response)
+				// или редирект, или очистка формы
+			}
+		} catch(error) {
+		console.error("Ошибка регистрации:", error);
+		alert(error.response?.data?.message || "Произошла ошибка");
+		}
+	};
+
+	const [emailLogin, setEmailLogin] = useState("");
+	const [passwordLogin, setPasswordLogin] = useState("");
+	const handleSubmitLogin = async(e) => {
+		e.preventDefault();
+
+		try {
+			const response = await axios.post(
+				getApiUrl("/backend/wp-json/users/v2/login/"), {
+				password: passwordLogin,
+				email: emailLogin,
+			});
+
+			console.log('login', response)
+
+			if (response.status === 200) {
+				alert("Вход выполнен");
+				// console.log(response)
+				// или редирект, или очистка формы
+			}
+		} catch(error) {
+		console.error("Ошибка регистрации:", error);
+		alert(error.response?.data?.message || "Произошла ошибка");
+		}
+	};
+
+	
 
   const modalClose = css`
     position: absolute;
@@ -191,9 +285,9 @@ export const Modal = ({ isOpen, onClose }) => {
                     <p>Или войти с&nbsp;помощью&nbsp;эл. почты</p>
                   </div>
 
-                  <form action="" className={modalForm}>
-                    <input type="text" placeholder="Электронная почта" />
-                    <PasswordInput text='Пароль' />
+                  <form onSubmit={handleSubmitLogin} className={modalForm}>
+                    <input type="text" placeholder="Электронная почта" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} />
+                    <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} />
                     <div className={cx(checkBox, css`
                       label::before {
                         border-color: rgba(16, 16, 16, 0.2);
@@ -212,11 +306,20 @@ export const Modal = ({ isOpen, onClose }) => {
                       <input type="checkbox" id="logex1" />
                       <label htmlFor="logex1">Запомнить меня</label>
                     </div>
+
+                    <Button 
+						type="submit"
+						className={css`width: 100%!important;margin-bottom: 16px;`}
+						onClick={handleSubmitLogin}
+					>Войти</Button>
                   </form>
 
-                  <Link href="/lk" className={css`width: 100%;`}>
-                    <Button onClick={onClose} className={css`width: 100%!important;margin-bottom: 16px;`}>Войти</Button>
-                  </Link>
+                  {/* <Link href="/lk" className={css`width: 100%;`}>
+                    <Button 
+						onClick={onClose} 
+						className={css`width: 100%!important;margin-bottom: 16px;`}
+					>Войти</Button>
+                  </Link> */}
                   <div className={css`
                     color: ${theme.colors.purple};
                     font-size: 14px;
@@ -235,13 +338,19 @@ export const Modal = ({ isOpen, onClose }) => {
                 <>
                   <div className={modalContentTop}>
                     <div className={modalTitle}>Зарегистрироваться</div>
-                    <form action="" className={modalForm}>
-                      <input type="text" placeholder="Имя" />
-                      <input type="text" placeholder="Фамилия" />
-                      <input type="text" placeholder="Электронная почта" />
-                      <PasswordInput text='Пароль' />
-                      <PasswordInput text='Подтверждение пароля' />
-                      <Button className={css`width: 100%!important;margin-bottom: 24px;`}>Зарегистрироваться</Button>
+                    <form onSubmit={handleSubmit} className={modalForm}>
+                      <input type="text" placeholder="Имя" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                      <input type="text" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                      <input type="text" placeholder="Электронная почта" value={email} onChange={(e) => setEmail(e.target.value)} />
+                      <PasswordInput text='Пароль' value={password} onChange={setPassword} />
+                      <PasswordInput text='Подтверждение пароля' value={confirmPassword} onChange={setConfirmPassword} />
+                      <Button type="submit" className={css`width: 100%!important;margin-bottom: 24px;`} onClick={handleSubmit}>Зарегистрироваться</Button>
+
+					  {regResponse && <>
+					  <h2 style={{color: 'green', fontSize: 14, margin: '5px 0'}}>Response: </h2>
+					  <p style={{color: 'green', fontSize: 14, margin: '5px 0'}}>{regResponse.data.message}</p>
+					  <a style={{color: 'green', fontSize: 14, margin: '5px 0'}} href={regResponse.data.data.link} target='_blank'>{regResponse.data.data.link}</a>
+					  </>}
                     </form>
                     <div className={modalTextWithLine}>
                       <p>Зарегистрироваться через</p>
