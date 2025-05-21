@@ -39,7 +39,7 @@ export const Formats = () => {
         .then((response) => {
             setFormatItems(response.data.items)
 			setIsLoading(false)
-            console.log('popular-formats ', response.data)
+            // console.log('popular-formats ', response.data)
         })
         .catch((error) => {
             console.log(error)

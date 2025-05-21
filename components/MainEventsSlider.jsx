@@ -29,7 +29,7 @@ export const MainEventsSlider = () => {
         .then((response) => {
 			setEvents(response.data);
 			setIsLoading(false);
-          	console.log('interesting-events ', response.data)
+          	// console.log('interesting-events ', response.data)
         })
         .catch((error) => {
             console.log(error);

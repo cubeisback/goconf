@@ -190,7 +190,7 @@ export const Modal = ({ isOpen, onClose }) => {
 
 			if (response.status === 200) {
 				alert("Вы успешно зарегистрированы!");
-				console.log(response)
+				console.log('registration', response)
 				setRegResponse(response)
 				// или редирект, или очистка формы
 			}
@@ -202,28 +202,73 @@ export const Modal = ({ isOpen, onClose }) => {
 
 	const [emailLogin, setEmailLogin] = useState("");
 	const [passwordLogin, setPasswordLogin] = useState("");
-	const handleSubmitLogin = async(e) => {
+	// const handleSubmitLogin = async(e) => {
+	// 	e.preventDefault();
+
+	// 	try {
+	// 		const response = await axios.post(
+	// 			getApiUrl("/backend/wp-json/users/v2/login/"), {
+	// 			password: passwordLogin,
+	// 			email: emailLogin,
+	// 		});
+
+	// 		console.log('login', response)
+
+	// 		if (response.status === 200) {
+	// 			alert("Вход выполнен");
+	// 			// console.log(response)
+	// 			// или редирект, или очистка формы
+	// 		}
+	// 	} catch(error) {
+	// 	console.error("Ошибка регистрации:", error);
+	// 	alert(error.response?.data?.message || "Произошла ошибка");
+	// 	}
+	// };
+
+	const handleSubmitLogin = async (e) => {
 		e.preventDefault();
 
 		try {
+			// 1. Авторизация
 			const response = await axios.post(
-				getApiUrl("/backend/wp-json/users/v2/login/"), {
+			getApiUrl("/backend/wp-json/users/v2/login/"),
+			{
 				password: passwordLogin,
 				email: emailLogin,
-			});
+			}
+			);
 
-			console.log('login', response)
+			console.log("login", response);
 
 			if (response.status === 200) {
-				alert("Вход выполнен");
-				// console.log(response)
-				// или редирект, или очистка формы
+			alert("Вход выполнен");
+			console.log('tut', response.data)
+			// 2. Извлекаем nonce
+			const nonce = response.data?.nonce;
+			
+			if (!nonce) {
+				console.error("Nonce не найден в ответе");
+				return;
 			}
-		} catch(error) {
-		console.error("Ошибка регистрации:", error);
-		alert(error.response?.data?.message || "Произошла ошибка");
+			console.log('nonce', nonce)
+			// 3. Второй запрос с этим nonce
+			const secondResponse = await axios.post(
+				getApiUrl("/backend/wp-json/users/v2/login/"), // замените на нужный
+				{
+				headers: {
+					"X-WP-Nonce": nonce,
+				},
+				}
+			);
+
+			console.log("Ответ после авторизации:", secondResponse.data);
+			}
+		} catch (error) {
+			console.error("Ошибка входа или запроса:", error);
+			alert(error.response?.data?.message || "Произошла ошибка");
 		}
 	};
+
 
 	
 
