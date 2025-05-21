@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
     <html lang="ru">
       <body>
 			<ThemeWrapper>
-			{children}
+				{children}
 			</ThemeWrapper>
       </body>
     </html>

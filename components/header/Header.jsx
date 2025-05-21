@@ -1,12 +1,13 @@
 "use client"
 
-import Logo from "@/public/images/svg/logo.svg";
+import LogoImg from "@/public/images/svg/logo.svg";
 import UserIcon from "@/public/images/svg/user.svg";
 import UserIcon32 from "@/public/images/svg/user32.svg";
 import NotificationIcon from "@/public/images/svg/notification.svg";
 import NotificationImg from "@/public/images/svg/notification_img.svg";
 import SearchIcon from "@/public/images/svg/search.svg";
 import SettingsIcon from "@/public/images/svg/settings.svg";
+import styled from "@emotion/styled";
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,6 +18,20 @@ import { useTheme } from "@emotion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useWindowSizeStore from "@/store/useWindowSizeStore";
+
+
+const Logo = styled.div`
+	svg {
+		width: 135px;
+		height: 60px;
+	}
+	@media(max-width: 575px) { 
+		svg {
+			height: 48px;
+			width: 108px;
+		}
+	}
+`
 
 export const Header = ({isLogin}) => {
 	const width = useWindowSizeStore((state) => state.width);
@@ -105,7 +120,7 @@ export const Header = ({isLogin}) => {
         flex: 1;
       }
     `}>
-        <Link href="/" className={css`@media(max-width: 575px) { svg {height: 48px; width: 108px;} }`}><Logo /></Link>
+        <Logo><Link href="/"><LogoImg /></Link></Logo>
         {width > 1439 &&
         <nav className={css`
           display: flex;

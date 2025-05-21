@@ -14,6 +14,18 @@ import { useTheme } from "@emotion/react";
 import axios from "axios";
 import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
+import styled from "@emotion/styled";
+
+
+const Next = styled.div`
+	width: 56px;
+	height: 56px;
+
+	@media(max-width: 575px) {
+		width: 48px;
+		height: 48px;
+	}
+`
 
 export const MainEventsSlider = () => {
     const theme = useTheme();
@@ -85,12 +97,12 @@ export const MainEventsSlider = () => {
                         }
                     }
                 `}>
-                    <div ref={navigationPrevRef}>
+                    <Next ref={navigationPrevRef}>
                         <SliderArrow />
-                    </div>
-                    <div ref={navigationNextRef}style={{transform: 'rotate(180deg)'}}>
+                    </Next>
+                    <Next ref={navigationNextRef} style={{transform: 'rotate(180deg)'}}>
                         <SliderArrow />
-                    </div>
+                    </Next>
                 </div>
             </div>
                     
@@ -278,7 +290,10 @@ export const MainEventsSlider = () => {
                                             `}>{item.online ? 'Онлайн-событие' : item.city}</div>
                                         </div>
                                         <Link href={`/event/${item.slug}`}>
-                                            <LinkArrow />
+										<Next>
+<LinkArrow />
+										</Next>
+                                            
                                         </Link>
                                     </div>
                                 </div>
