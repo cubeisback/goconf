@@ -242,7 +242,6 @@ export const Modal = ({ isOpen, onClose }) => {
 
 			if (response.status === 200) {
 			alert("Вход выполнен");
-			console.log('tut', response.data)
 			// 2. Извлекаем nonce
 			const nonce = response.data?.nonce;
 			
@@ -255,9 +254,13 @@ export const Modal = ({ isOpen, onClose }) => {
 			const secondResponse = await axios.post(
 				getApiUrl("/backend/wp-json/users/v2/login/"), // замените на нужный
 				{
-				headers: {
-					"X-WP-Nonce": nonce,
+					password: passwordLogin,
+					email: emailLogin,
 				},
+				{
+					headers: {
+						"X-WP-Nonce": nonce,
+					},
 				}
 			);
 
