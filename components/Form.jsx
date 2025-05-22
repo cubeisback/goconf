@@ -1,5 +1,5 @@
 import { css } from "@emotion/css"
-import { container } from "@/styles/ui"
+import { Container } from "@/styles/ui"
 import FormSvg from "@/public/images/svg/form.svg";
 
 import DropdownInput from "@/components/ui/DropdownInput";
@@ -17,7 +17,7 @@ export const Form = () => {
                 padding: 32px 0;
             }
         `}>
-            <div className={container}>
+            <Container>
                 <div className={css`
                     border-radius: 32px;
                     background-color: #6C35EA;
@@ -107,7 +107,7 @@ export const Form = () => {
                     </div>
                     <FormSvg />
                 </div>
-            </div>
+            </Container>
         </div>
     )
 }

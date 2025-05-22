@@ -19,7 +19,38 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useWindowSizeStore from "@/store/useWindowSizeStore";
 
+const HeaderBlock = styled.header`
+	position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px 64px;
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(16px);
+    display: flex;
+    gap: 64px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    z-index: 10;
+    max-width: 100vw;
 
+    @media(max-width: 1439px) {
+    	padding: 10px 32px;
+    }
+    @media(max-width: 1023px) {
+        padding: 10px 24px;
+    }
+    @media(max-width: 767px) {
+        padding: 10px 16px;
+    }
+    @media(max-width: 575px) {
+    	gap: 32px;
+    }
+
+    & > * {
+        flex: 1;
+    }
+`
 const Logo = styled.div`
 	svg {
 		width: 135px;
@@ -32,10 +63,102 @@ const Logo = styled.div`
 		}
 	}
 `
+const NavWrapper = styled.nav`
+    display: flex;
+    gap: 32px;
+    transition: ${({ theme }) => theme.transition};
+  	margin-left: ${({ $searchOpened }) => ($searchOpened ? "-400px" : "0")};
+`
+const RightSection = styled.div`
+	display: flex;
+    gap: 32px;
+    align-items: center;
+    justify-content: flex-end;
+
+    @media(max-width: 575px) {
+    	gap: 24px;
+    }
+`
+const SearchWrapper = styled.div`
+    position: relative;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+const SearchBlock = styled.div`
+    position: absolute;
+    right: 0;
+    top: 0;
+    flex: 0 1 ${({ $searchOpened }) => ($searchOpened ? '520px' : '48px')};
+    max-width: ${({ $searchOpened }) => ($searchOpened ? '520px' : '48px')};
+    min-width: ${({ $searchOpened }) => ($searchOpened ? '520px' : '48px')};
+    height: 48px;
+    border: 1px solid #EDEDEE;
+    border-radius: ${({ $searchOpened }) => ($searchOpened ? '28px' : '100%')};
+    cursor: pointer;
+    transition: ${({ theme }) => theme.transition};
+    background-color: #fff;
+    padding: ${({ $searchOpened }) => ($searchOpened ? '16px 48px 16px 16px' : '0')};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media(max-width: 1199px) {
+		flex: 0 1 ${({ $searchOpened }) => ($searchOpened ? '300px' : '48px')};
+		max-width: ${({ $searchOpened }) => ($searchOpened ? '300px' : '48px')};
+		min-width: ${({ $searchOpened }) => ($searchOpened ? '300px' : '48px')};
+    }
+
+`
+const SearchIconWrapper = styled.div`
+	position: relative;
+	cursor: pointer;
+	height: 20px;
+`
+
+const Burger = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    span {
+              position: absolute;
+              background-color: ${({ theme }) => theme.colors.purple};
+              height: 2px;
+              width: 24px;
+              transition: ${({ theme }) => theme.transition};
+
+              &:nth-of-type(1) {
+                opacity: ${({ $burger }) => $burger ? '0' : '1'};
+                top: 18px;
+              }
+              &:nth-of-type(2) {
+                top: 24px;
+                transform: rotate(${({ $burger }) => $burger ? '45deg' : '0deg'});
+              }
+              &:nth-of-type(3) {
+                transform: rotate(${({ $burger }) => $burger ? '-45deg' : '0deg'});
+                top: 24px;
+              }
+              &:nth-of-type(4) {
+                opacity: ${({ $burger }) => $burger ? '0' : '1'};
+                top: 30px;
+              }
+    }
+          
+`
 
 export const Header = ({isLogin}) => {
 	const width = useWindowSizeStore((state) => state.width);
-	const theme = useTheme();
+	// const theme = useTheme();
 
 	const [notifications, setNotifications] = useState(false);
 	const notificationsRef = useRef(null);
@@ -88,114 +211,51 @@ export const Header = ({isLogin}) => {
 
   return (
     <>
-    <header className={css`
-      position: fixed;
-      top: 0;
-      left: 0;
-      padding: 10px 64px;
-      background: rgba(255, 255, 255, 0.90);
-      backdrop-filter: blur(16px);
-      display: flex;
-      gap: 64px;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      z-index: 10;
-      max-width: 100vw;
-
-      @media(max-width: 1439px) {
-        padding: 10px 32px;
-      }
-      @media(max-width: 1023px) {
-        padding: 10px 24px;
-      }
-      @media(max-width: 767px) {
-        padding: 10px 16px;
-      }
-      @media(max-width: 575px) {
-        gap: 32px;
-      }
-
-      & > * {
-        flex: 1;
-      }
-    `}>
-        <Logo><Link href="/"><LogoImg /></Link></Logo>
+    <HeaderBlock>
+        <Logo>
+			<Link href="/">
+				<LogoImg />
+			</Link>
+		</Logo>
         {width > 1439 &&
-        <nav className={css`
-          display: flex;
-          gap: 32px;
-          transition: ${theme.transition};
-          margin-left: ${searchOpened ? '-400px' : '0'}
-        `}>
-            <Link href="/events" className={DoubleLink}>
-              <span>Мероприятия</span><span>Мероприятия</span>
+        <NavWrapper $searchOpened={searchOpened}>
+            <Link href="/events" >
+				<DoubleLink>
+              		<span>Мероприятия</span><span>Мероприятия</span>
+			  	</DoubleLink>
             </Link>
-            <Link href="/org" className={DoubleLink}>
+            <Link href="/org">
+			<DoubleLink>
               <span>Организаторам</span><span>Организаторам</span>
+			  </DoubleLink>
             </Link>
-            <Link href="/about" className={DoubleLink}>
+            <Link href="/about">
+			<DoubleLink>
               <span>О&nbsp;проекте</span><span>О&nbsp;проекте</span>
+			  </DoubleLink>
             </Link>
-            <Link href="/faq" className={DoubleLink}>
+            <Link href="/faq">
+			<DoubleLink>
               <span>FAQ</span><span>FAQ</span>
+			  </DoubleLink>
             </Link>
-        </nav>
+        </NavWrapper>
         }
-        <div className={css`
-          display: flex;
-          gap: 32px;
-          align-items: center;
-          justify-content: flex-end;
-
-          @media(max-width: 575px) {
-            gap: 24px;
-          }
-        `}>
+        <RightSection>
           {width > 575 && 
-          <div className={css`
-            position: relative;
-            height: 48px;
-            width: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          `}
+          <SearchWrapper
           onClick={()=>{setSearchOpened(true)}}
           ref={searchRef}
           >
-            <div className={css`
-              position: absolute;
-              right: 0;
-              top: 0;
-              flex: 0 1 ${searchOpened ? '520px' : '48px'};
-              max-width: ${searchOpened ? '520px' : '48px'};
-              min-width: ${searchOpened ? '520px' : '48px'};
-              height: 48px;
-              border: 1px solid #EDEDEE;
-              border-radius: ${searchOpened ? '28px' : '100%'};
-              cursor: pointer;
-              transition: ${theme.transition};
-              background-color: #fff;
-              padding: ${searchOpened ? '16px 48px 16px 16px' : '0'};
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              @media(max-width: 1199px) {
-                flex: 0 1 ${searchOpened ? '300px' : '48px'};
-                max-width: ${searchOpened ? '300px' : '48px'};
-                min-width: ${searchOpened ? '300px' : '48px'};
-              }
-            `}>
+            <SearchBlock $searchOpened={searchOpened}>
               {searchOpened && <input type="text" placeholder="Поиск по мероприятиям" /> }
-            </div>
+            </SearchBlock>
             
-            <div className={css`position: relative; cursor: pointer;height: 20px;`} onClick={()=>{searchOpened && router.push('/events')}}>
+            <SearchIconWrapper onClick={()=>{searchOpened && router.push('/events')}}>
               <SearchIcon />
-            </div>
+            </SearchIconWrapper>
             
-          </div>
+          </SearchWrapper>
           }
           {width > 768 && 
             <Link href="/lk/add">
@@ -209,7 +269,7 @@ export const Header = ({isLogin}) => {
           }
           {isLogin ?
           <>
-          <div className={css`cursor:pointer;`} ref={iconRef} onClick={toggleNotifications}>
+          <div style={{cursor: 'pointer'}} ref={iconRef} onClick={toggleNotifications}>
             <NotificationIcon />
           </div>
           <Link className={css`
@@ -228,51 +288,17 @@ export const Header = ({isLogin}) => {
           </div>
           }
           {width < 1440 && 
-          <div className={css`
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            width: 48px;
-            height: 48px;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-
-            span {
-              position: absolute;
-              background-color: ${theme.colors.purple};
-              height: 2px;
-              width: 24px;
-              transition: ${theme.transition};
-
-              &:nth-of-type(1) {
-                opacity: ${burger ? '0' : '1'};
-                top: 18px;
-              }
-              &:nth-of-type(2) {
-                top: 24px;
-                transform: rotate(${burger ? '45deg' : '0deg'});
-              }
-              &:nth-of-type(3) {
-                transform: rotate(${burger ? '-45deg' : '0deg'});
-                top: 24px;
-              }
-              &:nth-of-type(4) {
-                opacity: ${burger ? '0' : '1'};
-                top: 30px;
-              }
-            }
-          `}
-          onClick={()=>setBurger(prev => !prev)}
+          <Burger
+			$burger={burger}
+          	onClick={()=>setBurger(prev => !prev)}
           >
             <span></span>
             <span></span>
             <span></span>
             <span></span>
-          </div>
+          </Burger>
           }
-        </div>
+        </RightSection>
       
       <AnimatePresence>
         {notifications && 
@@ -312,7 +338,7 @@ export const Header = ({isLogin}) => {
       <Modal isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} />
 
       
-    </header>
+    </HeaderBlock>
 
     <AnimatePresence>
     {burger && 
@@ -363,17 +389,25 @@ export const Header = ({isLogin}) => {
                                   <input className={cx(input, css`padding: 0 4px;`)} type="text" placeholder='Поиск по мероприятиям' />
                                   <SearchIcon className={css`cursor: pointer;`} />
                               </div>
-            <Link href="/events" className={DoubleLink} onClick={()=>setBurger(false)}>
+            <Link href="/events" onClick={()=>setBurger(false)}>
+			<DoubleLink>
               <span>Мероприятия</span><span>Мероприятия</span>
+			  </DoubleLink>
             </Link>
-            <Link href="/org" className={DoubleLink} onClick={()=>setBurger(false)}>
+            <Link href="/org" onClick={()=>setBurger(false)}>
+			<DoubleLink>
               <span>Организаторам</span><span>Организаторам</span>
+			  </DoubleLink>
             </Link>
-            <Link href="/about" className={DoubleLink} onClick={()=>setBurger(false)}>
+            <Link href="/about" onClick={()=>setBurger(false)}>
+			<DoubleLink>
               <span>О&nbsp;проекте</span><span>О&nbsp;проекте</span>
+			  </DoubleLink>
             </Link>
-            <Link href="/faq" className={DoubleLink} onClick={()=>setBurger(false)}>
+            <Link href="/faq" onClick={()=>setBurger(false)}>
+			<DoubleLink>
               <span>FAQ</span><span>FAQ</span>
+			  </DoubleLink>
             </Link>
         </div>
         <div className={css`

@@ -1,7 +1,7 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { container } from "@/styles/ui";
+import { Container } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
 import LinkArrow from "@/public/images/svg/link_arrow.svg";
 import { useEffect, useState } from "react";
@@ -52,7 +52,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                 padding: 64px 0;
             }
         `}>
-            <div className={container}>
+            <Container>
                 {!onPage && 
                 <div className={css`
                     text-align: center;
@@ -303,7 +303,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                     `} onClick={()=>setLimit(prev => prev+5)}>Показать еще +</div>
                 )
                 }
-            </div>
+            </Container>
         </div>
     )
 };

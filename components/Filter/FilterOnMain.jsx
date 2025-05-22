@@ -2,7 +2,6 @@
 
 
 import { motion } from 'framer-motion';
-import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
 import { filterBtn } from "@/styles/ui";
@@ -11,6 +10,7 @@ import Datepicker from "@/components/ui/Datepicker";
 import { useRouter } from "next/navigation";
 import useFiltersStore from '@/store/useFiltersStore';
 import { useDateStore } from '@/store/useDateStore';
+import styled from "@emotion/styled";
 
 export const FilterOnMain = ({full, setEvents}) => {
     const theme = useTheme();
@@ -52,13 +52,9 @@ export const FilterOnMain = ({full, setEvents}) => {
 		setFilterUrl(filterString);
 	}
 
-    return (
-        <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                className={css`
-                    width: 100%;
+	const AnimatedFilterBlock = styled(motion.div)`
+	min-height: 80px;
+	width: 100%;
                     border-radius: 28px;
                     background-color: ${theme.colors.purple};
                     margin-bottom: ${full ? '16px' : '95px' };
@@ -72,9 +68,9 @@ export const FilterOnMain = ({full, setEvents}) => {
                       margin-bottom: ${full ? '24px' : '-48px'};
                       padding-bottom: ${full ? '16px' : '80px'};
                     }
-                `}>
-                    <div className={css`
-                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
+	`
+	const FilterItem = styled.div`
+	flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
                       max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
 
                       @media(max-width: 1339px) {
@@ -85,42 +81,23 @@ export const FilterOnMain = ({full, setEvents}) => {
                         flex: 0 1 100%;
                         max-width: 100%;
                       }
-                    `}>
+	`
+
+    return (
+        <AnimatedFilterBlock
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                >
+                    <FilterItem>
                       <DropdownInput options={filtersData && filtersData.subjects} handleFilterChange={handleFilterChange} type={'direction'} placeholder={'Тематика'} />
-                    </div>
-                    <div className={css`
-                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
-                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
-
-                      @media(max-width: 1339px) {
-                        flex: 0 1 calc(33.3333333% - 10.666666px);
-                        max-width: calc(33.3333333% - 10.666666px);
-                      }
-                      @media(max-width: 575px) {
-                        flex: 0 1 100%;
-                        max-width: 100%;
-                      }
-                    `}>
+                    </FilterItem>
+                    <FilterItem>
                       <DropdownInput options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} type={'city'} placeholder={'Город'} />
-                    </div>
-                    <div className={css`
-                      flex: 0 1 ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)' };
-                      max-width: ${full ? 'calc(20% - 13.333333px)' : 'calc(16.666666% - 13.333333px)'};
-
-                      @media(max-width: 1339px) {
-                        flex: 0 1 calc(33.3333333% - 10.666666px);
-                        max-width: calc(33.3333333% - 10.666666px);
-                      }
-                      @media(max-width: 575px) {
-                        flex: 0 1 100%;
-                        max-width: 100%;
-                      }
-                    `}>
+                    </FilterItem>
+                    <FilterItem>
                       <DropdownInput options={filtersData && filtersData.formats} handleFilterChange={handleFilterChange} type={'format'} placeholder={'Формат'} />
-                    </div>
-                    
-                    
-                    
+                    </FilterItem>
                     
                     <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} setStoreDate={handleStartDateChange} type={'start'} />
                     <Datepicker full={full} title={'Окончание'} handleFilterChange={handleFilterChange} setStoreDate={handleEndDateChange} type={'end'} fixmob={true} /> {/*TODO Передалать на экран*/}
@@ -129,6 +106,6 @@ export const FilterOnMain = ({full, setEvents}) => {
 						<span>Найти</span>
 					</div>}
                     
-        </motion.div>
+        </AnimatedFilterBlock>
     )
 };

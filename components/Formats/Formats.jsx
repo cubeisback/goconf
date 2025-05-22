@@ -1,7 +1,8 @@
 "use client"
 
 import { css } from '@emotion/css';
-import { container } from "@/styles/ui";
+import styled from "@emotion/styled";
+import { Container } from "@/styles/ui";
 import { useTheme } from '@emotion/react';
 import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -10,31 +11,38 @@ import 'swiper/css/navigation';
 import axios from 'axios';
 import Link from 'next/link';
 import { getApiUrl } from '@/functions/functions';
+import useWindowSizeStore from '@/store/useWindowSizeStore';
+
+const FormatsBlock = styled.div`
+background-color: #F5F7FA;
+            padding: 120px 0;
+            overflow: hidden;
+
+            @media(max-width: 575px) {
+                padding: 96px 0 64px;
+            }
+`
+const FormatsTitle = styled.div`
+text-align: center;
+                    margin-bottom: 96px;
+                    font-family: Impact;
+                    font-size: 56px;
+                    line-height: 1.15;
+
+                    @media(max-width: 575px) {
+                        font-size: 32px;
+                    }
+`
 
 export const Formats = () => {
     const theme = useTheme();
 
-    //ширина экрана
-    const [windowWidth, setWindowWidth] = useState(0);
-      
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-      
-    useEffect(() => {
-      handleResize();
-      window.addEventListener('resize', handleResize);
-      
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }, []);
+	const width = useWindowSizeStore((state) => state.width);
 
     const [formatItems, setFormatItems] = useState(null)
 	const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
       axios
-        // .get("/api/backend/wp-json/events/v2/popular-formats/")
 		.get(getApiUrl("/backend/wp-json/events/v2/popular-formats/"))
         .then((response) => {
             setFormatItems(response.data.items)
@@ -53,55 +61,19 @@ export const Formats = () => {
     
 
     return (
-        <div className={css`
-            background-color: #F5F7FA;
-            padding: 120px 0;
-            overflow: hidden;
-
-            @media(max-width: 575px) {
-                padding: 96px 0 64px;
-            }
-        `}>
-            <div className={container}>
-                <div className={css`
-                    text-align: center;
-                    margin-bottom: 96px;
-                    font-family: Impact;
-                    font-size: 56px;
-                    line-height: 1.15;
-
-                    @media(max-width: 575px) {
-                        font-size: 32px;
-                    }
-
-                    & > span {
-                        color: ${theme.colors.purple}
-                    }
-                `}>Популярные форматы
-                {/* <span>GoCONF</span> */}
-                </div>
-                {/* <div className={css`
-                    font-size: 20px;
-                    line-height: 1.14;
-                    color: #47474D;
-                    margin-bottom: 96px;
-                    text-align: center;
-
-                    @media(max-width: 575px) {
-                        font-size: 18px;
-                        margin-bottom: 48px;
-                    }
-                `}>Самые интересные бизнес-мероприятия различных форматов от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div> */}
-            </div>
-            {windowWidth > 767 ?
+        <FormatsBlock>
+            <Container>
+                <FormatsTitle>Популярные форматы</FormatsTitle>
+            </Container>
+            {width > 767 ?
 			isLoading ? (
   // Скелетоны (например, 3 заглушки)
   <>
-  <div className={css`display: flex;
+  {/* <div className={css`display: flex;
 	gap: 32px;`}>
     {[...Array(3)].map((_, i) => (
       <div key={i} className={css`
-	  	background: #eee;
+	  	background: #f90;
 		padding: 1rem;
 		margin-bottom: 1rem;
 		border-radius: 8px;
@@ -117,13 +89,10 @@ export const Formats = () => {
 	  `}>
       </div>
     ))}
-	</div>
+	</div> */}
   </>
 ) :
-            <div className={css`
-                // overflow-x: hidden;
-				min-height: 325px;
-            `}>
+            <div style={{minHeight: 235}}>
             
                 {formatItems && (
   <div className={css`
@@ -189,7 +158,7 @@ export const Formats = () => {
             line-height: 1.28;
             color: #fff;
             width: max-content;
-          `}>{item.count} событий</div>
+          `}>{item.count}</div>
         </div>
       </Link>
       
@@ -242,13 +211,13 @@ export const Formats = () => {
                                         line-height: 1.28;
                                         color: #fff;
                                         width: max-content;
-                                    `}>{item.count} событий</div>
+                                    `}>{item.count}</div>
                                 </div>
                             </Link>
                             </SwiperSlide>
                         ))}
             </Swiper>
             }
-        </div>
+        </FormatsBlock>
     );
 }

@@ -7,10 +7,7 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
 import LinkArrow from "@/public/images/svg/link_arrow.svg";
-// import img_ex_1 from '/public/images/events_1.jpg';
-import { css } from "@emotion/css";
 import { useTheme } from "@emotion/react";
-// import { NavLink } from "react-router";
 import axios from "axios";
 import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
@@ -26,9 +23,108 @@ const Next = styled.div`
 		height: 48px;
 	}
 `
+const SliderBlock = styled.div`
+	background-color: #22222A;
+            border-radius: 28px;
+            margin-bottom: 120px;
+            
+            @media(max-width: 1339px) {
+                margin-bottom: -32px;
+            }
+`
+const SliderBlockTop = styled.div`
+display: flex;
+                justify-content: space-between;
+                padding: 40px;
+                align-items: center;
+                font-size: 36px;
+                line-height: 1.12;
+                gap: 16px;
+
+                @media(max-width: 575px) {
+                    padding: 32px 16px;
+                    font-size: 28px;
+                }
+`
+const SliderBlockTopTitle = styled.div`
+	color: #fff;
+    font-family: Impact;
+`
+const SliderBlockTopNav = styled.div`
+	display: flex;
+                    gap: 16px;
+
+                    & > div {
+                        display: flex;
+                        cursor: pointer;
+                    }
+
+                    svg {
+                        @media(max-width: 575px) {
+                            width: 48px;
+                            height: 48px;
+                        }
+                    }
+`
+const SliderMainPart = styled.div`
+padding: 0 40px 40px;
+
+                        @media(max-width: 575px) {
+                            padding: 0 16px 32px;
+                        }
+
+                        & > div {
+                            border-radius: 28px;
+                        }
+`
+const SkeletonItem = styled.div`
+background: #eee;
+		padding: 1rem;
+		border-radius: 8px;
+		animation: pulse 1.5s infinite;
+		height: 441px;
+		width: 33%;
+
+		@keyframes pulse {
+			0% { opacity: 1 }
+			50% { opacity: 0.5 }
+			100% { opacity: 1 }
+		}
+`
+const SliderFormatsItem = styled.div`
+border-radius: 8px;
+            background-color: ${({theme}) => theme.colors.green};
+            padding: 3px 8px 5px;
+            color: #191921;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.16;
+            width: max-content; 
+` 
+const SliderItemTitle = styled(Link)`
+font-size: 18px;
+                                        font-weight: 500;
+                                        line-height: 1.36;
+                                        -webkit-line-clamp: 2;
+                                        line-clamp: 2;
+                                        display: -webkit-box;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;  
+`
+const SliderItemDate = styled.div`
+color: ${({theme}) => theme.colors.purple};
+                                                font-size: 28px;
+                                                line-height: 1.2;
+                                                margin-bottom: 4px;
+                                                font-family: Impact;
+    
+                                                @media(max-width: 575px) {
+                                                    font-size: 24px;
+                                                }
+								`
 
 export const MainEventsSlider = () => {
-    const theme = useTheme();
+    // const theme = useTheme();
 
     const navigationPrevRef = useRef(null);
     const navigationNextRef = useRef(null);
@@ -50,73 +146,21 @@ export const MainEventsSlider = () => {
 
     }, [])
 
-    return (
-        
-
-       
-        <div className={css`
-            background-color: #22222A;
-            border-radius: 28px;
-            margin-bottom: 120px;
-            
-            @media(max-width: 1339px) {
-                margin-bottom: -32px;
-            }
-        `}>
-            <div className={css`
-                display: flex;
-                justify-content: space-between;
-                padding: 40px;
-                align-items: center;
-                font-size: 36px;
-                line-height: 1.12;
-                gap: 16px;
-
-                @media(max-width: 575px) {
-                    padding: 32px 16px;
-                    font-size: 28px;
-                }
-            `}>
-                <div className={css`
-                    color: #fff;
-                    font-family: Impact;    
-                `}>Интересные события</div>
-                <div className={css`
-                    display: flex;
-                    gap: 16px;
-
-                    & > div {
-                        display: flex;
-                        cursor: pointer;
-                    }
-
-                    svg {
-                        @media(max-width: 575px) {
-                            width: 48px;
-                            height: 48px;
-                        }
-                    }
-                `}>
+    return (       
+        <SliderBlock>
+            <SliderBlockTop>
+                <SliderBlockTopTitle>Интересные события</SliderBlockTopTitle>
+                <SliderBlockTopNav>
                     <Next ref={navigationPrevRef}>
                         <SliderArrow />
                     </Next>
                     <Next ref={navigationNextRef} style={{transform: 'rotate(180deg)'}}>
                         <SliderArrow />
                     </Next>
-                </div>
-            </div>
+                </SliderBlockTopNav>
+            </SliderBlockTop>
                     
-                    <div className={css`
-                        padding: 0 40px 40px;
-
-                        @media(max-width: 575px) {
-                            padding: 0 16px 32px;
-                        }
-
-                        & > div {
-                            border-radius: 28px;
-                        }
-                    `}>
+                    <SliderMainPart>
                     <Swiper 
                         modules={[Navigation]} 
                         navigation={{
@@ -151,114 +195,37 @@ export const MainEventsSlider = () => {
 					{isLoading ? (
   // Скелетоны (например, 3 заглушки)
   <>
-  <div className={css`display: flex;
-	gap: 32px;`}>
+  <div style={{display: 'flex', gap: 32}}>
     {[...Array(3)].map((_, i) => (
-      <div key={i} className={css`
-	  	background: #eee;
-		padding: 1rem;
-		margin-bottom: 1rem;
-		border-radius: 8px;
-		animation: pulse 1.5s infinite;
-		height: 473px;
-		width: 33%;
-
-		@keyframes pulse {
-			0% { opacity: 1 }
-			50% { opacity: 0.5 }
-			100% { opacity: 1 }
-			}
-	  `}>
-      </div>
+      <SkeletonItem key={i}></SkeletonItem>
     ))}
 	</div>
   </>
 ) : 
                         events && events.items.map((item, index) => (
-                            <SwiperSlide key={index} className={css`
-                                border-radius: 24px;
-                                background-color: #fff;
-                                overflow: hidden;
-                            `}>
-                                <Link href={`/event/${item.slug}`} className={css`
-                                    width: 100%;
-                                `}>
-                                    <img src={item.cover} alt="" className={css`
-                                        object-fit: cover;
-                                        width: 100%;
-                                        height: 100%;
-                                    `} />
+                            <SwiperSlide key={index} style={{borderRadius: 24, backgroundColor: '#fff', overflow: 'hidden'}}>
+                                <Link href={`/event/${item.slug}`} style={{width: '100%'}}>
+                                    <img src={item.cover} alt="" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
                                 </Link>
-                                <div className={css`
-                                    padding: 24px;
-                                    display: flex;
-                                    flex-direction: column;
-                                    gap: 16px;    
-                                `}>
+                                <div style={{padding: 24, display: 'flex', flexDirection: 'column', gap: 16}}>
                                     <div>
-                                    {/* {item.format.map((f)=>{
-                                            <div className={css`
-                                                border-radius: 8px;
-                                                background-color: ${theme.colors.green};
-                                                padding: 3px 8px 5px;
-                                                color: #191921;
-                                                font-size: 14px;
-                                                font-weight: 500;
-                                                line-height: 1.16;
-                                                width: max-content;    
-                                            `}><NavLink to={`/events/${f.slug}`}>
-                                                {f.name}
-                                            </NavLink>
-                                            </div>
-                                        })} */}
 
 {item.format.map((f, idx) => (
-        <div key={idx} className={css`
-            border-radius: 8px;
-            background-color: ${theme.colors.green};
-            padding: 3px 8px 5px;
-            color: #191921;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 1.16;
-            width: max-content;    
-        `}><Link href={`/events/${f.slug}`}>
-            {f.name}
-        </Link>
-        </div>
+        <SliderFormatsItem key={idx}>
+			<Link href={`/events/${f.slug}`}>
+            	{f.name}
+        	</Link>
+        </SliderFormatsItem>
       ))}
                                     </div>
                                         
                                         
-                                    <Link href={`/event/${item.slug}`} className={css`
-                                        font-size: 18px;
-                                        font-weight: 500;
-                                        line-height: 1.36;
-                                        -webkit-line-clamp: 2;
-                                        line-clamp: 2;
-                                        display: -webkit-box;
-                                        -webkit-box-orient: vertical;
-                                        overflow: hidden;    
-                                    `} dangerouslySetInnerHTML={{ __html: item.title }} />
-                                    {/* {item.title}</NavLink> */}
-                                    <div className={css`
-                                        display: flex;
-                                        align-items: flex-end;
-                                        justify-content: space-between;    
-                                    `}>
+                                    <SliderItemTitle href={`/event/${item.slug}`} dangerouslySetInnerHTML={{ __html: item.title }} />
+                                    
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                                         <div>
-                                            <div className={css`
-                                                color: ${theme.colors.purple};
-                                                font-size: 28px;
-                                                line-height: 1.2;
-                                                margin-bottom: 4px;
-                                                font-family: Impact;
-    
-                                                @media(max-width: 575px) {
-                                                    font-size: 24px;
-                                                }
-                                            `}>
-												{/* {formatDate(item.date_start)} -<br/> {formatDate(item.date_end)} */}
+                                            <SliderItemDate>
+												
 												{
 									(() => {
 										const [d1, m1, y1] = item.date_start.split('.');
@@ -282,12 +249,8 @@ export const MainEventsSlider = () => {
 										}
 									})()
 									}
-											</div>
-                                            <div className={css`
-                                                color: #47474D;
-                                                font-size: 14px;
-                                                line-height: 1.16;    
-                                            `}>{item.online ? 'Онлайн-событие' : item.city}</div>
+											</SliderItemDate>
+                                            <div style={{color: '#47474D', fontSize: 14, lineHeight: 1.16}}>{item.online ? 'Онлайн-событие' : item.city}</div>
                                         </div>
                                         <Link href={`/event/${item.slug}`}>
 										<Next>
@@ -299,81 +262,10 @@ export const MainEventsSlider = () => {
                                 </div>
                             </SwiperSlide>
                         ))}
-                        {/* {events && events.map((item, index) => (
-                        <SwiperSlide key={index} className={css`
-                            border-radius: 24px;
-                            background-color: #fff;
-                            overflow: hidden;
-                        `}>
-                            <NavLink to={`/events/${item.url}`} className={css`
-                                width: 100%;
-                            `}>
-                                <img src={img_ex_1} alt="" className={css`
-                                    object-fit: cover;
-                                    width: 100%;
-                                    height: 100%;
-                                `} />
-                            </NavLink>
-                            <div className={css`
-                                padding: 24px;
-                                display: flex;
-                                flex-direction: column;
-                                gap: 16px;    
-                            `}>
-                                <div className={css`
-                                    border-radius: 8px;
-                                    background-color: ${theme.colors.green};
-                                    padding: 3px 8px 5px;
-                                    color: #191921;
-                                    font-size: 14px;
-                                    font-weight: 500;
-                                    line-height: 1.16;
-                                    width: max-content;    
-                                `}><NavLink to={`/events/${item.url}`}>{item.format}</NavLink></div>
-                                <NavLink to={`/events/${item.url}`} className={css`
-                                    font-size: 18px;
-                                    font-weight: 500;
-                                    line-height: 1.36;
-                                    -webkit-line-clamp: 2;
-                                    line-clamp: 2;
-                                    display: -webkit-box;
-                                    -webkit-box-orient: vertical;
-                                    overflow: hidden;    
-                                `}>{item.title}</NavLink>
-                                <div className={css`
-                                    display: flex;
-                                    align-items: flex-end;
-                                    justify-content: space-between;    
-                                `}>
-                                    <div>
-                                        <div className={css`
-                                            color: ${theme.colors.purple};
-                                            font-size: 28px;
-                                            line-height: 1.2;
-                                            margin-bottom: 4px;
-                                            font-family: Impact;
-
-                                            @media(max-width: 575px) {
-                                                font-size: 24px;
-                                            }
-                                        `}>{item.date1} -<br/> {item.date2}</div>
-                                        <div className={css`
-                                            color: #47474D;
-                                            font-size: 14px;
-                                            line-height: 1.16;    
-                                        `}>{item.city}</div>
-                                    </div>
-                                    <NavLink to={`/event/${item.slug}`}>
-                                        <LinkArrow />
-                                    </NavLink>
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                        ))} */}
                         
                     </Swiper>
-                    </div>
-                </div>
+                    </SliderMainPart>
+                </SliderBlock>
             
     )
 };

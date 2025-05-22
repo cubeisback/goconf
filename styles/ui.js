@@ -4,6 +4,8 @@ import { css } from "@emotion/css";
 import styled from "@emotion/styled";
 
 // ✅ Не зависит от темы
+
+//TODO Удалить container и другие старые стили
 export const container = css`
   width: 1340px;
   margin: 0 auto;
@@ -16,7 +18,23 @@ export const container = css`
   }
 `;
 
-export const DoubleLink = css`
+export const Container = styled.div`
+	width: 1340px;
+  	margin: 0 auto;
+  	padding: 0 30px;
+  	position: relative;
+
+  	@media (max-width: 1339px) {
+    	width: 100%;
+    	padding: 0 15px;
+  	}
+
+	@media(max-width: 1439px) {
+		padding: ${({ $fullWidth }) => ($fullWidth && "0")};
+	}
+`
+
+export const DoubleLink = styled.div`
   color: #191921;
   line-height: 1.28;
   overflow: hidden;
