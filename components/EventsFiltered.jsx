@@ -1,9 +1,9 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { ButtonMore, Container, container } from "@/styles/ui";
+import { ButtonMore, Container, container, DoubleLinkArrow } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
-import LinkArrow from "@/public/images/svg/link_arrow.svg";
+import LinkArrow from "@/public/images/svg/arrow_link.svg";
 import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import { formatDate } from "../functions/functions";
@@ -238,22 +238,12 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                                     {item.short_text}
                                 </div>
                             </div>
-                            <Link href={`/event/${item.slug}`} className={css`
-                                flex: 0 1 56px;
-                                max-width: 56px;
-
-                                @media(max-width: 1199px) {
-                                    display: none;
-                                }
-                                @media(max-width: 767px) {
-                                    display: flex;
-                                    order: 1;
-                                    flex: 0 1 48px;
-                                    max-width: 48px;
-                                }
-                            `}>
-                                <LinkArrow />
-                            </Link>
+							<DoubleLinkArrow href={`/event/${item.slug}`}>
+								<div>
+									<LinkArrow />
+									<LinkArrow />
+								</div>
+                            </DoubleLinkArrow>
                         </motion.div>
                     ))}
                 </div>
