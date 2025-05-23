@@ -70,7 +70,8 @@ const FormMain = styled.form`
         font-size: 14px;
     }
 
-    & > div {
+    & > div,
+	& > button {
         flex: 0 1 calc(33.33333% - 10.666666px);
         max-width: calc(33.33333% - 10.666666px);
 
