@@ -1,7 +1,7 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { Button, container, lkContainer } from "@/styles/ui";
+import { Button, Container, container, lkContainer } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useState } from "react";
 import LkMenu from "@/components/ui/LkMenu";
@@ -47,7 +47,7 @@ const UserNotifications = () => {
 
     return(
         <div className={lkContainer}>
-            <div className={container}>
+            <Container>
                 <div
                     className={css`
                     display: flex;
@@ -86,7 +86,7 @@ const UserNotifications = () => {
         </motion.div>
         
         </div>
-            </div>
+            </Container>
         </div>
     )
 };

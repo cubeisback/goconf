@@ -8,7 +8,7 @@ import { EventsFiltered } from '@/components/EventsFiltered';
 import { Form } from '@/components/Form';
 import Link from "next/link";
 import SearchIcon from "@/public/images/svg/search.svg";
-import { breadcrumbs, container, input, pagePromo, pageTitle } from "@/styles/ui";
+import { breadcrumbs, Container, container, input, pagePromo, pageTitle } from "@/styles/ui";
 import { css, cx } from '@emotion/css';
 
 export default function ClientEvents({ events: initialEvents, total: initialTotal, pageH1: initialH1, pageText: initialText, formatItems: initialFormats, slug }) {
@@ -63,7 +63,7 @@ export default function ClientEvents({ events: initialEvents, total: initialTota
 		{/* <DocumentTitle value={seoTitle} /> */}
 		{/* <DocumentDescription value={seoDescription} /> */}
             <div className={pagePromo}>
-                <div className={container}>
+                <Container>
                     <div className={breadcrumbs}>
                         <Link href="/">Главная</Link>
                         <p>{pageH1 && pageH1}</p>
@@ -99,7 +99,7 @@ export default function ClientEvents({ events: initialEvents, total: initialTota
 								<SearchIcon className={css`cursor: pointer;`} />
 							</button>
 					</form>
-                </div>
+                </Container>
             </div>
 
             <div className={css`
@@ -116,7 +116,7 @@ export default function ClientEvents({ events: initialEvents, total: initialTota
                     z-index: -1;
                 }
             `}>
-                <div className={container}>
+                <Container>
                     <Filter full={true} setEvents={setEvents} setTotal={setTotal} setPageH1={setPageH1} setPageText={setPageText} setQuery={setQuery} setSeoDescription={setSeoDescription} setSeoTitle={setSeoTitle} />
 
                     {total ? <p className={css`padding-bottom: 24px;`}>Найдено событий: {total}</p> : null}
@@ -158,7 +158,7 @@ export default function ClientEvents({ events: initialEvents, total: initialTota
                     ))}
                     </div>
                     
-                </div>
+                </Container>
 
                 {/* <MainEvents onPage={true} events={events} /> */}
                 <EventsFiltered onPage={true} events={events} />
@@ -167,7 +167,7 @@ export default function ClientEvents({ events: initialEvents, total: initialTota
                         padding: 64px 0;
                         background-color: #F5F7FA;
                 `}>
-                    <div className={container}>
+                    <Container>
                         <div className={css`
                             display: flex;
                             flex-direction: column;
@@ -179,7 +179,7 @@ export default function ClientEvents({ events: initialEvents, total: initialTota
                         `} dangerouslySetInnerHTML={{ __html: pageText && pageText }} />
                             
                         {/* </div> */}
-                    </div>
+                    </Container>
                 </div>
 
                 <Form />

@@ -1,7 +1,7 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { container, lkContainer} from "@/styles/ui";
+import { Container, container, lkContainer} from "@/styles/ui";
 import { useEffect } from "react";
 import UserMain from "./main/page";
 import LkMenu from "@/components/ui/LkMenu";
@@ -15,7 +15,7 @@ const User = () => {
 
     return (
         <div className={lkContainer}>
-            <div className={container}>
+            <Container>
                 <div
                     className={css`
                     display: flex;
@@ -24,7 +24,7 @@ const User = () => {
                     <LkMenu />
 					<UserMain />
                 </div>
-            </div>
+            </Container>
         </div>
     );
 }

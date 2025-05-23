@@ -282,9 +282,12 @@ export const Header = ({isLogin}) => {
           :
           <div onClick={()=>setIsModalOpen(true)} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>
             {width > 575 ? <UserIcon /> : <UserIcon32 /> }
-            {width > 575 && <p>
+            {width > 575 && 
+			<DoubleLink>
 				<span>Войти</span>
-			</p> }
+				<span>Войти</span>
+			</DoubleLink>
+			}
           </div>
           }
           {width < 1440 && 

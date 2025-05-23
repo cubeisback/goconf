@@ -1,7 +1,7 @@
 "use client"
 
 import { css, cx } from "@emotion/css";
-import { Button, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
+import { Button, Container, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useState } from "react";
 import EditIcon from "@/public/images/svg/edit.svg";
@@ -22,7 +22,7 @@ const UserOrg = () => {
 
     return (
         <div className={lkContainer}>
-            <div className={container}>
+            <Container>
                 <div
                     className={css`
                     display: flex;
@@ -265,7 +265,7 @@ const UserOrg = () => {
         }
 
         </div>
-            </div>
+            </Container>
         </div>
     )
 }

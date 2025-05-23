@@ -2,6 +2,7 @@
 
 import { css } from "@emotion/css";
 import styled from "@emotion/styled";
+import Link from "next/link";
 
 // ✅ Не зависит от темы
 
@@ -55,6 +56,48 @@ export const DoubleLink = styled.div`
     }
   }
 `;
+
+export const DoubleLinkArrow = styled(Link)`
+	width: 56px;
+	height: 56px;
+	border: 2px solid #8553F9;
+	border-radius: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	@media(max-width: 575px) {
+		width: 48px;
+		height: 48px;
+	}
+
+	& > div {
+		display: flex;
+		width: 14px;
+		height: 14px;
+		position: relative;
+		overflow: hidden;
+
+		& > svg {
+			position: absolute;
+			transition: ${({ theme }) => theme.transition};
+
+			&:nth-of-type(2) {
+				transform: translateX(-14px) translateY(14px);
+			}
+		}
+	}
+	
+	&:hover {
+		svg {
+			transform: translateX(14px) translateY(-14px);
+
+			&:nth-of-type(2) {
+				transform: translateX(0) translateY(0);
+			}
+		}
+	}
+`
 
 export const Button = styled.div`
   border-radius: 28px;

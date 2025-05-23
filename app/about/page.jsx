@@ -4,7 +4,7 @@ import { css, cx } from '@emotion/css';
 import About1 from "@/public/images/svg/about_1.svg";
 import About2 from "@/public/images/svg/about_2.svg";
 import About3 from "@/public/images/svg/about_3.svg";
-import { breadcrumbs, container, pagePromo, pageTitle } from "@/styles/ui";
+import { breadcrumbs, Container, container, pagePromo, pageTitle } from "@/styles/ui";
 import { Form } from '@/components/Form';
 import Link from 'next/link';
 
@@ -13,7 +13,7 @@ const About = () => {
     return (
         <>
             <div className={pagePromo}>
-                <div className={container}>
+                <Container>
                     <div className={breadcrumbs}>
                         <Link href="/">Главная</Link>
                         <p>О проекте</p>
@@ -28,7 +28,7 @@ const About = () => {
                             }
                         }
                     `}>Самые интересные бизнес-мероприятия различных форматов<br/> от&nbsp;форумов до&nbsp;бизнес-семинаров по&nbsp;всей России</div>
-                </div>
+                </Container>
             </div>
 
             <div className={css`
@@ -39,7 +39,7 @@ const About = () => {
                     padding-bottom: 64px;
                 }
             `}>
-                <div className={container}>
+                <Container>
                     <div className={css`
                         display: flex;
                         gap: 32px;
@@ -153,7 +153,7 @@ const About = () => {
                             <p>Мы&nbsp;постоянно работаем над новыми форматами продвижения, чтобы сделать привлечение участников на&nbsp;ваши мероприятия максимально эффективным. Все опции можно оплатить любым удобным способом.</p>
                         </div>
                     </div>
-                </div>
+                </Container>
             </div>
 
             <Form />

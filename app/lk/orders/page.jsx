@@ -5,7 +5,7 @@ import Link from "next/link";
 import { css, cx } from "@emotion/css";
 import { motion } from 'framer-motion';
 import { useState } from "react";
-import { container, lkContainer, userMain } from "@/styles/ui";
+import { Container, container, lkContainer, userMain } from "@/styles/ui";
 import EditIcon from "@/public/images/svg/edit.svg";
 import { useTheme } from "@emotion/react";
 import LkMenu from "@/components/ui/LkMenu";
@@ -28,7 +28,7 @@ const UserOrders = () => {
 
     return (
 		<div className={lkContainer}>
-            <div className={container}>
+            <Container>
                 <div
                     className={css`
                     display: flex;
@@ -191,7 +191,7 @@ const UserOrders = () => {
         </div>
 
 		</div>
-            </div>
+            </Container>
         </div>
     )
 }

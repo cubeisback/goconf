@@ -1,7 +1,7 @@
 "use client"
 
 import { css, cx } from "@emotion/css";
-import { Button, container, input, inputItem, inputRadio, inputRadioActive, lkContainer, userMain } from "@/styles/ui";
+import { Button, Container, container, input, inputItem, inputRadio, inputRadioActive, lkContainer, userMain } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
@@ -18,7 +18,7 @@ const UserStatus = () => {
 
     return (
         <div className={lkContainer}>
-            <div className={container}>
+            <Container>
                 <div
                     className={css`
                     display: flex;
@@ -424,7 +424,7 @@ const UserStatus = () => {
         }
     
 		</div>
-            </div>
+            </Container>
     	</div>
     )
 }

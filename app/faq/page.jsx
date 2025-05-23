@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { css, cx } from "@emotion/css";
-import { breadcrumbs, container, pagePromo, pageTitle } from "@/styles/ui";
+import { breadcrumbs, Container, container, pagePromo, pageTitle } from "@/styles/ui";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from "react";
 import PlusIcon from "@/public/images/svg/plus.svg";
@@ -43,7 +43,7 @@ const Faq = () => {
     return (
         <>
             <div className={pagePromo}>
-                <div className={container}>
+                <Container>
                     <div className={breadcrumbs}>
                         <Link  href="/">Главная</Link>
                         <p>FAQ</p>
@@ -111,7 +111,7 @@ const Faq = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </Container>
             </div>
             
             <Form />

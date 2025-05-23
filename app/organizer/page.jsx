@@ -1,6 +1,6 @@
 'use client'
 
-import { breadcrumbs, Button, container, pagePromo, pageTitle } from "@/styles/ui";
+import { breadcrumbs, Button, Container, container, pagePromo, pageTitle } from "@/styles/ui";
 import OrgLogo from '@/public/images/svg/org_logo.svg'
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
@@ -31,14 +31,14 @@ const Organizer = () => {
     return (
         <>
             <div className={pagePromo}>
-                <div className={container}>
+                <Container>
                     <div className={breadcrumbs}>
                         <Link href="/">Главная</Link>
                         <Link href="/org">Организаторы</Link>
                         <p>АКАР</p>
                     </div>
                     <h1 className={pageTitle}>АКАР</h1>
-                </div>
+                </Container>
             </div>
 
             <div className={css`
@@ -48,7 +48,7 @@ const Organizer = () => {
                     padding-bottom: 64px;
                 }
             `}>
-                <div className={container}>
+                <Container>
                     
                     <div className={css`
                         display: flex;
@@ -137,7 +137,7 @@ const Organizer = () => {
                         </motion.div>
                     </div>
                   
-                </div>
+                </Container>
             </div>
 
             <MainEvents similar={true} />

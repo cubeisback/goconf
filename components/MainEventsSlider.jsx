@@ -5,22 +5,55 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
-import SliderArrow from "@/public/images/svg/slider_arrow.svg";
-import LinkArrow from "@/public/images/svg/link_arrow.svg";
-import { useTheme } from "@emotion/react";
+import SliderArrow from "@/public/images/svg/arrow.svg";
+import LinkArrow from "@/public/images/svg/arrow_link.svg";
+// import { useTheme } from "@emotion/react";
 import axios from "axios";
 import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 import styled from "@emotion/styled";
+import { DoubleLinkArrow } from "@/styles/ui";
 
 
 const Next = styled.div`
 	width: 56px;
 	height: 56px;
+	border: 2px solid #8553F9;
+	border-radius: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	@media(max-width: 575px) {
 		width: 48px;
 		height: 48px;
+	}
+
+	& > div {
+		display: flex;
+		width: 18px;
+		height: 18px;
+		position: relative;
+		overflow: hidden;
+
+		& > svg {
+			position: absolute;
+			transition: ${({theme}) => theme.transition};
+
+			&:nth-of-type(2) {
+				transform: translateX(18px);
+			}
+		}
+	}
+	
+	&:hover {
+		svg {
+			transform: translateX(-18px);
+
+			&:nth-of-type(2) {
+				transform: translateX(0);
+			}
+		}
 	}
 `
 const SliderBlock = styled.div`
@@ -152,10 +185,16 @@ export const MainEventsSlider = () => {
                 <SliderBlockTopTitle>Интересные события</SliderBlockTopTitle>
                 <SliderBlockTopNav>
                     <Next ref={navigationPrevRef}>
-                        <SliderArrow />
+						<div>
+							<SliderArrow />
+							<SliderArrow />
+						</div>
                     </Next>
                     <Next ref={navigationNextRef} style={{transform: 'rotate(180deg)'}}>
-                        <SliderArrow />
+                        <div>
+							<SliderArrow />
+							<SliderArrow />
+						</div>
                     </Next>
                 </SliderBlockTopNav>
             </SliderBlockTop>
@@ -252,12 +291,12 @@ export const MainEventsSlider = () => {
 											</SliderItemDate>
                                             <div style={{color: '#47474D', fontSize: 14, lineHeight: 1.16}}>{item.online ? 'Онлайн-событие' : item.city}</div>
                                         </div>
-                                        <Link href={`/event/${item.slug}`}>
-										<Next>
-<LinkArrow />
-										</Next>
-                                            
-                                        </Link>
+                                        <DoubleLinkArrow href={`/event/${item.slug}`}>
+											<div>
+												<LinkArrow />
+												<LinkArrow />
+											</div>
+                                        </DoubleLinkArrow>
                                     </div>
                                 </div>
                             </SwiperSlide>

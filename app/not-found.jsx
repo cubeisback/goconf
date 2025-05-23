@@ -1,7 +1,7 @@
 'use client'
 
 import { css } from "@emotion/css";
-import { Button, container } from "@/styles/ui";
+import { Button, Container, container } from "@/styles/ui";
 import Img404 from "@/public/images/svg/404.svg";
 import { MainEvents } from "@/components/MainEvents";
 
@@ -14,7 +14,7 @@ export default function NotFoundPage() {
                 padding: 140px 0 32px;
                 background-color: #F5F7FA;
             `}>
-                <div className={container}>
+                <Container>
                     <div className={css`
                         display: flex;
                         gap: 24px;
@@ -88,7 +88,7 @@ export default function NotFoundPage() {
                         </div>
                     </div>
                     
-                </div>
+                </Container>
             </div>
             
             <MainEvents />

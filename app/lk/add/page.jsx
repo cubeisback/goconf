@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { css, cx } from "@emotion/css";
-import { Button, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
+import { Button, Container, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from "react";
 import DropdownInput from "@/components/ui/DropdownInput";
@@ -46,7 +46,7 @@ const UserAdd = () => {
 
     return(
         <div className={lkContainer}>
-            <div className={container}>
+            <Container>
                 <div
                     className={css`
                     display: flex;
@@ -579,7 +579,7 @@ const UserAdd = () => {
         </motion.div>
         
         </div>
-            </div>
+            </Container>
         </div>
     )
 };

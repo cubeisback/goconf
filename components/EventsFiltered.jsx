@@ -1,7 +1,7 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { ButtonMore, container } from "@/styles/ui";
+import { ButtonMore, Container, container } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
 import LinkArrow from "@/public/images/svg/link_arrow.svg";
 import { useEffect, useState } from "react";
@@ -29,7 +29,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                 padding: 64px 0;
             }
         `}>
-            <div className={container}>
+            <Container>
                 {!onPage && 
                 <div className={css`
                     text-align: center;
@@ -268,7 +268,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
 					</ButtonMore>
                 )
                 }
-            </div>
+            </Container>
         </div>
     )
 };

@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
-import { breadcrumbs, container, input, pagePromo, pageTitle } from "@/styles/ui";
+import { breadcrumbs, Container, container, input, pagePromo, pageTitle } from "@/styles/ui";
 import { Filter } from '@/components/Filter/Filter';
 import { EventsFiltered } from '@/components/EventsFiltered';
 import { Form } from '@/components/Form';
@@ -51,7 +51,7 @@ export default function EventsClient({ params }) {
 	return (
 		<>
 			<div className={pagePromo}>
-				<div className={container}>
+				<Container>
 					<div className={breadcrumbs}>
 						<Link href="/">Главная</Link>
 						<p>{pageH1}</p>
@@ -89,7 +89,7 @@ export default function EventsClient({ params }) {
 							<SearchIcon className={css`cursor: pointer;`} />
 						</button>
 					</form>
-				</div>
+				</Container>
 			</div>
 
 			<div className={css`
@@ -106,7 +106,7 @@ export default function EventsClient({ params }) {
 					z-index: -1;
 				}
 			`}>
-				<div className={container}>
+				<Container>
 					<Filter
 						full
 						setEvents={setEvents}
@@ -156,7 +156,7 @@ export default function EventsClient({ params }) {
 							/>
 						))}
 					</div>
-				</div>
+				</Container>
 
 				<EventsFiltered onPage events={events} />
 
@@ -164,7 +164,7 @@ export default function EventsClient({ params }) {
 					padding: 64px 0;
 					background-color: #F5F7FA;
 				`}>
-					<div className={container}>
+					<Container>
 						<div className={css`
 							display: flex;
 							flex-direction: column;
@@ -174,7 +174,7 @@ export default function EventsClient({ params }) {
 								color: #47474D;
 							}
 						`} dangerouslySetInnerHTML={{ __html: pageText }} />
-					</div>
+					</Container>
 				</div>
 
 				<Form />

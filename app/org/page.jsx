@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Form } from '@/components/Form';
-import { breadcrumbs, Button, container, pagePromo, pageTitle } from "@/styles/ui";
+import { breadcrumbs, Button, Container, container, pagePromo, pageTitle } from "@/styles/ui";
 import { css, cx } from '@emotion/css';
 import example_img from '/public/images/example.png';
 import Link from 'next/link';
@@ -59,7 +59,7 @@ const Org = () => {
     return (
         <>
             <div className={pagePromo}>
-                <div className={container}>
+                <Container>
                     <div className={breadcrumbs}>
                         <Link href="/">Главная</Link>
                         <p>Организаторам</p>
@@ -86,7 +86,7 @@ const Org = () => {
                             }
                         }
                     `}>Платные опции доступны всем организаторам, зарегистрированным на&nbsp;сайте.<br/> После регистрации вам доступна бесплатная версия карточки мероприятия (<span>тариф Базовый</span>)</div>
-                </div>
+                </Container>
             </div>
 
             <div className={css`
@@ -96,7 +96,7 @@ const Org = () => {
                     padding-bottom: 64px;
                 }
             `}>
-                <div className={container}>
+                <Container>
                     <div className={css`
                         font-size: 36px;
                         line-height: 1.12;
@@ -436,7 +436,7 @@ const Org = () => {
                             <img src={example_img} alt="" />
                         </div>
                     </div>
-                </div>
+                </Container>
             </div>
 
             <Form />
