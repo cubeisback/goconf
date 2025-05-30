@@ -112,7 +112,8 @@ export default function EventClient({ params }) {
 	const text = css`
 		display: flex;
 		flex-direction: column;
-		gap: 24px;
+		// gap: 24px;
+		gap: 16px;
 
 		& > p {
 			line-height: 1.28;
@@ -122,19 +123,48 @@ export default function EventClient({ params }) {
 			font-weight: 500;
 			line-height: 1.36;
 		}
+		& > h1 {
+			font-size: 28px;
+			font-family: Impact;
+			line-height: 1.34;
+			font-weight: normal;
+		}
 		& > h2 {
 			font-size: 24px;
 			line-height: 1.34;
+			font-weight: normal;
 		}
 		& > h3 {
 			font-size: 20px;
 			font-weight: 500;
 			line-height: 1.4;
+			font-weight: normal;
 		}
 		& > h4 {
 			font-size: 18px;
 			font-weight: 500;
 			line-height: 1.36;
+			font-weight: normal;
+		}
+		& > ul {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			
+			li {
+				font-size: 14px;
+			}
+		}
+		& > ol {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+
+			li {
+				font-size: 14px;
+			}
 		}
 	`;
 
@@ -189,7 +219,29 @@ export default function EventClient({ params }) {
 							</div>
 
 							<div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
-							{/* <div className={text}>{pageInfo.data.short_text}</div> */}
+							<div className={text} style={{marginTop: 64}}>
+								<h1>Test</h1>
+								<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eum voluptatem praesentium error, repudiandae quisquam est sequi itaque quia, quod sapiente, animi maxime assumenda nostrum officiis necessitatibus vitae possimus doloremque saepe!</p>
+								<h1>h1</h1>
+								<h2>h2</h2>
+								<h3>h3</h3>
+								<h4>h4</h4>
+								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, ad ea distinctio nostrum mollitia nisi vero aspernatur adipisci, voluptatem molestiae enim ipsa error quasi tenetur hic, sequi omnis consequatur libero!</p>
+								<h3>Маркирвоанный список:</h3>
+								<ul>
+									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque!</li>
+									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
+									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
+								</ul>
+								<h3>Нумерованный список:</h3>
+								<ol>
+									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
+									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
+									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
+									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
+									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
+								</ol>
+							</div>
 
 							{version === 3 && 
 							

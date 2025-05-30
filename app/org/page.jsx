@@ -6,6 +6,7 @@ import { breadcrumbs, Button, Container, container, pagePromo, pageTitle } from 
 import { css, cx } from '@emotion/css';
 import example_img from '/public/images/example.png';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Org = () => {
     const [active, setActive] = useState(1)
@@ -433,7 +434,7 @@ const Org = () => {
                                 }
                             }
                         `}>
-                            <img src={example_img} alt="" />
+							<Image src={example_img} alt="" />
                         </div>
                     </div>
                 </Container>

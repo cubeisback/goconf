@@ -297,11 +297,18 @@ export const filterBtn = css`
   flex: 1;
 `;
 
+//TODO удалить просто стиль
 export const pagePromo = css`
   background-color: #F5F7FA;
   padding: 120px 0 32px;
 `;
 
+export const PagePromo = styled.div`
+  background-color: #F5F7FA;
+  padding: 120px 0 32px;
+`;
+
+//TODO удалить просто стиль
 export const breadcrumbs = css`
   margin-bottom: 16px;
   display: flex;
@@ -335,7 +342,53 @@ export const breadcrumbs = css`
   }
 `;
 
+export const Breadcrumbs = styled.div`
+  margin-bottom: 16px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: calc(100vw - 30px);
+
+  @media (max-width: 575px) {
+    margin-bottom: 32px;
+  }
+
+  a {
+    font-size: 14px;
+    color: #B5B7B9;
+    line-height: 1.16;
+    min-width: max-content;
+
+    &::after {
+      content: "/";
+      padding-left: 6px;
+    }
+  }
+
+  p {
+    color: #6C6C71;
+    font-size: 14px;
+    line-height: 1.16;
+    min-width: max-content;
+  }
+`;
+
+//TODO Удалить просто стиль
 export const pageTitle = css`
+  margin-bottom: 24px;
+  font-family: Impact;
+  font-size: 56px;
+  line-height: 1.15;
+  font-weight: normal;
+
+  @media (max-width: 575px) {
+    font-size: 32px;
+  }
+`;
+
+export const PageTitle = styled.h1`
   margin-bottom: 24px;
   font-family: Impact;
   font-size: 56px;

@@ -242,29 +242,6 @@ export const Modal = ({ isOpen, onClose }) => {
 
 			if (response.status === 200) {
 			alert("Вход выполнен");
-			// 2. Извлекаем nonce
-			const nonce = response.data?.nonce;
-			
-			if (!nonce) {
-				console.error("Nonce не найден в ответе");
-				return;
-			}
-			console.log('nonce', nonce)
-			// 3. Второй запрос с этим nonce
-			const secondResponse = await axios.post(
-				getApiUrl("/backend/wp-json/users/v2/login/"), // замените на нужный
-				{
-					password: passwordLogin,
-					email: emailLogin,
-				},
-				{
-					headers: {
-						"X-WP-Nonce": nonce,
-					},
-				}
-			);
-
-			console.log("Ответ после авторизации:", secondResponse.data);
 			}
 		} catch (error) {
 			console.error("Ошибка входа или запроса:", error);

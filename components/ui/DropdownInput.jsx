@@ -3,9 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { css } from "@emotion/css";
 import { motion, AnimatePresence } from 'framer-motion';
-const ArrowDown = () => (
-  <img src="/images/svg/arrowDown.svg" alt="arrow icon" />
-);
+import ArrowDown from "@/public/images/svg/arrowDown.svg";
 import { useTheme } from '@emotion/react';
 
 const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChange, type, filterValues }) => {
