@@ -29,7 +29,7 @@ export const authOptions = {
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
-          redirect_uri: process.env.GOOGLE_REDIRECT_URI, // 👈 кастомный URL
+          redirect_uri: "https://dev.goconf.ru/social-login/google", // 👈 кастомный URL
         },
       },
     }),
