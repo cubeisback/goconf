@@ -13,7 +13,6 @@ export default function GoogleSocialLogin() {
   useEffect(() => {
     if (code) {
 		console.log('codeeeee', code)
-      // Отправка GET-запроса на WP сервер
 	  axios
         // .get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`))
       	fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`)
