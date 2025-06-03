@@ -1,6 +1,6 @@
 'use client'
 
-import { breadcrumbs, Button, Container, container, pagePromo, pageTitle } from "@/styles/ui";
+import { breadcrumbs, Button, Container, pagePromo, PageTitle } from "@/styles/ui";
 import OrgLogo from '@/public/images/svg/org_logo.svg'
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
@@ -8,8 +8,27 @@ import { Form } from '@/components/Form';
 import { MainEvents } from '@/components/MainEvents';
 import { motion } from 'framer-motion';
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getApiUrl } from "@/functions/functions";
 
 const Organizer = () => {
+	const { slug } = useParams();
+	const [pageInfo, setPageInfo] = useState(null);
+	useEffect(() => {
+		if (!slug) return;
+	
+		axios
+		  .get(getApiUrl(`/backend/wp-json/org/v2/simple/?slug=${slug}`))
+		  .then((response) => {
+			setPageInfo(response.data);
+			console.log('организатор ', response.data);
+		  })
+		  .catch((error) => {
+			console.log(error);
+		  });
+	}, [slug]);
 
     const theme = useTheme();
 
@@ -37,7 +56,7 @@ const Organizer = () => {
                         <Link href="/org">Организаторы</Link>
                         <p>АКАР</p>
                     </div>
-                    <h1 className={pageTitle}>АКАР</h1>
+					<PageTitle>{pageInfo && pageInfo.h1}</PageTitle>
                 </Container>
             </div>
 

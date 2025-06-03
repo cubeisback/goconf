@@ -18,6 +18,7 @@ import { useTheme } from "@emotion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useWindowSizeStore from "@/store/useWindowSizeStore";
+import AuthButton from "./Login";
 
 const HeaderBlock = styled.header`
 	position: fixed;
@@ -212,6 +213,7 @@ export const Header = ({isLogin}) => {
   return (
     <>
     <HeaderBlock>
+		<AuthButton />
         <Logo>
 			<Link href="/">
 				<LogoImg />

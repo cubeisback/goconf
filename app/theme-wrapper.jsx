@@ -9,6 +9,7 @@ import useHomeStore from "@/store/useHomeStore"
 import { useEffect } from "react"
 import { Footer } from '@/components/Footer/Footer'
 import WindowSizeProvider from '@/components/Providers/WindowSizeProvider'
+import { SessionProvider } from "next-auth/react"
 
 export default function ThemeWrapper({ children }) {
 
@@ -24,9 +25,11 @@ export default function ThemeWrapper({ children }) {
 		<WindowSizeProvider>
 			<ThemeProvider theme={theme}>
 				<Global styles={globalStyles} />
-				<Header/>
-				{children}
-				<Footer />
+				<SessionProvider>
+					<Header/>
+					{children}
+					<Footer />
+				</SessionProvider>
 			</ThemeProvider>
 		</WindowSizeProvider>
 	)

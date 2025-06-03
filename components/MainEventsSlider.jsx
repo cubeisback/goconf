@@ -7,7 +7,6 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import SliderArrow from "@/public/images/svg/arrow.svg";
 import LinkArrow from "@/public/images/svg/arrow_link.svg";
-// import { useTheme } from "@emotion/react";
 import axios from "axios";
 import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
@@ -58,26 +57,26 @@ const Next = styled.div`
 `
 const SliderBlock = styled.div`
 	background-color: #22222A;
-            border-radius: 28px;
-            margin-bottom: 120px;
+    border-radius: 28px;
+    margin-bottom: 120px;
             
-            @media(max-width: 1339px) {
-                margin-bottom: -32px;
-            }
+    @media(max-width: 1339px) {
+        margin-bottom: -32px;
+    }
 `
 const SliderBlockTop = styled.div`
-display: flex;
-                justify-content: space-between;
-                padding: 40px;
-                align-items: center;
-                font-size: 36px;
-                line-height: 1.12;
-                gap: 16px;
+	display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    align-items: center;
+    font-size: 36px;
+    line-height: 1.12;
+    gap: 16px;
 
-                @media(max-width: 575px) {
-                    padding: 32px 16px;
-                    font-size: 28px;
-                }
+    @media(max-width: 575px) {
+        padding: 32px 16px;
+        font-size: 28px;
+    }
 `
 const SliderBlockTopTitle = styled.div`
 	color: #fff;
@@ -85,80 +84,78 @@ const SliderBlockTopTitle = styled.div`
 `
 const SliderBlockTopNav = styled.div`
 	display: flex;
-                    gap: 16px;
+    gap: 16px;
 
-                    & > div {
-                        display: flex;
-                        cursor: pointer;
-                    }
+    & > div {
+        display: flex;
+        cursor: pointer;
+    }
 
-                    svg {
-                        @media(max-width: 575px) {
-                            width: 48px;
-                            height: 48px;
-                        }
-                    }
+    svg {
+        @media(max-width: 575px) {
+            width: 48px;
+            height: 48px;
+        }
+    }
 `
 const SliderMainPart = styled.div`
-padding: 0 40px 40px;
+	padding: 0 40px 40px;
 
-                        @media(max-width: 575px) {
-                            padding: 0 16px 32px;
-                        }
+    @media(max-width: 575px) {
+        padding: 0 16px 32px;
+    }
 
-                        & > div {
-                            border-radius: 28px;
-                        }
+    & > div {
+        border-radius: 28px;
+    }
 `
 const SkeletonItem = styled.div`
-background: #eee;
-		padding: 1rem;
-		border-radius: 8px;
-		animation: pulse 1.5s infinite;
-		height: 441px;
-		width: 33%;
+	background: #eee;
+	padding: 1rem;
+	border-radius: 24px;
+	animation: pulse 1.5s infinite;
+	height: 441px;
+	width: 33%;
 
-		@keyframes pulse {
-			0% { opacity: 1 }
-			50% { opacity: 0.5 }
-			100% { opacity: 1 }
-		}
+	@keyframes pulse {
+		0% { opacity: 1 }
+		50% { opacity: 0.5 }
+		100% { opacity: 1 }
+	}
 `
 const SliderFormatsItem = styled.div`
-border-radius: 8px;
-            background-color: ${({theme}) => theme.colors.green};
-            padding: 3px 8px 5px;
-            color: #191921;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 1.16;
-            width: max-content; 
+	border-radius: 8px;
+    background-color: ${({theme}) => theme.colors.green};
+    padding: 3px 8px 5px;
+    color: #191921;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.16;
+    width: max-content; 
 ` 
 const SliderItemTitle = styled(Link)`
-font-size: 18px;
-                                        font-weight: 500;
-                                        line-height: 1.36;
-                                        -webkit-line-clamp: 2;
-                                        line-clamp: 2;
-                                        display: -webkit-box;
-                                        -webkit-box-orient: vertical;
-                                        overflow: hidden;  
+	font-size: 18px;
+    font-weight: 500;
+    line-height: 1.36;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;  
 `
 const SliderItemDate = styled.div`
-color: ${({theme}) => theme.colors.purple};
-                                                font-size: 28px;
-                                                line-height: 1.2;
-                                                margin-bottom: 4px;
-                                                font-family: Impact;
+	color: ${({theme}) => theme.colors.purple};
+    font-size: 28px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+    font-family: Impact;
     
-                                                @media(max-width: 575px) {
-                                                    font-size: 24px;
-                                                }
-								`
+    @media(max-width: 575px) {
+        font-size: 24px;
+    }
+`
 
 export const MainEventsSlider = () => {
-    // const theme = useTheme();
-
     const navigationPrevRef = useRef(null);
     const navigationNextRef = useRef(null);
 
@@ -170,7 +167,6 @@ export const MainEventsSlider = () => {
         .then((response) => {
 			setEvents(response.data);
 			setIsLoading(false);
-          	// console.log('interesting-events ', response.data)
         })
         .catch((error) => {
             console.log(error);
@@ -232,15 +228,12 @@ export const MainEventsSlider = () => {
                         }}
                     >   
 					{isLoading ? (
-  // Скелетоны (например, 3 заглушки)
-  <>
-  <div style={{display: 'flex', gap: 32}}>
-    {[...Array(3)].map((_, i) => (
-      <SkeletonItem key={i}></SkeletonItem>
-    ))}
-	</div>
-  </>
-) : 
+						<div style={{display: 'flex', gap: 32}}>
+							{[...Array(3)].map((_, i) => (
+								<SkeletonItem key={i}></SkeletonItem>
+							))}
+						</div>
+					) : 
                         events && events.items.map((item, index) => (
                             <SwiperSlide key={index} style={{borderRadius: 24, backgroundColor: '#fff', overflow: 'hidden'}}>
                                 <Link href={`/event/${item.slug}`} style={{width: '100%'}}>
@@ -248,17 +241,15 @@ export const MainEventsSlider = () => {
                                 </Link>
                                 <div style={{padding: 24, display: 'flex', flexDirection: 'column', gap: 16}}>
                                     <div>
-
-{item.format.map((f, idx) => (
-        <SliderFormatsItem key={idx}>
-			<Link href={`/events/${f.slug}`}>
-            	{f.name}
-        	</Link>
-        </SliderFormatsItem>
-      ))}
+										{item.format.map((f, idx) => (
+											<SliderFormatsItem key={idx}>
+												<Link href={`/events/${f.slug}`}>
+													{f.name}
+												</Link>
+											</SliderFormatsItem>
+										))}
                                     </div>
-                                        
-                                        
+
                                     <SliderItemTitle href={`/event/${item.slug}`} dangerouslySetInnerHTML={{ __html: item.title }} />
                                     
                                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
@@ -305,6 +296,5 @@ export const MainEventsSlider = () => {
                     </Swiper>
                     </SliderMainPart>
                 </SliderBlock>
-            
     )
 };
