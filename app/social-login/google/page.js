@@ -1,26 +1,25 @@
+// app/social-login/google/page.tsx или .js
 'use client';
 
 import { getApiUrl } from '@/functions/functions';
-import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
+import axios from 'axios';
 
-export default function GoogleSocialLogin() {
+function GoogleLoginInner() {
   const params = useSearchParams();
   const code = params.get('code');
   const [result, setResult] = useState(null);
 
   useEffect(() => {
     if (code) {
-		console.log('codeeeee', code)
-	  axios
-        // .get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`))
-      	fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`)
+      console.log('codeeeee', code);
+	  // .get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`))
+      fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`)
         .then(res => res.json())
         .then(data => {
           console.log('Ответ от WP:', data);
           setResult(data);
-          // можешь здесь сохранить токен, авторизовать пользователя и т.д.
         });
     }
   }, [code]);
@@ -32,5 +31,13 @@ export default function GoogleSocialLogin() {
       {code && !result && <p>Авторизация...</p>}
       {result && <pre>{JSON.stringify(result, null, 2)}</pre>}
     </div>
+  );
+}
+
+export default function GoogleSocialLogin() {
+  return (
+    <Suspense fallback={<div>Загрузка...</div>}>
+      <GoogleLoginInner />
+    </Suspense>
   );
 }
