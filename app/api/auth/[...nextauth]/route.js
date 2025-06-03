@@ -29,12 +29,12 @@ export const authOptions = {
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
-          redirect_uri: "http://dev.goconf.ru/social-login/google", // 👈 кастомный URL
+          redirect_uri: process.env.GOOGLE_REDIRECT_URI, // 👈 кастомный URL
         },
       },
     }),
   ],
-//   secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 };
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
