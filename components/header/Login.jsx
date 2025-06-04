@@ -16,8 +16,7 @@ export default function AuthButton() {
     
 	<>
 	<button onClick={() => signIn('google')}>Войти через Google</button>
-	<a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=879586637662-g3v612m81nt3lktccs13nvfg63v8qoqg.apps.googleusercontent.com&redirect_uri=http://dev.goconf.ru/api/auth/callback/google&
-response_type=code&scope=openid%20email%20profile&access_type=online&prompt=consent">Войти через Google</a>
+	<a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=879586637662-g3v612m81nt3lktccs13nvfg63v8qoqg.apps.googleusercontent.com&redirect_uri=http://dev.goconf.ru/api/auth/callback/google&response_type=code&scope=openid%20email%20profile&access_type=online&prompt=consent">Войти через Google</a>
 	</>
   );
 }
