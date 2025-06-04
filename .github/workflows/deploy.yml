@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Create sensitive config files (.env.production and ecosystem.config.js)
+        run: |
+          echo "${{ secrets.ENV_PRODUCTION_CONTENT }}" > .env.production
+          echo "${{ secrets.ECOSYSTEM_CONFIG_CONTENT }}" > ecosystem.config.js
+
       - name: Setup SSH
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
@@ -24,32 +29,14 @@ jobs:
           chmod 600 ~/.ssh/goconf_key
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: Clean old project files
+      - name: Upload new project files (excluding .git and node_modules)
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
-          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
-            set -e
-            echo "Cleaning app directory except env and ecosystem config..."
-            find /home/thunder/web/dev.goconf.ru/app/ -mindepth 1 -maxdepth 1 \
-              ! -name '.env.production' \
-              ! -name 'ecosystem.config.js' \
-              -exec rm -rf {} +
-            echo "Removing old static files..."
-            rm -rf /home/thunder/web/dev.goconf.ru/public_html/_next
-          EOF
-
-      - name: Upload new project files
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
-        run: |
-          rsync -avz --delete-excluded \
+          rsync -avz \
             --exclude=".git" \
             --exclude="node_modules" \
-            --exclude=".env.production" \
-            --exclude="ecosystem.config.js" \
             -e "ssh -i ~/.ssh/goconf_key" ./ \
             $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
 
