@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 
@@ -7,6 +8,7 @@ function GoogleLoginInner() {
   const params = useSearchParams();
   const code = params.get('code');
   const [result, setResult] = useState(null);
+  const [token, setToken] = useState(null)
 
   useEffect(() => {
     if (code) {
@@ -15,9 +17,29 @@ function GoogleLoginInner() {
         .then(data => {
           console.log('Ответ от WP:', data);
           setResult(data);
+		  setToken(data.tokien)
         });
     }
   }, [code]);
+
+  useEffect(() => {
+	if(token) {
+		const fetchData = async () => {
+      try {
+        const res = await axios.get('https://dev.goconf.ru/wp-json/users/v2/profile/', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log('Ответ:', res.data);
+      } catch (err) {
+        console.error('Ошибка:', err);
+      }
+    };
+
+    fetchData(); // вызов async-функции внутри useEffect
+	}
+  }, [token]);
 
   return (
     <div>
