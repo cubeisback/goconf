@@ -45,7 +45,13 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
         run: |
-          rsync -avz --delete --exclude=".git" --exclude="node_modules" -e "ssh -i ~/.ssh/goconf_key" ./ $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
+          rsync -avz --delete-excluded \
+            --exclude=".git" \
+            --exclude="node_modules" \
+            --exclude=".env.production" \
+            --exclude="ecosystem.config.js" \
+            -e "ssh -i ~/.ssh/goconf_key" ./ \
+            $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
 
       - name: Install, Build and Restart App
         env:
