@@ -14,13 +14,28 @@ function GoogleLoginInner() {
   useEffect(() => {
     if (code) {
       console.log('codeeeee', code);
-	  // .get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`))
+	//   axios.get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`))
       fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}`)
         .then(res => res.json())
         .then(data => {
           console.log('Ответ от WP:', data);
           setResult(data);
         });
+
+// axios.get('https://dev.goconf.ru/wp-json/users/v2/login-social/', {
+//   params: {
+//     action: 'google_oauth',
+//     code: code
+//   }
+// })
+// .then(response => {
+//   console.log('Ответ от WP:', response.data);
+//   setResult(response.data);
+// })
+// .catch(error => {
+//   console.error('Ошибка при запросе:', error);
+// });
+
     }
   }, [code]);
 
