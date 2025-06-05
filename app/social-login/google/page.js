@@ -12,12 +12,12 @@ export function GoogleSocialLogin() {
 	const login = useAuthStore.getState().login;
 
 	// &uri=http://localhost:3000/social-login/google
-	const localuri = process.env.NODE_ENV === 'development' ? '&uri=http://localhost:3000/social-login/google' : null;
+	const localuri = process.env.NODE_ENV === 'development' ? '&uri=http://localhost:3000/social-login/google' : '&uri=https://dev.goconf.ru/social-login/google';
 
 	useEffect(() => {
 		console.log(process.env.NODE_ENV)
 		if (code) {
-		fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}${localuri && localuri}`)
+		fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}${localuri}`)
 			.then(res => res.json())
 			.then(data => {
 				console.log('Ответ от WP:', data);
