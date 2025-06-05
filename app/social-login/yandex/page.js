@@ -12,6 +12,7 @@ export function YandexSocialLogin() {
 	const login = useAuthStore.getState().login;
 	
 	// &uri=http://localhost:3000/social-login/yandex
+
 	useEffect(() => {
 		if (code) {
 		fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=yandex_oauth&code=${code}`)
