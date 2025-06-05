@@ -1,19 +1,26 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { Container, container, lkContainer} from "@/styles/ui";
+import { Container, lkContainer} from "@/styles/ui";
 import { useEffect } from "react";
 import UserMain from "./main/page";
 import LkMenu from "@/components/ui/LkMenu";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 const User = () => {
+	const router = useRouter();
+  	const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-    useEffect(()=>{
-        // setIsLogin(true);
-		//TODO Добавить логирование в стейт
-    });
+    useEffect(() => {
+		if (!isAuthenticated) {
+			router.replace('/');
+		} //TODO Доделать для всех разделов приватных страниц и личного кабинета
+	}, [isAuthenticated]);
 
     return (
+		<>
+      	{isAuthenticated && (
         <div className={lkContainer}>
             <Container>
                 <div
@@ -26,6 +33,8 @@ const User = () => {
                 </div>
             </Container>
         </div>
+		)}
+		</>
     );
 }
 

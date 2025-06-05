@@ -6,10 +6,12 @@ import { css, cx } from '@emotion/css';
 import { Button, checkBox } from '@/styles/ui';
 import { useTheme } from '@emotion/react';
 import Google from "@/public/images/svg/google.svg";
+import Yandex from "@/public/images/svg/yandex.svg";
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import Link from 'next/link';
 import axios from 'axios';
 import { getApiUrl } from '@/functions/functions';
+import { useAuthStore } from '@/store/useAuthStore';
 
 const modalBackdrop = css`
   position: fixed;
@@ -94,7 +96,7 @@ const modalSocials = css`
   justify-content: center;
   margin-bottom: 24px;
 
-  & > div {
+  & > a {
     border: 1px solid #D7DADD;
     border-radius: 100%;
     width: 64px;
@@ -103,6 +105,11 @@ const modalSocials = css`
     align-items: center;
     justify-content: center;
     cursor: pointer;
+
+	&:nth-of-type(2) {
+		background: #FC3F1D;
+		border-color: #FC3F1D;
+	}
   }
 `;
 
@@ -134,32 +141,17 @@ const modalTextWithLine = css`
 
 export const Modal = ({ isOpen, onClose }) => {
   	const theme = useTheme();
+	const login = useAuthStore.getState().login;
+
+	const googleRedirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
+	// href="https://accounts.google.com/o/oauth2/v2/auth?client_id=879586637662-g3v612m81nt3lktccs13nvfg63v8qoqg.apps.googleusercontent.com&redirect_uri=http://localhost:3000/social-login/google&response_type=code&scope=openid%20email%20profile&access_type=online&prompt=consent"
+	const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=879586637662-g3v612m81nt3lktccs13nvfg63v8qoqg.apps.googleusercontent.com&redirect_uri=${encodeURIComponent(googleRedirectUri)}&response_type=code&scope=openid%20email%20profile&access_type=online&prompt=consent`;
+	
+	const yandexRedirectUri = process.env.NEXT_PUBLIC_YANDEX_REDIRECT_URI;
+	// href="https://oauth.yandex.ru/authorize?response_type=code&client_id=27b4e4a2dfa544ec9bc5598b73516a32&redirect_uri=http://localhost:3000/social-login/yandex"
+	const yandexAuthUrl = `https://oauth.yandex.ru/authorize?response_type=code&client_id=27b4e4a2dfa544ec9bc5598b73516a32&redirect_uri=${encodeURIComponent(yandexRedirectUri)}`;
 
 
-  	// const handleSubmit = async (data) => {
-	// 	console.log('запрос ушел ')
-	// 	try {
-	// 	  const res = await axios.post(
-	// 		getApiUrl("/backend/wp-json/events/v2/filter/"),
-	// 		data,
-	// 		{
-	// 		  headers: {
-	// 			"Content-Type": "application/json",
-	// 		  },
-	// 		}
-	// 	  );
-	// 	  console.log("Response:", res);
-	// 	  setEvents(res.data.events);
-	// 	  setTotal(res.data.total);
-	// 	  setPageH1(res.data.h1);
-	// 	  setPageText(res.data.text);
-	// 	setSeoTitle(res.data.seo.title);
-	// 	setSeoDescription(res.data.seo.description);
-	// 	useDateStore.getState().resetMainDates();
-	// 	} catch (err) {
-	// 	  console.log("Error:", err.message);
-	// 	}
-	// };
 
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -167,16 +159,17 @@ export const Modal = ({ isOpen, onClose }) => {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
-	const [regResponse, setRegResponse] = useState(null)
+	// const [regResponse, setRegResponse] = useState(null)
 
+	const [errorMessageRegistration, setErrorMessageRegistration] = useState(null);
 	const handleSubmit = async(e) => {
 		e.preventDefault();
 
 		// Простейшая валидация
-		if (password !== confirmPassword) {
-		alert("Пароли не совпадают");
-		return;
-		}
+		// if (password !== confirmPassword) {
+		// alert("Пароли не совпадают");
+		// return;
+		// }
 
 		try {
 			const response = await axios.post(
@@ -189,63 +182,62 @@ export const Modal = ({ isOpen, onClose }) => {
 			});
 
 			if (response.status === 200) {
-				alert("Вы успешно зарегистрированы!");
 				console.log('registration', response)
-				setRegResponse(response)
-				// или редирект, или очистка формы
+				onClose();
+				setErrorMessageRegistration(null)
+
+				//пробный логин после авторизации
+				try {
+					const response = await axios.post(
+					getApiUrl("/backend/wp-json/users/v2/login/"),
+						{
+							password: password,
+							email: email,
+						}
+					);
+
+					if (response.status === 200) {
+						login(response.data.token);
+						onClose();
+					}
+				} catch (error) {
+					console.log(error.response?.data?.message)
+				}
+				//пробный логин после авторизации
 			}
 		} catch(error) {
-		console.error("Ошибка регистрации:", error);
-		alert(error.response?.data?.message || "Произошла ошибка");
+			console.error("Ошибка регистрации:", error);
+			console.log(error.response?.data?.message)
+			setErrorMessageRegistration(error.response?.data?.message)
 		}
 	};
 
 	const [emailLogin, setEmailLogin] = useState("");
 	const [passwordLogin, setPasswordLogin] = useState("");
-	// const handleSubmitLogin = async(e) => {
-	// 	e.preventDefault();
-
-	// 	try {
-	// 		const response = await axios.post(
-	// 			getApiUrl("/backend/wp-json/users/v2/login/"), {
-	// 			password: passwordLogin,
-	// 			email: emailLogin,
-	// 		});
-
-	// 		console.log('login', response)
-
-	// 		if (response.status === 200) {
-	// 			alert("Вход выполнен");
-	// 			// console.log(response)
-	// 			// или редирект, или очистка формы
-	// 		}
-	// 	} catch(error) {
-	// 	console.error("Ошибка регистрации:", error);
-	// 	alert(error.response?.data?.message || "Произошла ошибка");
-	// 	}
-	// };
+	const [errorMessage, setErrorMessage] = useState(null);
 
 	const handleSubmitLogin = async (e) => {
 		e.preventDefault();
 
 		try {
-			// 1. Авторизация
 			const response = await axios.post(
 			getApiUrl("/backend/wp-json/users/v2/login/"),
-			{
-				password: passwordLogin,
-				email: emailLogin,
-			}
+				{
+					password: passwordLogin,
+					email: emailLogin,
+				}
 			);
-
 			console.log("login", response);
 
 			if (response.status === 200) {
-			alert("Вход выполнен");
+				login(response.data.token);
+				onClose();
+				setErrorMessage(null)
 			}
 		} catch (error) {
 			console.error("Ошибка входа или запроса:", error);
-			alert(error.response?.data?.message || "Произошла ошибка");
+			console.log(error.response?.data?.message)
+			setErrorMessage(error.response?.data?.message)
 		}
 	};
 
@@ -296,22 +288,19 @@ export const Modal = ({ isOpen, onClose }) => {
                 <div className={modalContentTop}>
                   <div className={modalTitle}>Войти</div>
                   <div className={modalSocials}>
-                    <div>
-                      <Google />
-                    </div>
-                    <div>
-                      <Google />
-                    </div>
-                    <div>
-                      <Google />
-                    </div>
+                    <a href={googleAuthUrl}>
+						<Google />
+					</a>
+                    <a href={yandexAuthUrl}>
+                      <Yandex />
+                    </a>
                   </div>
                   <div className={modalTextWithLine}>
                     <p>Или войти с&nbsp;помощью&nbsp;эл. почты</p>
                   </div>
 
                   <form onSubmit={handleSubmitLogin} className={modalForm}>
-                    <input type="text" placeholder="Электронная почта" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} />
+                    <input type="email" placeholder="Электронная почта" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} />
                     <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} />
                     <div className={cx(checkBox, css`
                       label::before {
@@ -333,18 +322,20 @@ export const Modal = ({ isOpen, onClose }) => {
                     </div>
 
                     <Button 
+						$button
 						type="submit"
-						className={css`width: 100%!important;margin-bottom: 16px;`}
+						style={{width: '100%'}}
 						onClick={handleSubmitLogin}
-					>Войти</Button>
+					>
+						<p>
+							<span>Войти</span>
+							<span>Войти</span>
+						</p>
+					</Button>
+					{errorMessage && <p style={{color: '#f00', fontSize: 14, textAlign: 'center'}}>{errorMessage}</p>}
                   </form>
+				  
 
-                  {/* <Link href="/lk" className={css`width: 100%;`}>
-                    <Button 
-						onClick={onClose} 
-						className={css`width: 100%!important;margin-bottom: 16px;`}
-					>Войти</Button>
-                  </Link> */}
                   <div className={css`
                     color: ${theme.colors.purple};
                     font-size: 14px;
@@ -364,26 +355,30 @@ export const Modal = ({ isOpen, onClose }) => {
                   <div className={modalContentTop}>
                     <div className={modalTitle}>Зарегистрироваться</div>
                     <form onSubmit={handleSubmit} className={modalForm}>
-                      <input type="text" placeholder="Имя" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                      <input type="text" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                      <input type="text" placeholder="Электронная почта" value={email} onChange={(e) => setEmail(e.target.value)} />
-                      <PasswordInput text='Пароль' value={password} onChange={setPassword} />
-                      <PasswordInput text='Подтверждение пароля' value={confirmPassword} onChange={setConfirmPassword} />
-                      <Button type="submit" className={css`width: 100%!important;margin-bottom: 24px;`} onClick={handleSubmit}>Зарегистрироваться</Button>
-
-					  {regResponse && <>
-					  <h2 style={{color: 'green', fontSize: 14, margin: '5px 0'}}>Response: </h2>
-					  <p style={{color: 'green', fontSize: 14, margin: '5px 0'}}>{regResponse.data.message}</p>
-					  <a style={{color: 'green', fontSize: 14, margin: '5px 0'}} href={regResponse.data.data.link} target='_blank'>{regResponse.data.data.link}</a>
-					  </>}
+						<input type="text" placeholder="Имя" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+						<input type="text" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+						<input type="email" placeholder="Электронная почта" value={email} onChange={(e) => setEmail(e.target.value)} />
+						<PasswordInput text='Пароль' value={password} onChange={setPassword} />
+						{/* <PasswordInput text='Подтверждение пароля' value={confirmPassword} onChange={setConfirmPassword} /> */}
+						<Button $button type="submit" style={{width: '100%'}} onClick={handleSubmit}>
+							<p>
+								<span>Зарегистрироваться</span>
+								<span>Зарегистрироваться</span>
+							</p>
+						</Button>
+					
+						{errorMessageRegistration && <p style={{color: '#f00', fontSize: 14, textAlign: 'center'}}>{errorMessageRegistration}</p>}
                     </form>
                     <div className={modalTextWithLine}>
                       <p>Зарегистрироваться через</p>
                     </div>
                     <div className={cx(modalSocials, css`margin-bottom: 0;`)}>
-                      <div><Google/></div>
-                      <div><Google/></div>
-                      <div><Google/></div>
+						<a href={googleAuthUrl}>
+							<Google />
+						</a>
+						<a href={yandexAuthUrl}>
+							<Yandex />
+						</a>
                     </div>
                   </div>
                   <div className={modalContentBottom}>
@@ -420,9 +415,12 @@ export const Modal = ({ isOpen, onClose }) => {
                       <p>Зарегистрироваться через</p>
                     </div>
                     <div className={cx(modalSocials, css`margin-bottom: 0;`)}>
-                      <div><Google/></div>
-                      <div><Google/></div>
-                      <div><Google/></div>
+						<a href={googleAuthUrl}>
+							<Google />
+						</a>
+						<a href={yandexAuthUrl}>
+							<Yandex />
+						</a>
                     </div>
                   </div>
                   <div className={modalContentBottom}>

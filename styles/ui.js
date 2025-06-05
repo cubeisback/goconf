@@ -99,7 +99,11 @@ export const DoubleLinkArrow = styled(Link)`
 	}
 `
 
-export const Button = styled.div`
+const ButtonType = ({ $button, ...props }) => {
+  const Component = $button ? 'button' : 'div';
+  return <Component {...props} />;
+};
+export const Button = styled(ButtonType)`
   border-radius: 28px;
   background: ${({ green, theme }) =>
     green ? theme.colors.green : theme.colors.purple};
@@ -127,6 +131,7 @@ export const Button = styled.div`
     display: flex;
     flex-direction: column;
     overflow: hidden;
+	font-size: 16px;
 
     span {
       display: block;

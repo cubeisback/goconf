@@ -11,10 +11,12 @@ import CartIcon from "@/public/images/svg/cart.svg";
 import ExitIcon from "@/public/images/svg/exit.svg";
 import EditIcon from "@/public/images/svg/edit.svg";
 import StatusIcon from "@/public/images/svg/status.svg";
+import { useAuthStore } from "@/store/useAuthStore";
 
 //TODO переделать эту часть с меню в ЛК, чтобы он не был на каждой странице отдельно
 
 export default function LkMenu () {
+	const logout = useAuthStore((state) => state.logout);
 	const width = useWindowSizeStore((state) => state.width);
 	const pathname = usePathname();
 	const theme = useTheme();
@@ -152,7 +154,7 @@ export default function LkMenu () {
                         </div>
                         <div className={cx(menuItem, css`
                             margin-top: auto;
-                        `)}>
+                        `)} onClick={logout}>
                             <ExitIcon />
                             <p>Выйти</p>
                         </div>

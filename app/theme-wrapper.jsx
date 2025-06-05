@@ -9,27 +9,37 @@ import useHomeStore from "@/store/useHomeStore"
 import { useEffect } from "react"
 import { Footer } from '@/components/Footer/Footer'
 import WindowSizeProvider from '@/components/Providers/WindowSizeProvider'
-import { SessionProvider } from "next-auth/react"
+import { useAuthStore } from "@/store/useAuthStore"
 
 export default function ThemeWrapper({ children }) {
 
-	const fetchFiltersData = useFiltersStore((state) => state.fetchFiltersData)
-	const fetchHomeData = useHomeStore((state) => state.fetchHomeData)
+	const fetchFiltersData = useFiltersStore((state) => state.fetchFiltersData);
+	const fetchHomeData = useHomeStore((state) => state.fetchHomeData);
 
 	useEffect(() => {
 		fetchFiltersData()
 		fetchHomeData()
-	}, [fetchFiltersData])
+	}, [fetchFiltersData]);
+	
+
+	const token = useAuthStore((state) => state.token);
+  	const user = useAuthStore((state) => state.user);
+  	const fetchUser = useAuthStore((state) => state.fetchUser);
+
+	useEffect(() => {
+		if (token && !user) {
+			fetchUser();
+		}
+	}, [token]);
+
 
 	return (
 		<WindowSizeProvider>
 			<ThemeProvider theme={theme}>
 				<Global styles={globalStyles} />
-				<SessionProvider>
 					<Header/>
 					{children}
 					<Footer />
-				</SessionProvider>
 			</ThemeProvider>
 		</WindowSizeProvider>
 	)

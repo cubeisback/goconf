@@ -18,7 +18,7 @@ import { useTheme } from "@emotion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useWindowSizeStore from "@/store/useWindowSizeStore";
-import AuthButton from "./Login";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const HeaderBlock = styled.header`
 	position: fixed;
@@ -157,7 +157,10 @@ const Burger = styled.div`
           
 `
 
-export const Header = ({isLogin}) => {
+export const Header = () => {
+	const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+	const user = useAuthStore((state) => state.user);
+	
 	const width = useWindowSizeStore((state) => state.width);
 	// const theme = useTheme();
 
@@ -213,7 +216,6 @@ export const Header = ({isLogin}) => {
   return (
     <>
     <HeaderBlock>
-		<AuthButton />
         <Logo>
 			<Link href="/">
 				<LogoImg />
@@ -269,7 +271,7 @@ export const Header = ({isLogin}) => {
               </Button>
             </Link>
           }
-          {isLogin ?
+          {isAuthenticated ?
           <>
           <div style={{cursor: 'pointer'}} ref={iconRef} onClick={toggleNotifications}>
             <NotificationIcon />
@@ -279,7 +281,11 @@ export const Header = ({isLogin}) => {
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 136px;
-          `} href="/lk"> {width > 575 ? 'Александр Романов' : <UserIcon32 />}</Link>
+          `} href="/lk"> 
+		  	{width > 575 && user?.user?.data?.display_name
+			? user.user.data.display_name
+			: <UserIcon32 />}
+		  </Link>
           </>
           :
           <div onClick={()=>setIsModalOpen(true)} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>
