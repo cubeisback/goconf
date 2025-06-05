@@ -1,11 +1,11 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 
-export default function GoogleSocialLogin() {
+export function GoogleSocialLogin() {
 	const params = useSearchParams();
 	const code = params.get('code');
 	const router = useRouter();
@@ -32,5 +32,14 @@ export default function GoogleSocialLogin() {
 		<div style={{position: 'fixed', width: '100vw', height: '100vh', background: '#fff', zIndex: 99}}>
 		
 		</div>
+	);
+}
+
+
+export default function GoogleSocialLoginPage() {
+	return (
+		<Suspense fallback={<div>Загрузка...</div>}>
+			<GoogleSocialLogin />
+		</Suspense>
 	);
 }
