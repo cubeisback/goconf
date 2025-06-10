@@ -5,9 +5,40 @@ import { css } from "@emotion/css";
 import { motion, AnimatePresence } from 'framer-motion';
 import ArrowDown from "@/public/images/svg/arrowDown.svg";
 import { useTheme } from '@emotion/react';
+import styled from "@emotion/styled";
+
+
+// const InputArrow = styled
 
 const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChange, type, filterValues }) => {
   const theme = useTheme();
+
+  const Dropdown = styled.div`
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding-right: 16px;
+    background-color: #fff;
+    border-radius: 28px;
+`
+const Input = styled.input`
+    font-size: 14px;
+    padding: 14px 0 14px 16px;
+    background-color: transparent;
+
+    &::placeholder {
+        color:rgba(71, 71, 77, .64);
+        font-size: 14px;
+        line-height: 1.16;
+        transition: ${theme.transition};
+    }
+            
+    &:focus::placeholder {
+        color:rgba(71, 71, 77, .24); 
+    }
+    // ${isSimple && 'pointer-events: none;'}
+`
 
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -53,16 +84,16 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
   };
 
   const handleSelect = (value, type, index) => {
-    if(!isSimple) {
+    // if(!isSimple) {
       setSelectedValue(value);
       setQuery(value); // Подставляем выбранное значение в инпут
       setIsOpen(false); // Закрыть список после выбора
       setShowFullList(true); // Показывать полный список после выбора
-    } else {
-      setSelectedValue(value);
-      setQuery(value);
-      setShowFullList(true);
-    }
+    // } else {
+    //   setSelectedValue(value);
+    //   setQuery(value);
+    //   setShowFullList(true);
+    // }
     if(handleFilterChange) {
       handleFilterChange(keys[index], type);
     //   console.log('asfas', keys[index], type)
@@ -101,23 +132,16 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
 
   return (
     <div 
-      className={css`
-        position: relative;
-        ${isSimple && 'cursor: pointer;'}
-      `}
+    //   className={css`
+    //     position: relative;
+    //     // ${isSimple && 'cursor: pointer;'}
+    //   `}
+	  style={{position: 'relative'}}
       ref={dropdownRef}
-      onClick={()=>{isSimple && setIsOpen(prev => !prev)}}
+    //   onClick={()=>{isSimple && setIsOpen(prev => !prev)}}
     >
-      <div className={css`
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 8px;
-        padding-right: 16px;
-        background-color: #fff;
-        border-radius: 28px;
-      `}>
-        <input
+      <Dropdown>
+        <Input
           ref={inputRef}
           type="text"
           value={query}
@@ -125,34 +149,17 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
           onFocus={handleFocus}
           onKeyDown={handleKeyDown} // Добавляем обработчик нажатия клавиш
           placeholder={placeholder}
-          className={css`
-            font-size: 14px;
-            padding: 14px 0 14px 16px;
-            background-color: transparent;
-
-            &::placeholder {
-              color:rgba(71, 71, 77, .64);
-              font-size: 14px;
-              line-height: 1.16;
-              transition: ${theme.transition};
-            }
-            
-            &:focus::placeholder {
-              color:rgba(71, 71, 77, .24); 
-            }
-            ${isSimple && 'pointer-events: none;'}
-          `}
         />
         <ArrowDown 
           className={css`
             cursor:pointer;
             transition: ${theme.transition};
             transform: rotate(${isOpen ? '-180deg' : '0deg'});
-            ${isSimple && 'pointer-events: none;'}
+            // ${isSimple && 'pointer-events: none;'}
           `} 
           onClick={() => setIsOpen(prev => !prev)} 
         />
-      </div>
+      </Dropdown>
 
       <AnimatePresence>
         {isOpen && (

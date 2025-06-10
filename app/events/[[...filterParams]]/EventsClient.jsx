@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
-import { breadcrumbs, Container, input, pagePromo, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, breadcrumbs, Container, input, pagePromo, pageTitle } from "@/styles/ui";
 import { Filter } from '@/components/Filter/Filter';
 import { EventsFiltered } from '@/components/EventsFiltered';
 import { Form } from '@/components/Form';
@@ -52,10 +52,10 @@ export default function EventsClient({ params }) {
 		<>
 			<div className={pagePromo}>
 				<Container>
-					<div className={breadcrumbs}>
+					<Breadcrumbs>
 						<Link href="/">Главная</Link>
 						<p>{pageH1}</p>
-					</div>
+					</Breadcrumbs>
 					<h1 className={pageTitle}>{pageH1}</h1>
 
 					<form onSubmit={handleSubmit} className={css`

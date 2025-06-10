@@ -85,22 +85,22 @@ export const FilterOnMain = ({full, setEvents}) => {
 
     return (
         <AnimatedFilterBlock
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
+                // initial={{ opacity: 0 }}
+                // animate={{ opacity: 1 }}
+                // transition={{ duration: 0.3 }} //TODO Удалить появление?
                 >
                     <FilterItem>
-                      <DropdownInput options={filtersData && filtersData.subjects} handleFilterChange={handleFilterChange} type={'direction'} placeholder={'Тематика'} />
+                      <DropdownInput options={filtersData && filtersData.subjects} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'direction'} placeholder={'Тематика'} />
                     </FilterItem>
                     <FilterItem>
-                      <DropdownInput options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} type={'city'} placeholder={'Город'} />
+                      <DropdownInput options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'city'} placeholder={'Город'} />
                     </FilterItem>
                     <FilterItem>
-                      <DropdownInput options={filtersData && filtersData.formats} handleFilterChange={handleFilterChange} type={'format'} placeholder={'Формат'} />
+                      <DropdownInput options={filtersData && filtersData.formats} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'format'} placeholder={'Формат'} />
                     </FilterItem>
                     
-                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} setStoreDate={handleStartDateChange} type={'start'} />
-                    <Datepicker full={full} title={'Окончание'} handleFilterChange={handleFilterChange} setStoreDate={handleEndDateChange} type={'end'} fixmob={true} /> {/*TODO Передалать на экран*/}
+                    <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} setStoreDate={handleStartDateChange} filterValues={filterValues} type={'start'} />
+                    <Datepicker full={full} title={'Окончание'} handleFilterChange={handleFilterChange} setStoreDate={handleEndDateChange} filterValues={filterValues} type={'end'} fixmob={true} /> {/*TODO Передалать на экран*/}
 
                     {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>
 						<span>Найти</span>

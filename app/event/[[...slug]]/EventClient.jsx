@@ -1,6 +1,6 @@
 "use client"
 
-import { breadcrumbs, Button, container, pagePromo, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, breadcrumbs, Button, container, pagePromo, pageTitle } from "@/styles/ui";
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
@@ -132,19 +132,16 @@ export default function EventClient({ params }) {
 		& > h2 {
 			font-size: 24px;
 			line-height: 1.34;
-			font-weight: normal;
 		}
 		& > h3 {
 			font-size: 20px;
 			font-weight: 500;
 			line-height: 1.4;
-			font-weight: normal;
 		}
 		& > h4 {
 			font-size: 18px;
 			font-weight: 500;
 			line-height: 1.36;
-			font-weight: normal;
 		}
 		& > ul {
 			padding-left: 20px;
@@ -174,11 +171,11 @@ export default function EventClient({ params }) {
 		{/* <DocumentDescription value={decodeHtmlEntities(seoDescription)} /> */}
 			<div className={pagePromo}>
 				<div className={container}>
-					<div className={breadcrumbs}>
+					<Breadcrumbs>
 						<Link href="/">Главная</Link>
 						<Link href="/events">Мероприятия</Link>
 						<p>{pageInfo && pageInfo.data.post_title}</p>
-					</div>
+					</Breadcrumbs>
 					{pageInfo && <h1 className={pageTitle}>{pageInfo.data.post_title}</h1> }
 					<div className={promoThemes}>
 						<p>Тематика:</p>

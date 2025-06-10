@@ -348,36 +348,36 @@ export const breadcrumbs = css`
 `;
 
 export const Breadcrumbs = styled.div`
-  margin-bottom: 16px;
-  display: flex;
-  gap: 6px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  max-width: calc(100vw - 30px);
+	margin-bottom: 16px;
+	display: flex;
+	gap: 6px;
+	flex-wrap: nowrap;
 
-  @media (max-width: 575px) {
-    margin-bottom: 32px;
-  }
+	@media (max-width: 575px) {
+		margin-bottom: 32px;
+	}
 
-  a {
-    font-size: 14px;
-    color: #B5B7B9;
-    line-height: 1.16;
-    min-width: max-content;
+	a {
+		font-size: 14px;
+		color: #B5B7B9;
+		line-height: 1.16;
+		min-width: max-content;
+		white-space: nowrap;
 
-    &::after {
-      content: "/";
-      padding-left: 6px;
-    }
-  }
+		&::after {
+			content: "/";
+			padding-left: 6px;
+		}
+	}
 
-  p {
-    color: #6C6C71;
-    font-size: 14px;
-    line-height: 1.16;
-    min-width: max-content;
-  }
+	p {
+		color: #6C6C71;
+		font-size: 14px;
+		line-height: 1.16;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 `;
 
 //TODO Удалить просто стиль

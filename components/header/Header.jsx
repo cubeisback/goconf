@@ -246,7 +246,7 @@ export const Header = () => {
         </NavWrapper>
         }
         <RightSection>
-          {width > 575 && 
+          {/* {width > 575 && 
           <SearchWrapper
           onClick={()=>{setSearchOpened(true)}}
           ref={searchRef}
@@ -260,7 +260,7 @@ export const Header = () => {
             </SearchIconWrapper>
             
           </SearchWrapper>
-          }
+          } */}
           {width > 768 && 
             <Link href="/lk/add">
               <Button>
@@ -381,7 +381,7 @@ export const Header = () => {
           gap: 32px;
           padding: 24px 16px;
         `}>
-          <div className={css`
+          {/* <div className={css`
                                   background-color: #fff;
                                   border-radius: 28px;
                                   padding: 14px 16px;
@@ -399,7 +399,7 @@ export const Header = () => {
                               `}>
                                   <input className={cx(input, css`padding: 0 4px;`)} type="text" placeholder='Поиск по мероприятиям' />
                                   <SearchIcon className={css`cursor: pointer;`} />
-                              </div>
+                              </div> */}
             <Link href="/events" onClick={()=>setBurger(false)}>
 			<DoubleLink>
               <span>Мероприятия</span><span>Мероприятия</span>
