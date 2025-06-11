@@ -335,14 +335,14 @@ export const Formats = () => {
                         }}
                         spaceBetween={26}
 
-                        breakpoints={{
-                            640: {
-                                slidesPerView: 2,
-                            },
-                            1024: {
-                              slidesPerView: 3,
-                            },
-                        }}
+                        // breakpoints={{
+                        //     640: {
+                        //         slidesPerView: 2,
+                        //     },
+                        //     1024: {
+                        //       slidesPerView: 3,
+                        //     },
+                        // }}
                 className={css`
                   padding: 0 32px 40px;
                   `}
