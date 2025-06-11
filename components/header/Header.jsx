@@ -35,7 +35,7 @@ const HeaderBlock = styled.header`
     z-index: 10;
     max-width: 100vw;
 
-    @media(max-width: 1439px) {
+    @media(max-width: 1199px) {
     	padding: 10px 32px;
     }
     @media(max-width: 1023px) {
@@ -221,7 +221,7 @@ export const Header = () => {
 				<LogoImg />
 			</Link>
 		</Logo>
-        {width > 1439 &&
+        {width > 1199 &&
         <NavWrapper $searchOpened={searchOpened}>
             <Link href="/events" >
 				<DoubleLink>
@@ -298,7 +298,7 @@ export const Header = () => {
 			}
           </div>
           }
-          {width < 1440 && 
+          {width < 1200 && 
           <Burger
 			$burger={burger}
           	onClick={()=>setBurger(prev => !prev)}
