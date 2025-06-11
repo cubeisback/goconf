@@ -159,6 +159,7 @@ export const ButtonMore = styled.div`
                         border: 2px solid ${({ theme }) => theme.colors.purple};
                         background-color: #fff;
                         width: max-content;
+                        text-align: center;
                         
                         line-height: 1.28;
                         cursor: pointer;
