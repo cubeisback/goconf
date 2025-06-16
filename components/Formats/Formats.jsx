@@ -313,6 +313,7 @@ export const Formats = () => {
 
 //             </div>
 //             : 
+<div style={{padding: '0 32px 40px'}}>
             <Swiper 
               modules={[Navigation]} 
                 slidesPerView='auto'
@@ -344,25 +345,26 @@ export const Formats = () => {
                         //     },
                         // }}
                 className={css`
-                  padding: 0 32px 40px;
+                //   padding: 0 32px 40px;
                   `}
             >
-                        {/* {formatItems && formatItems.map((item, index) => ( */}
-                        {customItems && customItems.map((item, index) => (
+                        {formatItems && formatItems.map((item, index) => (
+                        // {customItems && customItems.map((item, index) => (
                             <SwiperSlide key={index} className={css`
-                                max-width: 224px;
+                                max-width: 222px;
                                 // padding: 0 10px; 
                             `}>
                             <Link 
-                            href=''
-                            // href={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`} 
+                            // href=''
+                            href={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`} 
                             className={css`
-                                max-width: 224px;
+                                max-width: 222px;
                                 // min-width: 224px;
                                 overflow: hidden;
                                 position: relative;
                             `}>
-                                <Image src={item.image} alt="" style={{borderRadius: 24}} />
+								<img src={item.img} alt="" />
+                                {/* <Image src={item.img} width={224} height={100} alt="" style={{borderRadius: 24}} /> */}
                                 {/* <div className={css`
                                     position: absolute;
                                     left: 0;
@@ -392,11 +394,14 @@ export const Formats = () => {
                                         width: max-content;
                                     `}>{item.count}</div>
                                 </div> */}
-                                <div style={{fontSize: 18, fontWeight: 500, lineHeight: 1.36, marginTop: 16}}>{item.title}</div>
+                                <div style={{fontSize: 18, fontWeight: 500, lineHeight: 1.36, marginTop: 16}} dangerouslySetInnerHTML={{
+                                        __html: item.name.replace(/\r\n/g, ''),
+                                      }}></div>
                             </Link>
                             </SwiperSlide>
                         ))}
             </Swiper>
+			</div>
             }
 </div>
 </Container>

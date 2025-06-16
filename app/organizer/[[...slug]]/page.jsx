@@ -16,6 +16,7 @@ import { getApiUrl } from "@/functions/functions";
 const Organizer = () => {
 	const { slug } = useParams();
 	const [pageInfo, setPageInfo] = useState(null);
+	const [orgEvents, setOrgEvens] = useState(null);
 	useEffect(() => {
 		if (!slug) return;
 	
@@ -23,7 +24,8 @@ const Organizer = () => {
 		  .get(getApiUrl(`/backend/wp-json/org/v2/simple/?slug=${slug}`))
 		  .then((response) => {
 			setPageInfo(response.data);
-			console.log('организатор ', response.data);
+			setOrgEvens(response.data["similar-events"])
+			console.log('организатор ', response.data["similar-events"]);
 		  })
 		  .catch((error) => {
 			console.log(error);
@@ -152,14 +154,20 @@ const Organizer = () => {
                             </div>
                             </div>
                             
-                            <Button green>Перейти на сайт</Button>
+                            <Button green>
+								<p>
+									<span>Перейти на сайт</span>
+									<span>Перейти на сайт</span>
+								</p>
+							</Button>
                         </motion.div>
                     </div>
                   
                 </Container>
             </div>
-
-            <MainEvents similar={true} />
+			
+			{orgEvents && <MainEvents similar={true} events={orgEvents} />}
+            
 
             <Form />
         </>

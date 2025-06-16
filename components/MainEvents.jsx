@@ -19,7 +19,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
     const [nearEvents, setNearEvents] = useState(null)
    
     useEffect(() => {
-        // if (events === undefined || events === null) {
+        if (events === undefined || events === null) {
             if(similar) {
                 axios
                 .get(getApiUrl(`/backend/wp-json/events/v2/similar-events/?id=${id}`))
@@ -39,9 +39,9 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                   console.log(error);
                 });
             }
-        // } else {
-        //   setNearEvents(events);
-        // }
+        } else {
+          setNearEvents(events);
+        }
       }, [similar, id]);
 
     return (

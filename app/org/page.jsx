@@ -71,11 +71,6 @@ const Org = () => {
                         line-height: 1.4;
                         text-align: center;
 
-                        @media(max-width: 575px) {
-                            font-size: 18px;
-                            line-height: 1.2;
-                        }
-
                         span {
                             color: #8553F9;
                             font-weight: 500;
@@ -86,7 +81,12 @@ const Org = () => {
                                 display: none;
                             }
                         }
-                    `}>Платные опции доступны всем организаторам, зарегистрированным на&nbsp;сайте.<br/> После регистрации вам доступна бесплатная версия карточки мероприятия (<span>тариф Базовый</span>)</div>
+
+						@media(max-width: 767px) {
+							font-size: 16px;
+							line-height: 1.22;
+						}
+                    `}>После регистрации на&nbsp;нашем сайте вы&nbsp;можете бесплатно размещать <b>неограниченное количество</b> бизнес-мероприятий. Все события проходят предварительную модерацию и&nbsp;появляются в&nbsp;каталоге с&nbsp;пометкой <span>&laquo;Базовый&raquo;</span>&nbsp;&mdash; это бесплатная версия страницы мероприятия.</div>
                 </Container>
             </div>
 
@@ -103,9 +103,25 @@ const Org = () => {
                         line-height: 1.12;
                         font-family: Impact;
                         text-align: center;
-                        margin-bottom: 56px;    
-                    `}>Тарифы</div>
-                    <div className={css`
+                        margin-bottom: 24px;    
+                    `}>Карточка мероприятия</div>
+					<div className={css`
+						text-align: center;
+						font-size: 20px;
+						line-height: 1.4;
+						margin-bottom: 48px;
+
+						span {
+							color: #8553F9;
+							font-weight: 500;
+						}
+
+						@media(max-width: 767px) {
+							font-size: 16px;
+							line-height: 1.22;
+						}
+					`}>Если вы&nbsp;хотите получать больше внимания, переходов на&nbsp;ваш сайт и&nbsp;прямые заявки от&nbsp;участников, подключите тариф <span>&laquo;Расширенный&raquo;</span>&nbsp;&mdash; он&nbsp;открывает доступ ко&nbsp;всем возможностям нашего сервиса.</div>
+                    {/* <div className={css`
                         display: flex;
                         gap: 4px;
                         padding: 4px;
@@ -122,20 +138,23 @@ const Org = () => {
                         <div className={cx(tabItem, active === 1 && tabItemActive)} onClick={()=>setActive(1)}>1 месяц</div>
                         <div className={cx(tabItem, active === 2 && tabItemActive)} onClick={()=>setActive(2)}>3 месяца <span>- 10%</span></div>
                         <div className={cx(tabItem, active === 3 && tabItemActive)} onClick={()=>setActive(3)}>6 месяцев <span>- 15%</span></div>
-                    </div>
+                    </div> */}
 
                     <div className={css`
                         display: flex;
+						justify-content: center;
                         gap: 32px;
-                        margin-bottom: 64px;
+                        margin-bottom: 90px;
 
                         @media(max-width: 991px) {
                             flex-wrap: wrap;
                         }
                     `}>
                         <div className={css`
-                            flex: 0 1 calc(33.333333% - 21.333333px);
-                            max-width: calc(33.333333% - 21.333333px);
+                            // flex: 0 1 calc(33.333333% - 21.333333px);
+                            // max-width: calc(33.333333% - 21.333333px);
+							flex: 0 1 400px;
+							max-width: 400px;
                             padding: 40px 24px 24px;
                             border-radius: 28px;
                             border: 2px solid #8553F9;
@@ -197,18 +216,23 @@ const Org = () => {
                                     }
                                 }
                             `}>
-                                {/* <div>Что входит</div> */}
-                                <p>Добавление одного события</p>
                                 <p>Текстовое описание, обложка, дата, место</p>
                                 <p className={css`color: #D7DADD; &::before {content: none!important;}`}>Ссылка на сайт с UTM</p>
                                 <p className={css`color: #D7DADD; &::before {content: none!important;}`}>Аналитика мероприятия</p>
                                 <p className={css`color: #D7DADD; &::before {content: none!important;}`}>Добавление фото/видео материалов</p>
                             </div>
-                            <Button className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>Попробовать</Button>
+                            <Button style={{margin: '0 auto'}} className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>
+								<p>
+									<span>Попробовать</span>
+									<span>Попробовать</span>
+								</p>
+							</Button>
                         </div>
                         <div className={css`
-                            flex: 0 1 calc(33.333333% - 21.333333px);
-                            max-width: calc(33.333333% - 21.333333px);
+                            // flex: 0 1 calc(33.333333% - 21.333333px);
+                            // max-width: calc(33.333333% - 21.333333px);
+							flex: 0 1 400px;
+							max-width: 400px;
                             padding: 40px 24px 24px;
                             border-radius: 28px;
                             border: 2px solid #8553F9;
@@ -229,14 +253,14 @@ const Org = () => {
                                 font-size: 24px;
                                 line-height: 1.34;
                                 margin-bottom: 24px;
-                            `}>Стандарт</div>
+                            `}>Расширенный</div>
                             <div className={css`
                                 margin-bottom: 40px;
                                 text-align: center;
                                 font-size: 28px;
                                 font-weight: 500;
                                 line-height: 1.2;
-                            `}>2 500 Р. / мес {active === 2 && <p className={css`color: #B5B7B9;text-align: center;font-size: 24px;font-weight: 500;line-height: 1.2;text-decoration: line-through;`}>10000 Р. / мес</p>}</div>
+                            `}>5&nbsp;000&nbsp;₽ {active === 2 && <p className={css`color: #B5B7B9;text-align: center;font-size: 24px;font-weight: 500;line-height: 1.2;text-decoration: line-through;`}>10000 Р. / мес</p>}</div>
                             <div className={css`
                                 border-radius: 16px;
                                 background-color: #fff;
@@ -271,15 +295,20 @@ const Org = () => {
                                 }
                             `}>
                                 {/* <div>Что входит</div> */}
-                                <p>Добавление одного события</p>
+                                {/* <p>Добавление одного события</p> */}
                                 <p>Текстовое описание, обложка, дата, место</p>
                                 <p>Ссылка на сайт с UTM</p>
                                 <p>Аналитика мероприятия</p>
                                 <p>Добавление фото/видео материалов</p>
                             </div>
-                            <Button className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>Попробовать</Button>
+                            <Button style={{margin: '0 auto'}} className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>
+								<p>
+									<span>Попробовать</span>
+									<span>Попробовать</span>
+								</p>
+							</Button>
                         </div>
-                        <div className={css`
+                        {/* <div className={css`
                             flex: 0 1 calc(33.333333% - 21.333333px);
                             max-width: calc(33.333333% - 21.333333px);
                             padding: 40px 24px 24px;
@@ -343,7 +372,6 @@ const Org = () => {
                                     }
                                 }
                             `}>
-                                {/* <div>Что входит</div> */}
                                 <p>Подписка на <b>3 мероприятия</b></p>
                                 <p>Текстовое описание, обложка, дата, место</p>
                                 <p>Ссылка на сайт с UTM</p>
@@ -351,16 +379,26 @@ const Org = () => {
                                 <p>Добавление фото/видео материалов</p>
                             </div>
                             <Button className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>Попробовать</Button>
-                        </div>
+                        </div> */}
                     </div>
                     
                     <div className={css`
-                        margin-bottom: 48px;
+                        margin-bottom: 24px;
                         font-family: Impact;
                         font-size: 36px;
                         line-height: 1.12;
                         text-align: center;
                     `}>Интересные события</div>
+					<div className={css`
+						text-align: center;
+						font-size: 20px;
+						margin-bottom: 48px;
+
+						@media(max-width: 767px) {
+							font-size: 16px;
+							line-height: 1.22;
+						}
+					`}>Также, мы&nbsp;предлагаем дополнительные опции продвижения,<br/> которые помогут вывести ваше событие в&nbsp;топ и&nbsp;привлечь именно ту&nbsp;аудиторию, которая вам нужна.</div>
                     <div className={css`
                         border-radius: 28px;
                         border: 2px solid #8553F9;
@@ -402,12 +440,18 @@ const Org = () => {
                                     font-size: 24px;
                                 }
                             `}>от 15 000 Р. / неделю</div>
-                            <Button className={css`@media(max-width: 991px) {width: 100%;}`}>Попробовать</Button>
+                            <Button className={css`@media(max-width: 991px) {width: 100%;}`}>
+								<p>
+									<span>Попробовать</span>
+									<span>Попробовать</span>
+								</p>
+							</Button>
                         </div>
                         <div className={css`
-                            flex: 0 1 605px;
-                            max-width: 605px;
+                            flex: 0 1 661px;
+                            max-width: 661px;
                             position: relative;
+							margin-bottom: -102px;
 
                             @media(max-width: 1199px) {
                                 flex: 0 1 500px;
@@ -416,6 +460,7 @@ const Org = () => {
                             @media(max-width: 991px) {
                                 flex: 0 1 100%;
                                 max-width: 100%;
+								margin-bottom: -60px;
                             }
 
                             &::before {
@@ -433,6 +478,10 @@ const Org = () => {
                                     top: -60px;
                                 }
                             }
+
+							& > img {
+								height: auto!important;
+							}
                         `}>
 							<Image src={example_img} alt="" />
                         </div>
