@@ -157,7 +157,9 @@ export const Modal = ({ isOpen, onClose }) => {
 	const [lastName, setLastName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
+	// const [confirmPassword, setConfirmPassword] = useState("");
+
+	const [errors, setErrors] = useState({});
 
 	// const [regResponse, setRegResponse] = useState(null)
 
@@ -165,11 +167,15 @@ export const Modal = ({ isOpen, onClose }) => {
 	const handleSubmit = async(e) => {
 		e.preventDefault();
 
-		// Простейшая валидация
-		// if (password !== confirmPassword) {
-		// alert("Пароли не совпадают");
-		// return;
-		// }
+		// const newErrors = {};
+		// if (!firstName.trim()) newErrors.firstName = "Введите имя";
+		// if (!lastName.trim()) newErrors.lastName = "Введите фамилию";
+		// if (!email.trim()) newErrors.email = "Введите email";
+		// if (!password.trim()) newErrors.password = "Введите пароль";
+
+		// setErrors(newErrors);
+
+		
 
 		try {
 			const response = await axios.post(
@@ -177,7 +183,7 @@ export const Modal = ({ isOpen, onClose }) => {
 				firstname: firstName,
 				lastname: lastName,
 				password: password,
-				confirm_password: confirmPassword,
+				// confirm_password: confirmPassword,
 				email: email,
 			});
 
@@ -208,6 +214,7 @@ export const Modal = ({ isOpen, onClose }) => {
 		} catch(error) {
 			console.error("Ошибка регистрации:", error);
 			console.log(error.response?.data?.message)
+			// error.response?.data?.message !== 'Parameter required' && setErrorMessageRegistration(error.response?.data?.message)
 			setErrorMessageRegistration(error.response?.data?.message)
 		}
 	};
@@ -238,6 +245,34 @@ export const Modal = ({ isOpen, onClose }) => {
 			console.error("Ошибка входа или запроса:", error);
 			console.log(error.response?.data?.message)
 			setErrorMessage(error.response?.data?.message)
+		}
+	};
+
+
+
+	const [emailReset, setEmailReset] = useState("");
+
+	const handleSubmitReset = async (e) => {
+		e.preventDefault();
+
+		try {
+			const response = await axios.post(
+			getApiUrl("/backend/wp-json/users/v2/password-reset/"),
+				{
+					email: emailReset,
+				}
+			);
+			console.log("reset", response);
+
+			if (response.status === 200) {
+				// login(response.data.token);
+				// onClose();
+				// setErrorMessage(null)
+			}
+		} catch (error) {
+			console.error("Ошибка восстановления пароля:", error);
+			// console.log(error.response?.data?.message)
+			// setErrorMessage(error.response?.data?.message)
 		}
 	};
 
@@ -356,7 +391,9 @@ export const Modal = ({ isOpen, onClose }) => {
                     <div className={modalTitle}>Зарегистрироваться</div>
                     <form onSubmit={handleSubmit} className={modalForm}>
 						<input type="text" placeholder="Имя" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+						
 						<input type="text" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+						
 						<input type="email" placeholder="Электронная почта" value={email} onChange={(e) => setEmail(e.target.value)} />
 						<PasswordInput text='Пароль' value={password} onChange={setPassword} />
 						{/* <PasswordInput text='Подтверждение пароля' value={confirmPassword} onChange={setConfirmPassword} /> */}
@@ -390,9 +427,9 @@ export const Modal = ({ isOpen, onClose }) => {
                 <>
                   <div className={cx(modalContentTop, css`padding: 40px 40px 8px;`)}>
                     <div className={modalTitle}>Забыли пароль?</div>
-                    <div className={css`font-size: 14px;line-height: 1.16;margin-bottom: 16px;`}>Введите свое имя пользователя или адрес электронной почты, и&nbsp;мы&nbsp;вышлем вам ссылку для сброса пароля.</div>
-                    <form action="" className={modalForm}>
-                      <input type="text" placeholder="Электронная почта или имя пользователя" />
+                    <div className={css`font-size: 14px;line-height: 1.16;margin-bottom: 16px;`}>Введите адрес электронной почты, и&nbsp;мы&nbsp;вышлем вам ссылку для сброса пароля.</div>
+                    <form onSubmit={handleSubmitReset} className={modalForm}>
+                      <input type="email" placeholder="Электронная почта" value={emailReset} onChange={(e) => setEmailReset(e.target.value)} />
                       <div className={css`
                         display: flex;
                         gap: 16px;
@@ -404,7 +441,12 @@ export const Modal = ({ isOpen, onClose }) => {
                           justify-content: center;
                         };
                       `}>
-                        <Button>Сбросить пароль</Button>
+                        <Button $button type="submit">
+							<p>
+								<span>Сбросить пароль</span>
+								<span>Сбросить пароль</span>
+							</p>
+						</Button>
                         <Button className={css`
                           background-color: #fff!important;
                           color: ${theme.colors.purple}!important;

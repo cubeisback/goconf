@@ -11,7 +11,7 @@ import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 
 
-export const MainEvents = ({onPage, similar, id, events}) => {
+export const MainEvents = ({onPage, similar, id, events, orgPage}) => {
     const theme = useTheme();
 
     const [limit, setLimit] = useState(5);
@@ -53,7 +53,7 @@ export const MainEvents = ({onPage, similar, id, events}) => {
             }
         `}>
             <Container>
-                {!onPage && 
+                {!onPage ? 
                 <div className={css`
                     text-align: center;
                     font-family: Impact;
@@ -66,7 +66,18 @@ export const MainEvents = ({onPage, similar, id, events}) => {
                         margin-bottom: 48px;
                     }
                 `}>{similar ? 'Похожие мероприятия' : 'Ближайшие события'}</div> 
-                }
+                :
+				<div className={css`
+                    font-family: Impact;
+                    margin-bottom: 40px;
+                    font-size: 36px;
+                    line-height: 1.15;
+
+                    @media(max-width: 575px) {
+                        font-size: 32px;
+                    }
+				`}>Предстоящие мероприятия</div>
+				}
                 <div className={css`
                     margin-bottom: 32px;
                 `}>

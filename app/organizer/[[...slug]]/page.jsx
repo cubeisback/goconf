@@ -166,7 +166,7 @@ const Organizer = () => {
                 </Container>
             </div>
 			
-			{orgEvents && <MainEvents similar={true} events={orgEvents} />}
+			{orgEvents && <MainEvents similar={true} events={orgEvents} onPage={true} />}
             
 
             <Form />

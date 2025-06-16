@@ -115,6 +115,7 @@ export const Button = styled(ButtonType)`
   color: ${({ green, theme }) => (green ? theme.colors.font : "#fff")};
   width: max-content;
   transition: ${({ theme }) => theme.transition};
+  font-size: 16px;
 
   &:hover {
     background: #fff;
