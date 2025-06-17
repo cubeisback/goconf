@@ -1,15 +1,17 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form } from '@/components/Form';
 import { breadcrumbs, Button, Container, container, pagePromo, pageTitle } from "@/styles/ui";
 import { css, cx } from '@emotion/css';
 import example_img from '/public/images/example.png';
 import Link from 'next/link';
 import Image from 'next/image';
+import axios from 'axios';
+import { getApiUrl } from '@/functions/functions';
 
 const Org = () => {
-    const [active, setActive] = useState(1)
+    const [active, setActive] = useState(1);
 
     const tabItem = css`
         width: 208px;
@@ -57,6 +59,17 @@ const Org = () => {
         }
     `;
 
+	const [orgsData, setOrgsData] = useState(null)
+	useEffect(() => {
+		axios
+			.get(getApiUrl('/backend/wp-json/pages/v2/org/'))
+			.then((response) => {
+				setOrgsData(response.data);
+				console.log('orgs - ', response.data)
+			})
+			.catch(console.error);
+	}, []);
+
     return (
         <>
             <div className={pagePromo}>
@@ -65,7 +78,7 @@ const Org = () => {
                         <Link href="/">Главная</Link>
                         <p>Организаторам</p>
                     </div>
-                    <h1 className={cx(pageTitle, css`text-align:center;`)}>Организаторам</h1>
+                    <h1 className={cx(pageTitle, css`text-align:center;`)}>{orgsData?.title && orgsData.title}</h1>
                     <div className={css`
                         font-size: 20px;
                         line-height: 1.4;
@@ -86,7 +99,7 @@ const Org = () => {
 							font-size: 16px;
 							line-height: 1.22;
 						}
-                    `}>После регистрации на&nbsp;нашем сайте вы&nbsp;можете бесплатно размещать <b>неограниченное количество</b> бизнес-мероприятий. Все события проходят предварительную модерацию и&nbsp;появляются в&nbsp;каталоге с&nbsp;пометкой <span>&laquo;Базовый&raquo;</span>&nbsp;&mdash; это бесплатная версия страницы мероприятия.</div>
+                    `} dangerouslySetInnerHTML={{ __html: orgsData?.content }}></div>
                 </Container>
             </div>
 
@@ -104,7 +117,7 @@ const Org = () => {
                         font-family: Impact;
                         text-align: center;
                         margin-bottom: 24px;    
-                    `}>Карточка мероприятия</div>
+                    `}>{orgsData?.fields?.tariffs?.title}</div>
 					<div className={css`
 						text-align: center;
 						font-size: 20px;
@@ -120,7 +133,7 @@ const Org = () => {
 							font-size: 16px;
 							line-height: 1.22;
 						}
-					`}>Если вы&nbsp;хотите получать больше внимания, переходов на&nbsp;ваш сайт и&nbsp;прямые заявки от&nbsp;участников, подключите тариф <span>&laquo;Расширенный&raquo;</span>&nbsp;&mdash; он&nbsp;открывает доступ ко&nbsp;всем возможностям нашего сервиса.</div>
+					`} dangerouslySetInnerHTML={{ __html: orgsData?.fields?.tariffs?.text }}></div>
                     {/* <div className={css`
                         display: flex;
                         gap: 4px;
@@ -150,7 +163,7 @@ const Org = () => {
                             flex-wrap: wrap;
                         }
                     `}>
-                        <div className={css`
+                        {/* <div className={css`
                             // flex: 0 1 calc(33.333333% - 21.333333px);
                             // max-width: calc(33.333333% - 21.333333px);
 							flex: 0 1 400px;
@@ -294,8 +307,6 @@ const Org = () => {
                                     }
                                 }
                             `}>
-                                {/* <div>Что входит</div> */}
-                                {/* <p>Добавление одного события</p> */}
                                 <p>Текстовое описание, обложка, дата, место</p>
                                 <p>Ссылка на сайт с UTM</p>
                                 <p>Аналитика мероприятия</p>
@@ -307,7 +318,7 @@ const Org = () => {
 									<span>Попробовать</span>
 								</p>
 							</Button>
-                        </div>
+                        </div> */}
                         {/* <div className={css`
                             flex: 0 1 calc(33.333333% - 21.333333px);
                             max-width: calc(33.333333% - 21.333333px);
@@ -380,6 +391,91 @@ const Org = () => {
                             </div>
                             <Button className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>Попробовать</Button>
                         </div> */}
+
+
+						{orgsData?.fields?.tariffs?.items.map(item => (
+							<div className={css`
+                            // flex: 0 1 calc(33.333333% - 21.333333px);
+                            // max-width: calc(33.333333% - 21.333333px);
+							flex: 0 1 400px;
+							max-width: 400px;
+                            padding: 40px 24px 24px;
+                            border-radius: 28px;
+                            border: 2px solid #8553F9;
+                            background-color: #F5F7FA;
+                            display: flex;
+                            flex-direction: column;
+
+                            @media(max-width: 991px) {
+                                flex: 0 1 100%;
+                                max-width: 100%;
+                                padding: 24px 16px;
+                            }
+                        `}>
+                            <div className={css`
+                                color: #8553F9;
+                                text-align: center;
+                                font-family: Impact;
+                                font-size: 24px;
+                                line-height: 1.34;
+                                margin-bottom: 24px;
+                            `}>{item.name}</div>
+                            <div className={css`
+                                margin-bottom: 40px;
+                                text-align: center;
+                                font-size: 28px;
+                                font-weight: 500;
+                                line-height: 1.2;
+                            `}>{item.cost}</div>
+                            <div className={css`
+                                border-radius: 16px;
+                                background-color: #fff;
+                                padding: 16px 24px 24px;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 16px;
+                                color: #47474D;
+                                margin-bottom: 40px;
+                                margin-top: auto;
+
+                                div {
+                                    text-align: center;
+                                    font-size: 18px;
+                                    line-height: 1.36;
+                                }
+
+                                p {
+                                    padding-left: 24px;
+                                    position: relative;
+                                    font-size: 14px;
+
+                                    &::before {
+                                        content: '';
+                                        position: absolute;
+                                        width: 16px;
+                                        height: 16px;
+                                        left: 0;
+                                        top: 0;
+                                        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(%23clip0_9501_15213)"><path d="M16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8Z" fill="%23B3ED73"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.7783 5.74978L7.01386 11.0435L4.23438 8.26408L4.76471 7.73375L6.98523 9.95426L11.2208 5.24805L11.7783 5.74978Z" fill="%23191921"/></g><defs><clipPath id="clip0_9501_15213"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>');
+                                    }
+                                }
+                            `}>
+								{item.props.map(p => (
+									<p>{p}</p>
+								))}
+                                {/* <p>Текстовое описание, обложка, дата, место</p>
+                                <p>Ссылка на сайт с UTM</p>
+                                <p>Аналитика мероприятия</p>
+                                <p>Добавление фото/видео материалов</p> */}
+                            </div>
+                            <Button style={{margin: '0 auto'}} className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>
+								<p>
+									<span>Попробовать</span>
+									<span>Попробовать</span>
+								</p>
+							</Button>
+                        </div>
+						))}
                     </div>
                     
                     <div className={css`
@@ -431,15 +527,15 @@ const Org = () => {
                                     font-size: 18px;
                                     line-height: 1.2;
                                 }
-                            `}>Размещение в сквозном блоке<br/> <span>«Интересные события»</span></div>
-                            <div className={css`font-size: 14px;line-height:1.116;margin-bottom: 40px;`}>Привлекайте дополнительный трафик в карточку вашего события. Блок «Интересные события» размещается на странице каждого мероприятия, опубликованного на сайте. В среднем, размещение события в этом блоке привлекает дополнительно 30% трафика.</div>
+                            `} dangerouslySetInnerHTML={{ __html: orgsData?.fields?.['interesting-events'].text_1 }}></div>
+                            <div className={css`font-size: 14px;line-height:1.116;margin-bottom: 40px;`}>{orgsData?.fields?.['interesting-events'].text_2}</div>
                             <div className={css`
                                 margin-bottom: 16px;font-size:28px;line-height:1.2;
 
                                 @media(max-width: 575px) {
                                     font-size: 24px;
                                 }
-                            `}>от 15 000 Р. / неделю</div>
+                            `}>{orgsData?.fields?.['interesting-events'].text_3}</div>
                             <Button className={css`@media(max-width: 991px) {width: 100%;}`}>
 								<p>
 									<span>Попробовать</span>
@@ -483,7 +579,8 @@ const Org = () => {
 								height: auto!important;
 							}
                         `}>
-							<Image src={example_img} alt="" />
+							{/* <Image src={example_img} alt="" /> */}
+							<img src={orgsData?.fields?.['interesting-events'].image} alt="" />
                         </div>
                     </div>
                 </Container>
