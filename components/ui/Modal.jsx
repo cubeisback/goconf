@@ -12,6 +12,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { getApiUrl } from '@/functions/functions';
 import { useAuthStore } from '@/store/useAuthStore';
+import styled from "@emotion/styled";
 
 const modalBackdrop = css`
   position: fixed;
@@ -141,6 +142,15 @@ const modalTextWithLine = css`
   }
 `;
 
+const Error = styled.div`
+	font-size: 12px;
+	// position: absolute;
+	text-align: center;
+	margin-top: -16px;
+	margin-bottom: -8px;
+	color: #f00;
+`
+
 export const Modal = ({ isOpen, onClose }) => {
   	const theme = useTheme();
 	const login = useAuthStore.getState().login;
@@ -162,6 +172,7 @@ export const Modal = ({ isOpen, onClose }) => {
 	// const [confirmPassword, setConfirmPassword] = useState("");
 
 	const [errors, setErrors] = useState({});
+	const [errorsLogin, setErrorsLogin] = useState({});
 
 	// const [regResponse, setRegResponse] = useState(null)
 
@@ -169,13 +180,13 @@ export const Modal = ({ isOpen, onClose }) => {
 	const handleSubmit = async(e) => {
 		e.preventDefault();
 
-		// const newErrors = {};
-		// if (!firstName.trim()) newErrors.firstName = "Введите имя";
-		// if (!lastName.trim()) newErrors.lastName = "Введите фамилию";
-		// if (!email.trim()) newErrors.email = "Введите email";
-		// if (!password.trim()) newErrors.password = "Введите пароль";
+		const newErrors = {};
+		if (!firstName.trim()) newErrors.firstName = "Введите имя";
+		if (!lastName.trim()) newErrors.lastName = "Введите фамилию";
+		if (!email.trim()) newErrors.email = "Введите email";
+		if (!password.trim()) newErrors.password = "Введите пароль";
 
-		// setErrors(newErrors);
+		setErrors(newErrors);
 
 		
 
@@ -207,6 +218,10 @@ export const Modal = ({ isOpen, onClose }) => {
 					if (response.status === 200) {
 						login(response.data.token);
 						onClose();
+						setFirstName('')
+						setLastName('')
+						setEmail('')
+						setPassword('')
 					}
 				} catch (error) {
 					console.log(error.response?.data?.message)
@@ -216,8 +231,8 @@ export const Modal = ({ isOpen, onClose }) => {
 		} catch(error) {
 			console.error("Ошибка регистрации:", error);
 			console.log(error.response?.data?.message)
-			// error.response?.data?.message !== 'Parameter required' && setErrorMessageRegistration(error.response?.data?.message)
-			setErrorMessageRegistration(error.response?.data?.message)
+			error.response?.data?.message !== 'Parameter required' && setErrorMessageRegistration(error.response?.data?.message)
+			// setErrorMessageRegistration(error.response?.data?.message)
 		}
 	};
 
@@ -227,6 +242,12 @@ export const Modal = ({ isOpen, onClose }) => {
 
 	const handleSubmitLogin = async (e) => {
 		e.preventDefault();
+
+		const newErrors = {};
+		if (!emailLogin.trim()) newErrors.emailLogin = "Введите email";
+		if (!passwordLogin.trim()) newErrors.passwordLogin = "Введите пароль";
+
+		setErrorsLogin(newErrors);
 
 		try {
 			const response = await axios.post(
@@ -338,7 +359,9 @@ export const Modal = ({ isOpen, onClose }) => {
 
                   <form onSubmit={handleSubmitLogin} className={modalForm}>
                     <input type="email" placeholder="Электронная почта" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} />
+					{errorsLogin.emailLogin && <Error>{errorsLogin.emailLogin}</Error>}
                     <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} />
+					{errorsLogin.passwordLogin && <Error>{errorsLogin.passwordLogin}</Error>}
                     <div className={cx(checkBox, css`
                       label::before {
                         border-color: rgba(16, 16, 16, 0.2);
@@ -393,11 +416,13 @@ export const Modal = ({ isOpen, onClose }) => {
                     <div className={modalTitle}>Зарегистрироваться</div>
                     <form onSubmit={handleSubmit} className={modalForm}>
 						<input type="text" placeholder="Имя" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-						
+						{errors.firstName && <Error>{errors.firstName}</Error>}
 						<input type="text" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-						
+						{errors.lastName && <Error>{errors.lastName}</Error>}
 						<input type="email" placeholder="Электронная почта" value={email} onChange={(e) => setEmail(e.target.value)} />
+						{errors.email && <Error>{errors.email}</Error>}
 						<PasswordInput text='Пароль' value={password} onChange={setPassword} />
+						{errors.password && <Error>{errors.password}</Error>}
 						{/* <PasswordInput text='Подтверждение пароля' value={confirmPassword} onChange={setConfirmPassword} /> */}
 						<Button $button type="submit" style={{width: '100%'}} onClick={handleSubmit}>
 							<p>
