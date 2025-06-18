@@ -19,6 +19,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
    
     useEffect(() => {
         setNearEvents(events);
+		console.log('filtered events', events)
     }, [events]);
 
     return (

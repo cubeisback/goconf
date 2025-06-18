@@ -51,9 +51,11 @@ const modalForm = css`
     padding: 16px;
     border: 1px solid #D7DADD;
     border-radius: 28px;
+	font-size: 14px;
 
     &::placeholder {
       color: rgba(71, 71, 77, .64);
+	  font-size: 14px;
     }
   }
 `;

@@ -221,6 +221,7 @@ export const input = css`
   background-color: #fff;
   border-radius: 28px;
   width: 100%;
+  font-size: 14px;
 
   &::placeholder {
     font-size: 14px;

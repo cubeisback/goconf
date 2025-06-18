@@ -34,6 +34,7 @@ export const MainEvents = ({onPage, similar, id, events, orgPage}) => {
                 .get(getApiUrl("/backend/wp-json/events/v2/near-events/"))
                 .then((response) => {
                   setNearEvents(response.data.items);
+				  console.log('near-events', response.data.items)
                 })
                 .catch((error) => {
                   console.log(error);
