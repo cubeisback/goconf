@@ -53,6 +53,7 @@ const modalForm = css`
     border: 1px solid #D7DADD;
     border-radius: 28px;
 	font-size: 14px;
+	transition: .3s ease-in-out;
 
     &::placeholder {
       color: rgba(71, 71, 77, .64);
@@ -144,11 +145,10 @@ const modalTextWithLine = css`
 
 const Error = styled.div`
 	font-size: 12px;
-	// position: absolute;
-	text-align: center;
 	margin-top: -16px;
 	margin-bottom: -8px;
-	color: #f00;
+	color: #FC1234;
+	padding-left: 10px;
 `
 
 export const Modal = ({ isOpen, onClose }) => {
@@ -162,8 +162,6 @@ export const Modal = ({ isOpen, onClose }) => {
 	const yandexRedirectUri = process.env.NEXT_PUBLIC_YANDEX_REDIRECT_URI;
 	// href="https://oauth.yandex.ru/authorize?response_type=code&client_id=27b4e4a2dfa544ec9bc5598b73516a32&redirect_uri=http://localhost:3000/social-login/yandex"
 	const yandexAuthUrl = `https://oauth.yandex.ru/authorize?response_type=code&client_id=27b4e4a2dfa544ec9bc5598b73516a32&redirect_uri=${encodeURIComponent(yandexRedirectUri)}`;
-
-
 
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -216,6 +214,7 @@ export const Modal = ({ isOpen, onClose }) => {
 					);
 
 					if (response.status === 200) {
+						console.log('дата на входе после регистрации',response)
 						login(response.data.token);
 						onClose();
 						setFirstName('')
@@ -224,14 +223,14 @@ export const Modal = ({ isOpen, onClose }) => {
 						setPassword('')
 					}
 				} catch (error) {
-					console.log(error.response?.data?.message)
+					console.log('ошибка входа после регистрации',error.response?.data?.message)
 				}
 				//пробный логин после авторизации
 			}
 		} catch(error) {
 			console.error("Ошибка регистрации:", error);
 			console.log(error.response?.data?.message)
-			error.response?.data?.message !== 'Parameter required' && setErrorMessageRegistration(error.response?.data?.message)
+			error.response?.data?.message === 'Извините, этот адрес email уже используется!' && setErrorMessageRegistration(error.response?.data?.message)
 			// setErrorMessageRegistration(error.response?.data?.message)
 		}
 	};
@@ -267,7 +266,8 @@ export const Modal = ({ isOpen, onClose }) => {
 		} catch (error) {
 			console.error("Ошибка входа или запроса:", error);
 			console.log(error.response?.data?.message)
-			setErrorMessage(error.response?.data?.message)
+			// setErrorMessage(error.response?.data?.message)
+			error.response?.data?.message === 'Неверный email или пароль.' && setErrorMessage(error.response?.data?.message)
 		}
 	};
 
@@ -317,6 +317,21 @@ export const Modal = ({ isOpen, onClose }) => {
     }
   `;
 
+const ErrorWrapper = (message) => {
+	return (
+		<AnimatePresence>
+			<motion.div 
+				initial={{ opacity: 0, x: -20, }}
+				animate={{ opacity: 1, x: 0 }}
+				exit={{ opacity: 0, x: 0 }}
+				transition={{ duration: .3 }}
+				>
+				<Error>{message}</Error>
+			</motion.div>
+		</AnimatePresence>
+	)
+}
+
   const [view, setView] = useState(1);
     return (
       <>
@@ -358,10 +373,15 @@ export const Modal = ({ isOpen, onClose }) => {
                   </div>
 
                   <form onSubmit={handleSubmitLogin} className={modalForm}>
-                    <input type="email" placeholder="Электронная почта" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} />
-					{errorsLogin.emailLogin && <Error>{errorsLogin.emailLogin}</Error>}
-                    <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} />
-					{errorsLogin.passwordLogin && <Error>{errorsLogin.passwordLogin}</Error>}
+                    <input type="email" placeholder="Электронная почта" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} style={errorsLogin.emailLogin && {borderColor: '#FC1234'}} />
+					{errorsLogin.emailLogin && 
+						ErrorWrapper(errorsLogin.emailLogin)
+					}
+                    {/* <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} style={errorsLogin.passwordLogin && {borderColor: '#FC1234'}} /> */}
+					<input type="password" placeholder="Пароль" value={passwordLogin} onChange={(e) => setPasswordLogin(e.target.value)} style={errorsLogin.passwordLogin && {borderColor: '#FC1234'}} />
+					{errorsLogin.passwordLogin && 
+						ErrorWrapper(errorsLogin.passwordLogin)
+					}
                     <div className={cx(checkBox, css`
                       label::before {
                         border-color: rgba(16, 16, 16, 0.2);
@@ -392,7 +412,7 @@ export const Modal = ({ isOpen, onClose }) => {
 							<span>Войти</span>
 						</p>
 					</Button>
-					{errorMessage && <p style={{color: '#f00', fontSize: 14, textAlign: 'center'}}>{errorMessage}</p>}
+					{errorMessage && <p style={{color: '#FC1234', fontSize: 14, textAlign: 'center'}}>{errorMessage}</p>}
                   </form>
 				  
 
@@ -407,7 +427,7 @@ export const Modal = ({ isOpen, onClose }) => {
                 
                 <div className={modalContentBottom}>
                   <div className={css`font-size: 14px;line-height: 1.16;`}>Еще нет аккаунта?&nbsp;<div className={css`color: ${theme.colors.purple};display: inline;cursor:pointer;`} onClick={()=>setView(2)}>Зарегистрироваться</div></div>
-                  <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
+                  <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/approval" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/privacy" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
                 </div>
                 </>
                 : view === 2 ?
@@ -415,14 +435,23 @@ export const Modal = ({ isOpen, onClose }) => {
                   <div className={modalContentTop}>
                     <div className={modalTitle}>Зарегистрироваться</div>
                     <form onSubmit={handleSubmit} className={modalForm}>
-						<input type="text" placeholder="Имя" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-						{errors.firstName && <Error>{errors.firstName}</Error>}
-						<input type="text" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-						{errors.lastName && <Error>{errors.lastName}</Error>}
-						<input type="email" placeholder="Электронная почта" value={email} onChange={(e) => setEmail(e.target.value)} />
-						{errors.email && <Error>{errors.email}</Error>}
-						<PasswordInput text='Пароль' value={password} onChange={setPassword} />
-						{errors.password && <Error>{errors.password}</Error>}
+						<input type="text" placeholder="Имя" value={firstName} onChange={(e) => setFirstName(e.target.value)} style={errors.firstName && {borderColor: '#FC1234'}} />
+						{errors.firstName && 
+							ErrorWrapper(errors.firstName)
+						}
+						<input type="text" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} style={errors.lastName && {borderColor: '#FC1234'}} />
+						{errors.lastName && 
+							ErrorWrapper(errors.lastName)
+						}
+						<input type="email" placeholder="Электронная почта" value={email} onChange={(e) => setEmail(e.target.value)} style={errors.email && {borderColor: '#FC1234'}} />
+						{errors.email && 
+							ErrorWrapper(errors.email)
+						}
+						{/* <PasswordInput text='Пароль' value={password} onChange={setPassword} /> */}
+						<input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} style={errors.password && {borderColor: '#FC1234'}} />
+						{errors.password && 
+							ErrorWrapper(errors.password)
+						}
 						{/* <PasswordInput text='Подтверждение пароля' value={confirmPassword} onChange={setConfirmPassword} /> */}
 						<Button $button type="submit" style={{width: '100%'}} onClick={handleSubmit}>
 							<p>
@@ -431,7 +460,7 @@ export const Modal = ({ isOpen, onClose }) => {
 							</p>
 						</Button>
 					
-						{errorMessageRegistration && <p style={{color: '#f00', fontSize: 14, textAlign: 'center'}}>{errorMessageRegistration}</p>}
+						{errorMessageRegistration && <p style={{color: '#FC1234', fontSize: 14, textAlign: 'center'}}>{errorMessageRegistration}</p>}
                     </form>
                     <div className={modalTextWithLine}>
                       <p>Зарегистрироваться через</p>
@@ -447,7 +476,7 @@ export const Modal = ({ isOpen, onClose }) => {
                   </div>
                   <div className={modalContentBottom}>
                     <div className={css`font-size: 14px;line-height: 1.16;`}>Уже есть аккаунт?&nbsp;<div className={css`color: ${theme.colors.purple};display: inline;cursor:pointer;`} onClick={()=>setView(1)}>Войти</div></div>
-                    <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
+                    <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/approval" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/privacy" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
                   </div>
                 </>
                 : 
@@ -494,7 +523,7 @@ export const Modal = ({ isOpen, onClose }) => {
                   </div>
                   <div className={modalContentBottom}>
                     <div className={css`font-size: 14px;line-height: 1.16;`}>Уже есть аккаунт?&nbsp;<div className={css`color: ${theme.colors.purple};display: inline;cursor:pointer;`} onClick={()=>setView(1)}>Войти</div></div>
-                    <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/lk" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
+                    <div className={css`font-size: 14px;line-height: 1.16;`}>При регистрации и&nbsp;входе вы&nbsp;соглашаетесь <Link href="/approval" className={css`color: ${theme.colors.purple};display:inline;`}>с&nbsp;условиями использования</Link> и&nbsp;<Link href="/privacy" className={css`color: ${theme.colors.purple};display:inline;`}>политикой конфиденциальности</Link></div>
                   </div>
                 </>
                 }

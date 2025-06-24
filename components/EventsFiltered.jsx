@@ -10,9 +10,9 @@ import { formatDate } from "../functions/functions";
 import Link from "next/link";
 
 
-export const EventsFiltered = ({onPage, similar, events}) => {
+export const EventsFiltered = ({onPage, similar, events, total}) => {
     const theme = useTheme();
-
+	
     const [limit, setLimit] = useState(5);
 
     const [nearEvents, setNearEvents] = useState(null)
@@ -48,7 +48,6 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                 <div className={css`
                     margin-bottom: 32px;
                 `}>
-                    {/* {nearEvents && nearEvents.length === 0 ? <p className={css`font-size: 18px;`}>По заданным параметрам событий не найдено</p> : null} */}
                     {nearEvents && nearEvents.slice(0, limit).map((item, index) => (
                         <motion.div 
                             initial={{ y: 50, opacity: 0 }}
@@ -250,7 +249,7 @@ export const EventsFiltered = ({onPage, similar, events}) => {
                 </div>
 
                 {!similar &&
-                nearEvents && limit < nearEvents.length && (
+                nearEvents && limit < total && (
                     <ButtonMore onClick={()=>setLimit(prev => prev+5)}>
 						<p>
 							<span>Показать еще +</span>

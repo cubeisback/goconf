@@ -9,7 +9,8 @@ const CalendarIcon = () => (
 import { filterSelector } from "@/styles/ui";
 import DatePicker from "react-datepicker";
 import {ru} from 'date-fns/locale/ru';
-import "react-datepicker/dist/react-datepicker.css"; //TODO remove
+// import "react-datepicker/dist/react-datepicker.css"; //TODO remove
+import "./my-datepicker.css";
 
 const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type, setStoreDate}) => {
     const [startDate, setStartDate] = useState(null);

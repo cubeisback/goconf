@@ -158,7 +158,7 @@ export default function EventsClient({ params }) {
 					</div>
 				</Container>
 
-				<EventsFiltered onPage events={events} />
+				<EventsFiltered onPage events={events} total={total} />
 
 				<div className={css`
 					padding: 64px 0;

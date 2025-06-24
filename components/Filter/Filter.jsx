@@ -17,7 +17,7 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
     const theme = useTheme();
 
     const filtersData = useFiltersStore((state) => state.filtersData)
-	console.log('asd', filtersData)
+	console.log('дата для фильров', filtersData)
 
 	const router = useRouter();
 	const pathname = usePathname();
@@ -159,7 +159,7 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
             },
           }
         );
-        console.log("Response:", res);
+        console.log("Запрос из фильтра:", res.data);
         setEvents(res.data.events);
         setTotal(res.data.total);
         setPageH1(res.data.h1);

@@ -1,0 +1,71 @@
+.react-datepicker {
+	padding: 16px;
+	background-color: #fff;
+	border-radius: 20px;
+	box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+	position: relative;
+	width: 312px;
+}
+.react-datepicker__day-names {
+	display: none;
+}
+.react-datepicker__aria-live {
+	display: none;
+}
+.react-datepicker__navigation-icon--previous {
+	font-size: 0;
+	width: 24px;
+	height: 24px;
+	position: absolute;
+	background-color: #fff;
+	cursor: pointer;
+	left: 16px;
+	top: 16px;
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.362 17C13.1 17 12.839 16.898 12.643 16.695L8.78004 12.695C8.40204 12.302 8.40704 11.679 8.79304 11.293L12.793 7.29301C13.183 6.90201 13.816 6.90201 14.207 7.29301C14.597 7.68401 14.597 8.31601 14.207 8.70701L10.902 12.012L14.081 15.305C14.465 15.703 14.454 16.336 14.057 16.719C13.862 16.907 13.612 17 13.362 17Z" fill="%2347474D"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.362 17C13.1 17 12.839 16.898 12.643 16.695L8.78004 12.695C8.40204 12.302 8.40704 11.679 8.79304 11.293L12.793 7.29301C13.183 6.90201 13.816 6.90201 14.207 7.29301C14.597 7.68401 14.597 8.31601 14.207 8.70701L10.902 12.012L14.081 15.305C14.465 15.703 14.454 16.336 14.057 16.719C13.862 16.907 13.612 17 13.362 17Z" fill="black" fill-opacity="0.2"/></svg>');
+}
+.react-datepicker__navigation--next {
+	font-size: 0;
+	width: 24px;
+	height: 24px;
+	position: absolute;
+	background-color: #fff;
+	cursor: pointer;
+	right: 16px;
+	top: 16px;
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5002 17C10.2442 17 9.98825 16.902 9.79325 16.707C9.40225 16.316 9.40225 15.684 9.79325 15.293L13.0982 11.988L9.91825 8.695C9.53525 8.297 9.54625 7.664 9.94325 7.281C10.3413 6.898 10.9742 6.909 11.3572 7.305L15.2193 11.305C15.5983 11.698 15.5933 12.321 15.2073 12.707L11.2072 16.707C11.0122 16.902 10.7563 17 10.5002 17Z" fill="%2347474D"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5002 17C10.2442 17 9.98825 16.902 9.79325 16.707C9.40225 16.316 9.40225 15.684 9.79325 15.293L13.0982 11.988L9.91825 8.695C9.53525 8.297 9.54625 7.664 9.94325 7.281C10.3413 6.898 10.9742 6.909 11.3572 7.305L15.2193 11.305C15.5983 11.698 15.5933 12.321 15.2073 12.707L11.2072 16.707C11.0122 16.902 10.7563 17 10.5002 17Z" fill="black" fill-opacity="0.2"/></svg>');
+}
+.react-datepicker__header {
+	margin-top: -15px;
+}
+.react-datepicker__header h2 {
+	text-align: center;
+	font-size: 14px;
+	line-height: 1.16;
+	color: #47474D;
+	font-weight: normal;
+}
+.react-datepicker__month {
+	margin-top: 13px;
+}
+.react-datepicker__week {
+	display: flex;
+	justify-content: space-around;
+}
+.react-datepicker__day {
+   	padding: 4px;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+    text-align: center;
+	color: #47474D;
+}
+.react-datepicker__day--outside-month {
+	color: #B5B7B9;
+}
+.react-datepicker__day--selected {
+	color: #fff;
+	border-radius: 64px;
+	background-color: #8553F9;
+}

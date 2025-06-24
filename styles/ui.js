@@ -502,3 +502,60 @@ export const lkContainer = css`
                 padding-bottom: 64px;
             }
 `;
+
+//TODO добавить для всех мест с текстом
+export const Article = styled.article`
+	padding: 64px 0;
+	display: flex;
+		flex-direction: column;
+		gap: 16px;
+
+		& > p {
+			line-height: 1.28;
+		}
+		& > div {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 1.36;
+		}
+		& > h1 {
+			font-size: 28px;
+			font-family: Impact;
+			line-height: 1.34;
+			font-weight: normal;
+		}
+		& > h2 {
+			font-size: 24px;
+			line-height: 1.34;
+		}
+		& > h3 {
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 1.4;
+		}
+		& > h4 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 1.36;
+		}
+		& > ul {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			
+			li {
+				font-size: 14px;
+			}
+		}
+		& > ol {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+
+			li {
+				font-size: 14px;
+			}
+		}
+`;
