@@ -10,6 +10,12 @@ import { MainEvents } from '@/components/MainEvents';
 import { Form } from '@/components/Form';
 import { FilterOnMain } from '@/components/Filter/FilterOnMain';
 import styled from "@emotion/styled";
+import axios from 'axios';
+import { getApiUrl } from '@/functions/functions';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import SuccessReg from "@/public/images/svg/success_reg.svg";
+import Link from 'next/link';
 
 export default function Main() {
 	const theme = useTheme();
@@ -233,6 +239,112 @@ export default function Main() {
 				}
 	`
 
+	// Подтверждение регистрации
+	const searchParams = useSearchParams();
+	useEffect(() => {
+		const confirm = searchParams.get('confirm');
+		const token = searchParams.get('token');
+		const user = searchParams.get('user');
+
+		if (confirm === 'registration' && token && user) {
+			confirmUser(token, user);
+		}
+	}, [searchParams]);
+
+	const [showSuccessReg, setShowSuccessReg] = useState(false)
+	const confirmUser = async(token, user) => {
+		console.log('Token:', token);
+		console.log('User ID:', user);
+
+		try {
+			const response = await axios.get(
+				getApiUrl(`/backend/wp-json/users/v2/confirm/?token=${token}&user=${user}`),
+			);
+
+			if (response.status === 200) {
+				console.log('regconf', response)
+				setShowSuccessReg(true)
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const reset = async() => {
+		try {
+			const response = await axios.post(
+			getApiUrl("/backend/wp-json/users/v2/password-reset/verify/"),
+				{
+					token: 'Jtei2x2kXfRDaDU8eXmxrh1WvnNurltO',
+				}
+			);
+			console.log("reset ", response);
+
+			if (response.status === 200) {
+				// login(response.data.token);
+				// onClose();
+				// setErrorMessage(null)
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	// https://dev.goconf.ru/backend/wp-json/users/v2/password-reset/update/ - POST:token,password
+
+	const reset2 = async() => {
+		// https://dev.goconf.ru/backend/wp-json/users/v2/password-reset/update/ - POST:token
+
+		// https://dev.goconf.ru/?action=password-reset&token=BHOPrutaV6Dt5MOO21yFD9oXCzzMdB0S
+		try {
+			const response = await axios.post(
+			getApiUrl("/backend/wp-json/users/v2/password-reset/update/"),
+				{
+					token: 'awxZ1oWW0CD5w97Y98cfso0gIbrg6e5k',
+					password: 'qwerty123'
+				}
+			);
+			console.log("update ", response);
+
+			if (response.status === 200) {
+				// login(response.data.token);
+				// onClose();
+				// setErrorMessage(null)
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	const getInfo = async() => {
+		// https://dev.goconf.ru/wp-json/account/v2/profile/
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+
+		// Получаем сам токен
+		const token = authToken?.state?.token;
+
+		console.log('Token:', token);
+		try {
+			const response = await axios.get(
+			getApiUrl("/backend/wp-json/account/v2/profile/"),
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+			);
+			console.log("get ", response);
+
+			if (response.status === 200) {
+				// login(response.data.token);
+				// onClose();
+				// setErrorMessage(null)
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
 	return (
 		<>
@@ -266,7 +378,9 @@ export default function Main() {
 					</AnimatedSubtitle>
 				</PromoMain>
 
-				
+				<div onClick={reset}>reset</div>
+				<div onClick={reset2}>reset2</div>
+				<div onClick={getInfo}>getInfo</div>
 
 			</Container>
 			
@@ -284,7 +398,21 @@ export default function Main() {
 			<MainEvents />
 
 			<Form />
-			
+			{showSuccessReg && 
+				<div className={css`
+					border-radius: 28px;
+					background-color: #fff;
+					box-shadow: 0px 111px 31px 0px rgba(0, 0, 0, 0.00), 0px 71px 28px 0px rgba(0, 0, 0, 0.01), 0px 40px 24px 0px rgba(0, 0, 0, 0.05), 0px 18px 18px 0px rgba(0, 0, 0, 0.09), 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
+					position: fixed;
+					left: 50%;
+					top: 50%;
+				`}>
+					<SuccessReg />
+					<div>Вы успешно зарегистрировались</div>
+					<p>На&nbsp;указанный e-mail отправлена ссылка для подтверждения регистрации</p>
+					<Link href="/" onClick={()=>setShowSuccessReg(false)}>Вернуться на&nbsp;сайт</Link>
+				</div>
+			}
 		</>
 	);
 }

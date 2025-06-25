@@ -179,13 +179,38 @@ export const Modal = ({ isOpen, onClose }) => {
 		e.preventDefault();
 
 		const newErrors = {};
-		if (!firstName.trim()) newErrors.firstName = "Введите имя";
-		if (!lastName.trim()) newErrors.lastName = "Введите фамилию";
-		if (!email.trim()) newErrors.email = "Введите email";
-		if (!password.trim()) newErrors.password = "Введите пароль";
+		// if (!firstName.trim()) newErrors.firstName = "Введите имя";
+		// if (!lastName.trim()) newErrors.lastName = "Введите фамилию";
+		// if (!email.trim()) newErrors.email = "Введите email";
+		// if (!password.trim()) newErrors.password = "Введите пароль";
 
-		setErrors(newErrors);
+		// setErrors(newErrors);
 
+
+		if (!email.trim()) {
+			newErrors.email = "Введите email";
+		} else {
+			// Проверка формата email
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(email.trim())) {
+				newErrors.email = "Некорректный формат email";
+			}
+		}
+		if (!firstName.trim()) {
+			newErrors.firstName = "Введите имя";
+		}
+		if (!lastName.trim()) {
+			newErrors.lastName = "Введите фамилию";
+		}
+		if (!password.trim()) {
+			newErrors.password = "Введите пароль";
+		}
+
+		// Если есть ошибки — обновляем стейт и не отправляем запрос
+		if (Object.keys(newErrors).length > 0) {
+			setErrors(newErrors);
+			return;
+		}
 		
 
 		try {
@@ -243,10 +268,31 @@ export const Modal = ({ isOpen, onClose }) => {
 		e.preventDefault();
 
 		const newErrors = {};
-		if (!emailLogin.trim()) newErrors.emailLogin = "Введите email";
-		if (!passwordLogin.trim()) newErrors.passwordLogin = "Введите пароль";
+		// if (!emailLogin.trim()) newErrors.emailLogin = "Введите email";
+		// if (!passwordLogin.trim()) newErrors.passwordLogin = "Введите пароль";
 
-		setErrorsLogin(newErrors);
+		// setErrorsLogin(newErrors);
+
+		// Проверка, что email не пустой
+		if (!emailLogin.trim()) {
+			newErrors.emailLogin = "Введите email";
+		} else {
+			// Проверка формата email
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(emailLogin.trim())) {
+				newErrors.emailLogin = "Некорректный формат email";
+			}
+		}
+
+		if (!passwordLogin.trim()) {
+			newErrors.passwordLogin = "Введите пароль";
+		}
+
+		// Если есть ошибки — обновляем стейт и не отправляем запрос
+		if (Object.keys(newErrors).length > 0) {
+			setErrorsLogin(newErrors);
+			return;
+		}
 
 		try {
 			const response = await axios.post(

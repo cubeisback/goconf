@@ -108,8 +108,8 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
               <p>{startDate ? startDate : title}</p>
               <CalendarIcon />
               <motion.div
-                  initial={{ pointerEvents: 'none', y: 18, opacity: 0 }}
-                  animate={{ opacity: showDate ? 1 : 0, y: showDate ? 18 : 40, pointerEvents: showDate ? 'all' : 'none' }}
+                  initial={{ pointerEvents: 'none', y: 0, opacity: 0 }}
+                  animate={{ opacity: showDate ? 1 : 0, y: showDate ? 0 : 40, pointerEvents: showDate ? 'all' : 'none' }}
                   transition={{ duration: 0.3 }}
                   style={{position: "absolute", zIndex: 10}}
                   ref={datePickerRef}
