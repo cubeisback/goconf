@@ -113,7 +113,7 @@ export const Button = styled(ButtonType)`
   cursor: pointer;
   text-align: center;
   color: ${({ green, theme }) => (green ? theme.colors.font : "#fff")};
-  width: max-content;
+  width: ${({ full }) => (full ? '100%' : 'max-content')};
   transition: ${({ theme }) => theme.transition};
   font-size: 16px;
 
