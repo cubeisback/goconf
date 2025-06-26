@@ -1,3 +1,5 @@
+'use client';
+
 import axios from 'axios';
 import { getApiUrl } from '@/functions/functions';
 import { useSearchParams } from 'next/navigation';
