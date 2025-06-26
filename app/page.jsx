@@ -12,7 +12,6 @@ import { FilterOnMain } from '@/components/Filter/FilterOnMain';
 import styled from "@emotion/styled";
 import axios from 'axios';
 import { getApiUrl } from '@/functions/functions';
-import { ConfirmRegistration } from '@/components/ConfirmRegistration';
 
 export default function Main() {
 	const theme = useTheme();
@@ -366,8 +365,6 @@ export default function Main() {
 			<MainEvents />
 
 			<Form />
-
-			<ConfirmRegistration />
 		</>
 	);
 }
