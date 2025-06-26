@@ -13,6 +13,7 @@ import styled from "@emotion/styled";
 import axios from 'axios';
 import { getApiUrl } from '@/functions/functions';
 import { ConfirmRegistration } from '@/components/ConfirmRegistration';
+import { Suspense } from 'react';
 
 export default function Main() {
 	const theme = useTheme();
@@ -367,9 +368,10 @@ export default function Main() {
 
 			<Form />
 
-			<ConfirmRegistration />
+			<Suspense fallback={null}>
+				<ConfirmRegistration />
+			</Suspense>
+			
 		</>
 	);
 }
-
-export const dynamic = 'force-dynamic';
