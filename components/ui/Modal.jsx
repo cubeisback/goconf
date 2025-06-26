@@ -224,6 +224,7 @@ export const Modal = ({ isOpen, onClose }) => {
 
 	const [errors, setErrors] = useState({});
 	const [errorsLogin, setErrorsLogin] = useState({});
+	
 
 	// const [regResponse, setRegResponse] = useState(null)
 	
@@ -232,7 +233,7 @@ export const Modal = ({ isOpen, onClose }) => {
 	const handleSubmit = async(e) => {
 		e.preventDefault();
 
-		const newErrors = {};
+		
 		// if (!firstName.trim()) newErrors.firstName = "Введите имя";
 		// if (!lastName.trim()) newErrors.lastName = "Введите фамилию";
 		// if (!email.trim()) newErrors.email = "Введите email";
@@ -240,7 +241,7 @@ export const Modal = ({ isOpen, onClose }) => {
 
 		// setErrors(newErrors);
 
-
+		const newErrors = {};
 		if (!email.trim()) {
 			newErrors.email = "Введите email";
 		} else {
@@ -258,6 +259,12 @@ export const Modal = ({ isOpen, onClose }) => {
 		}
 		if (!password.trim()) {
 			newErrors.password = "Введите пароль";
+		} else {
+			if (password.length < 8) {
+				newErrors.password = "Пароль должен быть не менее 8 символов";
+			} else if (!/\d/.test(password)) {
+				newErrors.password = "Пароль должен содержать хотя бы одну цифру";
+			}
 		}
 
 		// Если есть ошибки — обновляем стейт и не отправляем запрос
@@ -375,9 +382,30 @@ export const Modal = ({ isOpen, onClose }) => {
 
 
 	const [emailReset, setEmailReset] = useState("");
-
-	const handleSubmitReset = async (e) => {
+	const [errorsReset, setErrorsReset] = useState({});
+	const [showResetWindow, setShowResetWindow] = useState(false);
+	
+	const handleSubmitReset = async(e) => {
 		e.preventDefault();
+
+		const newErrors = {};
+
+		// Проверка, что email не пустой
+		if (!emailReset.trim()) {
+			newErrors.emailReset = "Введите email";
+		} else {
+			// Проверка формата email
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(emailReset.trim())) {
+				newErrors.emailReset = "Некорректный формат email";
+			}
+		}
+
+		// Если есть ошибки — обновляем стейт и не отправляем запрос
+		if (Object.keys(newErrors).length > 0) {
+			setErrorsReset(newErrors);
+			return;
+		}
 
 		try {
 			const response = await axios.post(
@@ -386,17 +414,15 @@ export const Modal = ({ isOpen, onClose }) => {
 					email: emailReset,
 				}
 			);
-			console.log("reset", response);
+			console.log("reset", response, emailReset);
 
 			if (response.status === 200) {
-				// login(response.data.token);
-				// onClose();
-				// setErrorMessage(null)
+				onClose();
+				setShowResetWindow(true)
+				setErrorsReset({})
 			}
 		} catch (error) {
 			console.error("Ошибка восстановления пароля:", error);
-			// console.log(error.response?.data?.message)
-			// setErrorMessage(error.response?.data?.message)
 		}
 	};
 
@@ -586,7 +612,10 @@ const ErrorWrapper = (message) => {
                     <div className={modalTitle}>Забыли пароль?</div>
                     <div className={css`font-size: 14px;line-height: 1.16;margin-bottom: 16px;`}>Введите адрес электронной почты, и&nbsp;мы&nbsp;вышлем вам ссылку для сброса пароля.</div>
                     <form onSubmit={handleSubmitReset} className={modalForm}>
-                      <input type="email" placeholder="Электронная почта" value={emailReset} onChange={(e) => setEmailReset(e.target.value)} />
+                      	<input type="email" placeholder="Электронная почта" value={emailReset} onChange={(e) => setEmailReset(e.target.value)} style={errorsReset.emailReset && {borderColor: '#FC1234'}} />
+						{errorsReset.emailReset && 
+							ErrorWrapper(errorsReset.emailReset)
+						}
                       <div className={css`
                         display: flex;
                         gap: 16px;
@@ -657,6 +686,34 @@ const ErrorWrapper = (message) => {
 						<p>
 							<span>Вернуться на&nbsp;сайт</span>
 							<span>Вернуться на&nbsp;сайт</span>
+						</p>
+					</Button>
+				</ConfirmWindow>
+				
+			</ModalBackdrop>
+		}
+
+		{showResetWindow &&
+		
+		<ModalBackdrop
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+				<ConfirmWindow
+					initial={{ scale: 0.8 }}
+					animate={{ scale: 1 }}
+					exit={{ scale: 0.8 }}
+					transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+				>
+					<ModalClose onClick={()=>setShowResetWindow(false)} />
+					<ConfirmWindowTitle>Восстановление пароля</ConfirmWindowTitle>
+					<ConfirmWindowText>Инструкция по&nbsp;восстановлению пароля отправлена на&nbsp;указанную почту</ConfirmWindowText>
+					<Button onClick={()=>setShowResetWindow(false)} full="true">
+						<p>
+							<span>Закрыть</span>
+							<span>Закрыть</span>
 						</p>
 					</Button>
 				</ConfirmWindow>

@@ -7,13 +7,113 @@ import { Button, input, inputItem, userMain } from "@/styles/ui";
 import EditIcon from "@/public/images/svg/edit.svg";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PasswordInput } from "@/components/ui/PasswordInput";
+import axios from "axios";
+import { getApiUrl } from "@/functions/functions";
 
 //TODO перенести весь компонент в основной page.jsx
 
 const UserMain = () => {
     const theme = useTheme();
+
+	const [userData, setUserData] = useState({
+		email: '',
+		first_name: '',
+		last_name: '',
+		phone: '',
+		info: {
+			name: '',
+			address: '',
+			rs: '',
+			inn: '',
+			kpp: '',
+			ogrn: '',
+		},
+	});
+
+	const handleGetUserInfo = async() => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+
+		const token = authToken?.state?.token;
+		try {
+			const response = await axios.get(
+			getApiUrl("/backend/wp-json/account/v2/profile/"),
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+			);
+			console.log("get ", response);
+
+			if (response.status === 200) {
+				const data = response.data;
+				setUserData({
+					email: data.data?.email || '',
+					first_name: data.data?.first_name || '',
+					last_name: data.data?.last_name || '',
+					phone: data.data?.phone || '',
+					info: {
+						name: data.info?.name || '',
+						address: data.info?.address || '',
+						rs: data.info?.rs || '',
+						inn: data.info?.inn || '',
+						kpp: data.info?.kpp || '',
+						ogrn: data.info?.ogrn || '',
+					},
+				});
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	useEffect(()=>{
+		handleGetUserInfo()
+	},[])
+
+	const handleUpdateUserInfo = async(number) => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+
+		try {
+			const response = await axios.post(
+			getApiUrl("/backend/wp-json/account/v2/update/"),
+			number === 1 ?
+			{
+				first_name: userData.first_name,
+				last_name: userData.last_name,
+				phone: userData.phone,
+				// email: userData.email
+			}
+			:
+			{
+				info: {
+					name: userData.info.name,
+					address: userData.info.address,
+					rs: userData.info.rs,
+					inn: userData.info.inn,
+					kpp: userData.info.kpp,
+					ogrn: userData.info.ogrn,
+				},
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+			);
+
+			if (response.status === 200) {
+				console.log("Update successful", response.data);
+			}
+		} catch (error) {
+			console.error("Update error", error);
+		}
+	};
 
     const [activeTab, setActiveTab] = useState(1)
         const tabItem = css`
@@ -85,21 +185,24 @@ const UserMain = () => {
                         `}>
                             <div className={inputItem}>
                                 <p>Имя</p>
-                                <input type="text" className={input} placeholder="Александр" />
+                                <input type="text" className={input} value={userData.first_name} placeholder="Имя" onChange={(e) => setUserData(prev => ({ ...prev, first_name: e.target.value }))} />
                             </div>
                             <div className={inputItem}>
                                 <p>Фамилия</p>
-                                <input type="text" className={input} placeholder="Романов" />
+                                <input type="text" className={input} value={userData.last_name} placeholder="Фамилия" onChange={(e) => setUserData(prev => ({ ...prev, last_name: e.target.value }))} />
                             </div>
                             <div className={inputItem}>
                                 <p>E-mail</p>
-                                <input type="email" className={input} placeholder="mail@mail.ru" />
+                                <input type="email" className={input} value={userData.email} placeholder="Электронная почта" onChange={(e) => setUserData(prev => ({ ...prev, email: e.target.value }))} />
                             </div>
                             <div className={inputItem}>
                                 <p>Телефон</p>
-                                <input type="text" className={input} placeholder="+7 (..." />
+                                <input type="text" className={input} value={userData.phone} placeholder="Телефон" onChange={(e) => setUserData(prev => ({ ...prev, phone: e.target.value }))} />
                             </div>
-                            <Button className={cx(css`opacity: .2; pointer-events: none;`)}>Сохранить изменения</Button>
+                            <Button 
+								// className={cx(css`opacity: .2; pointer-events: none;`)}
+								onClick={()=>handleUpdateUserInfo(1)}
+							>Сохранить изменения</Button>
                         </div>
                         <div className={css`
                             display: flex;
@@ -147,29 +250,88 @@ const UserMain = () => {
                     `}>
                         <div className={inputItem}>
                             <p>Юридическое наименование</p>
-                            <input type="text" className={input} placeholder='ООО "ЦРБК"' />
+                            <input type="text" className={input} placeholder='Юридическое наименование' 
+							value={userData.info.name}
+							onChange={(e) =>
+							setUserData(prev => ({
+							...prev,
+							info: {
+								...prev.info,
+								name: e.target.value
+							}
+							}))}
+							/>
                         </div>
                         <div className={inputItem}>
                             <p>Юридический адрес</p>
-                            <input type="text" className={input} placeholder="г. Москва, ул. Касьянова, д. 5Б" />
+                            <input type="text" className={input} placeholder="Юридический адрес"
+							value={userData.info.address}
+							onChange={(e) =>
+							setUserData(prev => ({
+							...prev,
+							info: {
+								...prev.info,
+								address: e.target.value
+							}
+							}))}
+							/>
                         </div>
                         <div className={inputItem}>
                             <p>Рассчетный счет</p>
-                            <input type="text" className={input} placeholder='423143853453452131' />
+                            <input type="text" className={input} placeholder='Рассчетный счет'
+							value={userData.info.rs}
+							onChange={(e) =>
+							setUserData(prev => ({
+							...prev,
+							info: {
+								...prev.info,
+								rs: e.target.value
+							}
+							}))} 
+							/>
                         </div>
                         <div className={inputItem}>
                             <p>ИНН</p>
-                            <input type="text" className={input} placeholder="5224113215" />
+                            <input type="text" className={input} placeholder="ИНН"
+							value={userData.info.inn}
+							onChange={(e) =>
+							setUserData(prev => ({
+							...prev,
+							info: {
+								...prev.info,
+								inn: e.target.value
+							}
+							}))}  />
                         </div>
                         <div className={inputItem}>
                             <p>КПП</p>
-                            <input type="text" className={input} placeholder="321312312" />
+                            <input type="text" className={input} placeholder="КПП"
+							value={userData.info.kpp}
+							onChange={(e) =>
+							setUserData(prev => ({
+							...prev,
+							info: {
+								...prev.info,
+								kpp: e.target.value
+							}
+							}))}
+							/>
                         </div>
                         <div className={inputItem}>
                             <p>ОГРН</p>
-                            <input type="text" className={input} placeholder="4342423" />
+                            <input type="text" className={input} placeholder="ОГРН"
+							value={userData.info.ogrn}
+							onChange={(e) =>
+							setUserData(prev => ({
+							...prev,
+							info: {
+								...prev.info,
+								ogrn: e.target.value
+							}
+							}))} 
+							/>
                         </div>
-                        <Button>Сохранить изменения</Button>
+                        <Button onClick={()=>handleUpdateUserInfo(2)}>Сохранить изменения</Button>
                     </div>
                 </motion.div>
                 )}

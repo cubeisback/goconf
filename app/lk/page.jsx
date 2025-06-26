@@ -2,7 +2,7 @@
 
 import { css } from "@emotion/css";
 import { Container, lkContainer} from "@/styles/ui";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import UserMain from "./main/page";
 import LkMenu from "@/components/ui/LkMenu";
 import { useAuthStore } from "@/store/useAuthStore";

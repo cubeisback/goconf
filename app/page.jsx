@@ -10,10 +10,9 @@ import { MainEvents } from '@/components/MainEvents';
 import { Form } from '@/components/Form';
 import { FilterOnMain } from '@/components/Filter/FilterOnMain';
 import styled from "@emotion/styled";
-import axios from 'axios';
-import { getApiUrl } from '@/functions/functions';
 import { ConfirmRegistration } from '@/components/ConfirmRegistration';
 import { Suspense } from 'react';
+import { ResetPassword } from '@/components/ResetPassword';
 
 export default function Main() {
 	const theme = useTheme();
@@ -236,84 +235,7 @@ export default function Main() {
 					}
 				}
 	`
-
 	
-
-	const reset = async() => {
-		try {
-			const response = await axios.post(
-			getApiUrl("/backend/wp-json/users/v2/password-reset/verify/"),
-				{
-					token: 'Jtei2x2kXfRDaDU8eXmxrh1WvnNurltO',
-				}
-			);
-			console.log("reset ", response);
-
-			if (response.status === 200) {
-				// login(response.data.token);
-				// onClose();
-				// setErrorMessage(null)
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	// https://dev.goconf.ru/backend/wp-json/users/v2/password-reset/update/ - POST:token,password
-
-	const reset2 = async() => {
-		// https://dev.goconf.ru/backend/wp-json/users/v2/password-reset/update/ - POST:token
-
-		// https://dev.goconf.ru/?action=password-reset&token=BHOPrutaV6Dt5MOO21yFD9oXCzzMdB0S
-		try {
-			const response = await axios.post(
-			getApiUrl("/backend/wp-json/users/v2/password-reset/update/"),
-				{
-					token: 'awxZ1oWW0CD5w97Y98cfso0gIbrg6e5k',
-					password: 'qwerty123'
-				}
-			);
-			console.log("update ", response);
-
-			if (response.status === 200) {
-				// login(response.data.token);
-				// onClose();
-				// setErrorMessage(null)
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	const getInfo = async() => {
-		// https://dev.goconf.ru/wp-json/account/v2/profile/
-		const authTokenRaw = localStorage.getItem('authToken');
-		const authToken = JSON.parse(authTokenRaw);
-
-		// Получаем сам токен
-		const token = authToken?.state?.token;
-
-		console.log('Token:', token);
-		try {
-			const response = await axios.get(
-			getApiUrl("/backend/wp-json/account/v2/profile/"),
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			}
-			);
-			console.log("get ", response);
-
-			if (response.status === 200) {
-				// login(response.data.token);
-				// onClose();
-				// setErrorMessage(null)
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
 
 	return (
 		<>
@@ -347,10 +269,6 @@ export default function Main() {
 					</AnimatedSubtitle>
 				</PromoMain>
 
-				<div onClick={reset}>reset</div>
-				<div onClick={reset2}>reset2</div>
-				<div onClick={getInfo}>getInfo</div>
-
 			</Container>
 			
 			<Container $fullWidth={true}>
@@ -370,6 +288,9 @@ export default function Main() {
 
 			<Suspense fallback={null}>
 				<ConfirmRegistration />
+			</Suspense>
+			<Suspense fallback={null}>
+				<ResetPassword />
 			</Suspense>
 			
 		</>
