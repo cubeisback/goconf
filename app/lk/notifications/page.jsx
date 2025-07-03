@@ -1,17 +1,19 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { Button, Container, container, lkContainer } from "@/styles/ui";
+import { Button, Container, lkContainer } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useState } from "react";
 import LkMenu from "@/components/ui/LkMenu";
 
 
-export const AnimatedSwitch = ({ label, initialChecked = false }) => {
+export const AnimatedSwitch = ({ label, initialChecked = false, incomeFunction }) => {
     const [isChecked, setIsChecked] = useState(initialChecked);
   
     const toggleSwitch = () => {
       setIsChecked(!isChecked);
+
+	  incomeFunction && incomeFunction(!isChecked)
     };
   
     return (

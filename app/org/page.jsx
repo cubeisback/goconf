@@ -393,8 +393,8 @@ const Org = () => {
                         </div> */}
 
 
-						{orgsData?.fields?.tariffs?.items.map(item => (
-							<div className={css`
+						{orgsData?.fields?.tariffs?.items.map((item, index) => (
+							<div key={index} className={css`
                             // flex: 0 1 calc(33.333333% - 21.333333px);
                             // max-width: calc(33.333333% - 21.333333px);
 							flex: 0 1 400px;
@@ -416,7 +416,7 @@ const Org = () => {
                                 color: #8553F9;
                                 text-align: center;
                                 font-family: Impact;
-                                font-size: 24px;
+                                font-size: 28px;
                                 line-height: 1.34;
                                 margin-bottom: 24px;
                             `}>{item.name}</div>
@@ -449,7 +449,8 @@ const Org = () => {
                                     position: relative;
                                     font-size: 14px;
 
-                                    &::before {
+									${index !== 0 && 
+                                    `&::before {
                                         content: '';
                                         position: absolute;
                                         width: 16px;
@@ -457,16 +458,14 @@ const Org = () => {
                                         left: 0;
                                         top: 0;
                                         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(%23clip0_9501_15213)"><path d="M16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8Z" fill="%23B3ED73"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.7783 5.74978L7.01386 11.0435L4.23438 8.26408L4.76471 7.73375L6.98523 9.95426L11.2208 5.24805L11.7783 5.74978Z" fill="%23191921"/></g><defs><clipPath id="clip0_9501_15213"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>');
-                                    }
+                                    }`
+									}
                                 }
                             `}>
-								{item.props.map(p => (
-									<p>{p}</p>
-								))}
-                                {/* <p>Текстовое описание, обложка, дата, место</p>
-                                <p>Ссылка на сайт с UTM</p>
-                                <p>Аналитика мероприятия</p>
-                                <p>Добавление фото/видео материалов</p> */}
+                                <p>Описание события, обложка, дата и место проведения</p>
+                                <p style={{color: index == 0 && '#D7DADD'}}>Ссылка на сайт</p>
+                                <p style={{color: index == 0 && '#D7DADD'}}>Аналитика (просмотры, переходы)</p>
+                                <p style={{color: index == 0 && '#D7DADD'}}>Фото и видео</p>
                             </div>
                             <Button style={{margin: '0 auto'}} className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>
 								<p>

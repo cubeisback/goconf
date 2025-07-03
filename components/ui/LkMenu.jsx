@@ -98,7 +98,7 @@ export default function LkMenu () {
                         border-radius: 28px;
                         background-color: #fff;
                         box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
-                        min-height: 448px;
+                        min-height: 368px;
                         height: max-content;
                         position: sticky;
                         top: 100px;
@@ -131,7 +131,7 @@ export default function LkMenu () {
                                 <p>Заказы</p>
                             </Link>
                         </div>
-                        <div className={cx(menuItem, css`
+                        {/* <div className={cx(menuItem, css`
                             flex-direction: column;align-items:flex-start;
                             cursor: default;
 
@@ -151,7 +151,7 @@ export default function LkMenu () {
                                 align-items: center;
                                 width: 100%;
                             `}>Базовый <EditIcon /></Link>
-                        </div>
+                        </div> */}
                         <div className={cx(menuItem, css`
                             margin-top: auto;
                         `)} onClick={logout}>
@@ -202,10 +202,10 @@ export default function LkMenu () {
                             <CartIcon />
                             <p>Заказы</p>
                         </Link>
-                        <Link  href="/lk/status" className={cx(menuItem, pathname === '/lk/status' && activeMenuItem)}>
+                        {/* <Link  href="/lk/status" className={cx(menuItem, pathname === '/lk/status' && activeMenuItem)}>
                             <StatusIcon />
                             <p>Статус</p>
-                        </Link>
+                        </Link> */}
                     </motion.div>
                     }
 		</>

@@ -1,7 +1,7 @@
 "use client"
 
 import { css, cx } from "@emotion/css";
-import { Button, Container, inputRadio, inputRadioActive, lkContainer, UserEventsBlock, UserEventsBlockItem, UserEventsBlockItemTop, UserEventsBlockItemTopIcons, UserEventsBlockItemTopPublishDate, UserEventsBlockItemTopStatus, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
+import { Button, Container, inputRadio, inputRadioActive, LkWrapper, UserEventsBlock, UserEventsBlockHead, UserEventsBlockItem, UserEventsBlockItemTop, UserEventsBlockItemTopIcons, UserEventsBlockItemTopPublishDate, UserEventsBlockItemTopStatus, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useEffect, useState } from "react";
@@ -22,6 +22,8 @@ const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'В
 const UserEvents = () => {
     const theme = useTheme();
     const [view, setView] = useState(1);
+	const [editId, setEditId] = useState(null);
+	
     
     const [selectedBlocks, setSelectedBlocks] = useState([1]);
 
@@ -97,13 +99,9 @@ const UserEvents = () => {
 	}
 
     return(
-        <div className={lkContainer}>
+        <LkWrapper>
             <Container>
-                <div
-                    className={css`
-                    display: flex;
-                    gap: 64px;
-                `}>
+                <div style={{display: 'flex', gap: 64}}>
                     <LkMenu />
                 
         {view === 1 && 
@@ -136,22 +134,29 @@ const UserEvents = () => {
             <UserEventsBlock>
 				<p>реальные</p>
 				{events && events.map((event, index) => (
-					<UserEventsBlockItem key={index}>
+					<div key={index}>
+					<UserEventsBlockHead>
+						<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>Тариф <b style={{marginLeft: 4}}>&laquo;Базовый&raquo;</b> <span style={{width: 20, height: 20, backgroundColor: '#D7DADD', borderRadius: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center',  marginLeft: 8}}>?</span></div>
+                        <div style={{fontSize: 14}}>Подключите тариф <span style={{color: '#8553F9', fontWeight: 500}}>&laquo;Расширенный&raquo;</span> для доступа ко&nbsp;всем возможностям</div>
+					</UserEventsBlockHead>
+					<UserEventsBlockItem>
 						<UserEventsBlockItemTop>
 							<UserEventsBlockItemTopStatus>На модерации</UserEventsBlockItemTopStatus>
 							<UserEventsBlockItemTopPublishDate>Дата публикации: {event.date_publish}</UserEventsBlockItemTopPublishDate>
 							<UserEventsBlockItemTopIcons>
-								<Link href={{ pathname: "/lk/add", query: { id: event.id } }}>
+								{/* <Link href={{ pathname: "/lk/add", query: { id: event.id } }}>
 									<EditIcon onClick={()=>console.log('edit')} />
-								</Link>
+								</Link> */}
+								<EditIcon onClick={()=>{setView(6), setEditId(event.id)}} />
 								<RemoveIcon onClick={()=>handleRemoveEvent(event.id)} />
 							</UserEventsBlockItemTopIcons>
 						</UserEventsBlockItemTop>
+						<div style={{marginBottom: 8, fontSize: 20, fontWeight: 500, lineHeight: 1.4}}>{event.title && event.title}</div>
 						<p>{event.city && event.city}</p>
 						<p>Старт: {event.date_start && event.date_start}</p>
 						<p>Конец: {event.date_end && event.date_end}</p>
-						<p>Название: {event.title && event.title}</p>
 					</UserEventsBlockItem>
+					</div>
 				))}
 				<p>статичные</p>
                 <div className={css`
@@ -709,10 +714,13 @@ const UserEvents = () => {
 		{view === 5 && 
 			<EventAdd setBack={setView} />
 		}
+		{view === 6 && 
+			<EventAdd setBack={setView} id={editId} />
+		}
         
 		</div>
             </Container>
-        </div>
+        </LkWrapper>
     )
 };
 

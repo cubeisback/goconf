@@ -196,7 +196,7 @@ const UserMainScreen = () => {
                     font-size: 28px;
                 }
             `}>Мой профиль</div>
-            <div className={css`
+            {/* <div className={css`
                 display: flex;
                 gap: 4px;
                 align-items: center;
@@ -204,7 +204,7 @@ const UserMainScreen = () => {
             `}>
                 <div>Статус профиля:</div>
                 <Link  href="/lk/status" className={css`color: ${theme.colors.purple};display: flex;align-items: center;gap: 4px;`}>Базовый <EditIcon /></Link>
-            </div>
+            </div> */}
             <div className={css`
                 display: flex;
                 gap: 4px;

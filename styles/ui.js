@@ -432,6 +432,7 @@ export const inputRadioActive = css`
 	}
 `;
 
+//TODO удалить
 export const lkContainer = css`
             padding: 120px 0;
             background-color: #F5F7FA;
@@ -441,6 +442,16 @@ export const lkContainer = css`
             @media(max-width: 575px) {
                 padding-bottom: 64px;
             }
+`;
+export const LkWrapper = styled.div`
+    padding: 120px 0;
+    background-color: #F5F7FA;
+
+    min-height: calc(100vh - 84px);
+
+    @media(max-width: 575px) {
+        padding-bottom: 64px;
+    }
 `;
 
 //TODO добавить для всех мест с текстом
@@ -516,13 +527,27 @@ export const UserEventsBlock = styled.div`
     gap: 32px;
 `;
 export const UserEventsBlockItem = styled.div`
-	border-radius: 28px;
+	border-radius: 0 0 28px 28px;
     background-color: #fff;
     box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
     padding: 24px 32px;
 
     @media(max-width: 575px) {
         padding: 16px;
+    }
+`;
+export const UserEventsBlockHead = styled.div`
+	background-color: #F5F7FA;
+	padding: 16px 32px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-radius: 28px 28px 0px 0px;
+	border: 2px solid #fff;
+	border-bottom: none;
+
+    @media(max-width: 575px) {
+        flex-direction: column;
     }
 `;
 export const UserEventsBlockItemTop = styled.div`
@@ -595,4 +620,35 @@ export const UserMainTitlesTitle = styled.div`
     @media(max-width: 575px) {
         font-size: 28px;
     }
+`;
+export const UserEventNav = styled.div`
+	display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+`;
+export const UserEventNavItem = styled.div`
+	padding: 11px 16px 13px;
+    color: #47474D;
+    font-size: 14px;
+    line-height: 1.16;
+    border-radius: 28px;
+    border: 2px solid #D7DADD;
+    transition: ${({ theme }) => theme.transition};
+    min-width: max-content;
+`;
+
+// color: ${theme.colors.purple}!important;
+	// ${view > 1 && `background-color: ${theme.colors.purple};
+	// color:#fff!important;` }
+	// ${({ $fullWidth }) => ($fullWidth && "0")}
+
+export const UserEventNavSeparator = styled.div`
+	width: 16px;
+	min-width: 16px;
+	height: 2px;
+	background-color: ${({ theme }) => theme.colors.purple};
+	padding: 0;
+	border: none;
 `;

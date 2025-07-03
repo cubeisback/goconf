@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { css, cx } from "@emotion/css";
-import { Button, Container, input, lkContainer, textarea, UserMain } from "@/styles/ui";
+import { Button, input, textarea, UserEventNav, UserEventNavItem, UserEventNavSeparator, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from "react";
 import DropdownInput from "@/components/ui/DropdownInput";
@@ -18,19 +18,14 @@ import LkMenu from "@/components/ui/LkMenu";
 import Image from "next/image";
 import { getApiUrl } from "@/functions/functions";
 import axios from "axios";
+import EventDropdown from "./EventDropdown";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6'];
 
-const EventAdd = ({setBack}) => {
+const EventAdd = ({setBack, id}) => {
     const [view, setView] = useState(1);
 
     const theme = useTheme();
-
-    const [text, setText] = useState('');
-
-    const handleChange = (event) => {
-        setText(event.target.value);
-    };
 
     const [activeTab, setActiveTab] = useState(1)
         const tabItem = css`
@@ -80,7 +75,7 @@ const EventAdd = ({setBack}) => {
 		anons: null,
 		city: null,
 		content: '',
-		cost: null,
+		cost: '',
 		cover: null,
 		format: [],
 		free: false,
@@ -103,6 +98,41 @@ const EventAdd = ({setBack}) => {
 		}));
 	};
 
+	const handleDataEventChangeSubject = (subjectItem) => {
+		setDataEvent((prev) => {
+			const exists = prev.subject.some(item => item.id === subjectItem.id);
+
+			return {
+				...prev,
+				subject: exists
+					? prev.subject.filter(item => item.id !== subjectItem.id) // удалить
+					: [...prev.subject, subjectItem] // добавить
+			};
+		});
+	};
+
+	const handleDataEventChangeFormat = (formatItem) => {
+		setDataEvent((prev) => {
+			const exists = prev.format.some(item => item.id === formatItem.id);
+
+			return {
+				...prev,
+				format: exists
+					? prev.format.filter(item => item.id !== formatItem.id) // удалить
+					: [...prev.format, formatItem] // добавить
+			};
+		});
+	};
+
+	const handleDataEventChangeFree = (value) => {
+		setDataEvent((prev) => ({
+			...prev,
+			free: value,
+		}));
+	};
+
+	
+
 	const handleAddEventSubmit = async() => {
 		const authTokenRaw = localStorage.getItem('authToken');
 		const authToken = JSON.parse(authTokenRaw);
@@ -112,6 +142,7 @@ const EventAdd = ({setBack}) => {
 			const response = await axios.post(
 			getApiUrl("/backend/wp-json/account/v2/events/editor/"),
 			{
+				...(id ? { id } : {}),
 				data: dataEvent
 			},
 			{
@@ -124,59 +155,63 @@ const EventAdd = ({setBack}) => {
 		} catch (error) {
 			console.error(error);
 		}
+		console.log(dataEvent)
 	}
 
 	useEffect(() => {
 		handleGetEventsMeta()
 	}, []);
 
+	useEffect(() => {
+		id && dfsdfsdfsd2(id)
+	}, [id]);
+	
+
+
+	const dfsdfsdfsd2 = async(id) => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+
+		const token = authToken?.state?.token;
+		console.log("dsfsjdhfds ID ID ", id)
+		try {
+			const response = await axios.get(
+			getApiUrl(`/backend/wp-json/account/v2/events/get_edit/?id=${id}`),
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+			);
+			console.log("editor ", response);
+			if (response.status === 200) {
+				setDataEvent(response.data.data)
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
     return( 
         <UserMain
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }} 
-        transition={{ duration: .3 }}
+			initial={{ opacity: 0, x: 50 }}
+			animate={{ opacity: 1, x: 0 }} 
+			transition={{ duration: .3 }}
         >
-        <div className={css`
-                display: flex;
-                gap: 16px;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 24px;
-            `}>
-                <div className={css`
-                    font-family: Impact;
-                    font-size: 36px;
-                    line-height: 1.12;
-                `}>Добавить событие</div>
-            </div>
+        	<UserMainTitles>
+                <UserMainTitlesTitle>Добавить событие</UserMainTitlesTitle>
+            </UserMainTitles>
 
-            <div className={css`
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-bottom: 24px;
-                overflow-x: auto;
-
-                div {
-                    padding: 11px 16px 13px;
-                    color: #47474D;
-                    font-size: 14px;
-                    line-height: 1.16;
-                    border-radius: 28px;
-                    border: 2px solid #D7DADD;
-                    transition: ${theme.transition};
-                    min-width: max-content;
-                }
-            `}>
-                <div className={css`border-color: ${theme.colors.purple}!important; color: ${theme.colors.purple}!important; ${view > 1 && `background-color: ${theme.colors.purple};color:#fff!important;` }`}>Основные данные</div>
-                <div className={css`width: 16px;min-width: 16px!important;height: 2px;background-color: ${theme.colors.purple};padding: 0!important;border:none!important;`}></div>
-                <div className={css`
+            <UserEventNav>
+                <UserEventNavItem $view={view}>Основные данные</UserEventNavItem>
+                <UserEventNavSeparator></UserEventNavSeparator>
+                <UserEventNavItem className={css`
                     ${view > 1 && `color: ${theme.colors.purple}!important;border-color: ${theme.colors.purple}!important;` }
                     ${view > 2 && `background-color: ${theme.colors.purple};color:#fff!important;` }
-                `}>Место и время</div>
-                <div className={css`width: 16px;min-width: 16px!important;height: 2px;background-color: ${theme.colors.purple};padding: 0!important;border:none!important;`}></div>
+                `}>Место и время</UserEventNavItem>
+                <UserEventNavSeparator></UserEventNavSeparator>
                 <div className={css`${view > 2 && `color: ${theme.colors.purple}!important;border-color: ${theme.colors.purple}!important;` }`}>Дополнительная информация</div>
-            </div>
+            </UserEventNav>
 
             {view === 1 && 
         <UserMain
@@ -207,8 +242,8 @@ const EventAdd = ({setBack}) => {
                     <p className={css`color: #47474D;`}>Краткое описание для анонса</p>
                     <p className={css`color: #6C6C71;`}>Максимальное количество символов - 200</p>
                 </div>
-                <textarea className={textarea} name="" id="" placeholder="Александр" onChange={handleChange}></textarea>
-                <div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{text.length} / 200</div>
+                <textarea className={textarea} name="short_text" id="" placeholder="Краткое описание" value={dataEvent.short_text} onChange={handleDataEventChange}></textarea>
+                <div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{dataEvent.short_text.length} / 200</div>
             </div>
 
             <div className={css`
@@ -234,21 +269,23 @@ const EventAdd = ({setBack}) => {
             `}>
                 <div>
                     <p>Тематика мероприятия</p>
-                    <DropdownInput options={options} placeholder={'Выбрать тематику'} />
+                    <EventDropdown full={true} options={metaParameters && metaParameters.subjects} items={dataEvent.subject} incomeFunction={handleDataEventChangeSubject} placeholder={'Выбрать тематики'} />
 					{/* <DropdownInput full={full} options={metaParameters && metaParameters.subjects} type={'direction'} placeholder={'ТематикаФЫВ'} /> */}
                 </div>
                 <div>
                     <p>Формат мероприятия</p>
-                    <DropdownInput options={options} placeholder={'Выбрать формат'} />
+					<EventDropdown full={true} options={metaParameters && metaParameters.formats} items={dataEvent.format} incomeFunction={handleDataEventChangeFormat} placeholder={'Выбрать формат'} />
+                    {/* <DropdownInput full={true} options={options} placeholder={'Выбрать формат'} /> */}
                 </div>
                 <div>
                     <p>Организатор</p>
-                    <DropdownInput options={options} placeholder={'Выбрать организатора'} />
+					{/* <EventDropdown full={true} placeholder={'Выбрать организатора'} /> */}
+                    <DropdownInput full={true} placeholder={'Выбрать организатора'} />
                     <p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/lk/org" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
                 </div>
                 <div>
                     <p>Ссылка на сайт мероприятия</p>
-                    <input className={input} type="text" placeholder="Александр" />
+					<input className={input} type="text" placeholder="Ссылка на сайт мероприятия" name="link" value={dataEvent.link} onChange={handleDataEventChange} />
                     <p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
                 </div>
             </div>
@@ -342,10 +379,10 @@ const EventAdd = ({setBack}) => {
                 <div>
                     <p>Стоимость участия</p>
                     <div className={css`display: flex;gap:8px;align-items: center;`}>
-                        <input className={input} type="text" placeholder="Введите стоимость" />
+                        <input className={input} type="text" placeholder="Введите стоимость" name="cost" value={dataEvent.cost} onChange={handleDataEventChange} />
                         <p className={css`color: #47474D;`}>руб.</p>
                     </div>
-                    <AnimatedSwitch label="Бесплатное участие" initialChecked={false} />
+                    <AnimatedSwitch label="Бесплатное участие" initialChecked={false} incomeFunction={handleDataEventChangeFree} />
                 </div>
                 <div>
                     <p>Статус мероприятия</p>
@@ -652,6 +689,7 @@ const EventAdd = ({setBack}) => {
             <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{view > 1 ? setView(prev => prev - 1) : setBack(1)}}>Отменить</Button>
             <Button onClick={()=>{view < 3 ? setView(prev => prev + 1) : handleAddEventSubmit()}}> {view > 2 ? 'Опубликовать' : 'Продолжить'}</Button>
             <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`}>Сохранить в черновик</div>
+			<div onClick={()=>handleAddEventSubmit()}>отправить</div>
         </div>
         </UserMain>
     )
