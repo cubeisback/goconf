@@ -271,11 +271,11 @@ export default function Main() {
 
 			</Container>
 			
-			<Container $fullWidth={true}>
+			<Container $fullWidth>
 				<FilterOnMain />
 			</Container>
 			<PurpleBg>
-				<Container $fullWidth={true}>
+				<Container $fullWidth>
 					<MainEventsSlider />
 				</Container>
 			</PurpleBg>

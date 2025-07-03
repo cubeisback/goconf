@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { css, cx } from "@emotion/css";
-import { Button, input, inputItem, userMain } from "@/styles/ui";
+import { Button, input, inputItem, UserMain } from "@/styles/ui";
 import EditIcon from "@/public/images/svg/edit.svg";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
@@ -14,7 +14,7 @@ import { getApiUrl } from "@/functions/functions";
 
 //TODO перенести весь компонент в основной page.jsx
 
-const UserMain = () => {
+const UserMainScreen = () => {
     const theme = useTheme();
 
 	const [userData, setUserData] = useState({
@@ -182,7 +182,7 @@ const UserMain = () => {
 
 
     return(
-        <motion.div className={userMain}
+        <UserMain
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }} 
         transition={{ duration: .3 }}>
@@ -418,8 +418,8 @@ const UserMain = () => {
                 </motion.div>
                 )}
             </AnimatePresence>
-        </motion.div>
+        </UserMain>
     )
 };
 
-export default UserMain;
+export default UserMainScreen;

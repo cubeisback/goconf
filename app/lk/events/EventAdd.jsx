@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { css, cx } from "@emotion/css";
-import { Button, Container, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
+import { Button, Container, input, lkContainer, textarea, UserMain } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from "react";
 import DropdownInput from "@/components/ui/DropdownInput";
@@ -131,11 +131,10 @@ const EventAdd = ({setBack}) => {
 	}, []);
 
     return( 
-        <motion.div 
+        <UserMain
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }} 
         transition={{ duration: .3 }}
-        className={userMain}
         >
         <div className={css`
                 display: flex;
@@ -180,7 +179,7 @@ const EventAdd = ({setBack}) => {
             </div>
 
             {view === 1 && 
-        <motion.div className={userMain}
+        <UserMain
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }} 
         transition={{ duration: .3 }}>
@@ -365,10 +364,10 @@ const EventAdd = ({setBack}) => {
             {/* <EditorComponent /> */}
 			<p>EDITOR</p>
             
-        </motion.div>
+        </UserMain>
         }
         {view === 2 && 
-        <motion.div className={userMain}
+        <UserMain
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: .3 }}>
@@ -519,7 +518,7 @@ const EventAdd = ({setBack}) => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.div>
+        </UserMain>
         }
 
         {view === 3 && 
@@ -654,7 +653,7 @@ const EventAdd = ({setBack}) => {
             <Button onClick={()=>{view < 3 ? setView(prev => prev + 1) : handleAddEventSubmit()}}> {view > 2 ? 'Опубликовать' : 'Продолжить'}</Button>
             <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`}>Сохранить в черновик</div>
         </div>
-        </motion.div>
+        </UserMain>
     )
 };
 

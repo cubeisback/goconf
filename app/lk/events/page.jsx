@@ -1,7 +1,7 @@
 "use client"
 
 import { css, cx } from "@emotion/css";
-import { Button, Container, container, inputRadio, inputRadioActive, lkContainer, userMain } from "@/styles/ui";
+import { Button, Container, inputRadio, inputRadioActive, lkContainer, UserEventsBlock, UserEventsBlockItem, UserEventsBlockItemTop, UserEventsBlockItemTopIcons, UserEventsBlockItemTopPublishDate, UserEventsBlockItemTopStatus, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useEffect, useState } from "react";
@@ -15,77 +15,9 @@ import LkMenu from "@/components/ui/LkMenu";
 import Link from "next/link";
 import axios from "axios";
 import { getApiUrl } from "@/functions/functions";
-import styled from "@emotion/styled";
 import EventAdd from "./EventAdd";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
-
-const UserEventsBlock = styled.div`
-	display: flex;
-    flex-direction: column;
-    gap: 32px;
-`
-const UserEventsBlockItem = styled.div`
-	border-radius: 28px;
-    background-color: #fff;
-    box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
-    padding: 24px 32px;
-
-    @media(max-width: 575px) {
-        padding: 16px;
-    }
-`
-const UserEventsBlockItemTop = styled.div`
-	display: flex;
-    gap: 16px;
-    align-items: center;
-    margin-bottom: 24px;
-
-    @media(max-width: 575px) {
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
-`
-const UserEventsBlockItemTopStatus = styled.div`
-	padding: 3px 8px 5px;
-	border-radius: 8px;
-	color: #fff;
-	background-color: #8553F9;
-	font-size: 14px;
-	line-height: 1.16;
-`
-const UserEventsBlockItemTopPublishDate = styled.div`
-	flex: 1;
-	font-size: 14px; 
-	line-height: 1.16;
-	color: #47474D;
-
-	@media(max-width: 575px) {
-		order: 1;
-		flex: 0 1 100%;
-		max-width: 100%;
-	}
-`
-
-const UserEventsBlockItemTopIcons = styled.div`
-	display: flex;
-	gap: 16px;
-
-	svg {
-		cursor: pointer;
-
-		path {
-			transition: .3s ease-in-out;
-		}
-
-		&:hover {
-
-			path {
-				stroke: #8553F9;
-			}
-		}
-	}
-`
 
 const UserEvents = () => {
     const theme = useTheme();
@@ -175,27 +107,12 @@ const UserEvents = () => {
                     <LkMenu />
                 
         {view === 1 && 
-        <motion.div className={userMain}
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }} 
-        transition={{ duration: .3 }}>
-            <div className={css`
-                display: flex;
-                gap: 16px;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 24px;
-
-                @media(max-width: 575px) {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-            `}>
-                <div className={css`
-                    font-family: Impact;
-                    font-size: 36px;
-                    line-height: 1.12;
-                `}>Мои мероприятия</div>
+        <UserMain
+        	initial={{ opacity: 0, x: 50 }}
+        	animate={{ opacity: 1, x: 0 }} 
+        	transition={{ duration: .3 }}>
+            <UserMainTitles>
+                <UserMainTitlesTitle>Мои мероприятия</UserMainTitlesTitle>
                 {/* <Link href="/lk/add">+ Добавить событие</Link> */}
 				<Button onClick={()=>setView(5)}>
 					<p>
@@ -203,23 +120,15 @@ const UserEvents = () => {
 						<span>+ Добавить событие</span>
 					</p>
 				</Button>
-            </div>
+            </UserMainTitles>
             
-            <div className={css`
-                margin-bottom: 32px;
-                display: flex;
-                gap: 16px;
-            `}>
-                <div className={css`flex: 0 1 300px;`}>
-                    <p className={css`margin-bottom: 8px;color: #47474D;font-size: 14px;line-height:1.16;`}>Статус</p>
-                    {/* <div className={css`display:flex;gap:8px;justify-content:space-between;background-color:#fff;border-radius:28px;padding:14px 16px;`}>
-                        <p className={css`color: #47474D;font-size: 14px;line-height:1.16;`}>Все</p>
-                        <ArrowDown />
-                    </div> */}
+            <div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
+                <div style={{flex: '0 1 300px'}}>
+                    <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Статус</p>
                     <DropdownInput options={options} placeholder={'Тематика'} isSimple />
                 </div>
-                <div className={css`flex: 0 1 300px;`}>
-                    <p className={css`margin-bottom: 8px;color: #47474D;font-size: 14px;line-height:1.16;`}>Дата проведения</p>
+                <div style={{flex: '0 1 300px'}}>
+                    <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Дата проведения</p>
                     <DropdownInput options={options} placeholder={'Предстоящие'} isSimple />
                 </div>
             </div>
@@ -592,31 +501,16 @@ const UserEvents = () => {
                 </div>
             </UserEventsBlock>
             
-        </motion.div>
+        </UserMain>
         }
         {view === 2 && 
-        <motion.div className={userMain}
+        <UserMain
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: .3 }}>
-            <div className={css`
-                display: flex;
-                gap: 16px;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 24px;
-
-                @media(max-width: 575px) {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-            `}>
-                <div className={css`
-                    font-family: Impact;
-                    font-size: 36px;
-                    line-height: 1.12;
-                `}>Продвигать событие</div>
-            </div>
+            <UserMainTitles>
+                <UserMainTitlesTitle>Продвигать событие</UserMainTitlesTitle>
+            </UserMainTitles>
             
             <div className={css`
                 display: flex;
@@ -673,28 +567,13 @@ const UserEvents = () => {
             </div>
 			<div onClick={()=>setView(1)}>Назад</div>
             <Button onClick={()=>setView(3)}>Перейти к оплате</Button>
-        </motion.div>
+        </UserMain>
         }
         {view === 3 &&
-        <div className={userMain}>
-            <div className={css`
-                display: flex;
-                gap: 16px;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 24px;
-
-                @media(max-width: 575px) {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-            `}>
-                <div className={css`
-                    font-family: Impact;
-                    font-size: 36px;
-                    line-height: 1.12;
-                `}>Продвигать событие</div>
-            </div>
+        <UserMain>
+            <UserMainTitles>
+                <UserMainTitlesTitle>Продвигать событие</UserMainTitlesTitle>
+            </UserMainTitles>
             
             <div className={css`
                 display: flex;
@@ -767,7 +646,7 @@ const UserEvents = () => {
                 </div>
             </motion.div>
             
-        </div>
+        </UserMain>
         }
         {view === 4 && 
         <motion.div className={css`
@@ -828,12 +707,6 @@ const UserEvents = () => {
         }
 
 		{view === 5 && 
-			// <motion.div
-			// initial={{ opacity: 0, x: 50 }}
-			// animate={{ opacity: 1, x: 0 }} 
-			// transition={{ duration: .3 }}>
-			// Добавление
-			// </motion.div>
 			<EventAdd setBack={setView} />
 		}
         

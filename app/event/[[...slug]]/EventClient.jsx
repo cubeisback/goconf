@@ -1,6 +1,6 @@
 "use client"
 
-import { Breadcrumbs, breadcrumbs, Button, container, pagePromo, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, breadcrumbs, Button, Container, pagePromo, pageTitle } from "@/styles/ui";
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
@@ -170,7 +170,7 @@ export default function EventClient({ params }) {
 		{/* <DocumentTitle value={decodeHtmlEntities(seoTitle)} /> */}
 		{/* <DocumentDescription value={decodeHtmlEntities(seoDescription)} /> */}
 			<div className={pagePromo}>
-				<div className={container}>
+				<Container>
 					<Breadcrumbs>
 						<Link href="/">Главная</Link>
 						<Link href="/events">Мероприятия</Link>
@@ -183,7 +183,7 @@ export default function EventClient({ params }) {
 							<Link key={theme.term_id} href={`/events/direction_${theme.slug}`}>{theme.name}</Link>
 						))}
 					</div>
-				</div>
+				</Container>
 			</div>
 
 			<div className={css`
@@ -193,7 +193,7 @@ export default function EventClient({ params }) {
 					padding-bottom: 64px;
 				}
 			`}>
-				<div className={container}>
+				<Container>
 					{pageInfo &&
 					<div className={css`
 						display: flex;
@@ -502,7 +502,7 @@ export default function EventClient({ params }) {
 						</motion.div>
 					</div>
 					}
-				</div>
+				</Container>
 			</div>
 			
 			<div className={css`
@@ -524,9 +524,9 @@ export default function EventClient({ params }) {
 					}
 				}
 			`}>
-				<div className={cx(container, css`@media(max-width: 1439px) {padding: 0;}` )}>
+				<Container $fullWidth>
 					<MainEventsSlider />
-				</div>
+				</Container>
 			</div>
 
 			<MainEvents id={pageInfo && pageInfo.data.ID} similar={true} />

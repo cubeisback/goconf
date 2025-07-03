@@ -2,22 +2,10 @@
 
 import { css } from "@emotion/css";
 import styled from "@emotion/styled";
+import { motion } from 'framer-motion';
 import Link from "next/link";
 
-// ✅ Не зависит от темы
-
-//TODO Удалить container и другие старые стили
-export const container = css`
-  width: 1340px;
-  margin: 0 auto;
-  padding: 0 30px;
-  position: relative;
-
-  @media (max-width: 1339px) {
-    width: 100%;
-    padding: 0 15px;
-  }
-`;
+//TODO Удалить старые стили
 
 export const Container = styled.div`
 	width: 1340px;
@@ -33,8 +21,7 @@ export const Container = styled.div`
 	@media(max-width: 1439px) {
 		padding: ${({ $fullWidth }) => ($fullWidth && "0")};
 	}
-`
-
+`;
 export const DoubleLink = styled.div`
   color: #191921;
   line-height: 1.28;
@@ -56,7 +43,6 @@ export const DoubleLink = styled.div`
     }
   }
 `;
-
 export const DoubleLinkArrow = styled(Link)`
 	width: 56px;
 	height: 56px;
@@ -97,105 +83,103 @@ export const DoubleLinkArrow = styled(Link)`
 			}
 		}
 	}
-`
-
+`;
 const ButtonType = ({ $button, ...props }) => {
   const Component = $button ? 'button' : 'div';
   return <Component {...props} />;
 };
 export const Button = styled(ButtonType)`
-  border-radius: 28px;
-  background: ${({ green, theme }) =>
-    green ? theme.colors.green : theme.colors.purple};
-  border: 2px solid ${({ green, theme }) =>
-    green ? theme.colors.green : theme.colors.purple};
-  padding: 12px 32px;
-  cursor: pointer;
-  text-align: center;
-  color: ${({ green, theme }) => (green ? theme.colors.font : "#fff")};
-  width: ${({ full }) => (full ? '100%' : 'max-content')};
-  transition: ${({ theme }) => theme.transition};
-  font-size: 16px;
-
-  &:hover {
-    background: #fff;
-    color: ${({ green, theme }) =>
-      green ? theme.colors.font : theme.colors.purple};
-  }
-
-  @media (max-width: 575px) {
-    width: 100%;
-  }
-
-  p {
-    height: 21px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+	border-radius: 28px;
+	background: ${({ green, theme }) =>
+		green ? theme.colors.green : theme.colors.purple};
+	border: 2px solid ${({ green, theme }) =>
+		green ? theme.colors.green : theme.colors.purple};
+	padding: 12px 32px;
+	cursor: pointer;
+	text-align: center;
+	color: ${({ green, theme }) => (green ? theme.colors.font : "#fff")};
+	width: ${({ full }) => (full ? '100%' : 'max-content')};
+	transition: ${({ theme }) => theme.transition};
 	font-size: 16px;
 
-    span {
-      display: block;
-      min-width: max-content;
-      transition: ${({ theme }) => theme.transition};
-      color: ${({ green, theme }) => (green ? theme.colors.font : "#fff")};
+	&:hover {
+		background: #fff;
+		color: ${({ green, theme }) =>
+		green ? theme.colors.font : theme.colors.purple};
+	}
 
-      &:nth-of-type(2) {
-        transform: translateY(100%);
-        color: ${({ green, theme }) =>
-          green ? theme.colors.font : theme.colors.purple};
-      }
-    }
-  }
+	@media (max-width: 575px) {
+		width: 100%;
+	}
 
-  &:hover p span {
-    transform: translateY(-100%);
-  }
+	p {
+		height: 21px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		font-size: 16px;
+
+		span {
+		display: block;
+		min-width: max-content;
+		transition: ${({ theme }) => theme.transition};
+		color: ${({ green, theme }) => (green ? theme.colors.font : "#fff")};
+
+		&:nth-of-type(2) {
+			transform: translateY(100%);
+			color: ${({ green, theme }) =>
+			green ? theme.colors.font : theme.colors.purple};
+		}
+		}
+	}
+
+	&:hover p span {
+		transform: translateY(-100%);
+	}
 `;
-
 export const ButtonMore = styled.div`
-  margin: 0 auto;
-                        padding: 14px 32px;
-                        border-radius: 28px;
-                        border: 2px solid ${({ theme }) => theme.colors.purple};
-                        background-color: #fff;
-                        width: max-content;
-                        text-align: center;
+  	margin: 0 auto;
+    padding: 14px 32px;
+    border-radius: 28px;
+    border: 2px solid ${({ theme }) => theme.colors.purple};
+    background-color: #fff;
+    width: max-content;
+    text-align: center;
                         
-                        line-height: 1.28;
-                        cursor: pointer;
-                        transition: ${({ theme }) => theme.transition};  
+    line-height: 1.28;
+    cursor: pointer;
+    transition: ${({ theme }) => theme.transition};  
                         
-                        &:hover {
-                            background-color: ${({ theme }) => theme.colors.purple};
-                        }
-
-  @media (max-width: 575px) {
-    width: 100%;
-  }
-
-  p {
-    height: 21px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-
-    span {
-      display: block;
-      min-width: max-content;
-      transition: ${({ theme }) => theme.transition};
-      color: ${({ theme }) => theme.colors.purple};
-
-      &:nth-of-type(2) {
-        transform: translateY(100%);
-        color: #fff;
-      }
+    &:hover {
+        background-color: ${({ theme }) => theme.colors.purple};
     }
-  }
 
-  &:hover p span {
-    transform: translateY(-100%);
-  }
+	@media (max-width: 575px) {
+		width: 100%;
+	}
+
+	p {
+		height: 21px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+
+		span {
+		display: block;
+		min-width: max-content;
+		transition: ${({ theme }) => theme.transition};
+		color: ${({ theme }) => theme.colors.purple};
+
+		&:nth-of-type(2) {
+			transform: translateY(100%);
+			color: #fff;
+		}
+		}
+	}
+
+	&:hover p span {
+		transform: translateY(-100%);
+	}
 `;
 
 export const inputItem = css`
@@ -315,41 +299,6 @@ export const PagePromo = styled.div`
   background-color: #F5F7FA;
   padding: 120px 0 32px;
 `;
-
-//TODO удалить просто стиль
-export const breadcrumbs = css`
-  margin-bottom: 16px;
-  display: flex;
-  gap: 6px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  max-width: calc(100vw - 30px);
-
-  @media (max-width: 575px) {
-    margin-bottom: 32px;
-  }
-
-  a {
-    font-size: 14px;
-    color: #B5B7B9;
-    line-height: 1.16;
-    min-width: max-content;
-
-    &::after {
-      content: "/";
-      padding-left: 6px;
-    }
-  }
-
-  p {
-    color: #6C6C71;
-    font-size: 14px;
-    line-height: 1.16;
-    min-width: max-content;
-  }
-`;
-
 export const Breadcrumbs = styled.div`
 	margin-bottom: 16px;
 	display: flex;
@@ -405,15 +354,6 @@ export const PageTitle = styled.h1`
 
   @media (max-width: 575px) {
     font-size: 32px;
-  }
-`;
-
-export const userMain = css`
-  flex: 1;
-  padding-top: 24px;
-
-  @media (max-width: 1023px) {
-    width: 100%;
   }
 `;
 
@@ -487,9 +427,9 @@ export const inputRadio = css`
 `;
 
 export const inputRadioActive = css`
-  &::before {
-    border-color: #8553F9;
-  }
+	&::before {
+		border-color: #8553F9;
+	}
 `;
 
 export const lkContainer = css`
@@ -558,4 +498,101 @@ export const Article = styled.article`
 				font-size: 14px;
 			}
 		}
+`;
+
+
+//USER STYLES
+export const UserMain = styled(motion.div)`
+	flex: 1;
+	padding-top: 24px;
+
+	@media (max-width: 1023px) {
+		width: 100%;
+	}
+`;
+export const UserEventsBlock = styled.div`
+	display: flex;
+    flex-direction: column;
+    gap: 32px;
+`;
+export const UserEventsBlockItem = styled.div`
+	border-radius: 28px;
+    background-color: #fff;
+    box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+    padding: 24px 32px;
+
+    @media(max-width: 575px) {
+        padding: 16px;
+    }
+`;
+export const UserEventsBlockItemTop = styled.div`
+	display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+
+    @media(max-width: 575px) {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+`;
+export const UserEventsBlockItemTopStatus = styled.div`
+	padding: 3px 8px 5px;
+	border-radius: 8px;
+	color: #fff;
+	background-color: #8553F9;
+	font-size: 14px;
+	line-height: 1.16;
+`;
+export const UserEventsBlockItemTopPublishDate = styled.div`
+	flex: 1;
+	font-size: 14px; 
+	line-height: 1.16;
+	color: #47474D;
+
+	@media(max-width: 575px) {
+		order: 1;
+		flex: 0 1 100%;
+		max-width: 100%;
+	}
+`;
+export const UserEventsBlockItemTopIcons = styled.div`
+	display: flex;
+	gap: 16px;
+
+	svg {
+		cursor: pointer;
+
+		path {
+			transition: .3s ease-in-out;
+		}
+
+		&:hover {
+
+			path {
+				stroke: #8553F9;
+			}
+		}
+	}
+`;
+export const UserMainTitles = styled.div`
+	display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    @media(max-width: 575px) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+`;
+export const UserMainTitlesTitle = styled.div`
+	font-family: Impact;
+    font-size: 36px;
+    line-height: 1.12;
+
+    @media(max-width: 575px) {
+        font-size: 28px;
+    }
 `;

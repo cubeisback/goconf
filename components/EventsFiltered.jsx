@@ -1,7 +1,7 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { ButtonMore, Container, container, DoubleLinkArrow } from "@/styles/ui";
+import { ButtonMore, Container, DoubleLinkArrow } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
 import LinkArrow from "@/public/images/svg/arrow_link.svg";
 import { useEffect, useState } from "react";

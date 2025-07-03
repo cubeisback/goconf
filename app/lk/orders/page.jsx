@@ -5,7 +5,7 @@ import Link from "next/link";
 import { css, cx } from "@emotion/css";
 import { motion } from 'framer-motion';
 import { useState } from "react";
-import { Container, container, lkContainer, userMain } from "@/styles/ui";
+import { Container, container, lkContainer, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import EditIcon from "@/public/images/svg/edit.svg";
 import { useTheme } from "@emotion/react";
 import LkMenu from "@/components/ui/LkMenu";
@@ -36,22 +36,15 @@ const UserOrders = () => {
                 `}>
                     <LkMenu />
                 
-        <div className={userMain}>
+        <UserMain>
             <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }} 
-            transition={{ duration: .3 }}
-            >
-                <div className={css`
-                    font-family: Impact;
-                    font-size: 36px;
-                    line-height: 1.12;
-                    margin-bottom: 16px;
-
-                    @media(max-width: 575px) {
-                        font-size: 28px;
-                    }
-                `}>Организаторы</div>
+				initial={{ opacity: 0, x: 50 }}
+				animate={{ opacity: 1, x: 0 }} 
+				transition={{ duration: .3 }}
+            >	
+				<UserMainTitles>
+					<UserMainTitlesTitle>Организаторы</UserMainTitlesTitle>
+				</UserMainTitles>
                 <div className={css`
                     margin-bottom: 24px;
                     display: flex;
@@ -188,7 +181,7 @@ const UserOrders = () => {
         </motion.div>
         }
 
-        </div>
+        </UserMain>
 
 		</div>
             </Container>

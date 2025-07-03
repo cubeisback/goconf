@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { css, cx } from "@emotion/css";
-import { Button, Container, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
+import { Button, Container, container, input, lkContainer, textarea, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from "react";
 import DropdownInput from "@/components/ui/DropdownInput";
@@ -81,25 +81,14 @@ const UserAdd = () => {
                 `}>
                     <LkMenu />
                 
-        <motion.div 
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }} 
-        transition={{ duration: .3 }}
-        className={userMain}
+        <UserMain
+        	initial={{ opacity: 0, x: 50 }}
+        	animate={{ opacity: 1, x: 0 }} 
+        	transition={{ duration: .3 }}
         >
-        <div className={css`
-                display: flex;
-                gap: 16px;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 24px;
-            `}>
-                <div className={css`
-                    font-family: Impact;
-                    font-size: 36px;
-                    line-height: 1.12;
-                `}>Добавить событие</div>
-            </div>
+        	<UserMainTitles>
+                <UserMainTitlesTitle>Добавить событие</UserMainTitlesTitle>
+            </UserMainTitles>
 
             <div className={css`
                 display: flex;
@@ -130,10 +119,10 @@ const UserAdd = () => {
             </div>
 
             {view === 1 && 
-        <motion.div className={userMain}
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }} 
-        transition={{ duration: .3 }}>
+        <UserMain
+        	initial={{ opacity: 0, x: 50 }}
+        	animate={{ opacity: 1, x: 0 }} 
+        	transition={{ duration: .3 }}>
 
             <div className={css`margin-bottom: 24px;`}>
                 <div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;
@@ -314,10 +303,10 @@ const UserAdd = () => {
             {/* <EditorComponent /> */}
 			<p>EDITOR</p>
             
-        </motion.div>
+        </UserMain>
         }
         {view === 2 && 
-        <motion.div className={userMain}
+        <UserMain
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: .3 }}>
@@ -468,7 +457,7 @@ const UserAdd = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.div>
+        </UserMain>
         }
 
         {view === 3 && 
@@ -603,7 +592,7 @@ const UserAdd = () => {
             <Button onClick={()=>{view < 3 && setView(prev => prev + 1)}}> {view > 2 ? 'Опубликовать' : 'Продолжить'}</Button>
             <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`}>Сохранить в черновик</div>
         </div>
-        </motion.div>
+        </UserMain>
         
         </div>
             </Container>

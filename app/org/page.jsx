@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Form } from '@/components/Form';
-import { breadcrumbs, Button, Container, container, pagePromo, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, Button, Container, pagePromo, pageTitle } from "@/styles/ui";
 import { css, cx } from '@emotion/css';
 import example_img from '/public/images/example.png';
 import Link from 'next/link';
@@ -74,10 +74,10 @@ const Org = () => {
         <>
             <div className={pagePromo}>
                 <Container>
-                    <div className={breadcrumbs}>
+                    <Breadcrumbs>
                         <Link href="/">Главная</Link>
                         <p>Организаторам</p>
-                    </div>
+                    </Breadcrumbs>
                     <h1 className={cx(pageTitle, css`text-align:center;`)}>{orgsData?.title && orgsData.title}</h1>
                     <div className={css`
                         font-size: 20px;

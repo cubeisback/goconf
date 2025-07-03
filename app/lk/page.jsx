@@ -2,11 +2,11 @@
 
 import { css } from "@emotion/css";
 import { Container, lkContainer} from "@/styles/ui";
-import { useEffect, useState } from "react";
-import UserMain from "./main/page";
+import { useEffect } from "react";
 import LkMenu from "@/components/ui/LkMenu";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
+import UserMainScreen from "./main/page";
 
 const User = () => {
 	const router = useRouter();
@@ -29,7 +29,7 @@ const User = () => {
                     gap: 64px;
                 `}>
                     <LkMenu />
-					<UserMain />
+					<UserMainScreen />
                 </div>
             </Container>
         </div>

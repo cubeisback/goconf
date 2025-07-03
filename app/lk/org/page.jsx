@@ -1,7 +1,7 @@
 "use client"
 
 import { css, cx } from "@emotion/css";
-import { Button, Container, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
+import { Button, Container, container, input, lkContainer, textarea, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useState } from "react";
 import EditIcon from "@/public/images/svg/edit.svg";
@@ -31,33 +31,14 @@ const UserOrg = () => {
                     <LkMenu />
                 
         {view === 1 &&
-        <motion.div className={userMain}
+        <UserMain
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }} 
         transition={{ duration: .3 }}>
-            <div className={css`
-                display: flex;
-                gap: 16px;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 24px;
-
-                @media(max-width: 575px) {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-            `}>
-                <div className={css`
-                    font-family: Impact;
-                    font-size: 36px;
-                    line-height: 1.12;
-
-                    @media(max-width: 575px) {
-                        font-size: 28px;
-                    }
-                `}>Организаторы</div>
+            <UserMainTitles>
+                <UserMainTitlesTitle>Организаторы</UserMainTitlesTitle>
                 <Button onClick={()=>setView(2)}>+ Добавить организатора</Button>
-            </div>
+            </UserMainTitles>
 
             <div className={css`
                 display: flex;
@@ -155,11 +136,11 @@ const UserOrg = () => {
                     </div>
                 </div>
             </div>
-        </motion.div>
+        </UserMain>
         }
 
         {view === 2 && 
-        <motion.div className={userMain}
+        <UserMain
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: .3 }}>
@@ -261,7 +242,7 @@ const UserOrg = () => {
                 <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Предпросмотр</Button>
                 <Button>Сохранить</Button>
             </div>
-        </motion.div>
+        </UserMain>
         }
 
         </div>
