@@ -128,6 +128,59 @@ const UserMain = () => {
             color: #fff;
         `;
 
+	// Установить новый пароль:
+	// POST: https://dev.goconf.ru/wp-json/account/v2/password/
+	// Параметры: 
+	// password*
+	// confirm_password*
+
+	//TODO доделать валидацию пароля
+
+	const [passwordChange, setPasswordChange] = useState('');
+	const [passwordChangeConfirm, setPasswordChangeConfirm] = useState('');
+	const [passwordError, setPasswordError] = useState(false);
+
+	const handleUpdateUserPassword = async() => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+
+		console.log('pswd change', passwordChange, passwordChangeConfirm)
+		if(
+			passwordChange.trim() !== '' &&
+			passwordChangeConfirm.trim() !== '' &&
+			passwordChange === passwordChangeConfirm
+		) {
+			console.log('vse ok')
+			setPasswordError(false);
+			try {
+				const response = await axios.post(
+				getApiUrl("/backend/wp-json/account/v2/password/"),
+				{
+					password: passwordChange,
+					confirm_password: passwordChangeConfirm,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+
+				if (response.status === 200) {
+					console.log("Update password successful", response.data);
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+			}
+		} else {
+			console.log('huinya')
+			setPasswordError(true)
+			
+		}
+	};
+
+
     return(
         <motion.div className={userMain}
         initial={{ opacity: 0, x: 50 }}
@@ -193,7 +246,11 @@ const UserMain = () => {
                             </div>
                             <div className={inputItem}>
                                 <p>E-mail</p>
-                                <input type="email" className={input} value={userData.email} placeholder="Электронная почта" onChange={(e) => setUserData(prev => ({ ...prev, email: e.target.value }))} />
+                                <input type="email" className={input} value={userData.email} placeholder="Электронная почта" 
+								// onChange={(e) => setUserData(prev => ({ ...prev, email: e.target.value }))}
+								readOnly
+								style={{opacity: 0.64, pointerEvents: 'none'}}
+								 />
                             </div>
                             <div className={inputItem}>
                                 <p>Телефон</p>
@@ -202,7 +259,12 @@ const UserMain = () => {
                             <Button 
 								// className={cx(css`opacity: .2; pointer-events: none;`)}
 								onClick={()=>handleUpdateUserInfo(1)}
-							>Сохранить изменения</Button>
+							>
+								<p>
+									<span>Сохранить изменения</span>
+									<span>Сохранить изменения</span>
+								</p>
+							</Button>
                         </div>
                         <div className={css`
                             display: flex;
@@ -224,14 +286,34 @@ const UserMain = () => {
                             `}>Изменить пароль</div>
                             <div className={inputItem}>
                                 <p>Пароль</p>
-                                <PasswordInput text='Введите пароль' />
+								{/* <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} style={errorsLogin.passwordLogin && {borderColor: '#FC1234'}} /> */}
+                                <PasswordInput text='Введите пароль' value={passwordChange} onChange={setPasswordChange} />
+								{/* {passwordError && 
+									<AnimatePresence>
+										<motion.div 
+											initial={{ opacity: 0, x: -20, }}
+											animate={{ opacity: 1, x: 0 }}
+											exit={{ opacity: 0, x: 0 }}
+											transition={{ duration: .3 }}
+											>
+											<Error>{message}</Error>
+										</motion.div>
+									</AnimatePresence>
+								} */}
                             </div>
                             
                             <div className={inputItem}>
                                 <p>Повторите пароль</p>
-                                <PasswordInput text='Повторите пароль' />
+                                <PasswordInput text='Повторите пароль' value={passwordChangeConfirm} onChange={setPasswordChangeConfirm} />
                             </div>
-                            <Button className={cx(css`opacity: .2; pointer-events: none;`)}>Сохранить изменения</Button>
+                            <Button
+								onClick={()=>handleUpdateUserPassword()}
+							>
+								<p>
+									<span>Сохранить изменения</span>
+									<span>Сохранить изменения</span>
+								</p>
+							</Button>
                         </div>
                     </motion.div>
                 ) : (

@@ -4,7 +4,7 @@ import { css, cx } from "@emotion/css";
 import { Button, Container, container, inputRadio, inputRadioActive, lkContainer, userMain } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditIcon from "@/public/images/svg/edit.svg";
 import RemoveIcon from "@/public/images/svg/remove.svg";
 import CheckIcon from "@/public/images/svg/check.svg";
@@ -12,8 +12,80 @@ import UpIcon from "@/public/images/svg/up.svg";
 import InfoIcon from "@/public/images/svg/info.svg";
 import DropdownInput from "@/components/ui/DropdownInput";
 import LkMenu from "@/components/ui/LkMenu";
+import Link from "next/link";
+import axios from "axios";
+import { getApiUrl } from "@/functions/functions";
+import styled from "@emotion/styled";
+import EventAdd from "./EventAdd";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
+
+const UserEventsBlock = styled.div`
+	display: flex;
+    flex-direction: column;
+    gap: 32px;
+`
+const UserEventsBlockItem = styled.div`
+	border-radius: 28px;
+    background-color: #fff;
+    box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+    padding: 24px 32px;
+
+    @media(max-width: 575px) {
+        padding: 16px;
+    }
+`
+const UserEventsBlockItemTop = styled.div`
+	display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+
+    @media(max-width: 575px) {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+`
+const UserEventsBlockItemTopStatus = styled.div`
+	padding: 3px 8px 5px;
+	border-radius: 8px;
+	color: #fff;
+	background-color: #8553F9;
+	font-size: 14px;
+	line-height: 1.16;
+`
+const UserEventsBlockItemTopPublishDate = styled.div`
+	flex: 1;
+	font-size: 14px; 
+	line-height: 1.16;
+	color: #47474D;
+
+	@media(max-width: 575px) {
+		order: 1;
+		flex: 0 1 100%;
+		max-width: 100%;
+	}
+`
+
+const UserEventsBlockItemTopIcons = styled.div`
+	display: flex;
+	gap: 16px;
+
+	svg {
+		cursor: pointer;
+
+		path {
+			transition: .3s ease-in-out;
+		}
+
+		&:hover {
+
+			path {
+				stroke: #8553F9;
+			}
+		}
+	}
+`
 
 const UserEvents = () => {
     const theme = useTheme();
@@ -35,6 +107,62 @@ const UserEvents = () => {
 
 
     const [radios, setRadios] = useState(1);
+
+
+	// https://dev.goconf.ru/wp-json/account/v2/events/
+	const [events, setEvents] = useState(null)
+	const handleGetEvents = async() => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+
+			try {
+				const response = await axios.get(
+				getApiUrl("/backend/wp-json/account/v2/events/"),
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				console.log('events', response.data.items)
+				if (response.status === 200) {
+					setEvents(response.data.items)
+					// console.log("events", response.data);
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+			}
+	};
+
+	useEffect(() => {
+		handleGetEvents()
+	}, []);
+
+	// https://dev.goconf.ru/wp-json/account/v2/events/remove/
+	const handleRemoveEvent = async(id) => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+
+			try {
+				const response = await axios.get(
+				getApiUrl(`/backend/wp-json/account/v2/events/remove/?id=${id}`),
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				// console.log('events', response.data.items)
+				if (response.status === 200) {
+					// setEvents(response.data.items)
+					// console.log("events", response.data);
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+			}
+	}
 
     return(
         <div className={lkContainer}>
@@ -68,7 +196,13 @@ const UserEvents = () => {
                     font-size: 36px;
                     line-height: 1.12;
                 `}>Мои мероприятия</div>
-                <Button>+ Добавить событие</Button>
+                {/* <Link href="/lk/add">+ Добавить событие</Link> */}
+				<Button onClick={()=>setView(5)}>
+					<p>
+						<span>+ Добавить событие</span>
+						<span>+ Добавить событие</span>
+					</p>
+				</Button>
             </div>
             
             <div className={css`
@@ -90,11 +224,27 @@ const UserEvents = () => {
                 </div>
             </div>
 
-            <div className={css`
-                display: flex;
-                flex-direction: column;
-                gap: 32px;
-            `}>
+            <UserEventsBlock>
+				<p>реальные</p>
+				{events && events.map((event, index) => (
+					<UserEventsBlockItem key={index}>
+						<UserEventsBlockItemTop>
+							<UserEventsBlockItemTopStatus>На модерации</UserEventsBlockItemTopStatus>
+							<UserEventsBlockItemTopPublishDate>Дата публикации: {event.date_publish}</UserEventsBlockItemTopPublishDate>
+							<UserEventsBlockItemTopIcons>
+								<Link href={{ pathname: "/lk/add", query: { id: event.id } }}>
+									<EditIcon onClick={()=>console.log('edit')} />
+								</Link>
+								<RemoveIcon onClick={()=>handleRemoveEvent(event.id)} />
+							</UserEventsBlockItemTopIcons>
+						</UserEventsBlockItemTop>
+						<p>{event.city && event.city}</p>
+						<p>Старт: {event.date_start && event.date_start}</p>
+						<p>Конец: {event.date_end && event.date_end}</p>
+						<p>Название: {event.title && event.title}</p>
+					</UserEventsBlockItem>
+				))}
+				<p>статичные</p>
                 <div className={css`
                     border-radius: 28px;
                     background-color: #fff;
@@ -440,7 +590,7 @@ const UserEvents = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </UserEventsBlock>
             
         </motion.div>
         }
@@ -521,6 +671,7 @@ const UserEvents = () => {
                     </div>
                 ))}
             </div>
+			<div onClick={()=>setView(1)}>Назад</div>
             <Button onClick={()=>setView(3)}>Перейти к оплате</Button>
         </motion.div>
         }
@@ -675,6 +826,16 @@ const UserEvents = () => {
                 </div>
         </motion.div>
         }
+
+		{view === 5 && 
+			// <motion.div
+			// initial={{ opacity: 0, x: 50 }}
+			// animate={{ opacity: 1, x: 0 }} 
+			// transition={{ duration: .3 }}>
+			// Добавление
+			// </motion.div>
+			<EventAdd setBack={setView} />
+		}
         
 		</div>
             </Container>

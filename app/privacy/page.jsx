@@ -1,6 +1,6 @@
 'use client'
 
-import { Breadcrumbs, Container, pagePromo, PagePromo, pageTitle, PageTitle } from "@/styles/ui";
+import { Article, Breadcrumbs, Container, pagePromo, PagePromo, pageTitle, PageTitle } from "@/styles/ui";
 import { Form } from '@/components/Form';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -33,14 +33,13 @@ const About = () => {
 						<Container>
 							<Breadcrumbs>
 								<Link href="/">Главная</Link>
-								<Link href="/events">Мероприятия</Link>
 								<p>{title && title}</p>
 							</Breadcrumbs>
 							{title && <h1 className={pageTitle}>{title}</h1>}
 						</Container>
 			</div>
 			<Container>
-				{ pageInfo && <div dangerouslySetInnerHTML={{ __html:  pageInfo }}></div> }
+				{ pageInfo && <Article dangerouslySetInnerHTML={{ __html:  pageInfo }}></Article> }
 			</Container>
         </>
     );

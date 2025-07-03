@@ -212,7 +212,7 @@ export const EventsFiltered = ({onPage, similar, events, total}) => {
                                         }
                                     }
                                 `}>
-                                    {item.subject.map((direction, index) => (
+                                    {item.subject?.map((direction, index) => (
                                         <Link key={index} href={`/events/direction_${direction.slug}`}>{direction.name}</Link>
                                     ))}
                                 </div>

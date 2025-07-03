@@ -96,26 +96,28 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
 				if (sessionDate) {
 					const parsed = JSON.parse(sessionDate);
 					const defaultForm = {
-					city: null,
-					format: null,
-					direction: null,
-					dateStart: parsed?.state?.mainDates?.dateStart,
-					dateEnd: parsed?.state?.mainDates?.dateEnd,
-					isOnline: false,
-					isFree: false,
+						city: null,
+						format: null,
+						direction: null,
+						dateStart: parsed?.state?.mainDates?.dateStart,
+						dateEnd: parsed?.state?.mainDates?.dateEnd,
+						isOnline: false,
+						isFree: false,
+						// load_page: 1
 					};
 					setFilterValues({});
 					setFormData(defaultForm);
 					handleSubmit(defaultForm);
 				} else {
 					const defaultForm = {
-					city: null,
-					format: null,
-					direction: null,
-					dateStart: null,
-					dateEnd: null,
-					isOnline: false,
-					isFree: false,
+						city: null,
+						format: null,
+						direction: null,
+						dateStart: null,
+						dateEnd: null,
+						isOnline: false,
+						isFree: false,
+						// load_page: 1
 					};
 					setFilterValues({});
 					setFormData(defaultForm);

@@ -3,8 +3,10 @@
 import { css, cx } from "@emotion/css";
 import { useState } from "react";
 import { input } from "@/styles/ui";
+import Eye from "@/public/images/svg/eye.svg";
+import EyeOff from "@/public/images/svg/eye_off.svg";
 
-export const PasswordInput = ({ text, value, onChange }) => {
+export const PasswordInput = ({ text, value, onChange, style }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -19,6 +21,7 @@ export const PasswordInput = ({ text, value, onChange }) => {
         className={cx(input, css`padding-right: 46px;`)}
         onChange={(e) => onChange(e.target.value)}
         placeholder={text}
+		style={style}
       />
       <div
         onClick={() => setShowPassword((prev) => !prev)}
@@ -27,13 +30,13 @@ export const PasswordInput = ({ text, value, onChange }) => {
           right: 16px;
           top: 50%;
           transform: translateY(-50%);
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           cursor: pointer;
-          background: url('/eye-icon.svg') no-repeat center;
-          background-size: contain;
         `}
-      ></div>
+      >
+		{showPassword ? <Eye/> : <EyeOff/>}
+	  </div>
     </div>
   );
 };

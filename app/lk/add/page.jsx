@@ -5,7 +5,7 @@ import Link from "next/link";
 import { css, cx } from "@emotion/css";
 import { Button, Container, container, input, lkContainer, textarea, userMain } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropdownInput from "@/components/ui/DropdownInput";
 import { useTheme } from "@emotion/react";
 import AvatarIcon from "@/public/images/svg/avatar.svg";
@@ -16,6 +16,8 @@ import { AnimatedSwitch } from "../notifications/page";
 import img_ex_1 from '/public/images/events_1.jpg';
 import LkMenu from "@/components/ui/LkMenu";
 import Image from "next/image";
+import { getApiUrl } from "@/functions/functions";
+import axios from "axios";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6'];
 
@@ -43,6 +45,31 @@ const UserAdd = () => {
             color: #fff;
         `;
     
+	const handleGetEventsMeta = async() => {
+			const authTokenRaw = localStorage.getItem('authToken');
+			const authToken = JSON.parse(authTokenRaw);
+			const token = authToken?.state?.token;
+	
+				try {
+					const response = await axios.get(
+					getApiUrl("/backend/wp-json/account/v2/events/meta/"),
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+					);
+					console.log('events meta', response)
+					if (response.status === 200) {
+						// console.log("events", response.data);
+					}
+				} catch (error) {
+					console.error("Update password error", error);
+				}
+	};
+	useEffect(() => {
+		handleGetEventsMeta()
+	}, []);
 
     return(
         <div className={lkContainer}>

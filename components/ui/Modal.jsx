@@ -504,8 +504,8 @@ const ErrorWrapper = (message) => {
 					{errorsLogin.emailLogin && 
 						ErrorWrapper(errorsLogin.emailLogin)
 					}
-                    {/* <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} style={errorsLogin.passwordLogin && {borderColor: '#FC1234'}} /> */}
-					<input type="password" placeholder="Пароль" value={passwordLogin} onChange={(e) => setPasswordLogin(e.target.value)} style={errorsLogin.passwordLogin && {borderColor: '#FC1234'}} />
+                    <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} style={errorsLogin.passwordLogin && {borderColor: '#FC1234'}} />
+					{/* <input type="password" placeholder="Пароль" value={passwordLogin} onChange={(e) => setPasswordLogin(e.target.value)} style={errorsLogin.passwordLogin && {borderColor: '#FC1234'}} /> */}
 					{errorsLogin.passwordLogin && 
 						ErrorWrapper(errorsLogin.passwordLogin)
 					}
@@ -574,8 +574,8 @@ const ErrorWrapper = (message) => {
 						{errors.email && 
 							ErrorWrapper(errors.email)
 						}
-						{/* <PasswordInput text='Пароль' value={password} onChange={setPassword} /> */}
-						<input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} style={errors.password && {borderColor: '#FC1234'}} />
+						<PasswordInput text='Пароль' value={password} onChange={setPassword} style={errors.password && {borderColor: '#FC1234'}} />
+						{/* <input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} style={errors.password && {borderColor: '#FC1234'}} /> */}
 						{errors.password && 
 							ErrorWrapper(errors.password)
 						}

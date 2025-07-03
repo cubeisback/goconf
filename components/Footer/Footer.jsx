@@ -26,7 +26,7 @@ export const Footer = () => {
     <FooterWrapper>
         <div>© GoCONF 2025</div>
         <div><a href="mailto:info@goconf.ru">info@goconf.ru</a></div>
-        <div><Link href="/agreement" target='_blank'>Пользовательское соглашение</Link></div>
+        <div><Link href="/agreement">Пользовательское соглашение</Link></div>
     </FooterWrapper>
   );
 }
