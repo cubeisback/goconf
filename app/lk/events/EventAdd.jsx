@@ -523,7 +523,7 @@ const EventAdd = ({setBack, id}) => {
 							ref={inputRef}
 							style={{ display: 'none' }}
 							onChange={handleFileChange} />
-						{dataEvent?.anons?.id ? 
+						{dataEvent?.anons?.id && !previewUrl ? 
 							<img src={dataEvent.anons.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
 						:
 							
