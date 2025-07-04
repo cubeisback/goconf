@@ -5,7 +5,7 @@ import Link from "next/link";
 import { css, cx } from "@emotion/css";
 import { Button, input, textarea, UserEventNav, UserEventNavItem, UserEventNavSeparator, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DropdownInput from "@/components/ui/DropdownInput";
 import { useTheme } from "@emotion/react";
 import AvatarIcon from "@/public/images/svg/avatar.svg";
@@ -19,10 +19,12 @@ import Image from "next/image";
 import { getApiUrl } from "@/functions/functions";
 import axios from "axios";
 import EventDropdown from "./EventDropdown";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6'];
 
 const EventAdd = ({setBack, id}) => {
+	const token = useAuthStore((state) => state.token);
     const [view, setView] = useState(1);
 
     const theme = useTheme();
@@ -39,12 +41,9 @@ const EventAdd = ({setBack, id}) => {
             background-color: ${theme.colors.purple};
             color: #fff;
         `;
-	
+
 	const [metaParameters, setMetaParameters] = useState(null)
 	const handleGetEventsMeta = async() => {
-			const authTokenRaw = localStorage.getItem('authToken');
-			const authToken = JSON.parse(authTokenRaw);
-			const token = authToken?.state?.token;
 	
 				try {
 					const response = await axios.get(
@@ -65,6 +64,10 @@ const EventAdd = ({setBack, id}) => {
 				}
 	};
 
+	useEffect(()=>{
+		// console.log('города', metaParameters?.cities)
+	}, [metaParameters])
+
 	// https://dev.goconf.ru/wp-json/account/v2/events/editor/
 	// https://dev.goconf.ru/wp-json/account/v2/events/get_edit/
 	const [dataEvent, setDataEvent] = useState({
@@ -72,11 +75,11 @@ const EventAdd = ({setBack, id}) => {
 		date_start: '',
 		date_end: '',
 		address: '',
-		anons: null,
-		city: null,
+		anons: {},
+		city: {},
 		content: '',
 		cost: '',
-		cover: null,
+		cover: {},
 		format: [],
 		free: false,
 		gallery: [],
@@ -134,10 +137,6 @@ const EventAdd = ({setBack, id}) => {
 	
 
 	const handleAddEventSubmit = async() => {
-		const authTokenRaw = localStorage.getItem('authToken');
-		const authToken = JSON.parse(authTokenRaw);
-
-		const token = authToken?.state?.token;
 		try {
 			const response = await axios.post(
 			getApiUrl("/backend/wp-json/account/v2/events/editor/"),
@@ -169,10 +168,6 @@ const EventAdd = ({setBack, id}) => {
 
 
 	const dfsdfsdfsd2 = async(id) => {
-		const authTokenRaw = localStorage.getItem('authToken');
-		const authToken = JSON.parse(authTokenRaw);
-
-		const token = authToken?.state?.token;
 		console.log("dsfsjdhfds ID ID ", id)
 		try {
 			const response = await axios.get(
@@ -183,12 +178,114 @@ const EventAdd = ({setBack, id}) => {
 				},
 			}
 			);
-			console.log("editor ", response);
+			console.log("get edit info ", response);
 			if (response.status === 200) {
 				setDataEvent(response.data.data)
 			}
 		} catch (error) {
 			console.error(error);
+		}
+	}
+
+	// https://dev.goconf.ru/wp-json/images/v2/upload/ 
+	// const addPreviewImage = async (e) => {
+	// 	try {
+	// 		const file = e.target.files[0]; // получаем файл из инпута
+
+	// 		const formData = new FormData();
+	// 		formData.append('file', file); // имя 'file' должно совпадать с тем, что ожидает бекенд
+
+	// 		const response = await axios.post(
+	// 			getApiUrl('/backend/wp-json/account/images/v2/upload'),
+	// 			formData,
+	// 			{
+	// 				headers: {
+	// 					Authorization: `Bearer ${token}`,
+	// 					// Не указывай Content-Type, axios сам установит boundary для multipart/form-data
+	// 				},
+	// 			}
+	// 		);
+
+	// 		console.log("get edit info ", response);
+	// 		if (response.status === 200) {
+	// 			setDataEvent(response.data.data);
+	// 		}
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// };
+	const inputRef = useRef(null);
+	const [selectedFile, setSelectedFile] = useState(null);
+
+	const handleButtonClick = () => {
+		// Открытие диалога выбора файла
+		inputRef.current?.click();
+	};
+
+	const handleFileChange = async (e) => {
+		const file = e.target.files[0];
+		if (!file) return;
+
+		setSelectedFile(file); // если хочешь отобразить превью и т.д.
+
+		const formData = new FormData();
+		formData.append('file', file);
+		// [...formData.entries()].forEach(([key, value]) => {
+		// 	console.log('Ключ:', key);
+		// 	console.log('Значение:', value);
+		// });
+
+		try {
+			const response = await axios.post(
+				getApiUrl('/backend/wp-json/images/v2/upload'),
+				formData,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						// Content-Type не указываем, axios сам поставит
+					},
+				}
+			);
+
+			console.log("Файл успешно загружен:", response.data);
+			if (response.status === 200) {
+				setDataEvent((prev) => ({
+					...prev,
+					anons: {
+						id: response.data.id,
+						url: response.data.url
+					},
+				}));
+				// setDataEvent(response.data.data); // если хочешь отдать данные в родительский компонент
+			}
+		} catch (error) {
+			console.error("Ошибка загрузки:", error);
+		}
+	};
+
+	// https://dev.goconf.ru/wp-json/images/v2/delete/ 
+	const handleRemoveImage = async(id) => {
+		console.log(token)
+		try {
+			const response = await axios.get(
+				getApiUrl(`/backend/wp-json/images/v2/delete?id=${id}`),
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						// Content-Type не указываем, axios сам поставит
+					},
+				}
+			);
+
+			console.log("Файл успешно удален:", response);
+			if (response.status === 200) {
+				setDataEvent((prev) => ({
+					...prev,
+					anons: {},
+				}));
+			}
+		} catch (error) {
+			console.error("Ошибка загрузки:", error);
 		}
 	}
 
@@ -199,7 +296,7 @@ const EventAdd = ({setBack, id}) => {
 			transition={{ duration: .3 }}
         >
         	<UserMainTitles>
-                <UserMainTitlesTitle>Добавить событие</UserMainTitlesTitle>
+                <UserMainTitlesTitle>{id ? 'Редактирование': 'Добавить событие'}</UserMainTitlesTitle>
             </UserMainTitles>
 
             <UserEventNav>
@@ -319,9 +416,23 @@ const EventAdd = ({setBack, id}) => {
                 `}>
                     <div className={css`color: #47474D;margin-bottom: 4px;`}>Изображение для анонса</div>
                     <div className={css`color: #6C6C71;margin-bottom: 16px;`}>Изображение в&nbsp;ленте мероприятий</div>
-                    <div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}>
-                        <AvatarIcon />
+                    
+					<div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}
+					style={{cursor: "pointer"}}
+					onClick={handleButtonClick}
+					>
+						<input type="file"
+							ref={inputRef}
+							style={{ display: 'none' }}
+							onChange={handleFileChange} />
+						{dataEvent?.anons?.id ? 
+							<img src={dataEvent.anons.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
+						:
+							<AvatarIcon />
+						}
+                        
                     </div>
+					{dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>}
                     <div className={css`color: ${theme.colors.purple};margin-bottom: 8px;`}>Загрузить</div>
                     <div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
                         <p><span>Разрешение</span>&nbsp;&mdash; 400&times;270 пикселей</p>
@@ -382,7 +493,7 @@ const EventAdd = ({setBack, id}) => {
                         <input className={input} type="text" placeholder="Введите стоимость" name="cost" value={dataEvent.cost} onChange={handleDataEventChange} />
                         <p className={css`color: #47474D;`}>руб.</p>
                     </div>
-                    <AnimatedSwitch label="Бесплатное участие" initialChecked={false} incomeFunction={handleDataEventChangeFree} />
+                    <AnimatedSwitch label="Бесплатное участие" initialChecked={dataEvent?.free} incomeFunction={handleDataEventChangeFree} />
                 </div>
                 <div>
                     <p>Статус мероприятия</p>
@@ -474,8 +585,11 @@ const EventAdd = ({setBack, id}) => {
                                     max-width: 100%!important;
                                 }
                             `}>
-                                <p>Город</p>
-                                <DropdownInput options={options} placeholder={'Выбрать город'} />
+                                <p style={{color: 'red'}}>Город</p>
+                                {/* <DropdownInput options={metaParameters && metaParameters?.cities} placeholder={'Выбрать город'} /> */}
+								{/* <DropdownInput full={full} options={filtersData && filtersData.cities} handleFilterChange={handleFilterChange} filterValues={filterValues} type={'city'} placeholder={'Город'} /> */}
+								<EventDropdown full={true} options={metaParameters && metaParameters?.cities} items={[]} placeholder={'Выбрать город'} />
+								{/* items={dataEvent.format} incomeFunction={handleDataEventChangeFormat} */}
                             </div>
                             <div className={css`
                                 flex: 0 1 calc(50% - 12px)!important;
@@ -487,7 +601,7 @@ const EventAdd = ({setBack, id}) => {
                                 }
                             `}>
                                 <p>Адрес</p>
-                                <input className={input} type="text" placeholder="Укажите адрес" />
+								<input className={input} type="text" placeholder="Введите адрес" name="address" value={dataEvent.address} onChange={handleDataEventChange} />
                             </div>
                             <div>
                                 <p>Дата начала</p>

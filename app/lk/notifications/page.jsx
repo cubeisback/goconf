@@ -3,12 +3,16 @@
 import { css } from "@emotion/css";
 import { Button, Container, lkContainer } from "@/styles/ui";
 import { motion } from 'framer-motion';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LkMenu from "@/components/ui/LkMenu";
 
 
-export const AnimatedSwitch = ({ label, initialChecked = false, incomeFunction }) => {
-    const [isChecked, setIsChecked] = useState(initialChecked);
+export const AnimatedSwitch = ({ label, initialChecked, incomeFunction }) => {
+    const [isChecked, setIsChecked] = useState(false);
+
+	useEffect(()=>{
+		setIsChecked(initialChecked)
+	}, [initialChecked])
   
     const toggleSwitch = () => {
       setIsChecked(!isChecked);
