@@ -9,8 +9,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import axios from 'axios';
 import { getApiUrl } from '@/functions/functions';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useRouter } from 'next/navigation';
+import { Modal } from '@/components/ui/Modal';
 
 const Org = () => {
+	const token = useAuthStore((state) => state.token);
+	const router = useRouter();
+	const [isModalOpen, setIsModalOpen] = useState(false);
     const [active, setActive] = useState(1);
 
     const tabItem = css`
@@ -460,14 +466,33 @@ const Org = () => {
                                         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(%23clip0_9501_15213)"><path d="M16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8Z" fill="%23B3ED73"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.7783 5.74978L7.01386 11.0435L4.23438 8.26408L4.76471 7.73375L6.98523 9.95426L11.2208 5.24805L11.7783 5.74978Z" fill="%23191921"/></g><defs><clipPath id="clip0_9501_15213"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>');
                                     }`
 									}
+
+									span {
+										&::before {
+											content: '';
+											position: absolute;
+											width: 16px;
+											height: 16px;
+											left: 0;
+											top: 0;
+											background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(%23clip0_9501_15213)"><path d="M16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8Z" fill="%23B3ED73"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.7783 5.74978L7.01386 11.0435L4.23438 8.26408L4.76471 7.73375L6.98523 9.95426L11.2208 5.24805L11.7783 5.74978Z" fill="%23191921"/></g><defs><clipPath id="clip0_9501_15213"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>');
+										}
+									}
                                 }
                             `}>
-                                <p>Описание события, обложка, дата и место проведения</p>
+                                <p><span>Описание события, обложка, дата и место проведения</span></p>
                                 <p style={{color: index == 0 && '#D7DADD'}}>Ссылка на сайт</p>
                                 <p style={{color: index == 0 && '#D7DADD'}}>Аналитика (просмотры, переходы)</p>
                                 <p style={{color: index == 0 && '#D7DADD'}}>Фото и видео</p>
                             </div>
-                            <Button style={{margin: '0 auto'}} className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}>
+                            <Button style={{margin: '0 auto'}} className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}
+								onClick={()=>{
+									token ?
+										router.push('/lk/events')
+									:
+										setIsModalOpen(true)
+								}}
+							>
 								<p>
 									<span>Попробовать</span>
 									<span>Попробовать</span>
@@ -586,6 +611,8 @@ const Org = () => {
             </div>
 
             <Form />
+
+			<Modal isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} />
         </>
     );
 }
