@@ -44,7 +44,6 @@ const EventAdd = ({setBack, id}) => {
 
 	const [metaParameters, setMetaParameters] = useState(null)
 	const handleGetEventsMeta = async() => {
-	
 				try {
 					const response = await axios.get(
 					getApiUrl("/backend/wp-json/account/v2/events/meta/"),
@@ -134,16 +133,91 @@ const EventAdd = ({setBack, id}) => {
 		}));
 	};
 
-	
+	const [imageFormData, setImageFormData] = useState(null)
+	const handleUploadImage = async() => {
+			try {
+				const response = await axios.post(
+					getApiUrl('/backend/wp-json/images/v2/upload'),
+					imageFormData,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
 
-	const handleAddEventSubmit = async() => {
+				console.log("Файл успешно загружен:", response.data);
+
+				const newAnons = {
+					id: response.data.id,
+					url: response.data.url,
+				};
+
+				if (response.status === 200) {
+					if (dataEvent?.anons?.id) {
+						// 1. Удаляем старую картинку
+						await handleRemoveImage(dataEvent.anons.id);
+
+						// 2. Обновляем стейт
+						setDataEvent((prev) => {
+							const updated = {
+							...prev,
+							anons: newAnons,
+							};
+							// 3. Здесь сразу вызываем следующий шаг
+							// doSomethingAfterUpdate(updated);
+							handleAddEventSubmit(updated)
+							return updated;
+						});
+
+						} else {
+						// 1. Обновляем стейт
+						setDataEvent((prev) => {
+							const updated = {
+							...prev,
+							anons: newAnons,
+							};
+							// 2. Следующий шаг
+							// doSomethingAfterUpdate(updated);
+							handleAddEventSubmit(updated)
+							return updated;
+						});
+					}
+					// if(dataEvent?.anons?.id) {
+					// 	await handleRemoveImage(dataEvent?.anons?.id)
+					// 	setDataEvent((prev) => ({
+					// 		...prev,
+					// 		anons: {
+					// 			id: response.data.id,
+					// 			url: response.data.url
+					// 		},
+					// 	}));
+					// 	console.log('удалил картинку ', dataEvent?.anons?.id, 'стейт 1 ', dataEvent)
+					// } else {
+					// 	setDataEvent((prev) => ({
+					// 		...prev,
+					// 		anons: {
+					// 			id: response.data.id,
+					// 			url: response.data.url
+					// 		},
+					// 	}));
+					// 	console.log('картинки не было ', response.data.id, 'стейт 2 ', dataEvent)
+					// }
+					// console.log('стейт 3 ', dataEvent)
+				}
+			} catch (error) {
+				console.error("Ошибка загрузки:", error);
+			}
+	}
+
+	const handleAddEventSubmit = async(items) => {
 		try {
 			const response = await axios.post(
 			getApiUrl("/backend/wp-json/account/v2/events/editor/"),
 			{
 				...(id ? { id } : {}),
 				status: 'moderation',
-				data: dataEvent
+				data: items
 			},
 			{
 				headers: {
@@ -155,7 +229,6 @@ const EventAdd = ({setBack, id}) => {
 		} catch (error) {
 			console.error(error);
 		}
-		console.log(dataEvent)
 	}
 
 	useEffect(() => {
@@ -189,84 +262,66 @@ const EventAdd = ({setBack, id}) => {
 	}
 
 	// https://dev.goconf.ru/wp-json/images/v2/upload/ 
-	// const addPreviewImage = async (e) => {
-	// 	try {
-	// 		const file = e.target.files[0]; // получаем файл из инпута
-
-	// 		const formData = new FormData();
-	// 		formData.append('file', file); // имя 'file' должно совпадать с тем, что ожидает бекенд
-
-	// 		const response = await axios.post(
-	// 			getApiUrl('/backend/wp-json/account/images/v2/upload'),
-	// 			formData,
-	// 			{
-	// 				headers: {
-	// 					Authorization: `Bearer ${token}`,
-	// 					// Не указывай Content-Type, axios сам установит boundary для multipart/form-data
-	// 				},
-	// 			}
-	// 		);
-
-	// 		console.log("get edit info ", response);
-	// 		if (response.status === 200) {
-	// 			setDataEvent(response.data.data);
-	// 		}
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// };
 	const inputRef = useRef(null);
-	const [selectedFile, setSelectedFile] = useState(null);
 
 	const handleButtonClick = () => {
 		// Открытие диалога выбора файла
 		inputRef.current?.click();
 	};
 
+	const [previewUrl, setPreviewUrl] = useState(null);
 	const handleFileChange = async (e) => {
 		const file = e.target.files[0];
 		if (!file) return;
 
-		setSelectedFile(file); // если хочешь отобразить превью и т.д.
+		// создаём временный URL для превью
+		const imageUrl = URL.createObjectURL(file);
+		setPreviewUrl(imageUrl);
 
 		const formData = new FormData();
 		formData.append('file', file);
+		setImageFormData(formData)
 		// [...formData.entries()].forEach(([key, value]) => {
 		// 	console.log('Ключ:', key);
 		// 	console.log('Значение:', value);
 		// });
 
-		try {
-			const response = await axios.post(
-				getApiUrl('/backend/wp-json/images/v2/upload'),
-				formData,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-						// Content-Type не указываем, axios сам поставит
-					},
-				}
-			);
+				// setDataEvent((prev) => ({
+				// 	...prev,
+				// 	anons: {
+				// 		id: response.data.id,
+				// 		url: response.data.url
+				// 	},
+				// }));
 
-			console.log("Файл успешно загружен:", response.data);
-			if (response.status === 200) {
-				setDataEvent((prev) => ({
-					...prev,
-					anons: {
-						id: response.data.id,
-						url: response.data.url
-					},
-				}));
-				// setDataEvent(response.data.data); // если хочешь отдать данные в родительский компонент
-			}
-		} catch (error) {
-			console.error("Ошибка загрузки:", error);
-		}
+		// try {
+		// 	const response = await axios.post(
+		// 		getApiUrl('/backend/wp-json/images/v2/upload'),
+		// 		formData,
+		// 		{
+		// 			headers: {
+		// 				Authorization: `Bearer ${token}`,
+		// 			},
+		// 		}
+		// 	);
+
+		// 	console.log("Файл успешно загружен:", response.data);
+		// 	if (response.status === 200) {
+		// 		setDataEvent((prev) => ({
+		// 			...prev,
+		// 			anons: {
+		// 				id: response.data.id,
+		// 				url: response.data.url
+		// 			},
+		// 		}));
+		// 	}
+		// } catch (error) {
+		// 	console.error("Ошибка загрузки:", error);
+		// }
 	};
 
 	// https://dev.goconf.ru/wp-json/images/v2/delete/ 
 	const handleRemoveImage = async(id) => {
-		console.log(token)
 		try {
 			const response = await axios.get(
 				getApiUrl(`/backend/wp-json/images/v2/delete?id=${id}`),
@@ -471,12 +526,24 @@ const EventAdd = ({setBack, id}) => {
 						{dataEvent?.anons?.id ? 
 							<img src={dataEvent.anons.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
 						:
-							<AvatarIcon />
+							
+							previewUrl ? <img src={previewUrl} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} /> : <AvatarIcon />
 						}
                         
                     </div>
-					{dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>}
-                    <div className={css`color: ${theme.colors.purple};margin-bottom: 8px;`}>Загрузить</div>
+					
+					{/* {dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>} */}
+					{dataEvent?.anons?.id || previewUrl ?
+					<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
+                        <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+                        <div style={{cursor: 'pointer'}}>
+                            <RemoveIcon onClick={()=>handleRemoveImage(dataEvent.anons.id)} />
+                        </div>
+                    </div>
+					:
+					<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={handleButtonClick}>Загрузить</div>
+					}
+                    
                     <div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
                         <p><span>Разрешение</span>&nbsp;&mdash; 400&times;270 пикселей</p>
                         <p><span>Формат</span>&nbsp;&mdash; PNG или JPEG</p>
@@ -854,7 +921,7 @@ const EventAdd = ({setBack, id}) => {
             <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{view > 1 ? setView(prev => prev - 1) : setBack(1)}}>Отменить</Button>
             <Button onClick={()=>{view < 3 ? setView(prev => prev + 1) : handleAddEventSubmit()}}> {view > 2 ? 'Опубликовать' : 'Продолжить'}</Button>
             <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`}>Сохранить в черновик</div>
-			<div onClick={()=>handleAddEventSubmit()}>отправить</div>
+			<div onClick={()=>handleUploadImage()}>отправить</div>
         </div>
         </UserMain>
     )
