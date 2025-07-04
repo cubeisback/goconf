@@ -290,6 +290,48 @@ const EventAdd = ({setBack, id}) => {
 		}
 	}
 
+
+
+
+	const [time, setTime] = useState('12:00');
+
+  const handleInputChange = (e) => {
+    let value = e.target.value.replace(/[^\d]/g, ''); // Удаляем всё, кроме цифр
+
+    // Ограничим до 4 цифр (ччмм)
+    if (value.length > 4) value = value.slice(0, 4);
+
+    // Добавим двоеточие
+    let formatted = '';
+    if (value.length <= 2) {
+      formatted = value;
+    } else {
+      formatted = value.slice(0, 2) + ':' + value.slice(2);
+    }
+
+    setTime(formatted);
+  };
+
+  const handleBlur = () => {
+    const [h, m] = time.split(':');
+
+    let hours = parseInt(h || '0', 10);
+    let minutes = parseInt(m || '0', 10);
+
+    if (isNaN(hours)) hours = 0;
+    if (isNaN(minutes)) minutes = 0;
+
+    // Ограничения
+    if (hours > 23) hours = 23;
+    if (minutes > 59) minutes = 59;
+
+    const formatted = `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`;
+
+    setTime(formatted);
+  };
+
     return( 
         <UserMain
 			initial={{ opacity: 0, x: 50 }}
@@ -614,7 +656,15 @@ const EventAdd = ({setBack, id}) => {
                             </div>
                             <div>
                                 <p>Время начала</p>
-                                <input className={input} type="text" placeholder="Время начала" />
+								<input
+									type="text"
+									className={input}
+									value={time}
+									onChange={handleInputChange}
+									onBlur={handleBlur}
+									placeholder="Время начала"
+									maxLength={5}
+								/>
                             </div>
                         </div>
                     </motion.div>
