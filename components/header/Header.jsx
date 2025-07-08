@@ -17,8 +17,10 @@ import { Modal } from "@/components/ui/Modal";
 import { useTheme } from "@emotion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import useWindowSizeStore from "@/store/useWindowSizeStore";
+// import useWindowSizeStore from "@/store/useWindowSizeStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthReady } from "@/hooks/useAuthReady";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 const HeaderBlock = styled.header`
 	position: fixed;
@@ -158,10 +160,16 @@ const Burger = styled.div`
 `
 
 export const Header = () => {
-	const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+	// const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+	const { ready } = useAuthReady();
 	const user = useAuthStore((state) => state.user);
+	useEffect(() => {
+		if (!ready) return;
 	
-	const width = useWindowSizeStore((state) => state.width);
+	}, [ready]);
+	
+	// const width = useWindowSizeStore((state) => state.width);
+	const { width } = useWindowSize();
 	// const theme = useTheme();
 
 	const [notifications, setNotifications] = useState(false);
@@ -271,7 +279,7 @@ export const Header = () => {
               </Button>
             </Link>
           }
-          {isAuthenticated ?
+          {ready ?
           <>
           <div style={{cursor: 'pointer'}} ref={iconRef} onClick={toggleNotifications}>
             <NotificationIcon />

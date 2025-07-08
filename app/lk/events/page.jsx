@@ -141,7 +141,12 @@ const UserEvents = () => {
 					</UserEventsBlockHead>
 					<UserEventsBlockItem>
 						<UserEventsBlockItemTop>
-							<UserEventsBlockItemTopStatus>На модерации</UserEventsBlockItemTopStatus>
+							{event.status === 'publish' ? 
+							<UserEventsBlockItemTopStatus style={{backgroundColor: '#69B90F'}}>Опубликовано</UserEventsBlockItemTopStatus>
+							:
+							<UserEventsBlockItemTopStatus style={{backgroundColor: '#8553F9'}}>На модерации</UserEventsBlockItemTopStatus>
+							}
+							
 							<UserEventsBlockItemTopPublishDate>Дата публикации: {event.date_publish}</UserEventsBlockItemTopPublishDate>
 							<UserEventsBlockItemTopIcons>
 								{/* <Link href={{ pathname: "/lk/add", query: { id: event.id } }}>

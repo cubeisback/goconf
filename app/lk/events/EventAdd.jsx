@@ -216,7 +216,7 @@ const EventAdd = ({setBack, id}) => {
 			getApiUrl("/backend/wp-json/account/v2/events/editor/"),
 			{
 				...(id ? { id } : {}),
-				status: 'moderation',
+				status: 'draft',
 				data: items
 			},
 			{

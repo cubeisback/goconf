@@ -1,24 +1,3 @@
-// import { create } from 'zustand';
-// import { persist } from 'zustand/middleware';
-
-// export const useAuthStore = create(persist(
-//   (set) => ({
-//     token: null,
-//     isAuthenticated: false,
-
-//     login: (token) => {
-//       set({ token, isAuthenticated: true });
-//     },
-
-//     logout: () => {
-//       set({ token: null, isAuthenticated: false });
-//     },
-//   }),
-//   {
-//     name: 'authToken',
-//   }
-// ));
-
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -28,10 +7,11 @@ export const useAuthStore = create(
       token: null,
       isAuthenticated: false,
       user: null,
+      hasHydrated: false,
 
       login: (token) => {
         set({ token, isAuthenticated: true });
-        get().fetchUser(); // сразу загружаем пользователя
+        get().fetchUser();
       },
 
       logout: () => {
@@ -51,7 +31,7 @@ export const useAuthStore = create(
 
           if (!res.ok) {
             if (res.status === 401) {
-              get().logout(); // токен недействителен — выходим
+              get().logout();
             }
             return;
           }
@@ -62,15 +42,19 @@ export const useAuthStore = create(
           console.error('Ошибка при получении профиля:', err);
         }
       },
+
+      setHasHydrated: () => set({ hasHydrated: true }),
     }),
     {
-      name: 'authToken', // ключ в localStorage
+      name: 'authToken',
       partialize: (state) => ({
         token: state.token,
         isAuthenticated: state.isAuthenticated,
         user: state.user,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated?.(); // <== вот это нужно, иначе `hasHydrated` всегда false
+      },
     }
   )
 );
-

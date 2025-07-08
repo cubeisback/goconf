@@ -108,6 +108,9 @@ export const Button = styled(ButtonType)`
 		green ? theme.colors.font : theme.colors.purple};
 	}
 
+	@media(max-width: 799px) {
+        margin: ${({ button_404 }) => (button_404 && '0 auto;')}
+    }
 	@media (max-width: 575px) {
 		width: 100%;
 	}
@@ -512,7 +515,7 @@ export const Article = styled.article`
 `;
 
 
-//USER STYLES
+//USER STYLES START
 export const UserMain = styled(motion.div)`
 	flex: 1;
 	padding-top: 24px;
@@ -565,7 +568,6 @@ export const UserEventsBlockItemTopStatus = styled.div`
 	padding: 3px 8px 5px;
 	border-radius: 8px;
 	color: #fff;
-	background-color: #8553F9;
 	font-size: 14px;
 	line-height: 1.16;
 `;
@@ -630,19 +632,16 @@ export const UserEventNav = styled.div`
 `;
 export const UserEventNavItem = styled.div`
 	padding: 11px 16px 13px;
-    color: #47474D;
+    color: ${({ $isActive, $isFilled, theme }) => ($isFilled ? '#fff' : $isActive ? theme.colors.purple : '#47474D')};
     font-size: 14px;
     line-height: 1.16;
     border-radius: 28px;
-    border: 2px solid #D7DADD;
+	background-color: ${({$isFilled, theme}) => ($isFilled && theme.colors.purple)};
+    border: 2px solid ${({ $isActive, theme }) => ($isActive ? theme.colors.purple : '#D7DADD')};
     transition: ${({ theme }) => theme.transition};
     min-width: max-content;
+	cursor: pointer;
 `;
-
-// color: ${theme.colors.purple}!important;
-	// ${view > 1 && `background-color: ${theme.colors.purple};
-	// color:#fff!important;` }
-	// ${({ $fullWidth }) => ($fullWidth && "0")}
 
 export const UserEventNavSeparator = styled.div`
 	width: 16px;
@@ -652,3 +651,74 @@ export const UserEventNavSeparator = styled.div`
 	padding: 0;
 	border: none;
 `;
+// USER STYLES END
+
+// PageNotFound 404 START
+export const PageNotFound = styled.div`
+	padding: 140px 0 32px;
+    background-color: #F5F7FA;
+`;
+export const PageNotFoundBlock = styled.div`
+	display: flex;
+    gap: 24px;
+    align-items: center;
+
+    @media(max-width: 799px) {
+        flex-direction: column;
+        text-align: center;            
+    }
+`;
+export const PageNotFoundBlockInfo = styled.div`
+	flex: 1;
+`;
+export const PageNotFoundBlockInfoImg = styled.div`
+	font-family: Impact;
+    font-size: 104px;
+    line-height: 1.1;
+    margin-bottom: 90px;
+
+    @media(max-width: 1023px) {
+        font-size: 80px;
+    }
+    @media(max-width: 991px) {
+        font-size: 60px;
+        margin-bottom: 24px;
+    }
+    @media(max-width: 575px) {
+        font-size: 40px;
+    }
+`;
+export const PageNotFoundBlockInfoTitle = styled.div`
+	font-size: 24px;
+    font-weight: 500;
+    line-height: 1.34;
+    margin-bottom: 8px;
+
+    @media(max-width: 575px) {
+        font-size: 18px;
+    }
+`;
+export const PageNotFoundBlockInfoText = styled.div`
+	font-size: 20px;
+    line-height: 1.4;
+    margin-bottom: 24px;
+
+    @media(max-width: 575px) {
+        font-size: 16px;
+    }
+`;
+export const PageNotFoundBlockImg = styled.div`
+	flex: 0 1 440px;
+    max-width: 440px;
+
+    @media(max-width: 460px) {
+        flex: 0 1 100%;
+        max-width: 100%;
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    }
+`;
+// PageNotFound 404 END

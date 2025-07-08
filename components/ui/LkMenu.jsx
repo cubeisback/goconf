@@ -12,14 +12,21 @@ import ExitIcon from "@/public/images/svg/exit.svg";
 import EditIcon from "@/public/images/svg/edit.svg";
 import StatusIcon from "@/public/images/svg/status.svg";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useEffect } from "react";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 //TODO переделать эту часть с меню в ЛК, чтобы он не был на каждой странице отдельно
 
 export default function LkMenu () {
 	const logout = useAuthStore((state) => state.logout);
-	const width = useWindowSizeStore((state) => state.width);
+	// const width = useWindowSizeStore((state) => state.width);
+	const { width } = useWindowSize();
 	const pathname = usePathname();
 	const theme = useTheme();
+
+	useEffect(()=>{
+		console.log('WIDTH', width)
+	}, [width])
 
 	const menuItem = css`
         padding: 12px;
@@ -84,7 +91,7 @@ export default function LkMenu () {
 			}
         }
     `;
-	
+	if (width === null) return null
 	return (
 		<>
 		{width > 1023 ?
@@ -105,7 +112,9 @@ export default function LkMenu () {
                     `}
                     initial={{ opacity: 0, x: 100 }}
                     animate={{ opacity: 1, x: 0 }} 
-                    transition={{ duration: .3 }}>
+					exit={{ opacity: 1, x: 100}}
+                    transition={{ duration: .3 }}
+					>
                         <div className={css`
                             display: flex;
                             flex-direction: column;

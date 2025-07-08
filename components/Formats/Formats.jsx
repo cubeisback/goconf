@@ -12,7 +12,7 @@ import { Navigation } from 'swiper/modules';
 import axios from 'axios';
 import Link from 'next/link';
 import { getApiUrl } from '@/functions/functions';
-import useWindowSizeStore from '@/store/useWindowSizeStore';
+// import useWindowSizeStore from '@/store/useWindowSizeStore';
 import SliderArrow from "@/public/images/svg/arrow.svg";
 
 import image1 from '/public/images/formats_1.jpg'
@@ -147,7 +147,7 @@ export const Formats = () => {
       const navigationNextRef = useRef(null);
     const theme = useTheme();
 
-	const width = useWindowSizeStore((state) => state.width);
+	// const width = useWindowSizeStore((state) => state.width);
 
     const [formatItems, setFormatItems] = useState(null)
 	const [isLoading, setIsLoading] = useState(true);

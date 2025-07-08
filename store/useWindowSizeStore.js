@@ -1,9 +1,10 @@
-import { create } from 'zustand';
+// import { create } from 'zustand';
 
-const useWindowSizeStore = create((set) => ({
-  width: null,
-  height: null,
-  setSize: ({ width, height }) => set({ width, height }),
-}));
+// const useWindowSizeStore = create((set) => ({
+//   width: null,
+//   height: null,
+//   setSize: ({ width, height }) => set({ width, height }),
+// }));
 
-export default useWindowSizeStore;
+// export default useWindowSizeStore;
+//TODO REMOVE

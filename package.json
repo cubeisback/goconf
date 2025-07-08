@@ -8,9 +8,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@editorjs/editorjs": "^2.30.7",
-    "@editorjs/header": "^2.8.8",
-    "@editorjs/list": "^2.0.2",
     "@emotion/cache": "^11.14.0",
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",
@@ -25,8 +22,6 @@
     "react": "latest",
     "react-datepicker": "^7.5.0",
     "react-dom": "latest",
-    "react-editor-js": "^2.1.0",
-    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.54.0",
     "react-router": "^7.0.2",
     "react-scripts": "5.0.1",
