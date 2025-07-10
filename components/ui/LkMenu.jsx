@@ -11,6 +11,7 @@ import CartIcon from "@/public/images/svg/cart.svg";
 import ExitIcon from "@/public/images/svg/exit.svg";
 import EditIcon from "@/public/images/svg/edit.svg";
 import StatusIcon from "@/public/images/svg/status.svg";
+import Exclamation from "@/public/images/svg/exclamation_mark.svg";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect } from "react";
 import { useWindowSize } from "@/hooks/useWindowSize";
@@ -95,9 +96,14 @@ export default function LkMenu () {
 	return (
 		<>
 		{width > 1023 ?
-                    <motion.div className={css`
-                        flex: 0 1 296px;
+		<div className={css`
+			flex: 0 1 296px;
                         max-width: 296px;
+		height: max-content;
+                        position: sticky;
+                        top: 100px;
+						`}>
+                    <motion.div className={css`
                         padding: 8px;
                         display: flex;
                         flex-direction: column;
@@ -106,14 +112,11 @@ export default function LkMenu () {
                         background-color: #fff;
                         box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
                         min-height: 368px;
-                        height: max-content;
-                        position: sticky;
-                        top: 100px;
                     `}
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }} 
-					exit={{ opacity: 1, x: 100}}
-                    transition={{ duration: .3 }}
+                    // initial={{ opacity: 0, x: 100 }}
+                    // animate={{ opacity: 1, x: 0 }} 
+					// exit={{ opacity: 1, x: 100}}
+                    // transition={{ duration: .3 }}
 					>
                         <div className={css`
                             display: flex;
@@ -169,11 +172,40 @@ export default function LkMenu () {
                         </div>
 
                     </motion.div>
+
+					<div className={css`
+						margin-top: 16px;
+						border-radius: 28px;
+						background: #FFF;
+						box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+						display: flex;
+						gap: 16px;
+						padding: 16px;
+
+						svg {
+							flex: 0 1 24px;
+							max-width: 24px;
+						}
+
+						p {
+							flex: 1;
+							font-size: 14px;
+							line-height: 1.16;
+
+							a {
+								color: #8553F9;
+							}
+						}
+						`}>
+							<Exclamation />
+							<p>Для индивидуальных условий по&nbsp;продвижению нескольких событий&nbsp;&mdash; пишите на&nbsp;<a href="mailto:info@goconf.ru" target="_blank">info@goconf.ru</a> или в&nbsp;чат.</p>
+						</div>
+				</div>
                     :
                     <motion.div 
-                    initial={{ opacity: 0, y: 100 }} //TODO чекнуть почему анимации после обновления не работают
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ duration: .3 }}
+                    // initial={{ opacity: 0, y: 100 }} //TODO чекнуть почему анимации после обновления не работают
+                    // animate={{ opacity: 1, y: 0 }} 
+                    // transition={{ duration: .3 }}
                     className={css`
                         position: fixed;
                         bottom: 24px;

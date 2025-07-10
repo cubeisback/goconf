@@ -15,7 +15,6 @@ import LkMenu from "@/components/ui/LkMenu";
 import Link from "next/link";
 import axios from "axios";
 import { getApiUrl } from "@/functions/functions";
-import EventAdd from "./EventAdd";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
@@ -112,12 +111,15 @@ const UserEvents = () => {
             <UserMainTitles>
                 <UserMainTitlesTitle>Мои мероприятия</UserMainTitlesTitle>
                 {/* <Link href="/lk/add">+ Добавить событие</Link> */}
-				<Button onClick={()=>setView(5)}>
+				<Link href="/lk/events/add"><Button 
+				// onClick={()=>setView(5)}
+				>
 					<p>
 						<span>+ Добавить событие</span>
 						<span>+ Добавить событие</span>
 					</p>
 				</Button>
+				</Link>
             </UserMainTitles>
             
             <div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
@@ -716,12 +718,12 @@ const UserEvents = () => {
         </motion.div>
         }
 
-		{view === 5 && 
+		{/* {view === 5 && 
 			<EventAdd setBack={setView} />
 		}
 		{view === 6 && 
 			<EventAdd setBack={setView} id={editId} />
-		}
+		} */}
         
 		</div>
             </Container>

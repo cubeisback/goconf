@@ -270,7 +270,7 @@ export const Header = () => {
           </SearchWrapper>
           } */}
           {width > 768 && 
-            <Link href="/lk/add">
+            <Link href="/lk/events/add">
               <Button>
                 <p>
                   <span>Разместить событие</span>
@@ -435,7 +435,7 @@ export const Header = () => {
           gap: 32px;
           align-items: center;
         `}>
-          <Link href="/lk/add">
+          <Link href="/lk/events/add">
               <Button>
                 <p>
                   <span>Разместить событие</span>

@@ -3,13 +3,17 @@
 import { css, cx } from "@emotion/css";
 import { Button, Container, container, input, lkContainer, textarea, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { motion } from 'framer-motion';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditIcon from "@/public/images/svg/edit.svg";
 import RemoveIcon from "@/public/images/svg/remove.svg";
 import AvatarIcon from "@/public/images/svg/avatar.svg";
 import Image from 'next/image'
 import org_1 from '@/public/images/org_1.png';
 import LkMenu from "@/components/ui/LkMenu";
+import Link from "next/link";
+import { getApiUrl } from "@/functions/functions";
+import axios from "axios";
+import { useAuthReady } from "@/hooks/useAuthReady";
 // import EditorComponent from "@/components/ui/Editor";
 
 const UserOrg = () => {
@@ -19,6 +23,35 @@ const UserOrg = () => {
     const handleChange = (event) => {
         setText(event.target.value);
     };
+
+	const { ready, token } = useAuthReady();
+	
+	useEffect(() => {
+		if (!ready) return;
+	
+		handleGetOrganizations(token)
+	}, [ready, token]);
+	
+	// https://dev.goconf.ru/wp-json/account/v2/companies/
+	const [organizations, setOrganizations] = useState(null)
+	const handleGetOrganizations = async(token) => {
+		try {
+			const response = await axios.get(
+			getApiUrl("/backend/wp-json/account/v2/companies/"),
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+			);
+			console.log('organizations', response.data.items)
+			if (response.status === 200) {
+				setOrganizations(response.data.items)
+			}
+		} catch (error) {
+			console.error("organizations error", error);
+		}
+	};
 
     return (
         <div className={lkContainer}>
@@ -37,7 +70,16 @@ const UserOrg = () => {
         transition={{ duration: .3 }}>
             <UserMainTitles>
                 <UserMainTitlesTitle>Организаторы</UserMainTitlesTitle>
-                <Button onClick={()=>setView(2)}>+ Добавить организатора</Button>
+				<Link href="/lk/org/add">
+					<Button 
+					// onClick={()=>setView(2)}
+					>
+						<p>
+							<span>+ Добавить организатора</span>
+							<span>+ Добавить организатора</span>
+						</p>
+					</Button>
+				</Link>
             </UserMainTitles>
 
             <div className={css`
