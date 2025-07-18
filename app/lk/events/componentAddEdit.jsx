@@ -441,37 +441,22 @@ const {
 });
   
 	const handleSubmitTest = async () => {
-		// let testImage = dataEvent.logo;
-  
-		// if (anonsFile) {
-		// 	const uploaded = await handleUploadImage(); // сначала загружаем изображение
-		// 	if (!uploaded) return; // если ошибка, не отправляем дальше
-		// 	testImage = uploaded;
+		const anons = await uploadAnons();
+		const cover = await uploadCover();
+
+		// if (!anons || !cover) {
+		// 	alert("Ошибка загрузки изображений");
+		// 	return;
 		// }
-  
-		// const payload = {
-		// 	...dataEvent,
-		// 	anons: testImage,
-		// 	// другие поля
-		// };
-		// console.log(payload)
 
-	const anons = await uploadAnons();
-	const cover = await uploadCover();
+		// потом отправляй event
+		const payload = {
+			...dataEvent,
+			anons,
+			cover,
+		};
 
-	if (!anons || !cover) {
-		alert("Ошибка загрузки изображений");
-		return;
-	}
-
-	// потом отправляй event
-	const payload = {
-		...dataEvent,
-		anons,
-		cover,
-	};
-
-	console.log("Отправка события:", payload);
+		console.log("Отправка события:", payload);
 
 		await handleAddEventSubmit(payload); // основной запрос
 	};
