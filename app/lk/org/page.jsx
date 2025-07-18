@@ -110,9 +110,15 @@ const UserOrg = () => {
                         justify-content: space-between;
                         margin-bottom: 24px;
                     `}>
-                        <div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #8553F9; font-size: 14px; line-height: 1.16;`}>
-							{item.status === 'moderation' ? 'На модерации' : item.status}
-						</div>
+						{item.status === 'rejected' ?
+						<div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #FF5B3B; font-size: 14px; line-height: 1.16;`}>Отклонено</div>
+						: item.status === 'publish' ? 
+						<div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #69B90F; font-size: 14px; line-height: 1.16;`}>Опубликовано</div>
+						: item.status === 'draft' ? 
+						<div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #B5B7B9; font-size: 14px; line-height: 1.16;`}>Черновик</div> :
+						<div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #8553F9; font-size: 14px; line-height: 1.16;`}>На модерации</div>
+						}
+                        
                         <div className={css`display: flex; gap: 16px;`}>
 							<Link href={`/lk/org/edit/?id=${item.id}`}>
 								<EditIcon />

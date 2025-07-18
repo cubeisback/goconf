@@ -264,7 +264,6 @@ const AddEdit = () => {
 								}))
 								}
 							/>
-							{/* <div dangerouslySetInnerHTML={{ __html: dataOrganization.text }} /> */}
 							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{dataOrganization.text.length} / 5000</div>
 						</div>
 
@@ -289,7 +288,6 @@ const AddEdit = () => {
 							</div>
 							<div className={css`flex: 0 1 calc(50% - 12px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Номер телефона</p>
-								{/* <input className={input} type="text" placeholder="+7 (___) ___-__-__" name="phones" value={dataOrganization.phones[0] || ''} onChange={handleDataOrganizaionChange} /> */}
 								<IMaskInput
 									className={input}
 									name="phones"

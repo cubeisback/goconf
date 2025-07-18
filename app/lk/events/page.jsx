@@ -154,7 +154,9 @@ const UserEvents = () => {
 								{/* <Link href={{ pathname: "/lk/add", query: { id: event.id } }}>
 									<EditIcon onClick={()=>console.log('edit')} />
 								</Link> */}
-								<EditIcon onClick={()=>{setView(6), setEditId(event.id)}} />
+								<Link href={`/lk/events/edit/?id=${event.id}`}>
+									<EditIcon  />
+								</Link>
 								<RemoveIcon onClick={()=>handleRemoveEvent(event.id)} />
 							</UserEventsBlockItemTopIcons>
 						</UserEventsBlockItemTop>

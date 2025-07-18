@@ -1,6 +1,5 @@
 "use client"
 
-// import { useSearchParams } from "next/navigation";
 import AddEdit from "../componentAddEdit";
 import { Suspense } from "react";
 
