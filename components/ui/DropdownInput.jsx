@@ -9,10 +9,6 @@ import styled from "@emotion/styled";
 
 
 // const InputArrow = styled
-
-const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChange, type, filterValues }) => {
-  const theme = useTheme();
-
   const Dropdown = styled.div`
 	display: flex;
     justify-content: space-between;
@@ -31,14 +27,18 @@ const Input = styled.input`
         color:rgba(71, 71, 77, .64);
         font-size: 14px;
         line-height: 1.16;
-        transition: ${theme.transition};
+        transition: .3s ease-in-out;
     }
             
     &:focus::placeholder {
         color:rgba(71, 71, 77, .24); 
     }
-    // ${isSimple && 'pointer-events: none;'}
 `
+
+const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChange, type, filterValues }) => {
+  const theme = useTheme();
+
+
 
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);

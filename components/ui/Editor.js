@@ -41,7 +41,15 @@ export default function TextEditor({ content, onChange }) {
   return (
     <>
       {/* Панель инструментов */}
-      <div style={{ marginBottom: 10, userSelect: "none" }}>
+		<div className="texteditor_panel" style={{ 
+			userSelect: "none",
+			borderRadius: '28px 28px 0px 0px',
+			border: '2px solid #FFF',
+			background: '#F5F7FA',
+			padding: '16px 24px',
+			display: 'flex',
+			gap: 16,
+		}}>
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!editor.can().toggleBold()}
@@ -123,7 +131,7 @@ export default function TextEditor({ content, onChange }) {
           1. List
         </button>
 
-        <button
+        {/* <button
           onClick={() => editor.chain().focus().setParagraph().run()}
           title="Параграф"
           style={{
@@ -131,7 +139,7 @@ export default function TextEditor({ content, onChange }) {
           }}
         >
           ¶
-        </button>
+        </button> */}
 
         {[1, 2, 3, 4, 5, 6].map((level) => (
           <button
@@ -173,14 +181,14 @@ export default function TextEditor({ content, onChange }) {
 
       {/* Редактор */}
       <div
+	  	className="texteditor_main"
         style={{
-          border: "1px solid #ccc",
-          borderRadius: 8,
-          minHeight: 200,
-          padding: 12,
-          fontSize: 16,
-          lineHeight: 1.5,
-          overflowY: "auto",
+			background: '#fff',
+			borderRadius: '0 0 28px 28px',
+			padding: 14,
+			fontSize: 16,
+			lineHeight: 1.5,
+			overflowY: "auto",
         }}
       >
         <EditorContent editor={editor} />

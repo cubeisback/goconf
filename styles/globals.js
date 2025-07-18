@@ -80,4 +80,20 @@ export const globalStyles = (props) => css`
     display: inline-block;
     max-width: 100%;
   }
+
+	.texteditor_panel {
+		
+		button {
+			background-color: transparent;
+			cursor: pointer;
+			font-size: 16px;
+		}
+	}
+	.texteditor_main {
+		div {
+			min-height: 200px!important;
+			max-height: 200px!important;
+			outline: none!important;
+		}
+	}
 `;

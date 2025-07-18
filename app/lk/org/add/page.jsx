@@ -3,17 +3,21 @@
 import { css, cx } from "@emotion/css";
 import { Button, Container, container, input, lkContainer, LkWrapper, textarea, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import AvatarIcon from "@/public/images/svg/avatar.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LkMenu from "@/components/ui/LkMenu";
 import { useAuthReady } from "@/hooks/useAuthReady";
 import axios from "axios";
 import { getApiUrl } from "@/functions/functions";
-import EventDropdown from "../../events/add/EventDropdown";
 import TextEditor from "@/components/ui/Editor";
 import { useImageUpload } from "@/functions/useImageUpload";
+import { IMaskInput } from 'react-imask';
+import CityDropdown from "../../events/add/CityDropdown";
 
 const OrganizationsAdd = ({id}) => {
 	const [content, setContent] = useState(''); //Для редактора
+
+	const refMask = useRef(null);
+	const inputRefMask = useRef(null);
 
 	const { ready, token } = useAuthReady();
 	useEffect(() => {
@@ -78,6 +82,16 @@ const OrganizationsAdd = ({id}) => {
 				? [value]
 				: value,
 		}));
+	};
+
+	const handleDataOrganizaionCityChange = (selectedCity) => {
+		setDataOrganization((prev) => {
+
+			return {
+				...prev,
+				city: selectedCity
+			};
+		});
 	};
 
 	const handleSocialChange = (e) => {
@@ -226,7 +240,7 @@ const OrganizationsAdd = ({id}) => {
 							<input className={input} type="text" placeholder="Название" name="name" value={dataOrganization.name} onChange={handleDataOrganizaionChange} />
 						</div>
 						
-						<button onClick={handleButtonClick}>Выбрать изображение</button>
+						
 						<input
 							type="file"
 							ref={inputRef}
@@ -234,21 +248,23 @@ const OrganizationsAdd = ({id}) => {
 							style={{ display: "none" }}
 						/>
 
-						{previewUrl && (
-							<div>
-							<img src={previewUrl} alt="preview" style={{ maxWidth: 200 }} />
-							{dataOrganization.logo?.id && (
-								<button onClick={() => handleRemoveImage(dataOrganization.logo.id)}>Удалить</button>
-							)}
-							</div>
-						)}
-
-						<button onClick={handleSubmitTest}>Отправить</button>
-
 						<div className={css`display: flex;flex-direction:column;gap:8px;margin-bottom:24px;`}>
 							<div className={css`color: #47474D;font-size: 14px;line-height:1.16;`}>Логотип</div>
-							<AvatarIcon />
-							<div className={css`color: #8553F9;font-size: 14px;line-height:1.16;`}>Выберите файл</div>
+							{previewUrl ? (
+								<div>
+									<div style={{ width: 96, height: 96, borderRadius: '100%', backgroundColor: '#fff', padding: 10, cursor: 'pointer', overflow: 'hidden' }}>
+										<img src={previewUrl} alt="preview" style={{objectFit: 'contain', objectPosition: '50% 50%', width: '100%', height: '100%'}} onClick={handleButtonClick} />
+									</div>
+								
+								{dataOrganization.logo?.id && (
+									<button onClick={() => handleRemoveImage(dataOrganization.logo.id)}>Удалить</button>
+								)}
+								</div>
+							) : (
+								<AvatarIcon onClick={handleButtonClick} style={{cursor: 'pointer'}} />
+							)}
+							
+							<div className={css`color: #8553F9;font-size: 14px;line-height:1.16;cursor: pointer;`} onClick={handleButtonClick}>Выберите файл</div>
 							<div>
 								<div className={css`font-size: 12px;line-height:1.2;`}>Маскимальный размер <span className={css`color: #6C6C71;`}>- 1мб</span></div>
 								<div className={css`font-size: 12px;line-height:1.2;`}>Формат <span className={css`color: #6C6C71;`}>- PNG или SVG</span></div>
@@ -291,8 +307,7 @@ const OrganizationsAdd = ({id}) => {
 						<div className={css`display: flex;gap:24px;flex-wrap:wrap;margin-bottom:48px;`}>
 							<div className={css`flex: 0 1 calc(50% - 12px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Город</p>
-								<EventDropdown full={true} options={metaParameters && metaParameters?.cities} items={[]} placeholder={'Выбрать город'} />
-								{/* <input className={input} type="text" placeholder="Выбрать город" /> */}
+								<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataOrganizaionCityChange} items={[]} placeholder={'Выбрать город'} />
 							</div>
 							<div className={css`flex: 0 1 calc(50% - 12px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Адрес</p>
@@ -304,7 +319,19 @@ const OrganizationsAdd = ({id}) => {
 							</div>
 							<div className={css`flex: 0 1 calc(50% - 12px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Номер телефона</p>
-								<input className={input} type="text" placeholder="+7 (___) ___-__-__" name="phones" value={dataOrganization.phones[0] || ''} onChange={handleDataOrganizaionChange} />
+								{/* <input className={input} type="text" placeholder="+7 (___) ___-__-__" name="phones" value={dataOrganization.phones[0] || ''} onChange={handleDataOrganizaionChange} /> */}
+								<IMaskInput
+									className={input}
+									name="phones"
+									mask='+{7} (000) 000-00-00'
+									radix="."
+									value={dataOrganization.phones[0] || ''}
+									unmask={false}
+									ref={refMask}
+									inputRef={inputRefMask}
+									onChange={handleDataOrganizaionChange}
+									placeholder='+7 (___) ___-__-__'
+									/>
 							</div>
 							<div className={css`flex: 0 1 100%;`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Адрес сайта</p>
@@ -335,7 +362,8 @@ const OrganizationsAdd = ({id}) => {
 
 						<div className={css`display: flex;gap:16px;`}>
 							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Предпросмотр</Button>
-							<Button onClick={()=>console.log('save', dataOrganization)}>
+							<Button onClick={()=>{console.log(dataOrganization)}}>
+								{/* handleSubmitTest */}
 								<p>
 									<span>Сохранить</span>
 									<span>Сохранить</span>
