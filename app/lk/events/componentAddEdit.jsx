@@ -410,36 +410,69 @@ const EventsAddEdit = () => {
 
 
 
-  const {
-		previewUrl,
-		inputRef,
-		handleFileChange,
-		handleUploadImage,
-		handleRemoveImage,
-		handleButtonClick,
-		file,
+const {
+	previewUrl: anonsPreview,
+	inputRef: anonsInputRef,
+	handleFileChange: handleAnonsChange,
+	handleUploadImage: uploadAnons,
+	handleRemoveImage: removeAnons,
+	handleButtonClick: clickAnons,
+	file: anonsFile,
 	} = useImageUpload({
-		token,
-		data: dataEvent,
-		setData: setDataEvent,
-		targetKey: "anons",
-	});
+	token,
+	data: dataEvent,
+	setData: setDataEvent,
+	targetKey: "anons",
+});
+
+const {
+	previewUrl: coverPreview,
+	inputRef: coverInputRef,
+	handleFileChange: handleCoverChange,
+	handleUploadImage: uploadCover,
+	handleRemoveImage: removeCover,
+	handleButtonClick: clickCover,
+	file: coverFile,
+	} = useImageUpload({
+	token,
+	data: dataEvent,
+	setData: setDataEvent,
+	targetKey: "cover",
+});
   
 	const handleSubmitTest = async () => {
-		let testImage = dataEvent.logo;
+		// let testImage = dataEvent.logo;
   
-		if (file) {
-			const uploaded = await handleUploadImage(); // сначала загружаем изображение
-			if (!uploaded) return; // если ошибка, не отправляем дальше
-			testImage = uploaded;
-		}
+		// if (anonsFile) {
+		// 	const uploaded = await handleUploadImage(); // сначала загружаем изображение
+		// 	if (!uploaded) return; // если ошибка, не отправляем дальше
+		// 	testImage = uploaded;
+		// }
   
-		const payload = {
-			...dataEvent,
-			anons: testImage,
-			// другие поля
-		};
-		console.log(payload)
+		// const payload = {
+		// 	...dataEvent,
+		// 	anons: testImage,
+		// 	// другие поля
+		// };
+		// console.log(payload)
+
+	const anons = await uploadAnons();
+	const cover = await uploadCover();
+
+	if (!anons || !cover) {
+		alert("Ошибка загрузки изображений");
+		return;
+	}
+
+	// потом отправляй event
+	const payload = {
+		...dataEvent,
+		anons,
+		cover,
+	};
+
+	console.log("Отправка события:", payload);
+
 		await handleAddEventSubmit(payload); // основной запрос
 	};
 
@@ -582,31 +615,31 @@ const EventsAddEdit = () => {
 								
 								<div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}
 								style={{cursor: "pointer"}}
-								onClick={handleButtonClick}
+								onClick={clickAnons}
 								>
 									<input type="file"
-										ref={inputRef}
+										ref={anonsInputRef}
 										style={{ display: 'none' }}
-										onChange={handleFileChange} />
-									{dataEvent?.anons?.id && !previewUrl ? 
+										onChange={handleAnonsChange} />
+									{dataEvent?.anons?.id && !anonsPreview ? 
 										<img src={dataEvent.anons.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
 									:
 										
-										previewUrl ? <img src={previewUrl} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} /> : <AvatarIcon />
+										anonsPreview ? <img src={anonsPreview} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} /> : <AvatarIcon />
 									}
 									
 								</div>
 								
 								{/* {dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>} */}
-								{dataEvent?.anons?.id || previewUrl ?
+								{dataEvent?.anons?.id || anonsPreview ?
 								<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
 									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
 									<div style={{cursor: 'pointer'}}>
-										<RemoveIcon onClick={()=>handleRemoveImage(dataEvent.anons.id)} />
+										<RemoveIcon onClick={()=>removeAnons(dataEvent.anons.id)} />
 									</div>
 								</div>
 								:
-								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={handleButtonClick}>Загрузить</div>
+								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={clickAnons}>Загрузить</div>
 								}
 								
 								<div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
@@ -621,10 +654,38 @@ const EventsAddEdit = () => {
 							`}>
 								<div className={css`color: #47474D;margin-bottom: 4px;`}>Широкое изображение на&nbsp;странице события</div>
 								<div className={css`color: #6C6C71;margin-bottom: 16px;`}>Изображение на&nbsp;внутренней странице мероприятия</div>
-								<div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}>
+								{/* <div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}>
 									<AvatarIcon />
 								</div>
-								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;`}>Загрузить</div>
+								 */}
+								<div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}
+								style={{cursor: "pointer"}}
+								onClick={clickCover}
+								>
+									<input type="file"
+										ref={coverInputRef}
+										style={{ display: 'none' }}
+										onChange={handleCoverChange} />
+									{dataEvent?.cover?.id && !coverPreview ? 
+										<img src={dataEvent.cover.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
+									:
+										
+										coverPreview ? <img src={coverPreview} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} /> : <AvatarIcon />
+									}
+									
+								</div>
+								
+								{/* {dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>} */}
+								{dataEvent?.cover?.id || coverPreview ?
+								<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
+									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+									<div style={{cursor: 'pointer'}}>
+										<RemoveIcon onClick={()=>removeCover(dataEvent.cover.id)} />
+									</div>
+								</div>
+								:
+								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={clickCover}>Загрузить</div>
+								}
 								<div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
 									<p><span>Разрешение</span>&nbsp;&mdash; 960&times;420 пикселей</p>
 									<p><span>Формат</span>&nbsp;&mdash; PNG или JPEG</p>
