@@ -1,16 +1,14 @@
 "use client"
 
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import AddEdit from "../componentAddEdit";
 import { Suspense } from "react";
 
 const OrganizationsEdit = () => {
-	const searchParams = useSearchParams()
-  	const id = searchParams.get('id')
 	
 	return(
 		<Suspense fallback={<div>Загрузка...</div>}>
-			<AddEdit id={id} />
+			<AddEdit />
 		</Suspense>
 	)
 }

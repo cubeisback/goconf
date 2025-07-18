@@ -12,8 +12,11 @@ import TextEditor from "@/components/ui/Editor";
 import { useImageUpload } from "@/functions/useImageUpload";
 import { IMaskInput } from 'react-imask';
 import CityDropdown from "../events/add/CityDropdown";
+import { useSearchParams } from "next/navigation";
 
-const AddEdit = ({id}) => {
+const AddEdit = () => {
+	const searchParams = useSearchParams();
+	const id = searchParams.get('id');
 
 	const refMask = useRef(null);
 	const inputRefMask = useRef(null);
