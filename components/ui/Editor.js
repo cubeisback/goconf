@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Strike from "@tiptap/extension-strike";
 import TextAlign from "@tiptap/extension-text-align";
+import { useEffect } from "react";
 
 export default function TextEditor({ content, onChange }) {
   const editor = useEditor({
@@ -33,6 +34,12 @@ export default function TextEditor({ content, onChange }) {
       },
     },
   });
+
+  useEffect(() => {
+    if (editor && content !== undefined && content !== editor.getHTML()) {
+      editor.commands.setContent(content);
+    }
+  }, [content, editor]);
 
   if (!editor) {
     return null;

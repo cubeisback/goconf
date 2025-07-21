@@ -35,17 +35,24 @@ const Input = styled.input`
 `
 //TODO стили вынести
 
-const CityDropdown = ({ options, placeholder, handleDataOrganizaionCityChange }) => {
+const CityDropdown = ({ options, placeholder, handleDataOrganizaionCityChange, value }) => {
   const theme = useTheme();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(value || '');
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState(value || '');
   const [showFullList, setShowFullList] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
   const [values, setValues] = useState([]);
 
+   useEffect(() => {
+    if (value !== undefined && value !== selectedValue) {
+      setQuery(value);
+      setSelectedValue(value);
+    }
+  }, [value]);
+  
   useEffect(() => {    
     if (options) {
 		const cityNames = options.map(city => city.name);

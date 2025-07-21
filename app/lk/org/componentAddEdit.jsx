@@ -43,6 +43,14 @@ const AddEdit = () => {
 					},
 				}
 			);
+			setDataOrganization(response.data.data)
+			setDataOrganization((prev) => {
+				return {
+					...prev,
+					emails: response.data.data.emails.map((item) => item.value),
+					phones: response.data.data.phones.map((item) => item.value),
+				};
+			});
 			console.log("get org info ", response);
 		} catch (error) {
 			console.error(error);
@@ -231,7 +239,19 @@ const AddEdit = () => {
 								)}
 								</div>
 							) : (
+								dataOrganization?.logo?.url ?
+								<div>
+									<div style={{ width: 96, height: 96, borderRadius: '100%', backgroundColor: '#fff', padding: 10, cursor: 'pointer', overflow: 'hidden' }}>
+										<img src={dataOrganization.logo.url} alt="preview" style={{objectFit: 'contain', objectPosition: '50% 50%', width: '100%', height: '100%'}} onClick={handleButtonClick} />
+									</div>
+								{/* TODO удаление картинки только после основного запроса */}
+								{dataOrganization.logo?.id && (
+									<button onClick={() => handleRemoveImage(dataOrganization.logo.id)}>Удалить</button>
+								)}
+								</div>
+								:
 								<AvatarIcon onClick={handleButtonClick} style={{cursor: 'pointer'}} />
+								
 							)}
 							
 							<div className={css`color: #8553F9;font-size: 14px;line-height:1.16;cursor: pointer;`} onClick={handleButtonClick}>Выберите файл</div>
@@ -246,7 +266,7 @@ const AddEdit = () => {
 								<p className={css`color: #47474D;`}>Краткое описание</p>
 								<p className={css`color: #6C6C71;`}>Используется для поисковых систем (мета-описание)</p>
 							</div>
-							<textarea className={textarea} placeholder="Краткое описание" name="text_short" value={dataOrganization.text_short} onChange={handleDataOrganizaionChange} ></textarea>
+							<textarea className={textarea} placeholder="Краткое описание" name="text_short" value={dataOrganization.text_short.replace(/<[^>]*>?/gm, '')} onChange={handleDataOrganizaionChange} ></textarea>
 							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{dataOrganization.text_short.length} / 200</div>
 						</div>
 					
@@ -256,7 +276,7 @@ const AddEdit = () => {
 								<p className={css`color: #6C6C71;`}>Детальное описание для страницы компании</p>
 							</div>
 							<TextEditor
-								content={dataOrganization.text}
+								content={dataOrganization?.text || ""}
 								onChange={(html) =>
 								setDataOrganization((prev) => ({
 									...prev,
@@ -276,7 +296,12 @@ const AddEdit = () => {
 						<div className={css`display: flex;gap:24px;flex-wrap:wrap;margin-bottom:48px;`}>
 							<div className={css`flex: 0 1 calc(50% - 12px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Город</p>
-								<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataOrganizaionCityChange} items={[]} placeholder={'Выбрать город'} />
+								<CityDropdown 
+									options={metaParameters?.cities} 
+									handleDataOrganizaionCityChange={handleDataOrganizaionCityChange} 
+									value={dataOrganization.city}
+									placeholder={'Выбрать город'} 
+								/>
 							</div>
 							<div className={css`flex: 0 1 calc(50% - 12px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Адрес</p>
@@ -288,6 +313,9 @@ const AddEdit = () => {
 							</div>
 							<div className={css`flex: 0 1 calc(50% - 12px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Номер телефона</p>
+								{/* {dataOrganization.phones.map((i)=>(
+									<div key={i.value}>{i.value}</div>
+								))} */}
 								<IMaskInput
 									className={input}
 									name="phones"
@@ -330,7 +358,10 @@ const AddEdit = () => {
 
 						<div className={css`display: flex;gap:16px;`}>
 							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Предпросмотр</Button>
-							<Button onClick={()=>{console.log(dataOrganization)}}>
+							<Button 
+							// onClick={()=>{console.log(dataOrganization)}}
+							onClick={handleSubmitTest}
+							>
 								{/* handleSubmitTest */}
 								<p>
 									<span>Сохранить</span>
