@@ -40,7 +40,7 @@ export default function ThemeWrapper({ children }) {
 				<Global styles={globalStyles} />
 					<Header/>
 					{children}
-					{/* <ConfirmModal /> */}
+					<ConfirmModal />
 					<Footer />
 			</ThemeProvider>
 		// </WindowSizeProvider>
