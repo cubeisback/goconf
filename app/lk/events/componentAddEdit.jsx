@@ -33,7 +33,10 @@ const EventsAddEdit = () => {
 		if (!ready) return;
 
 		handleGetEventsMeta(token)
-	}, [ready, token]);
+		if (id) {
+			dfsdfsdfsd2(id);
+		}
+	}, [ready, token, id]);
 
 
     const [view, setView] = useState(1);
@@ -99,6 +102,13 @@ const EventsAddEdit = () => {
 	});
 
 	useEffect(()=>{
+		setDataEvent((prev) => ({
+			...prev,
+			online: activeTab === 2 ? true : false,
+		}));
+	}, [activeTab])
+
+	useEffect(()=>{
 		console.log(dataEvent)
 	}, [dataEvent])
 
@@ -137,6 +147,15 @@ const EventsAddEdit = () => {
 		});
 	};
 
+	const handleDataEventChangeOrganizator = (organizatorItem) => {
+		setDataEvent((prev) => {
+			return {
+				...prev,
+				organizator: organizatorItem
+			};
+		});
+	};
+
 	const handleDataEventChangeFree = (value) => {
 		setDataEvent((prev) => ({
 			...prev,
@@ -144,82 +163,7 @@ const EventsAddEdit = () => {
 		}));
 	};
 
-	// const [imageFormData, setImageFormData] = useState(null)
-	// const handleUploadImage = async() => {
-	// 		try {
-	// 			const response = await axios.post(
-	// 				getApiUrl('/backend/wp-json/images/v2/upload'),
-	// 				imageFormData,
-	// 				{
-	// 					headers: {
-	// 						Authorization: `Bearer ${token}`,
-	// 					},
-	// 				}
-	// 			);
 
-	// 			console.log("Файл успешно загружен:", response.data);
-
-	// 			const newAnons = {
-	// 				id: response.data.id,
-	// 				url: response.data.url,
-	// 			};
-
-	// 			if (response.status === 200) {
-	// 				if (dataEvent?.anons?.id) {
-	// 					// 1. Удаляем старую картинку
-	// 					await handleRemoveImage(dataEvent.anons.id);
-
-	// 					// 2. Обновляем стейт
-	// 					setDataEvent((prev) => {
-	// 						const updated = {
-	// 						...prev,
-	// 						anons: newAnons,
-	// 						};
-	// 						// 3. Здесь сразу вызываем следующий шаг
-	// 						// doSomethingAfterUpdate(updated);
-	// 						handleAddEventSubmit(updated)
-	// 						return updated;
-	// 					});
-
-	// 					} else {
-	// 					// 1. Обновляем стейт
-	// 					setDataEvent((prev) => {
-	// 						const updated = {
-	// 						...prev,
-	// 						anons: newAnons,
-	// 						};
-	// 						// 2. Следующий шаг
-	// 						// doSomethingAfterUpdate(updated);
-	// 						handleAddEventSubmit(updated)
-	// 						return updated;
-	// 					});
-	// 				}
-	// 				// if(dataEvent?.anons?.id) {
-	// 				// 	await handleRemoveImage(dataEvent?.anons?.id)
-	// 				// 	setDataEvent((prev) => ({
-	// 				// 		...prev,
-	// 				// 		anons: {
-	// 				// 			id: response.data.id,
-	// 				// 			url: response.data.url
-	// 				// 		},
-	// 				// 	}));
-	// 				// 	console.log('удалил картинку ', dataEvent?.anons?.id, 'стейт 1 ', dataEvent)
-	// 				// } else {
-	// 				// 	setDataEvent((prev) => ({
-	// 				// 		...prev,
-	// 				// 		anons: {
-	// 				// 			id: response.data.id,
-	// 				// 			url: response.data.url
-	// 				// 		},
-	// 				// 	}));
-	// 				// 	console.log('картинки не было ', response.data.id, 'стейт 2 ', dataEvent)
-	// 				// }
-	// 				// console.log('стейт 3 ', dataEvent)
-	// 			}
-	// 		} catch (error) {
-	// 			console.error("Ошибка загрузки:", error);
-	// 		}
-	// }
 
 	const handleAddEventSubmit = async(items) => {
 		try {
@@ -241,14 +185,6 @@ const EventsAddEdit = () => {
 			console.error(error);
 		}
 	}
-
-	// useEffect(() => {
-	// 	handleGetEventsMeta()
-	// }, []);
-
-	useEffect(() => {
-		id && dfsdfsdfsd2(id)
-	}, [id]);
 	
 
 
@@ -281,90 +217,6 @@ const EventsAddEdit = () => {
 			};
 		});
 	};
-
-	// // https://dev.goconf.ru/wp-json/images/v2/upload/ 
-	// const inputRef = useRef(null);
-
-	// const handleButtonClick = () => {
-	// 	// Открытие диалога выбора файла
-	// 	inputRef.current?.click();
-	// };
-
-	// const [previewUrl, setPreviewUrl] = useState(null);
-	// const handleFileChange = async (e) => {
-	// 	const file = e.target.files[0];
-	// 	if (!file) return;
-
-	// 	// создаём временный URL для превью
-	// 	const imageUrl = URL.createObjectURL(file);
-	// 	setPreviewUrl(imageUrl);
-
-	// 	const formData = new FormData();
-	// 	formData.append('file', file);
-	// 	setImageFormData(formData)
-	// 	// [...formData.entries()].forEach(([key, value]) => {
-	// 	// 	console.log('Ключ:', key);
-	// 	// 	console.log('Значение:', value);
-	// 	// });
-
-	// 			// setDataEvent((prev) => ({
-	// 			// 	...prev,
-	// 			// 	anons: {
-	// 			// 		id: response.data.id,
-	// 			// 		url: response.data.url
-	// 			// 	},
-	// 			// }));
-
-	// 	// try {
-	// 	// 	const response = await axios.post(
-	// 	// 		getApiUrl('/backend/wp-json/images/v2/upload'),
-	// 	// 		formData,
-	// 	// 		{
-	// 	// 			headers: {
-	// 	// 				Authorization: `Bearer ${token}`,
-	// 	// 			},
-	// 	// 		}
-	// 	// 	);
-
-	// 	// 	console.log("Файл успешно загружен:", response.data);
-	// 	// 	if (response.status === 200) {
-	// 	// 		setDataEvent((prev) => ({
-	// 	// 			...prev,
-	// 	// 			anons: {
-	// 	// 				id: response.data.id,
-	// 	// 				url: response.data.url
-	// 	// 			},
-	// 	// 		}));
-	// 	// 	}
-	// 	// } catch (error) {
-	// 	// 	console.error("Ошибка загрузки:", error);
-	// 	// }
-	// };
-
-	// // https://dev.goconf.ru/wp-json/images/v2/delete/ 
-	// const handleRemoveImage = async(id) => {
-	// 	try {
-	// 		const response = await axios.get(
-	// 			getApiUrl(`/backend/wp-json/images/v2/delete?id=${id}`),
-	// 			{
-	// 				headers: {
-	// 					Authorization: `Bearer ${token}`,
-	// 					// Content-Type не указываем, axios сам поставит
-	// 				},
-	// 			}
-	// 		);
-
-	// 		console.log("Файл успешно удален:", response);
-	// 		if (response.status === 200) {
-	// 			setDataEvent((prev) => ({
-	// 				...prev,
-	// 				anons: {},
-	// 			}));
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Ошибка загрузки:", error);
-	// 	}
-	// }
 
 
 
@@ -557,8 +409,8 @@ const {
 							</div>
 							<div>
 								<p>Организатор</p>
-								{/* <EventDropdown full={true} placeholder={'Выбрать организатора'} /> */}
-								<DropdownInput full={true} placeholder={'Выбрать организатора'} />
+								<EventDropdown full={true} options={metaParameters && metaParameters.companies} items={dataEvent.organizator} incomeFunction={handleDataEventChangeOrganizator} placeholder={'Выбрать организатора'} />
+								{/* <DropdownInput full={true} options={metaParameters && metaParameters.companies} placeholder={'Выбрать организатора'} /> */}
 								<p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/lk/org" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
 							</div>
 							<div>
@@ -729,11 +581,11 @@ const {
 						`}>Описание</div>
 
 						<TextEditor
-														content={dataEvent.text}
+														content={dataEvent.content}
 														onChange={(html) =>
 														setDataEvent((prev) => ({
 															...prev,
-															text: html,
+															content: html,
 														}))
 														}
 													/>
@@ -812,7 +664,7 @@ const {
 											}
 										`}>
 											<p>Город</p>
-											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} items={[]} placeholder={'Выбрать город'} />
+											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} items={[]} fullCityData={true} placeholder={'Выбрать город'} />
 										</div>
 										<div className={css`
 											flex: 0 1 calc(50% - 12px)!important;
@@ -878,15 +730,23 @@ const {
 									`}>
 										<div>
 											<p>Дата начала</p>
-											<input className={input} type="text" placeholder="Дата начала" />
+											<input className={input} type="text" name="date_start" placeholder="Дата начала" value={dataEvent.date_start} onChange={handleDataEventChange} />
 										</div>
 										<div>
 											<p>Дата окончания</p>
-											<input className={input} type="text" placeholder="Дата окончания" />
+											<input className={input} type="text" name="date_end" placeholder="Дата окончания" value={dataEvent.date_end} onChange={handleDataEventChange} />
 										</div>
 										<div>
 											<p>Время начала</p>
-											<input className={input} type="text" placeholder="Время начала" />
+											<input
+												type="text"
+												className={input}
+												value={time}
+												onChange={handleInputChange}
+												onBlur={handleBlur}
+												placeholder="Время начала"
+												maxLength={5}
+											/>
 										</div>
 										<div className={css`
 											flex: 0 1 100%!important;
@@ -1018,7 +878,8 @@ const {
 							margin-bottom: 16px;
 							font-size: 12px;
 						`}>Вы можете добавить Iframe с Ютуба или ВК</div>
-						<textarea className={cx(textarea, css`margin-bottom: 40px;`)} name="" id="" placeholder="https://" ></textarea>
+						{/* <textarea className={cx(textarea, css`margin-bottom: 40px;`)} name="" id="" placeholder="https://" ></textarea> */}
+						<textarea className={textarea} name="video" id="" placeholder="https://" value={dataEvent.video} onChange={handleDataEventChange}></textarea>
 					</>
 					}
 

@@ -7,35 +7,40 @@ import ArrowDown from "@/public/images/svg/arrowDown.svg";
 import { useTheme } from '@emotion/react';
 import styled from "@emotion/styled";
 
-
 const Dropdown = styled.div`
-	display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    padding-right: 16px;
-    background-color: #fff;
-    border-radius: 28px;
-`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding-right: 16px;
+  background-color: #fff;
+  border-radius: 28px;
+`;
+
 const Input = styled.input`
+  font-size: 14px;
+  padding: 14px 0 14px 16px;
+  background-color: transparent;
+
+  &::placeholder {
+    color:rgba(71, 71, 77, .64);
     font-size: 14px;
-    padding: 14px 0 14px 16px;
-    background-color: transparent;
+    line-height: 1.16;
+    transition: .3s ease-in-out;
+  }
+          
+  &:focus::placeholder {
+    color:rgba(71, 71, 77, .24); 
+  }
+`;
 
-    &::placeholder {
-        color:rgba(71, 71, 77, .64);
-        font-size: 14px;
-        line-height: 1.16;
-        transition: .3s ease-in-out;
-    }
-            
-    &:focus::placeholder {
-        color:rgba(71, 71, 77, .24); 
-    }
-`
-//TODO стили вынести
-
-const CityDropdown = ({ options, placeholder, handleDataOrganizaionCityChange, value }) => {
+const CityDropdown = ({ 
+  options, 
+  placeholder, 
+  handleDataOrganizaionCityChange, 
+  value, 
+  fullCityData = false 
+}) => {
   const theme = useTheme();
   const [query, setQuery] = useState(value || '');
   const [isOpen, setIsOpen] = useState(false);
@@ -44,44 +49,46 @@ const CityDropdown = ({ options, placeholder, handleDataOrganizaionCityChange, v
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
-  const [values, setValues] = useState([]);
+  const [cities, setCities] = useState([]);
 
-   useEffect(() => {
+  useEffect(() => {
     if (value !== undefined && value !== selectedValue) {
-      setQuery(value);
-      setSelectedValue(value);
+      setQuery(fullCityData ? value.name : value);
+      setSelectedValue(fullCityData ? value.name : value);
     }
   }, [value]);
   
   useEffect(() => {    
     if (options) {
-		const cityNames = options.map(city => city.name);
-		setValues(cityNames)
+      setCities(options);
     }
-    
   }, [options]);
 
   useEffect(() => {
-  if (isOpen && inputRef.current) {
-    inputRef.current.focus();
-  }
-}, [isOpen]);
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
   
-const filteredOptions = values.filter(option =>
-	option.toLowerCase().includes(query.toLowerCase())
-);
+  const filteredOptions = cities.filter(city =>
+    city.name.toLowerCase().includes(query.toLowerCase())
+  );
 
   const handleChange = (event) => {
     setQuery(event.target.value);
   };
 
-const handleSelect = (value) => {
-  handleDataOrganizaionCityChange(value);
-  setQuery(value);
-  setSelectedValue(value);
-  setIsOpen(false);
-  setShowFullList(false);
-};
+  const handleSelect = (city) => {
+    const selected = city === 'Все города' 
+      ? (fullCityData ? null : '') 
+      : (fullCityData ? city : city.name);
+    
+    handleDataOrganizaionCityChange(selected);
+    setQuery(city === 'Все города' ? '' : city.name);
+    setSelectedValue(city === 'Все города' ? '' : city.name);
+    setIsOpen(false);
+    setShowFullList(false);
+  };
 
   const handleFocus = () => {
     setIsOpen(true);
@@ -89,28 +96,28 @@ const handleSelect = (value) => {
 
   const handleKeyDown = (event) => {
     if (event.key === 'Backspace' && query.length > 0) {
-      setQuery(''); // Очищаем инпут
-      setSelectedValue(''); // Сбрасываем выбранное значение
-      event.preventDefault(); // Предотвращаем удаление по одной букве
+      setQuery('');
+      setSelectedValue('');
+      event.preventDefault();
     }
   };
 
-useEffect(() => {
-	const handleClickOutside = (event) => {
-		if (!dropdownRef.current?.contains(event.target)) {
-		setIsOpen(false);
-		}
-	};
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!dropdownRef.current?.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
 
-	document.addEventListener("mousedown", handleClickOutside);
-	return () => {
-		document.removeEventListener("mousedown", handleClickOutside);
-	};
-}, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div 
-	  style={{position: 'relative'}}
+      style={{position: 'relative'}}
       ref={dropdownRef}
     >
       <Dropdown>
@@ -133,7 +140,7 @@ useEffect(() => {
         />
       </Dropdown>
 
-		<AnimatePresence>
+      <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -184,33 +191,32 @@ useEffect(() => {
                 }
               `}
             >
-              <li key={99999} onClick={() => handleSelect('')}>
-				Все города
-			  </li>
-              {(showFullList ? values : filteredOptions).map((option) => {
-                const originalIndex = values.indexOf(option);
+              <li key={99999} onClick={() => handleSelect('Все города')}>
+                Все города
+              </li>
+              {(showFullList ? cities : filteredOptions).map((city) => {
                 return (
                   <li
-                    key={originalIndex}
-                    onClick={() => handleSelect(option)}
+                    key={city.id}
+                    onClick={() => handleSelect(city)}
                     className={css`
                       padding: 8px;
                       cursor: pointer;
-                      color: ${option === selectedValue ? `${theme.colors.purple}` : `${theme.colors.font}`};
+                      color: ${city.name === selectedValue ? `${theme.colors.purple}` : `${theme.colors.font}`};
 
                       &:hover {
                         color: ${theme.colors.purple};
                       }
                     `}
                   >
-                    {option}
+                    {city.name}
                   </li>
                 );
               })}
             </ul>
           </motion.div>
         )}
-		</AnimatePresence>
+      </AnimatePresence>
     </div>
   );
 };
