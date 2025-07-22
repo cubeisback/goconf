@@ -10,6 +10,7 @@ import { useEffect } from "react"
 import { Footer } from '@/components/Footer/Footer'
 // import WindowSizeProvider from '@/components/Providers/WindowSizeProvider'
 import { useAuthStore } from "@/store/useAuthStore"
+import { ConfirmModal } from "@/components/ConfirmModal"
 
 export default function ThemeWrapper({ children }) {
 
@@ -39,6 +40,7 @@ export default function ThemeWrapper({ children }) {
 				<Global styles={globalStyles} />
 					<Header/>
 					{children}
+					<ConfirmModal />
 					<Footer />
 			</ThemeProvider>
 		// </WindowSizeProvider>

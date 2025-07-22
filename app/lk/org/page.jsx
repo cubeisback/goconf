@@ -9,6 +9,7 @@ import LkMenu from "@/components/ui/LkMenu";
 import Link from "next/link";
 import { getApiUrl } from "@/functions/functions";
 import axios from "axios";
+import AvatarIcon from "@/public/images/svg/avatar.svg";
 import { useAuthReady } from "@/hooks/useAuthReady";
 
 const UserOrg = () => {
@@ -129,7 +130,12 @@ const UserOrg = () => {
                     </div>
                     <div className={css`display: flex; gap: 24px;`}>
                         <div className={css`flex: 0 1 96px;`}>
+							{item.logo ? 
 							<img src={item.logo} alt={item.name} />
+							:
+							<AvatarIcon/>
+							}
+							
                         </div>
                         <div className={css`flex:1;`}>
                             <div className={css`font-size:20px;font-weight:500;line-height:1.4;margin-bottom: 8px;`}>{item.name}</div>

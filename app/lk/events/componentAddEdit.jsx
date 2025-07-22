@@ -22,6 +22,7 @@ import { AnimatedSwitch } from "../notifications/page";
 import EventDropdown from "./add/EventDropdown";
 import CityDropdown from "./add/CityDropdown";
 import TextEditor from "@/components/ui/Editor";
+import EventDate from "./add/EventDate";
 
 const EventsAddEdit = () => {
 	const { ready, token } = useAuthReady();
@@ -163,6 +164,21 @@ const EventsAddEdit = () => {
 		}));
 	};
 
+	const testCalendar = (date, whatDate) => {
+		console.log(date, whatDate)
+		whatDate === 'date_start' ?
+		setDataEvent((prev) => ({
+			...prev,
+			date_start: date,
+		}))
+		:
+		setDataEvent((prev) => ({
+			...prev,
+			date_end: date,
+		}))
+		;
+	}
+
 
 
 	const handleAddEventSubmit = async(items) => {
@@ -292,6 +308,9 @@ const {
 	targetKey: "cover",
 });
   
+
+
+
 	const handleSubmitTest = async () => {
 		const anons = await uploadAnons();
 		const cover = await uploadCover();
@@ -312,6 +331,8 @@ const {
 
 		await handleAddEventSubmit(payload); // основной запрос
 	};
+
+	
 
     return( 
 		<LkWrapper>
@@ -680,11 +701,11 @@ const {
 										</div>
 										<div>
 											<p>Дата начала</p>
-											<input className={input} type="text" name="date_start" placeholder="Дата начала" value={dataEvent.date_start} onChange={handleDataEventChange} />
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' />
 										</div>
 										<div>
 											<p>Дата окончания</p>
-											<input className={input} type="text" name="date_end" placeholder="Дата окончания" value={dataEvent.date_end} onChange={handleDataEventChange} />
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_end} changeDate={testCalendar} whatDate='date_end' />
 										</div>
 										<div>
 											<p>Время начала</p>
@@ -730,11 +751,11 @@ const {
 									`}>
 										<div>
 											<p>Дата начала</p>
-											<input className={input} type="text" name="date_start" placeholder="Дата начала" value={dataEvent.date_start} onChange={handleDataEventChange} />
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' />
 										</div>
 										<div>
 											<p>Дата окончания</p>
-											<input className={input} type="text" name="date_end" placeholder="Дата окончания" value={dataEvent.date_end} onChange={handleDataEventChange} />
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_end} changeDate={testCalendar} whatDate='date_end' />
 										</div>
 										<div>
 											<p>Время начала</p>
@@ -894,7 +915,7 @@ const {
 					`}>
 						<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{view > 1 ? setView(prev => prev - 1) : setBack(1)}}>Отменить</Button>
 						<Button onClick={()=>{view < 3 ? setView(prev => prev + 1) : handleAddEventSubmit()}}> {view > 2 ? 'Опубликовать' : 'Продолжить'}</Button>
-						<div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`}>Сохранить в черновик</div>
+						<div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`} onClick={()=>console.log(dataEvent)}>Сохранить в черновик</div>
 						<div onClick={()=>handleUploadImage()}>отправить</div>
 						<div onClick={handleSubmitTest}>ОТПРАВИТЬ НОВЫАЯ</div>
 					</div>

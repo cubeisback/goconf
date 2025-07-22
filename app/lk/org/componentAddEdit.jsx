@@ -13,6 +13,7 @@ import { useImageUpload } from "@/functions/useImageUpload";
 import { IMaskInput } from 'react-imask';
 import CityDropdown from "../events/add/CityDropdown";
 import { useSearchParams } from "next/navigation";
+import { useConfirmModal } from "@/store/confirmModalStore";
 
 const AddEdit = () => {
 	const searchParams = useSearchParams();
@@ -182,8 +183,17 @@ const AddEdit = () => {
 			logo: testImage,
 			// другие поля
 		};
-		console.log(payload)
 		await handleAddOrganizationSubmit(payload); // основной запрос
+	};
+
+	const { openModal } = useConfirmModal();
+	const handleSubmitTestModal = () => {
+		openModal({
+		title: 'Сохранение',
+		description: `Вы действительно хотите сохранить?`,
+		onConfirm: () => handleSubmitTest(),
+		confirmText: 'Сохранить',
+		});
 	};
 	
 	
@@ -360,7 +370,7 @@ const AddEdit = () => {
 							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Предпросмотр</Button>
 							<Button 
 							// onClick={()=>{console.log(dataOrganization)}}
-							onClick={handleSubmitTest}
+							onClick={handleSubmitTestModal}
 							>
 								{/* handleSubmitTest */}
 								<p>
