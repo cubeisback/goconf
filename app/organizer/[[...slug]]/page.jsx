@@ -1,6 +1,6 @@
 'use client'
 
-import { breadcrumbs, Button, Container, pagePromo, PageTitle } from "@/styles/ui";
+import { Breadcrumbs, Button, Container, pagePromo, PageTitle } from "@/styles/ui";
 import OrgLogo from '@/public/images/svg/org_logo.svg'
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
@@ -53,11 +53,11 @@ const Organizer = () => {
         <>
             <div className={pagePromo}>
                 <Container>
-                    <div className={breadcrumbs}>
+                    <Breadcrumbs>
                         <Link href="/">Главная</Link>
                         <Link href="/org">Организаторы</Link>
                         <p>АКАР</p>
-                    </div>
+                    </Breadcrumbs>
 					<PageTitle>{pageInfo && pageInfo.h1}</PageTitle>
                 </Container>
             </div>
@@ -154,7 +154,7 @@ const Organizer = () => {
                             </div>
                             </div>
                             
-                            <Button green>
+                            <Button green='true'>
 								<p>
 									<span>Перейти на сайт</span>
 									<span>Перейти на сайт</span>
