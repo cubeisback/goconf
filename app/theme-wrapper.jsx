@@ -41,6 +41,7 @@ export default function ThemeWrapper({ children }) {
 					<Header/>
 					{children}
 					<ConfirmModal />
+					{/* test */}
 					<Footer />
 			</ThemeProvider>
 		// </WindowSizeProvider>
