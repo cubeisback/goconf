@@ -16,7 +16,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import axios from 'axios';
-import { decodeHtmlEntities, formatDate, formatPrice } from '@/functions/functions';
+import { decodeHtmlEntities, formatDate, formatPrice, getApiUrl } from '@/functions/functions';
 // import { DocumentDescription, DocumentTitle } from '@/functions/DocumentMeta';
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -58,7 +58,7 @@ export default function EventClient({ params }) {
 		if (!slug) return;
 	
 		axios
-		  .get(`https://dev.goconf.ru/wp-json/events/v2/single/?slug=${slug}`)
+		  .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`))
 		  .then((response) => {
 			setPageInfo(response.data);
 			// Здесь тоже можно вызывать функции для SEO если нужно
