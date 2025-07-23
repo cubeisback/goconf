@@ -11,6 +11,7 @@ import { Filter } from '@/components/Filter/Filter';
 import { EventsFiltered } from '@/components/EventsFiltered';
 import { Form } from '@/components/Form';
 import SearchIcon from "@/public/images/svg/search.svg";
+import { getApiUrl } from '@/functions/functions';
 
 export default function EventsClient({ params }) {
 	const theme = useTheme();
@@ -25,7 +26,7 @@ export default function EventsClient({ params }) {
 
 	useEffect(() => {
 		axios
-			.get("https://dev.goconf.ru/wp-json/events/v2/popular-formats/")
+			.get(getApiUrl("/backend/wp-json/events/v2/popular-formats/"))
 			.then((response) => {
 				setFormatItems(response.data.items);
 			})

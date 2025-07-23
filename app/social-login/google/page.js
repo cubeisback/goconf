@@ -28,6 +28,8 @@ export function GoogleSocialLogin() {
 			});
 		}
 	}, [code]);
+
+	//TODO переделать логин на axios как в yandex
 	
 	return (
 		<div style={{position: 'fixed', width: '100vw', height: '100vh', background: '#fff', zIndex: 99}}>

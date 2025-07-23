@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
+import axios from 'axios';
+import { getApiUrl } from '@/functions/functions';
 
 export function YandexSocialLogin() {
 	const params = useSearchParams();
@@ -15,12 +17,14 @@ export function YandexSocialLogin() {
 
 	useEffect(() => {
 		if (code) {
-		fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=yandex_oauth&code=${code}`)
-			.then(res => res.json())
+		// fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=yandex_oauth&code=${code}`)
+		axios
+			.get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=yandex_oauth&code=${code}`))
+			// .then(res => res.json())
 			.then(data => {
 				console.log('Ответ от WP:', data);
-				if (data.token) {
-					login(data.token);
+				if (data.data.token) {
+					login(data.data.token);
 					router.push('/');
 				}
 			});

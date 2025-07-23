@@ -1,3 +1,5 @@
+import { getApiUrl } from '@/functions/functions';
+import axios from 'axios';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -23,21 +25,32 @@ export const useAuthStore = create(
         if (!token) return;
 
         try {
-          const res = await fetch('https://dev.goconf.ru/wp-json/users/v2/profile/', {
+          const res = await axios
+            .get(getApiUrl('/backend/wp-json/users/v2/profile/'), {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          });
+          })
+          // .then(resfsa=>console.log(resfsa));
+// console.log('res', res)
+          // if (!res.ok) {
+          //   if (res.status === 401) {
+          //     get().logout();
+          //   }
+          //   return;
+          // }
 
-          if (!res.ok) {
-            if (res.status === 401) {
-              get().logout();
-            }
-            return;
+          if(res.status !== 200) {
+            get().logout();
+            return
           }
 
-          const data = await res.json();
-          set({ user: data });
+          //TODO проверить логины
+          
+
+          // const data = await res.json();
+          set({ user: res.data });
+          console.log('user', res)
         } catch (err) {
           console.error('Ошибка при получении профиля:', err);
         }
