@@ -28,28 +28,18 @@ export function decodeHtmlEntities(str) {
 // 	return url;
 // };
 
-// export const getApiUrl = (url) => {
-// 	if (typeof window === "undefined") {
-// 	  // SSR (на сервере) — всегда отдаём полный URL
-// 	  return `https://dev.goconf.ru${url}`;
-// 	}
+export const getApiUrl = (url) => {
+	if (typeof window === "undefined") {
+	  // SSR (на сервере) — всегда отдаём полный URL
+	  return `https://dev.goconf.ru${url}`;
+	}
   
-// 	if (window.location.hostname === "localhost") {
-// 	  return `https://dev.goconf.ru${url}`;
-// 	}
+	if (window.location.hostname === "localhost") {
+	  return `https://dev.goconf.ru${url}`;
+	}
   
-// 	// На клиенте, если не localhost
-// 	return url;
-//   };
-
-  export const getApiUrl = (url) => {
-  if (typeof window === "undefined") {
-    // При SSR всегда отдаем полный URL
-    return `https://dev.goconf.ru${url}`;
-  }
-
-  // Для клиента возвращаем абсолютный путь
-  return `https://dev.goconf.ru${url}`;
-};
+	// На клиенте, если не localhost
+	return url;
+  };
   
   
