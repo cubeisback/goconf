@@ -53,10 +53,8 @@ const UserOrg = () => {
 				},
 			}
 			);
-			// console.log('organizations', response.data.items)
 			if (response.status === 200) {
-				console.log('removed')
-				// setOrganizations(response.data.items)
+				// console.log('removed')
 			}
 		} catch (error) {
 			console.error("organizations error", error);
@@ -125,7 +123,7 @@ const UserOrg = () => {
 								<EditIcon />
 							</Link>
                             
-                            <RemoveIcon onClick={()=>handleDeleteOrganization(item.id)} />
+                            <RemoveIcon style={{cursor: 'pointer'}} onClick={()=>handleDeleteOrganization(item.id)} />
                         </div>
                     </div>
                     <div className={css`display: flex; gap: 24px;`}>

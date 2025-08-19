@@ -83,7 +83,7 @@ const CityDropdown = ({
       ? (fullCityData ? null : '') 
       : (fullCityData ? city : city.name);
 
-	  console.log(city)
+	  console.log(selected)
 	// selected.name ? handleDataOrganizaionCityChange(selected.name) : handleDataOrganizaionCityChange(selected);
 	handleDataOrganizaionCityChange(selected)
     setQuery(city === 'Все города' ? '' : city.name);
