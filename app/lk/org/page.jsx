@@ -44,23 +44,23 @@ const UserOrg = () => {
 
 	const handleDeleteOrganization = async(id) => {
 		console.log(token, id)
-		// try {
-		// 	const response = await axios.get(
-		// 	getApiUrl(`/backend/wp-json/account/v2/remove/?id=${id}`),
-		// 	{
-		// 		headers: {
-		// 			Authorization: `Bearer ${token}`,
-		// 		},
-		// 	}
-		// 	);
-		// 	// console.log('organizations', response.data.items)
-		// 	if (response.status === 200) {
-		// 		console.log('removed')
-		// 		// setOrganizations(response.data.items)
-		// 	}
-		// } catch (error) {
-		// 	console.error("organizations error", error);
-		// }
+		try {
+			const response = await axios.get(
+			getApiUrl(`/backend/wp-json/account/v2/company/remove/?id=${id}`),
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+			);
+			// console.log('organizations', response.data.items)
+			if (response.status === 200) {
+				console.log('removed')
+				// setOrganizations(response.data.items)
+			}
+		} catch (error) {
+			console.error("organizations error", error);
+		}
 	};
 
     return (

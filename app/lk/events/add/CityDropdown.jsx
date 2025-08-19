@@ -82,8 +82,10 @@ const CityDropdown = ({
     const selected = city === 'Все города' 
       ? (fullCityData ? null : '') 
       : (fullCityData ? city : city.name);
-    
-    handleDataOrganizaionCityChange(selected);
+
+	  console.log(city)
+	// selected.name ? handleDataOrganizaionCityChange(selected.name) : handleDataOrganizaionCityChange(selected);
+	handleDataOrganizaionCityChange(selected)
     setQuery(city === 'Все города' ? '' : city.name);
     setSelectedValue(city === 'Все города' ? '' : city.name);
     setIsOpen(false);

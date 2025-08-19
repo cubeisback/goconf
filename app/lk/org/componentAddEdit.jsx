@@ -12,10 +12,11 @@ import TextEditor from "@/components/ui/Editor";
 import { useImageUpload } from "@/functions/useImageUpload";
 import { IMaskInput } from 'react-imask';
 import CityDropdown from "../events/add/CityDropdown";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useConfirmModal } from "@/store/confirmModalStore";
 
 const AddEdit = () => {
+	const router = useRouter();
 	const searchParams = useSearchParams();
 	const id = searchParams.get('id');
 
@@ -191,7 +192,10 @@ const AddEdit = () => {
 		openModal({
 		title: 'Сохранение',
 		description: `Вы действительно хотите сохранить?`,
-		onConfirm: () => handleSubmitTest(),
+		onConfirm: () => {
+			handleSubmitTest(), 
+			router.replace('/lk')
+		},
 		confirmText: 'Сохранить',
 		});
 	};
