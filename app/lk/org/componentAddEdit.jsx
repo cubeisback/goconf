@@ -14,6 +14,8 @@ import { IMaskInput } from 'react-imask';
 import CityDropdown from "../events/add/CityDropdown";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useConfirmModal } from "@/store/confirmModalStore";
+import { motion, AnimatePresence } from 'framer-motion';
+import styled from "@emotion/styled";
 
 const AddEdit = () => {
 	const router = useRouter();
@@ -187,14 +189,65 @@ const AddEdit = () => {
 		await handleAddOrganizationSubmit(payload); // основной запрос
 	};
 
-	const { openModal } = useConfirmModal();
+
+	//TODO объеденить валидации
+	const Error = styled.div`
+		font-size: 12px;
+		color: #FC1234;
+		padding-left: 10px;
+	`
+
+	const ErrorWrapper = (message) => {
+		return (
+			<AnimatePresence>
+				<motion.div 
+					initial={{ opacity: 0, x: -20, }}
+					animate={{ opacity: 1, x: 0 }}
+					exit={{ opacity: 0, x: 0 }}
+					transition={{ duration: .3 }}
+					>
+					<Error>{message}</Error>
+				</motion.div>
+			</AnimatePresence>
+		)
+	}
+	const [organizatorErrors, setOrganizatorErrors] = useState({});
+
+	const { openModal, closeModal } = useConfirmModal();
 	const handleSubmitTestModal = () => {
 		openModal({
 		title: 'Сохранение',
 		description: `Вы действительно хотите сохранить?`,
 		onConfirm: () => {
-			handleSubmitTest(), 
-			router.replace('/lk')
+			// if(dataOrganization.name != '') {
+			// 	handleSubmitTest(), 
+			// 	router.replace('/lk/org')
+			// } else {
+			// 	set
+			// 	closeModal()
+			// }
+			const errors = {};
+
+			if (!dataOrganization.name.trim()) {
+				errors.name = "Название обязательно";
+			}
+
+			// if (!dataOrganization.city.trim()) {
+			// errors.city = "Город обязателен";
+			// }
+
+			// сюда добавляешь правила под остальные поля
+			
+			
+		
+			if (Object.keys(errors).length > 0) {
+				closeModal()
+				setOrganizatorErrors(errors);
+				// return;
+			} else {
+				handleSubmitTest(), 
+				router.replace('/lk/org')
+			}
 		},
 		confirmText: 'Сохранить',
 		});
@@ -229,7 +282,10 @@ const AddEdit = () => {
 								<p className={css`color: #47474D;`}>Название</p>
 								<p className={css`color: #6C6C71;`}>Юридическое наименование вашей организации или ИП</p>
 							</div>
-							<input className={input} type="text" placeholder="Название" name="name" value={dataOrganization.name} onChange={handleDataOrganizaionChange} />
+							<input className={input} type="text" placeholder="Название" name="name" value={dataOrganization.name} onChange={handleDataOrganizaionChange} style={organizatorErrors.name && {border: '1px solid #FC1234'}} />
+							{organizatorErrors.name && 
+								ErrorWrapper(organizatorErrors.name)
+							}
 						</div>
 						
 						

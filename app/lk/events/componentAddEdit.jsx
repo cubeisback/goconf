@@ -17,14 +17,17 @@ import { getApiUrl } from "@/functions/functions";
 import axios from "axios";
 import { useAuthReady } from "@/hooks/useAuthReady";
 import { useImageUpload } from "@/functions/useImageUpload";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatedSwitch } from "../notifications/page";
 import EventDropdown from "./add/EventDropdown";
 import CityDropdown from "./add/CityDropdown";
 import TextEditor from "@/components/ui/Editor";
 import EventDate from "./add/EventDate";
+import { useGalleryUpload } from "@/functions/useGalleryUpload";
+import { useConfirmModal } from "@/store/confirmModalStore";
 
 const EventsAddEdit = () => {
+	const router = useRouter();
 	const { ready, token } = useAuthReady();
 
 	const searchParams = useSearchParams();
@@ -308,6 +311,20 @@ const {
 	targetKey: "cover",
 });
   
+const {
+  previewUrls: galleryPreviews,
+  inputRef: galleryInputRef,
+  handleFileChange: handleGalleryChange,
+  handleUploadImages: uploadGallery,
+  handleRemoveImage: removeFromGallery,
+  handleButtonClick: clickGallery,
+  files: galleryFiles,
+} = useGalleryUpload({
+  token,
+  data: dataEvent,
+  setData: setDataEvent,
+  targetKey: "gallery",
+});
 
 
 
@@ -331,6 +348,20 @@ const {
 
 		await handleAddEventSubmit(payload); // основной запрос
 	};
+
+
+	const { openModal } = useConfirmModal();
+		const handleSubmitModal = () => {
+			openModal({
+			title: 'Сохранение',
+			description: `Вы действительно хотите сохранить?`,
+			onConfirm: () => {
+				handleSubmitTest(), 
+				router.replace('/lk/events')
+			},
+			confirmText: 'Сохранить',
+			});
+		};
 
 	
 
@@ -487,6 +518,7 @@ const {
 									}
 									
 								</div>
+								{/* TODO надо проверить, Рома писал что анонс и большая встают в разные места */}
 								
 								{/* {dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>} */}
 								{dataEvent?.anons?.id || anonsPreview ?
@@ -685,7 +717,7 @@ const {
 											}
 										`}>
 											<p>Город</p>
-											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} items={[]} fullCityData={true} placeholder={'Выбрать город'} />
+											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} value={dataEvent.city.name} items={[]} fullCityData={true} placeholder={'Выбрать город'} />
 										</div>
 										<div className={css`
 											flex: 0 1 calc(50% - 12px)!important;
@@ -836,56 +868,22 @@ const {
 									}
 								}
 							`}>
-								<div>
-									<Image src={img_ex_1} alt="" />
-									<div>
-										<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+								{dataEvent.gallery && dataEvent.gallery.map((image, index) => (
+									<div key={index}>
+										<img src={image.url} alt="" />
 										<div>
-											<EditIcon />
-											<RemoveIcon />
+											<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+											<div>
+												<EditIcon />
+												<RemoveIcon />
+												{image.id}
+											</div>
 										</div>
+
+										
 									</div>
-								</div>
-								<div>
-									<Image src={img_ex_1} alt="" />
-									<div>
-										<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
-										<div>
-											<EditIcon />
-											<RemoveIcon />
-										</div>
-									</div>
-								</div>
-								<div>
-									<Image src={img_ex_1} alt="" />
-									<div>
-										<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
-										<div>
-											<EditIcon />
-											<RemoveIcon />
-										</div>
-									</div>
-								</div>
-								<div>
-									<Image src={img_ex_1} alt="" />
-									<div>
-										<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
-										<div>
-											<EditIcon />
-											<RemoveIcon />
-										</div>
-									</div>
-								</div>
-								<div>
-									<Image src={img_ex_1} alt="" />
-									<div>
-										<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
-										<div>
-											<EditIcon />
-											<RemoveIcon />
-										</div>
-									</div>
-								</div>
+								))}
+								
 							</div>
 						<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;margin-bottom: 48px;`)} >+ Добавить изображение</Button>
 
@@ -913,11 +911,28 @@ const {
 							flex-direction: column;
 						}
 					`}>
-						<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{view > 1 ? setView(prev => prev - 1) : setBack(1)}}>Отменить</Button>
+						{view == 1 ? 
+							<Button onClick={()=>{setView(prev => prev + 1)}}>Продолжить</Button>
+						: view == 2 ? 
+						<>
+							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer'}}>Назад</div>
+							<Button onClick={()=>{setView(prev => prev + 1)}}>Продолжить</Button>
+							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{handleSubmitModal()}}>Отправить на модерацию</Button>
+							{/* <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`} onClick={()=>console.log(dataEvent)}>Сохранить в черновик</div> */}
+						</>
+						: 
+						<>
+							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer'}}>Назад</div>
+							<Button onClick={()=>{handleSubmitModal()}}>Отправить на модерацию</Button>
+							{/* <Button onClick={()=>{view < 3 ? setView(prev => prev + 1) : handleAddEventSubmit()}}>Опубликовать</Button> */}
+						</>
+						}
+						{/* <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{view > 1 ? setView(prev => prev - 1) : setBack(1)}}>Отменить</Button>
 						<Button onClick={()=>{view < 3 ? setView(prev => prev + 1) : handleAddEventSubmit()}}> {view > 2 ? 'Опубликовать' : 'Продолжить'}</Button>
-						<div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`} onClick={()=>console.log(dataEvent)}>Сохранить в черновик</div>
-						<div onClick={()=>handleUploadImage()}>отправить</div>
+						
 						<div onClick={handleSubmitTest}>ОТПРАВИТЬ НОВЫАЯ</div>
+
+						<div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`} onClick={()=>console.log(dataEvent)}>Сохранить в черновик</div> */}
 					</div>
 					</UserMain>
 				</div>

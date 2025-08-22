@@ -11,6 +11,7 @@ import { getApiUrl } from "@/functions/functions";
 import axios from "axios";
 import AvatarIcon from "@/public/images/svg/avatar.svg";
 import { useAuthReady } from "@/hooks/useAuthReady";
+import { useConfirmModal } from "@/store/confirmModalStore";
 
 const UserOrg = () => {
 	const { ready, token } = useAuthReady();
@@ -39,6 +40,7 @@ const UserOrg = () => {
 			}
 		} catch (error) {
 			console.error("organizations error", error);
+			setOrganizations(null)
 		}
 	};
 
@@ -53,12 +55,32 @@ const UserOrg = () => {
 				},
 			}
 			);
-			if (response.status === 200) {
-				// console.log('removed')
-			}
+			// if (response.status === 200) {
+			// 	console.log('removed')
+			// }
 		} catch (error) {
-			console.error("organizations error", error);
+			console.error("organizations delete error", error);
 		}
+	};
+
+	const { openModal } = useConfirmModal();
+	const handleSubmitDeleteModal = (id) => {
+		openModal({
+		title: 'Удаление',
+		description: `Вы действительно хотите удалить организатора?`,
+		onConfirm: async () => {
+			try {
+				await handleDeleteOrganization(id);
+				setOrganizations(prev => prev.filter(o => o.id !== id)); // мгновенно в UI
+				// подстрахуемся актуальным списком
+				await handleGetOrganizations();
+			} catch (e) {
+				console.error(e);
+				await handleGetOrganizations(); // откатимся к серверному состоянию при ошибке
+			}
+		},
+		confirmText: 'Удалить',
+		});
 	};
 
     return (
@@ -93,7 +115,7 @@ const UserOrg = () => {
                 flex-direction: column;
                 gap: 32px;
             `}>
-				{organizations && organizations.map((item, index)=>(
+				{organizations ? organizations.map((item, index)=>(
 				<div
 				key={index}
 				 className={css`
@@ -123,11 +145,12 @@ const UserOrg = () => {
 								<EditIcon />
 							</Link>
                             
-                            <RemoveIcon style={{cursor: 'pointer'}} onClick={()=>handleDeleteOrganization(item.id)} />
+                            <RemoveIcon style={{cursor: 'pointer'}} onClick={()=>handleSubmitDeleteModal(item.id)} />
                         </div>
                     </div>
                     <div className={css`display: flex; gap: 24px;`}>
                         <div className={css`flex: 0 1 96px;`}>
+							{/* TODO картинка отображается не сразу, иногда не отображается с каким-то именем (был banner.png) или после сохранения и релоада общего списка */}
 							{item.logo ? 
 							<img src={item.logo} alt={item.name} />
 							:
@@ -142,7 +165,10 @@ const UserOrg = () => {
                         </div>
                     </div>
                 </div>
-				))}
+				))
+			:
+			<div>Ничего не найдено</div>
+			}
                 
             </div>
         </UserMain>

@@ -22,7 +22,12 @@ const UserEvents = () => {
     const theme = useTheme();
     const [view, setView] = useState(1);
 	const [editId, setEditId] = useState(null);
-	
+    
+    // TODO
+    // ссылка на трансляцию в какое поле записывать?
+    // куда записывается "время начала"
+    // "ссылка на трансляцию" у онлайн мероприятия записывать в адрес?
+    // Разобраться с обложкой и анонсом (cover anons). Не везде есть оба значения
     
     const [selectedBlocks, setSelectedBlocks] = useState([1]);
 
