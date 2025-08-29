@@ -1,7 +1,7 @@
 "use client"
 
 import { css, cx } from "@emotion/css";
-import { Button, Container, inputRadio, inputRadioActive, LkWrapper, UserEventsBlock, UserEventsBlockHead, UserEventsBlockItem, UserEventsBlockItemTop, UserEventsBlockItemTopIcons, UserEventsBlockItemTopPublishDate, UserEventsBlockItemTopStatus, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
+import { Button, Container, input, inputItem, inputRadio, inputRadioActive, LkWrapper, UserEventsBlock, UserEventsBlockHead, UserEventsBlockItem, UserEventsBlockItemTop, UserEventsBlockItemTopIcons, UserEventsBlockItemTopPublishDate, UserEventsBlockItemTopStatus, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useEffect, useState } from "react";
@@ -21,27 +21,10 @@ const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'В
 const UserEvents = () => {
     const theme = useTheme();
     const [view, setView] = useState(1);
-	const [editId, setEditId] = useState(null);
+	// const [editId, setEditId] = useState(null);
     
     // TODO
-    // ссылка на трансляцию в какое поле записывать?
-    // куда записывается "время начала"
-    // "ссылка на трансляцию" у онлайн мероприятия записывать в адрес?
     // Разобраться с обложкой и анонсом (cover anons). Не везде есть оба значения
-    
-    const [selectedBlocks, setSelectedBlocks] = useState([1]);
-
-    // Функция для обработки клика по блоку
-    const handleBlockClick = (blockId) => {
-        setSelectedBlocks((prevSelected) =>
-        prevSelected.includes(blockId)
-            ? prevSelected.filter((id) => id !== blockId) // Если блок уже выбран, снимаем выбор
-            : [...prevSelected, blockId] // Если блок не выбран, добавляем в список выбранных
-        );
-    };
-
-    // Массив блоков для отображения
-    const blocks = [1, 2, 3, 4, 5]; // Это может быть любая структура данных
 
 
     const [radios, setRadios] = useState(1);
@@ -108,6 +91,122 @@ const UserEvents = () => {
 				console.error("Update password error", error);
 			}
 	}
+
+
+	const [dataForPayments, setDataForPayment] = useState({
+		id: '',
+		title: '',
+
+		promo: 'cost_7',
+		tariff: 0,
+		pay: 'pay_ur',
+
+		info: {
+			name: '',
+			address: '',
+			inn: '',
+			kpp: '',
+		},
+	});
+
+	useEffect(()=>{
+		console.log(dataForPayments)
+	}, [dataForPayments])
+
+	const getTariffs = async() => {
+			try {
+				const response = await axios.get(
+					getApiUrl("/backend/wp-json/account/v2/promotion/tariffs/"),
+				);
+				console.log('tariffs', response.data)
+				if (response.status === 200) {
+					// console.log("events", response.data);
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+			}
+	};
+
+	const [tariffOne, setTariffOne] = useState(true);
+	const [tariffTwo, setTariffTwo] = useState(false);
+
+
+	const getHist = async() => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+			try {
+				const response = await axios.get(
+					getApiUrl("/backend/wp-json/account/v2/promotion/history/"),
+					{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				console.log('history', response.data)
+				if (response.status === 200) {
+					// console.log("events", response.data);
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+			}
+	};
+
+	const getUrData = async() => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+			try {
+				const response = await axios.get(
+					getApiUrl("/backend/wp-json/account/v2/promotion/ur_info/"),
+					{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				console.log('ur_info', response.data)
+				if (response.status === 200) {
+					setDataForPayment((prev) => ({
+						...prev,
+						info: {
+							name: response.data.name,
+							address: response.data.address,
+							inn: response.data.inn,
+							kpp: response.data.kpp
+						}
+					}));
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+			}
+	};
+
+	const addOrder = async() => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+			try {
+				const response = await axios.post(
+				getApiUrl("/backend/wp-json/account/v2/promotion/add/"),
+				dataForPayments,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				console.log('addOrder', response.data)
+				if (response.status === 200) {
+					// console.log("events", response.data);
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+			}
+	};
+	
+
 
     return(
         <LkWrapper>
@@ -208,7 +307,14 @@ const UserEvents = () => {
 							</div>
                             <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Организатор:</b> ????</div>
                         </div>
-						<Button onClick={()=>setView(2)}>Продвигать событие</Button>
+						<Button onClick={()=>{
+							setDataForPayment((prev) => ({
+								...prev,
+								id: event.id,
+								title: event.title
+							}));
+							getUrData();
+							setView(2)}}>Опции для продвижения</Button>
 					</UserEventsBlockItem>
 					</div>
 				))}
@@ -567,8 +673,12 @@ const UserEvents = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: .3 }}>
+
+			<div onClick={getTariffs}>ТАРИФЫ</div>
+			<div onClick={getHist}>ИСТОРИЯ</div>
+
             <UserMainTitles>
-                <UserMainTitlesTitle>Продвигать событие</UserMainTitlesTitle>
+                <UserMainTitlesTitle>Опции для продвижения</UserMainTitlesTitle>
             </UserMainTitles>
             
             <div className={css`
@@ -593,39 +703,121 @@ const UserEvents = () => {
                 <div>Подтверждение покупки</div>
             </div>
             <div className={css`margin-bottom: 8px;color: #6C6C71;font-size: 14px;line-height: 1.16;`}>Событие</div>
-            <div className={css`margin-bottom: 16px; font-size: 20px; font-weight: 500; line-height: 1.4;`}>Налоговая и юридическая безопасность селлера на маркетплейсах</div>
-            <div className={css`margin-bottom: 8px; color: #6C6C71; font-size: 14px;line-height: 1.16;`}>Опции для продвижения</div>
+            <div className={css`margin-bottom: 16px; font-size: 20px; font-weight: 500; line-height: 1.4;`}>{dataForPayments.title}</div>
+            {/* <div className={css`margin-bottom: 8px; color: #6C6C71; font-size: 14px;line-height: 1.16;`}>Опции для продвижения</div> */}
             <div className={css`display: flex; flex-direction: column;gap: 8px; margin-bottom: 24px;`}>
-                {blocks.map((blockId, index) => (
-                    <div key={index} className={css`
-                        padding: 8px 8px 8px 40px;
+                
+                    <div className={css`
+                        padding: 8px 8px 8px 36px;
                         cursor: pointer;
                         position: relative;
-                        filter: ${selectedBlocks.includes(blockId) ? 'grayscale(0)' : 'grayscale(1)' };
-                        opacity: ${selectedBlocks.includes(blockId) ? 1 : .4 };
+                        filter: grayscale(0);
                         transition: ${theme.transition};
-                        pointer-events: ${selectedBlocks.includes(blockId) ? 'all' : 'none' };
+                        pointer-events: all;
                         
                         &::before {
                             content: '';
                             position: absolute;
-                            left: ${selectedBlocks.includes(blockId) ? '4px' : '0' };
-                            top: ${selectedBlocks.includes(blockId) ? '12px' : '8px' };
-                            width: ${selectedBlocks.includes(blockId) ? '24px' : '32px' };
-                            height: ${selectedBlocks.includes(blockId) ? '24px' : '32px' };
-                            background-image: ${selectedBlocks.includes(blockId) ? `url('data:image/svg+xml,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="%238553F9"/><path fill-rule="evenodd" clip-rule="evenodd" d="M20.884 6.883L9.88398 17.883C9.39582 18.3712 8.60437 18.3712 8.11621 17.883L3.11621 12.883L4.88398 11.1152L9.00009 15.2314L19.1162 5.11523L20.884 6.883Z" fill="white"/></svg>')` : `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="5" y="5" width="22" height="22" rx="5" stroke="%23101010" stroke-opacity="0.2" stroke-width="2"/></svg>')`};
+                            left: 0 ;
+                            top: 12px ;
+                            width: 24px ;
+                            height: 24px ;
+                            background-image: 
+								${tariffOne 
+									? 
+									`url('data:image/svg+xml,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="%238553F9"/><path fill-rule="evenodd" clip-rule="evenodd" d="M20.884 6.883L9.88398 17.883C9.39582 18.3712 8.60437 18.3712 8.11621 17.883L3.11621 12.883L4.88398 11.1152L9.00009 15.2314L19.1162 5.11523L20.884 6.883Z" fill="white"/></svg>');`
+									: 
+									`url('data:image/svg+xml,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="22" height="22" rx="5" stroke="%23101010" stroke-opacity="0.2" stroke-width="2"/></svg>');`
+								}
+								
+							;
+							};
                         }
                     `}
-                    onClick={()=>handleBlockClick(blockId)}
+                    onClick={()=>{
+						setTariffOne(prev => !prev)
+					}}
                     >
-                        <div className={css`padding: 6px 0 8px;`}>Размещение в сквозном слайдере «Интересные события»</div>
-                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; span {color: #191921;}`}>Срок размещения - 7 дней с момента заказа опции</p>
-                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; span {color: #191921;}`}>Стоимость услуги - <span>5 000 рублей</span></p>
+                        <div className={css`padding: 6px 0 16px;`}>Тариф <b style={{fontWeight: 500}}>«Расширенный»</b></div>
+						<div className={css`
+							display: flex;
+							gap: 24px;
+							margin-bottom: 16px;
+
+							div {
+								position: relative;
+								padding-left: 24px;
+								font-size: 14px;
+								color: #47474D;
+								line-height: 1.16;
+
+								&::before {
+									content: '';
+									position: absolute;
+									top: 0;
+									left: 0;
+									width: 16px;
+									height: 16px;
+									background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(%23clip0_10645_69356)"><path d="M16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8Z" fill="%23B3ED73"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.7783 5.74978L7.01386 11.0435L4.23438 8.26408L4.76471 7.73375L6.98523 9.95426L11.2208 5.24805L11.7783 5.74978Z" fill="%23191921"/></g><defs><clipPath id="clip0_10645_69356"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>');
+								}
+							}
+						`}>
+							<div>Ссылка на сайт с&nbsp;UTM</div>
+							<div>Аналитика мероприятия</div>
+							<div>Добавление фото/видео материалов</div>
+						</div>
+                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; margin-bottom: 8px; span {color: #191921; font-weight: 500;}`}>Срок размещения - <span>бессрочно</span></p>
+                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; span {color: #191921; font-weight: 500;}}`}>Стоимость услуги - <span>5 000 рублей</span></p>
                     </div>
-                ))}
+                
             </div>
-			<div onClick={()=>setView(1)}>Назад</div>
-            <Button onClick={()=>setView(3)}>Перейти к оплате</Button>
+
+			<div className={css`display: flex; flex-direction: column;gap: 8px; margin-bottom: 24px;`}>
+                
+                    <div className={css`
+                        padding: 8px 8px 8px 36px;
+                        cursor: pointer;
+                        position: relative;
+                        filter: grayscale(0);
+                        transition: ${theme.transition};
+                        pointer-events: all;
+                        
+                        &::before {
+                            content: '';
+                            position: absolute;
+                            left: 0 ;
+                            top: 12px ;
+                            width: 24px ;
+                            height: 24px ;
+                            background-image: 
+								${tariffTwo 
+									? 
+									`url('data:image/svg+xml,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="%238553F9"/><path fill-rule="evenodd" clip-rule="evenodd" d="M20.884 6.883L9.88398 17.883C9.39582 18.3712 8.60437 18.3712 8.11621 17.883L3.11621 12.883L4.88398 11.1152L9.00009 15.2314L19.1162 5.11523L20.884 6.883Z" fill="white"/></svg>');`
+									: 
+									`url('data:image/svg+xml,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="22" height="22" rx="5" stroke="%23101010" stroke-opacity="0.2" stroke-width="2"/></svg>');`
+								}
+								
+							;
+							};
+                        }
+                    `}
+                    onClick={()=>{
+						setTariffTwo(prev => !prev)
+					}}
+                    >
+                        <div className={css`padding: 6px 0 16px;`}>Размещение в&nbsp;сквозном слайдере <b style={{fontWeight: 500}}>Интересные события</b></div>
+						
+                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; margin-bottom: 8px; span {color: #191921; font-weight: 500;}`}>Срок размещения - <span>от 7 до 28 дней</span></p>
+                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; span {color: #191921; font-weight: 500;}}`}>Стоимость услуги - <span>от 5 000 рублей</span></p>
+                    </div>
+                
+            </div>
+			{/* <div onClick={()=>setView(1)}>Назад</div> */}
+            <Button onClick={()=>{
+				if(tariffOne || tariffTwo) {
+					setView(3)
+				} 
+			}}>Перейти к оплате</Button>
         </UserMain>
         }
         {view === 3 &&
@@ -651,7 +843,7 @@ const UserEvents = () => {
                     min-width: max-content;
                 }
             `}>
-                <div className={css`border-color: #8553F9!important;`}>Выбор опций</div>
+                <div className={css`border-color: #8553F9!important; background-color: #8553F9; color: #fff!important;`}>Выбор опций</div>
                 <div className={css`width: 16px;height: 2px;background-color: #8553F9;padding: 0!important;border:none!important;`}></div>
                 <div className={css`border-color: #8553F9!important;`}>Подтверждение покупки</div>
             </div>
@@ -678,16 +870,55 @@ const UserEvents = () => {
                     }
                 `}>
                     <div className={css`margin-bottom: 16px;color: #6C6C71;font-size: 14px;line-height: 1.16;`}>Промежуточный итог</div>
+					{tariffOne && 
                     <div className={css`
-                        display: flex;gap:16px;justify-content: space-between;margin-bottom: 16px;padding-bottom: 16px;border-bottom: 1px solid #D7DADD;
+                        display: flex;gap:16px;justify-content: space-between;margin-bottom: 16px;padding-bottom: 16px;
                         @media(max-width: 575px) {
                             flex-direction: column;
                         }
                     `}>
-                        <div>Размещение в сквозном слайдере «Интересные события» (на 7 дней)</div>
-                        <div className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</div>
+                        <div style={{flex: '0 1 540px'}}>Тариф «Расширенный»</div>
+						<div style={{flex: 1}}>бессрочно</div>
+                        <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</div>
                     </div>
-                    <div>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</span></div>
+					}
+					{tariffTwo && 
+                    <div className={css`
+                        display: flex;gap:16px;justify-content: space-between;margin-bottom: 16px;padding-bottom: 16px;
+                        @media(max-width: 575px) {
+                            flex-direction: column;
+                        }
+                    `}>
+                        <div style={{flex: '0 1 540px'}}>Размещение в сквозном слайдере «Интересные события» (на 7 дней)</div>
+						<div style={{flex: 1, display: 'flex'}}>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <g opacity="0.32" clip-path="url(#clip0_11673_218)">
+    <rect width="24" height="24" rx="4" fill="white"/>
+    <path d="M6 11.9961H18" stroke="#191921" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <defs>
+    <clipPath id="clip0_11673_218">
+      <rect width="24" height="24" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>
+							<div>7 дней</div>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+							<g clip-path="url(#clip0_11673_222)">
+								<rect width="24" height="24" rx="4" fill="#F5F7FA"/>
+								<path d="M6 11.996H18M12.004 6L12.004 18" stroke="#6C6C71" stroke-width="2" stroke-linecap="round"/>
+							</g>
+							<defs>
+								<clipPath id="clip0_11673_222">
+								<rect width="24" height="24" fill="white"/>
+								</clipPath>
+							</defs>
+							</svg>
+						</div>
+                        <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</div>
+                    </div>
+					}
+                    <div style={{display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid #D7DADD'}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</span></div>
                 </div>
                 <div className={css`color: #6C6C71;margin-bottom: 16px; font-size: 14px;line-height: 1.16;`}>Способ оплаты</div>
                 <div className={css`
@@ -707,7 +938,94 @@ const UserEvents = () => {
             
         </UserMain>
         }
-        {view === 4 && 
+		{view === 4 && 
+		<motion.div className={css`
+            flex: 1;
+            padding-top: 24px;
+        `}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: .3 }}>
+            <div className={css`
+                display: flex;
+                gap: 16px;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 24px;
+                max-width: 100%;
+            `}>
+                <div className={css`
+                    font-family: Impact;
+                    font-size: 36px;
+                    line-height: 1.12;
+                `}>Безналичная оплата</div>
+            </div>
+            <div className={css`margin-bottom: 32px;`}>Юридическая информация, необходимая для выставления счетов</div>
+
+			<div className={css`
+										display: flex;
+										flex-wrap: wrap;
+										gap: 24px;
+										margin-bottom: 40px;
+									`}>
+										<div className={inputItem}>
+											<p>Юридическое наименование</p>
+											<input type="text" className={input} value={dataForPayments.info.name} placeholder="Юридическое наименование" 
+											onChange={(e) =>
+											setDataForPayment(prev => ({
+											...prev,
+											info: {
+												...prev.info,
+												name: e.target.value
+											}
+											}))}  />
+										</div>
+										<div className={inputItem}>
+											<p>Юридический адрес</p>
+											<input type="text" className={input} value={dataForPayments.info.address} placeholder="Юридический адрес" 
+											onChange={(e) =>
+											setDataForPayment(prev => ({
+											...prev,
+											info: {
+												...prev.info,
+												address: e.target.value
+											}
+											}))} />
+										</div>
+										<div className={inputItem}>
+											<p>ИНН</p>
+											<input type="text" className={input} value={dataForPayments.info.inn} placeholder="ИНН" 
+											onChange={(e) =>
+											setDataForPayment(prev => ({
+											...prev,
+											info: {
+												...prev.info,
+												inn: e.target.value
+											}
+											}))}
+											 />
+										</div>
+										<div className={inputItem}>
+											<p>КПП</p>
+											<input type="text" className={input} value={dataForPayments.info.kpp} placeholder="КПП" 
+											onChange={(e) =>
+											setDataForPayment(prev => ({
+											...prev,
+											info: {
+												...prev.info,
+												kpp: e.target.value
+											}
+											}))} />
+										</div>
+									</div>
+            
+                <div className={css`display: flex;gap:16px;`}>
+                    <Button onClick={()=>setView(3)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Назад</Button>
+                    <Button onClick={addOrder}>Получить счет</Button>
+                </div>
+        </motion.div>
+		}
+        {view === 5 && 
         <motion.div className={css`
             flex: 1;
             padding-top: 24px;
