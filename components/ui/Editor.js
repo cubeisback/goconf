@@ -6,6 +6,12 @@ import Underline from "@tiptap/extension-underline";
 import Strike from "@tiptap/extension-strike";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEffect } from "react";
+import Bold from "@/public/images/svg/bold_icon.svg";
+import Italic from "@/public/images/svg/italic_icon.svg";
+import Under from "@/public/images/svg/underline_icon.svg";
+import ListBullets from "@/public/images/svg/list_bullets_icon.svg";
+import ListNumbers from "@/public/images/svg/list_numbers_icon.svg";
+import Header from "@/public/images/svg/header_icon.svg";
 
 export default function TextEditor({ content, onChange }) {
   const editor = useEditor({
@@ -55,38 +61,59 @@ export default function TextEditor({ content, onChange }) {
 			background: '#F5F7FA',
 			padding: '16px 24px',
 			display: 'flex',
-			gap: 16,
+			gap: 8,
 		}}>
         <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          disabled={!editor.can().toggleBold()}
-          style={{ fontWeight: editor.isActive("bold") ? "bold" : "normal" }}
+          	onClick={() => editor.chain().focus().toggleBold().run()}
+          	disabled={!editor.can().toggleBold()}
+			style={{ 
+				display: 'flex', 
+				alignItems: 'center', 
+				justifyContent: 'center', 
+				padding: 3, 
+				borderRadius: 6, 
+				border: '1px solid #f5f7fa', 
+				borderColor: editor.isActive("bold") ? "#191921" : "#f5f7fa" 
+			}}
           title="Жирный (Ctrl+B)"
         >
-          B
+          <Bold />
         </button>
 
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={!editor.can().toggleItalic()}
-          style={{ fontStyle: editor.isActive("italic") ? "italic" : "normal" }}
+          style={{ display: 'flex', 
+				alignItems: 'center', 
+				justifyContent: 'center', 
+				padding: 3, 
+				borderRadius: 6, 
+				border: '1px solid #f5f7fa', 
+				borderColor: editor.isActive("italic") ? "#191921" : "#f5f7fa" 
+			}}
           title="Курсив (Ctrl+I)"
         >
-          I
+          <Italic />
         </button>
 
         <button
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           disabled={!editor.can().toggleUnderline()}
           style={{
-            textDecoration: editor.isActive("underline") ? "underline" : "none",
+			display: 'flex',
+			alignItems: 'center', 
+				justifyContent: 'center', 
+				padding: 3, 
+				borderRadius: 6, 
+				border: '1px solid #f5f7fa', 
+				borderColor: editor.isActive("underline") ? "#191921" : "#f5f7fa" 
           }}
           title="Подчеркнутый (Ctrl+U)"
         >
-          U
+          <Under />
         </button>
 
-        <button
+        {/* <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
           disabled={!editor.can().toggleStrike()}
           style={{
@@ -95,9 +122,9 @@ export default function TextEditor({ content, onChange }) {
           title="Зачеркнутый"
         >
           S
-        </button>
+        </button> */}
 
-        <button
+        {/* <button
           onClick={() => editor.chain().focus().toggleCode().run()}
           disabled={!editor.can().toggleCode()}
           style={{
@@ -106,9 +133,9 @@ export default function TextEditor({ content, onChange }) {
           title="Код"
         >
           {"</>"}
-        </button>
+        </button> */}
 
-        <button
+        {/* <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           title="Цитата"
           style={{
@@ -116,26 +143,38 @@ export default function TextEditor({ content, onChange }) {
           }}
         >
           ❝ ❞
-        </button>
+        </button> */}
 
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           title="Маркированный список"
           style={{
-            backgroundColor: editor.isActive("bulletList") ? "#ddd" : "transparent",
+			display: 'flex',
+			alignItems: 'center', 
+				justifyContent: 'center', 
+				padding: 3, 
+				borderRadius: 6, 
+				border: '1px solid #f5f7fa', 
+				borderColor: editor.isActive("bulletList") ? "#191921" : "#f5f7fa" 
           }}
         >
-          • List
+          <ListBullets />
         </button>
 
         <button
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           title="Нумерованный список"
           style={{
-            backgroundColor: editor.isActive("orderedList") ? "#ddd" : "transparent",
+			display: 'flex',
+			alignItems: 'center', 
+				justifyContent: 'center', 
+				padding: 3, 
+				borderRadius: 6, 
+				border: '1px solid #f5f7fa', 
+				borderColor: editor.isActive("orderedList") ? "#191921" : "#f5f7fa" 
           }}
         >
-          1. List
+          <ListNumbers />
         </button>
 
         {/* <button
@@ -148,22 +187,40 @@ export default function TextEditor({ content, onChange }) {
           ¶
         </button> */}
 
-        {[1, 2, 3, 4, 5, 6].map((level) => (
-          <button
-            key={level}
-            onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
-            title={`Заголовок H${level}`}
-            style={{
-              backgroundColor: editor.isActive("heading", { level })
-                ? "#ddd"
-                : "transparent",
-            }}
-          >
-            H{level}
-          </button>
-        ))}
+		<div style={{
+			position: 'relative',
+			alignItems: 'center', 
+				justifyContent: 'center', 
+				padding: 3, 
+				borderRadius: 6, 
+				}}>
+			{/* <Header /> */}
+			<div style={{
+				// position: 'absolute', 
+				// padding: 16,
+				display: 'flex',
+				gap: 8
+				}}>
+				{[1, 2, 3, 4, 5, 6].map((level) => (
+					
+				<button
+					key={level}
+					onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
+					title={`Заголовок H${level}`}
+					style={{
+					fontWeight: editor.isActive("heading", { level })
+						? "bold"
+						: "normal",
+					}}
+				>
+					H{level}
+				</button>
+				
+				))}
+			</div>
+		</div>
 
-        {["left", "center", "right", "justify"].map((alignment) => (
+        {/* {["left", "center", "right", "justify"].map((alignment) => (
           <button
             key={alignment}
             onClick={() => editor.chain().focus().setTextAlign(alignment).run()}
@@ -176,11 +233,17 @@ export default function TextEditor({ content, onChange }) {
           >
             {alignment[0].toUpperCase()}
           </button>
-        ))}
+        ))} */}
 
         <button
           onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
           title="Очистить форматирование"
+		  style={{
+			alignItems: 'center', 
+				justifyContent: 'center', 
+				padding: 3, 
+				borderRadius: 6, 
+		  }}
         >
           ✖
         </button>
@@ -192,7 +255,7 @@ export default function TextEditor({ content, onChange }) {
         style={{
 			background: '#fff',
 			borderRadius: '0 0 28px 28px',
-			padding: 14,
+			padding: 16,
 			fontSize: 16,
 			lineHeight: 1.5,
 			overflowY: "auto",

@@ -23,7 +23,7 @@ import EventDropdown from "./add/EventDropdown";
 import CityDropdown from "./add/CityDropdown";
 import TextEditor from "@/components/ui/Editor";
 import EventDate from "./add/EventDate";
-import { useGalleryUpload } from "@/functions/useGalleryUpload";
+import { useMultiImageUpload } from "@/functions/useGalleryUpload";
 import { useConfirmModal } from "@/store/confirmModalStore";
 
 const EventsAddEdit = () => {
@@ -102,6 +102,7 @@ const EventsAddEdit = () => {
 		short_text: '',
 		subject: [],
 		time_start: '',
+		broadcast: '',
 		video: ''
 	});
 
@@ -184,13 +185,13 @@ const EventsAddEdit = () => {
 
 
 
-	const handleAddEventSubmit = async(items) => {
+	const handleAddEventSubmit = async(items, status) => {
 		try {
 			const response = await axios.post(
 			getApiUrl("/backend/wp-json/account/v2/events/editor/"),
 			{
 				...(id ? { id } : {}),
-				status: 'draft',
+				status: status,
 				data: items
 			},
 			{
@@ -240,24 +241,28 @@ const EventsAddEdit = () => {
 
 
 
-	const [time, setTime] = useState('12:00');
+	const [time, setTime] = useState('00:00');
 
-  const handleInputChange = (e) => {
-    let value = e.target.value.replace(/[^\d]/g, ''); // Удаляем всё, кроме цифр
+	const handleInputChange = (e) => {
+		let value = e.target.value.replace(/[^\d]/g, ''); // Удаляем всё, кроме цифр
 
-    // Ограничим до 4 цифр (ччмм)
-    if (value.length > 4) value = value.slice(0, 4);
+		// Ограничим до 4 цифр (ччмм)
+		if (value.length > 4) value = value.slice(0, 4);
 
-    // Добавим двоеточие
-    let formatted = '';
-    if (value.length <= 2) {
-      formatted = value;
-    } else {
-      formatted = value.slice(0, 2) + ':' + value.slice(2);
-    }
+		// Добавим двоеточие
+		let formatted = '';
+		if (value.length <= 2) {
+		formatted = value;
+		} else {
+		formatted = value.slice(0, 2) + ':' + value.slice(2);
+		}
 
-    setTime(formatted);
-  };
+		setTime(formatted);
+		setDataEvent((prev) => ({
+			...prev,
+			time_start: formatted,
+		}));
+	};
 
   const handleBlur = () => {
     const [h, m] = time.split(':');
@@ -277,6 +282,10 @@ const EventsAddEdit = () => {
       .padStart(2, '0')}`;
 
     setTime(formatted);
+	setDataEvent((prev) => ({
+			...prev,
+			time_start: formatted,
+		}));
   };
 
 
@@ -312,14 +321,19 @@ const {
 });
   
 const {
-  previewUrls: galleryPreviews,
   inputRef: galleryInputRef,
+  replaceInputRef: replaceGalleryInputRef,
+  previews: galleryPreviews,
+  replacePreviews,
   handleFileChange: handleGalleryChange,
+  handleReplaceChange: handleGalleryReplace,
   handleUploadImages: uploadGallery,
-  handleRemoveImage: removeFromGallery,
+  handleUploadReplacements: uploadGalleryReplacements,
+  handleRemoveImage: removeGalleryImage,
+  handleRemoveTemp: removeTempGallery,
   handleButtonClick: clickGallery,
-  files: galleryFiles,
-} = useGalleryUpload({
+  startReplace,
+} = useMultiImageUpload({
   token,
   data: dataEvent,
   setData: setDataEvent,
@@ -328,9 +342,18 @@ const {
 
 
 
-	const handleSubmitTest = async () => {
+
+
+
+	const handleSubmitTest = async (status) => {
 		const anons = await uploadAnons();
 		const cover = await uploadCover();
+		// const gallery = await uploadGallery();
+		// ⚡️ теперь грузим галерею здесь
+		const gallery = [
+			...(await uploadGallery()),          // новые
+			...(await uploadGalleryReplacements()) // замены
+		];
 
 		// if (!anons || !cover) {
 		// 	alert("Ошибка загрузки изображений");
@@ -342,11 +365,13 @@ const {
 			...dataEvent,
 			anons,
 			cover,
+			gallery,
+			// gallery: dataEvent.gallery, // актуальная версия после замен
 		};
 
 		console.log("Отправка события:", payload);
 
-		await handleAddEventSubmit(payload); // основной запрос
+		await handleAddEventSubmit(payload, status); // основной запрос
 	};
 
 
@@ -356,7 +381,7 @@ const {
 			title: 'Сохранение',
 			description: `Вы действительно хотите сохранить?`,
 			onConfirm: () => {
-				handleSubmitTest(), 
+				handleSubmitTest('moderation'), 
 				router.replace('/lk/events')
 			},
 			confirmText: 'Сохранить',
@@ -617,7 +642,7 @@ const {
 								<p>Стоимость участия</p>
 								{!dataEvent?.free &&
 									<div className={css`display: flex;gap:8px;align-items: center;`}>
-										<input className={input} type="number" placeholder="Введите стоимость" name="cost" value={dataEvent.cost} onChange={handleDataEventChange} />
+										<input className={input} type="number" placeholder="Введите стоимость" name="cost" value={dataEvent.cost ? dataEvent.cost : ''} onChange={handleDataEventChange} />
 										<p className={css`color: #47474D;`}>руб.</p>
 									</div>
 								}
@@ -717,7 +742,7 @@ const {
 											}
 										`}>
 											<p>Город</p>
-											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} value={dataEvent.city.name} items={[]} fullCityData={true} placeholder={'Выбрать город'} />
+											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} value={dataEvent.city?.name} items={[]} fullCityData={true} placeholder={'Выбрать город'} />
 										</div>
 										<div className={css`
 											flex: 0 1 calc(50% - 12px)!important;
@@ -744,11 +769,12 @@ const {
 											<input
 												type="text"
 												className={input}
-												value={time}
+												value={dataEvent.time_start}
 												onChange={handleInputChange}
 												onBlur={handleBlur}
 												placeholder="Время начала"
 												maxLength={5}
+												name="time_start"
 											/>
 										</div>
 									</div>
@@ -794,7 +820,7 @@ const {
 											<input
 												type="text"
 												className={input}
-												value={time}
+												value={dataEvent.time_start}
 												onChange={handleInputChange}
 												onBlur={handleBlur}
 												placeholder="Время начала"
@@ -806,7 +832,7 @@ const {
 											max-width: 100%!important;
 										`}>
 											<p>Ссылка на трансляцию</p>
-											<input className={input} type="text" placeholder="https://" />
+											<input className={input} type="text" placeholder="https://" name="broadcast" value={dataEvent.broadcast} onChange={handleDataEventChange} />
 											<p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
 										</div>
 									</div>
@@ -839,6 +865,7 @@ const {
 							<p><span>Разрешение</span>&nbsp;&mdash; не&nbsp;более 9&nbsp;фотографий</p>
 							<p><span>Формат</span>&nbsp;&mdash; PNG или JPEG, рекомендуемое разрешение&nbsp;&mdash; 900&times;600</p>
 						</div>
+						
 						<div className={css`
 								display: flex;
 								flex-wrap: wrap;
@@ -867,8 +894,63 @@ const {
 										align-items: center;
 									}
 								}
-							`}>
-								{dataEvent.gallery && dataEvent.gallery.map((image, index) => (
+							`}>	
+
+
+								<input
+									type="file"
+									ref={galleryInputRef}
+									style={{ display: "none" }}
+									onChange={handleGalleryChange}
+									multiple
+								/>
+								{/* отдельный input для замены */}
+								<input
+								type="file"
+								ref={replaceGalleryInputRef}
+								style={{ display: "none" }}
+								onChange={handleGalleryReplace}
+								/>
+
+
+	{/* уже загруженные картинки */}
+	{dataEvent.gallery.map((img, index) => (
+		<div key={img.id || index}>
+
+			<img src={replacePreviews[index]?.url || img.url} alt="" />
+			<div>
+				<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>
+					{replacePreviews[index]?.size || img.size || "-"}
+				</div>
+				<div>
+					<EditIcon onClick={() => startReplace(index)} />
+					<RemoveIcon onClick={() => removeGalleryImage(img.id)} />
+				</div>
+			</div>
+		</div>
+	))}
+
+  {/* временные превью (ещё не отправлены) */}
+  {galleryPreviews.map((src, idx) => (
+    <div key={"temp-" + idx}>
+		<img src={src.url} alt="" />
+			<div>
+				<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>{src.size}</div>
+				<div>
+					{/* <EditIcon /> */}
+					<RemoveIcon onClick={() => removeTempGallery(idx)} />
+				</div>
+			</div>
+      {/* <img src={src} alt="" width={80} /> */}
+      {/* <button onClick={() => removeTempGallery(idx)}>Убрать</button> */}
+    </div>
+  ))}
+
+  {/* добавить фото */}
+  
+
+
+								{/* {dataEvent.gallery && dataEvent.gallery.map((image, index) => (
 									<div key={index}>
 										<img src={image.url} alt="" />
 										<div>
@@ -882,10 +964,13 @@ const {
 
 										
 									</div>
-								))}
+								))} */}
 								
 							</div>
-						<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;margin-bottom: 48px;`)} >+ Добавить изображение</Button>
+							{(dataEvent.gallery.length + galleryPreviews.length) < 9 && (
+								<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;margin-bottom: 48px;`)} onClick={clickGallery}>+ Добавить изображение</Button>
+							)}
+						
 
 						<div className={css`
 							margin-bottom: 8px;
@@ -932,7 +1017,8 @@ const {
 						
 						<div onClick={handleSubmitTest}>ОТПРАВИТЬ НОВЫАЯ</div>
 
-						<div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`} onClick={()=>console.log(dataEvent)}>Сохранить в черновик</div> */}
+						 */}
+						 <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`} onClick={()=>{handleSubmitTest('draft')}}>Сохранить в черновик</div>
 					</div>
 					</UserMain>
 				</div>

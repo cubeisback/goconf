@@ -14,7 +14,7 @@ import DropdownInput from "@/components/ui/DropdownInput";
 import LkMenu from "@/components/ui/LkMenu";
 import Link from "next/link";
 import axios from "axios";
-import { getApiUrl } from "@/functions/functions";
+import { formatDate, formatPrice, getApiUrl } from "@/functions/functions";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
@@ -146,7 +146,6 @@ const UserEvents = () => {
             </div>
 
             <UserEventsBlock>
-				<p>реальные</p>
 				{events && events.map((event, index) => (
 					<div key={index}>
 					<UserEventsBlockHead>
@@ -157,15 +156,14 @@ const UserEvents = () => {
 						<UserEventsBlockItemTop>
 							{event.status === 'publish' ? 
 							<UserEventsBlockItemTopStatus style={{backgroundColor: '#69B90F'}}>Опубликовано</UserEventsBlockItemTopStatus>
+							: event.status === 'draft' ? 
+							<UserEventsBlockItemTopStatus style={{backgroundColor: '#B5B7B9'}}>Черновик</UserEventsBlockItemTopStatus>
 							:
 							<UserEventsBlockItemTopStatus style={{backgroundColor: '#8553F9'}}>На модерации</UserEventsBlockItemTopStatus>
 							}
 							
 							<UserEventsBlockItemTopPublishDate>Дата публикации: {event.date_publish}</UserEventsBlockItemTopPublishDate>
 							<UserEventsBlockItemTopIcons>
-								{/* <Link href={{ pathname: "/lk/add", query: { id: event.id } }}>
-									<EditIcon onClick={()=>console.log('edit')} />
-								</Link> */}
 								<Link href={`/lk/events/edit/?id=${event.id}`}>
 									<EditIcon  />
 								</Link>
@@ -173,13 +171,48 @@ const UserEvents = () => {
 							</UserEventsBlockItemTopIcons>
 						</UserEventsBlockItemTop>
 						<div style={{marginBottom: 8, fontSize: 20, fontWeight: 500, lineHeight: 1.4}}>{event.title && event.title}</div>
-						<p>{event.city && event.city}</p>
-						<p>Старт: {event.date_start && event.date_start}</p>
-						<p>Конец: {event.date_end && event.date_end}</p>
+						{!event.online &&
+							<div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>{event.cost && formatPrice(event.cost)} руб.</div>
+						}
+						<div className={css`
+                                display: flex;flex-direction: column;gap: 8px;margin-bottom: 24px;
+
+                                @media(max-width: 575px) {
+                                    width: 100%;
+                                }
+                        `}>
+                            <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Даты проведения:</b>&nbsp; 
+															{
+																(() => {
+																	const [d1, m1, y1] = event.date_start.split('.');
+																	const [d2, m2, y2] = event.date_end.split('.');
+							
+																	if (event.date_start === event.date_end) {
+																	return formatDate(event.date_start);
+																	} else if (m1 === m2 && y1 === y2) {
+																	// Берём отформатированную дату и убираем оттуда число, оставляя "июня 2025"
+																	const formatted = formatDate(event.date_start);
+																	const [, monthAndYear] = formatted.split(' ', 2); // может вернуть только месяц
+																	const rest = formatted.slice(formatted.indexOf(' ') + 1); // "июня 2025"
+																	return `${d1}–${d2} ${rest}`;
+																	} else {
+																	return (
+																		<>
+																		{formatDate(event.date_start)} -<br />
+																		{formatDate(event.date_end)}
+																		</>
+																	);
+																	}
+																})()
+																}
+							</div>
+                            <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Организатор:</b> ????</div>
+                        </div>
+						<Button onClick={()=>setView(2)}>Продвигать событие</Button>
 					</UserEventsBlockItem>
 					</div>
 				))}
-				<p>статичные</p>
+				{/* <p>статичные</p>
                 <div className={css`
                     border-radius: 28px;
                     background-color: #fff;
@@ -524,7 +557,7 @@ const UserEvents = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </UserEventsBlock>
             
         </UserMain>
