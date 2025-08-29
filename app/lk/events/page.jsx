@@ -891,29 +891,9 @@ const UserEvents = () => {
                     `}>
                         <div style={{flex: '0 1 540px'}}>Размещение в сквозном слайдере «Интересные события» (на 7 дней)</div>
 						<div style={{flex: 1, display: 'flex'}}>
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <g opacity="0.32" clip-path="url(#clip0_11673_218)">
-    <rect width="24" height="24" rx="4" fill="white"/>
-    <path d="M6 11.9961H18" stroke="#191921" stroke-width="2" stroke-linecap="round"/>
-  </g>
-  <defs>
-    <clipPath id="clip0_11673_218">
-      <rect width="24" height="24" fill="white"/>
-    </clipPath>
-  </defs>
-</svg>
+							<div>-</div>
 							<div>7 дней</div>
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-							<g clip-path="url(#clip0_11673_222)">
-								<rect width="24" height="24" rx="4" fill="#F5F7FA"/>
-								<path d="M6 11.996H18M12.004 6L12.004 18" stroke="#6C6C71" stroke-width="2" stroke-linecap="round"/>
-							</g>
-							<defs>
-								<clipPath id="clip0_11673_222">
-								<rect width="24" height="24" fill="white"/>
-								</clipPath>
-							</defs>
-							</svg>
+							<div>+</div>
 						</div>
                         <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</div>
                     </div>
