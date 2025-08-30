@@ -1,12 +1,21 @@
 export function formatDate(dateString) {
-    const [day, month, year] = dateString.split('.');
-    const date = new Date(`${year}-${month}-${day}`);
-        
-    return new Intl.DateTimeFormat('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    }).format(date).replace(' г.', '');
+  if (!dateString) return ""; // или вернуть null
+
+  const [day, month, year] = dateString.split('.');
+
+  // Проверяем что все части есть
+  if (!day || !month || !year) return "";
+
+  // month в JS начинается с 0 → поэтому -1
+  const date = new Date(year, month - 1, day);
+
+  if (isNaN(date)) return ""; // защита от Invalid Date
+
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(date).replace(' г.', '');
 }
 
 export function formatPrice(price) {
