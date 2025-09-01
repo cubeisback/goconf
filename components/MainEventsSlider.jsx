@@ -166,6 +166,7 @@ export const MainEventsSlider = () => {
         .get(getApiUrl("/backend/wp-json/events/v2/interesting-events/"))
         .then((response) => {
 			setEvents(response.data);
+			console.log('ОШИБКА ТУТ', response.data)
 			setIsLoading(false);
         })
         .catch((error) => {
