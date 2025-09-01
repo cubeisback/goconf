@@ -48,12 +48,19 @@ jobs:
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
             set -e
             cd /home/thunder/web/goconf.ru/app
+
+            echo "Fixing permissions..."
+            chown -R thunder:thunder .
+
             echo "Cleaning cache..."
             rm -rf .next node_modules/.cache
+
             echo "Installing dependencies..."
             npm install
+
             echo "Building project..."
             npm run build
+
             echo "Restarting PM2 process..."
             pm2 describe goconf-prod > /dev/null 2>&1
             if [ $? -eq 0 ]; then
