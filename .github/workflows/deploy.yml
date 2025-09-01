@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - prod
 
 jobs:
   deploy:
@@ -20,44 +21,57 @@ jobs:
 
       - name: Setup SSH
         env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY_DEV }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
           chmod 600 ~/.ssh/goconf_key
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: Upload new project files (excluding .git and node_modules)
+      - name: Upload new project files
         env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
         run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            TARGET_PATH="/home/thunder/web/dev.goconf.ru/app"
+          else
+            TARGET_PATH="/home/thunder/web/goconf.ru/app"
+          fi
           rsync -avz \
             --exclude=".git" \
             --exclude="node_modules" \
             -e "ssh -i ~/.ssh/goconf_key" ./ \
-            $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
+            $SERVER_USER@$SERVER_IP:$TARGET_PATH/
 
       - name: Install, Build and Restart App
         env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
         run: |
-          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            TARGET_PATH="/home/thunder/web/dev.goconf.ru/app"
+            PM2_NAME="goconf-dev"
+          else
+            TARGET_PATH="/home/thunder/web/goconf.ru/app"
+            PM2_NAME="goconf-prod"
+          fi
+
+          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << EOF
             set -e
-            cd /home/thunder/web/dev.goconf.ru/app
+            cd $TARGET_PATH
             echo "Installing dependencies..."
             npm install
             echo "Building project..."
             npm run build
             echo "Restarting PM2 process..."
-            pm2 describe goconf-dev > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-              pm2 restart goconf-dev
+            pm2 describe $PM2_NAME > /dev/null 2>&1
+            if [ \$? -eq 0 ]; then
+              pm2 restart $PM2_NAME
             else
-              pm2 start npm --name "goconf-dev" -- start
+              pm2 start npm --name "$PM2_NAME" -- start
             fi
             pm2 save
           EOF
