@@ -48,16 +48,18 @@ jobs:
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
             set -e
             cd /home/thunder/web/goconf.ru/app
+            echo "Cleaning cache..."
+            rm -rf .next node_modules/.cache
             echo "Installing dependencies..."
             npm install
             echo "Building project..."
             npm run build
             echo "Restarting PM2 process..."
-            pm2 describe goconf-dev > /dev/null 2>&1
+            pm2 describe goconf-prod > /dev/null 2>&1
             if [ $? -eq 0 ]; then
-              pm2 restart goconf-dev
+              pm2 restart goconf-prod
             else
-              pm2 start npm --name "goconf-dev" -- start
+              pm2 start npm --name "goconf-prod" -- start
             fi
             pm2 save
           EOF
