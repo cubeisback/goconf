@@ -1,6 +1,7 @@
 const fs = require('fs');
 const dotenv = require('dotenv');
 
+
 // Подключаем кастомный env-файл
 // ENV_FILE будет передаваться в workflow через export или npm run build
 const envFile = process.env.ENV_FILE || '.env.production';
