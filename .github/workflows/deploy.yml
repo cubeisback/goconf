@@ -1,4 +1,4 @@
-name: Deploy goconf Next.js App
+name: Deploy goconf Next.js App (Dev)
 
 on:
   push:
@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  deploy:
+  deploy-dev:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create sensitive config files (.env.dev and ecosystem.config.js)
+      - name: Create .env.dev and ecosystem.config.js
         run: |
           echo "${{ secrets.ENV_DEV_CONTENT }}" > .env.dev
           echo "${{ secrets.ECOSYSTEM_CONFIG_CONTENT }}" > ecosystem.config.js
@@ -29,7 +29,7 @@ jobs:
           chmod 600 ~/.ssh/goconf_key
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: Upload new project files (excluding .git and node_modules)
+      - name: Upload project files (excluding .git and node_modules)
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -40,7 +40,7 @@ jobs:
             -e "ssh -i ~/.ssh/goconf_key" ./ \
             $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
 
-      - name: Install, Build and Restart App
+      - name: Install, Build and Restart PM2
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -48,10 +48,19 @@ jobs:
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
             set -e
             cd /home/thunder/web/dev.goconf.ru/app
+
             echo "Installing dependencies..."
             npm install
+
+            echo "Cleaning previous build..."
+            rm -rf .next
+
+            echo "Using .env.dev for build..."
+            cp .env.dev .env.production
+
             echo "Building project..."
-            ENV_FILE=.env.dev npm run build
+            npm run build
+
             echo "Restarting PM2 process..."
             pm2 describe goconf-dev > /dev/null 2>&1
             if [ $? -eq 0 ]; then
@@ -60,4 +69,6 @@ jobs:
               pm2 start npm --name "goconf-dev" -- start
             fi
             pm2 save
+
+            echo "Dev deployment completed ✅"
           EOF
