@@ -50,6 +50,8 @@ jobs:
             cd /home/thunder/web/dev.goconf.ru/app
             echo "Installing dependencies..."
             npm install
+            echo "Cleaning previous build..."
+            rm -rf .next
             echo "Building project..."
             ENV_FILE=.env.dev npm run build
             echo "Restarting PM2 process..."
