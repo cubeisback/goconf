@@ -219,6 +219,14 @@ export const Header = () => {
 
 	//burger menu
 	const [burger, setBurger] = useState(false);
+
+
+	const makeEventsBtn = () => {
+		ready ? 
+		router.push('/lk/events/add')
+		: 
+		setIsModalOpen(true)
+	}
   
 
   return (
@@ -270,14 +278,14 @@ export const Header = () => {
           </SearchWrapper>
           } */}
           {width > 768 && 
-            <Link href="/lk/events/add">
-              <Button>
+            // <Link href="/lk/events/add">
+              <Button onClick={()=>makeEventsBtn()}>
                 <p>
                   <span>Разместить событие</span>
                   <span>Разместить событие</span>
                 </p>
               </Button>
-            </Link>
+            // </Link>
           }
           {ready ?
           <>
@@ -435,14 +443,14 @@ export const Header = () => {
           gap: 32px;
           align-items: center;
         `}>
-          <Link href="/lk/events/add">
-              <Button>
+          {/* <Link href="/lk/events/add"> */}
+              <Button onClick={()=>makeEventsBtn()}>
                 <p>
                   <span>Разместить событие</span>
                   <span>Разместить событие</span>
                 </p>
               </Button>
-            </Link>
+            {/* </Link> */}
           <Link href="">Пользовательское соглашение</Link>
           <div>© GoCONF 2025</div>
         </div>

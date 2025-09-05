@@ -465,34 +465,33 @@ export const Article = styled.article`
 		gap: 16px;
 
 		& > p {
+			font-size: 16px;
 			line-height: 1.28;
 		}
-		& > div {
-			font-size: 18px;
-			font-weight: 500;
-			line-height: 1.36;
-		}
-		& > h1 {
+		h1 {
 			font-size: 28px;
 			font-family: Impact;
 			line-height: 1.34;
-			font-weight: normal;
+			font-weight: 500;
 		}
-		& > h2 {
+		h2 {
 			font-size: 24px;
 			line-height: 1.34;
+			font-weight: 500;
 		}
-		& > h3 {
+		h3 {
 			font-size: 20px;
 			font-weight: 500;
 			line-height: 1.4;
+			font-weight: 500;
 		}
-		& > h4 {
+		h4 {
 			font-size: 18px;
 			font-weight: 500;
 			line-height: 1.36;
+			font-weight: 500;
 		}
-		& > ul {
+		ul {
 			padding-left: 20px;
 			display: flex;
 			flex-direction: column;
@@ -502,7 +501,7 @@ export const Article = styled.article`
 				font-size: 14px;
 			}
 		}
-		& > ol {
+		ol {
 			padding-left: 20px;
 			display: flex;
 			flex-direction: column;
@@ -511,6 +510,9 @@ export const Article = styled.article`
 			li {
 				font-size: 14px;
 			}
+		}
+		strong {
+			font-weight: 500;
 		}
 `;
 
