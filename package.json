@@ -22,6 +22,7 @@
     "axios": "^1.8.3",
     "cra-template": "1.2.0",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.2",
     "motion": "^11.15.0",
     "next": "latest",
     "react": "latest",
