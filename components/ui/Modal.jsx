@@ -208,12 +208,12 @@ export const Modal = ({ isOpen, onClose }) => {
   	const theme = useTheme();
 	const login = useAuthStore.getState().login;
 
-	const googleRedirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
 	// href="https://accounts.google.com/o/oauth2/v2/auth?client_id=879586637662-g3v612m81nt3lktccs13nvfg63v8qoqg.apps.googleusercontent.com&redirect_uri=http://localhost:3000/social-login/google&response_type=code&scope=openid%20email%20profile&access_type=online&prompt=consent"
+	const googleRedirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
 	const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=879586637662-g3v612m81nt3lktccs13nvfg63v8qoqg.apps.googleusercontent.com&redirect_uri=${encodeURIComponent(googleRedirectUri)}&response_type=code&scope=openid%20email%20profile&access_type=online&prompt=consent`;
 	
-	const yandexRedirectUri = process.env.NEXT_PUBLIC_YANDEX_REDIRECT_URI;
 	// href="https://oauth.yandex.ru/authorize?response_type=code&client_id=27b4e4a2dfa544ec9bc5598b73516a32&redirect_uri=http://localhost:3000/social-login/yandex"
+	const yandexRedirectUri = process.env.NEXT_PUBLIC_YANDEX_REDIRECT_URI;
 	const yandexAuthUrl = `https://oauth.yandex.ru/authorize?response_type=code&client_id=27b4e4a2dfa544ec9bc5598b73516a32&redirect_uri=${encodeURIComponent(yandexRedirectUri)}`;
 
 	const [firstName, setFirstName] = useState("");

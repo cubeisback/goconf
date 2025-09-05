@@ -11,7 +11,7 @@ import { Form } from '@/components/Form';
 import { FilterOnMain } from '@/components/Filter/FilterOnMain';
 import styled from "@emotion/styled";
 import { ConfirmRegistration } from '@/components/ConfirmRegistration';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { ResetPassword } from '@/components/ResetPassword';
 
 export default function Main() {
@@ -236,6 +236,10 @@ export default function Main() {
 				}
 	`
 	
+
+	useEffect(()=>{
+		console.log(process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI)
+	}, [])
 
 	return (
 		<>
