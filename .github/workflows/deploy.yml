@@ -71,4 +71,4 @@ jobs:
             pm2 save
 
             echo "Dev deployment completed ✅"
-EOF
+          EOF
