@@ -130,29 +130,6 @@ const UserEvents = () => {
 	const [tariffOne, setTariffOne] = useState(true);
 	const [tariffTwo, setTariffTwo] = useState(false);
 
-
-	const getHist = async() => {
-		const authTokenRaw = localStorage.getItem('authToken');
-		const authToken = JSON.parse(authTokenRaw);
-		const token = authToken?.state?.token;
-			try {
-				const response = await axios.get(
-					getApiUrl("/backend/wp-json/account/v2/promotion/history/"),
-					{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-				);
-				console.log('history', response.data)
-				if (response.status === 200) {
-					// console.log("events", response.data);
-				}
-			} catch (error) {
-				console.error("Update password error", error);
-			}
-	};
-
 	const getUrData = async() => {
 		const authTokenRaw = localStorage.getItem('authToken');
 		const authToken = JSON.parse(authTokenRaw);
@@ -675,7 +652,6 @@ const UserEvents = () => {
         transition={{ duration: .3 }}>
 
 			<div onClick={getTariffs}>ТАРИФЫ</div>
-			<div onClick={getHist}>ИСТОРИЯ</div>
 
             <UserMainTitles>
                 <UserMainTitlesTitle>Опции для продвижения</UserMainTitlesTitle>
@@ -914,6 +890,22 @@ const UserEvents = () => {
                     <Button onClick={()=>setView(2)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Назад</Button>
                     <Button onClick={()=>setView(4)}>Подтвердить</Button>
                 </div>
+				<div className={
+					css`
+						margin-top: 16px;
+						color: #6C6C71;
+						font-size: 14px;
+
+						a {
+							color: #8553F9;
+							text-decoration: underline;
+
+							&:hover {
+								text-decoration: none;
+							}
+						}
+					`
+				}>Нажимая "Подтвердить" вы соглашаетесь с условиями <Link href="/offer" target="_blank">публичной оферты</Link></div>
             </motion.div>
             
         </UserMain>

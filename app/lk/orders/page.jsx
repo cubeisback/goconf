@@ -4,11 +4,13 @@ import Link from "next/link";
 
 import { css, cx } from "@emotion/css";
 import { motion } from 'framer-motion';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, container, lkContainer, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import EditIcon from "@/public/images/svg/edit.svg";
 import { useTheme } from "@emotion/react";
 import LkMenu from "@/components/ui/LkMenu";
+import axios from "axios";
+import { getApiUrl } from "@/functions/functions";
 
 const UserOrders = () => {
     const theme = useTheme();
@@ -25,6 +27,37 @@ const UserOrders = () => {
             background-color: ${theme.colors.purple};
             color: #fff;
         `;
+
+	const [orders, setOrders] = useState()
+	const getHist = async() => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+			try {
+				const response = await axios.get(
+					getApiUrl("/backend/wp-json/account/v2/promotion/history/"),
+					{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				console.log('history', response.data)
+				if (response.status === 200) {
+					setOrders(response.data)
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+			}
+	};
+
+	useEffect(()=>{
+		getHist()
+	}, [])
+
+	useEffect(()=>{
+		console.log('vot', orders)
+	}, [orders])
 
     return (
 		<div className={lkContainer}>
@@ -76,7 +109,6 @@ const UserOrders = () => {
                     <div className={cx(tabItem, activeTab === 2 && tabItemActive)} onClick={()=>setActiveTab(2)}>История заказов</div>
                 </div>
             </motion.div>
-
         {activeTab === 1 &&
         <motion.div
         initial={{ opacity: 0, y: 50 }}
@@ -132,7 +164,10 @@ const UserOrders = () => {
             flex-direction: column;
             gap: 32px;
         `}>
-            <div className={css`
+			
+			{orders && orders.map((item)=>(
+			
+            <div key={item.id} className={css`
                 padding: 24px 32px;
                 border-radius: 28px;
                 background-color: #fff;
@@ -168,16 +203,21 @@ const UserOrders = () => {
                             border-radius: 8px;
                             background-color: #FF5B3B;
                             width: max-content;
-                        `}>Не&nbsp;оплачен</div>
-                        <div>Дата: 27 сентября 2024</div>
+                        `}>{item.status}</div>
+                        <div>Дата: {item.date}</div>
                     </div>
                     <div className={css`color: ${theme.colors.purple};`}>Скачать счет</div>
                 </div>
-                <div><b>Наименование услуги:</b> Размещение в&nbsp;сквозном слайдере &laquo;Интересные события&raquo; (<b>на&nbsp;7&nbsp;дней</b>)</div>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}><b>Наименование услуги:</b> 
+					{item.options.map((option, i) => (
+						<div key={i} dangerouslySetInnerHTML={{ __html: option }}></div>
+					))}
+				</div>
                 <div><b>№ заказа:</b> <span className={css`color: #6C6C71;`}>5530712</span></div>
                 <div><b>Сумма оплаты:</b> <span className={css`color: ${theme.colors.purple};font-weight: 500;`}>14&nbsp;000&nbsp;руб.</span></div>
                 <div><b>Способ оплаты:</b> <span className={css`color: #6C6C71;`}>Безналичная оплата</span></div>
             </div>
+			))}
         </motion.div>
         }
 

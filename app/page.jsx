@@ -238,7 +238,7 @@ export default function Main() {
 	
 
 	useEffect(()=>{
-		console.log('NODE_ENV', process.env.NEXT_PUBLIC_VERSION)
+		console.log('PUBLIC VERSION', process.env.NEXT_PUBLIC_VERSION)
 	}, [])
 
 	return (
