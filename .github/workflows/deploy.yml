@@ -51,7 +51,7 @@ jobs:
             echo "Installing dependencies..."
             npm install
             echo "Building project..."
-            npm run build
+            ENV_FILE=.env.dev npm run build
             echo "Restarting PM2 process..."
             pm2 describe goconf-dev > /dev/null 2>&1
             if [ $? -eq 0 ]; then
