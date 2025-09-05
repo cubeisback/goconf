@@ -17,7 +17,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ru">
-      <body className="dev_test">
+      <body>
 		<noindex>
 			<ThemeWrapper>
 				{children}
