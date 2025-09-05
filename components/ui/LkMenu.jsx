@@ -128,11 +128,11 @@ export default function LkMenu () {
                         `}>
                             <Link  href="/lk" className={cx(menuItem, pathname === '/lk' && activeMenuItem)}>
                                 <UserIcon />
-                                <p>Мой профиль</p>
+                                <p>Профиль</p>
                             </Link>
                             <Link  href="/lk/events" className={cx(menuItem, pathname === '/lk/events' && activeMenuItem)}>
                                 <EventsIcon />
-                                <p>Мои мероприятия</p>
+                                <p>Мероприятия</p>
                             </Link>
                             <Link  href="/lk/org" className={cx(menuItem, pathname === '/lk/org' && activeMenuItem)}>
                                 <OrgIcon />
