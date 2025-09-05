@@ -238,7 +238,7 @@ export default function Main() {
 	
 
 	useEffect(()=>{
-		console.log(process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI)
+		console.log('NODE_ENV', process.env.NODE_ENV)
 	}, [])
 
 	return (
