@@ -13,9 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create sensitive config files (.env.production and ecosystem.config.js)
+      - name: Create sensitive config files (.env.dev and ecosystem.config.js)
         run: |
-          echo "${{ secrets.ENV_PRODUCTION_CONTENT }}" > .env.production
+          echo "${{ secrets.ENV_DEV_CONTENT }}" > .env.dev
           echo "${{ secrets.ECOSYSTEM_CONFIG_CONTENT }}" > ecosystem.config.js
 
       - name: Setup SSH
