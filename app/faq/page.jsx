@@ -71,12 +71,15 @@ const Faq = () => {
         }
     };
 
+	const [pageInfo, setPageInfo] = useState(null);
+
 	useEffect(() => {
 		axios
 		  .get(getApiUrl("/backend/wp-json/pages/v2/faq/"))
 		  .then((response) => {
 			setQuestions(response.data.fields.faq);
 			setIsLoading(false)
+			setPageInfo(response.data)
 			console.log('faq ', response.data);
 		  })
 		  .catch((error) => {
@@ -93,7 +96,11 @@ const Faq = () => {
                         <p>FAQ</p>
                     </Breadcrumbs>
                     <PageTitle style={{textAlign: 'center'}}>FAQ</PageTitle>
-                    <div style={{textAlign: 'center', marginBottom: 64}}>Выберите подходящий тарифный план</div>
+                    <div style={{textAlign: 'center', marginBottom: 64}}>
+						{/* Выберите подходящий тарифный план */}
+						<div dangerouslySetInnerHTML={{ __html: pageInfo?.content }} />
+					</div>
+					
 
                     <FaqBlock>
 						{isLoading ? (
@@ -120,7 +127,10 @@ const Faq = () => {
                                             transition={{ duration: .3 }}
 											style={{overflow: 'hidden'}}
                                         >
-                                            <div style={{fontSize: 14, padding: '0 16px 16px 32px'}}>{item.answer}</div>
+                                            <div style={{fontSize: 14, padding: '0 16px 16px 32px'}}>
+												{/* {item.answer} */}
+												<div dangerouslySetInnerHTML={{ __html: item.answer }} />
+											</div>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
