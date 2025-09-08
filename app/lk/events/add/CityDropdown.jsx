@@ -167,7 +167,7 @@ const CityDropdown = ({
             <ul
               className={css`
                 list-style-type: none;
-                max-height: 161px;
+                max-height: 240px;
                 overflow-y: auto;
                 overflow-x: hidden;
 

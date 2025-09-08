@@ -148,20 +148,12 @@ export default function EventClient({ params }) {
 			display: flex;
 			flex-direction: column;
 			gap: 10px;
-			
-			li {
-				font-size: 14px;
-			}
 		}
 		& > ol {
 			padding-left: 20px;
 			display: flex;
 			flex-direction: column;
 			gap: 10px;
-
-			li {
-				font-size: 14px;
-			}
 		}
 	`;
 
@@ -211,12 +203,12 @@ export default function EventClient({ params }) {
 							flex: 1;
 							max-width: 952px;
 						`}>
-							<div className={css`max-height: 400px;overflow: hidden;margin-bottom: 40px;`}>
-								<img src={pageInfo.fields.anons.url} alt="" className={css`object-fit: cover;width:100%;height:100%;`} />
+							<div className={css`height: 400px;overflow: hidden;margin-bottom: 40px;`}>
+								<img src={pageInfo.fields.cover.url} alt="" className={css`object-fit: contain;width:100%;height:100%;object-position: 50% 50%;`} />
 							</div>
 
 							<div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
-							<div className={text} style={{marginTop: 64}}>
+							{/* <div className={text} style={{marginTop: 64}}>
 								<h1>Test</h1>
 								<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eum voluptatem praesentium error, repudiandae quisquam est sequi itaque quia, quod sapiente, animi maxime assumenda nostrum officiis necessitatibus vitae possimus doloremque saepe!</p>
 								<h1>h1</h1>
@@ -238,7 +230,7 @@ export default function EventClient({ params }) {
 									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
 									<li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint atque ut aperiam facilis? Sed ullam eaque, recusandae explicabo nam doloribus in delectus reiciendis, quibusdam necessitatibus quidem blanditiis, fuga est cumque</li>
 								</ol>
-							</div>
+							</div> */}
 
 							{version === 3 && 
 							
@@ -308,27 +300,6 @@ export default function EventClient({ params }) {
 										},
 									}}
 								>
-									<SwiperSlide className={css`
-										border-radius: 24px;
-										background-color: #fff;
-										overflow: hidden;
-									`}>
-										<img src={''} alt="" />
-									</SwiperSlide>
-									<SwiperSlide className={css`
-										border-radius: 24px;
-										background-color: #fff;
-										overflow: hidden;
-									`}>
-										<img src={''} alt="" />
-									</SwiperSlide>
-									<SwiperSlide className={css`
-										border-radius: 24px;
-										background-color: #fff;
-										overflow: hidden;
-									`}>
-										<img src={''} alt="" />
-									</SwiperSlide>
 									<SwiperSlide className={css`
 										border-radius: 24px;
 										background-color: #fff;
@@ -498,7 +469,7 @@ export default function EventClient({ params }) {
 							{version === 2 && <a href="/" className={css`
 								color: ${theme.colors.purple};
 							`}>Это ваше мероприятие?</a>}
-							{version === 3 && <Button green>На сайт мероприятия</Button>}
+							{version === 3 && <Button green style={{width: '100%'}}>На сайт мероприятия</Button>}
 						</motion.div>
 					</div>
 					}

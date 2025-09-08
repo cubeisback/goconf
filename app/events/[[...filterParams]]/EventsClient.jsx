@@ -37,7 +37,7 @@ export default function EventsClient({ params }) {
 		e.preventDefault();
 		try {
 			const response = await axios.post(
-				"https://dev.goconf.ru/wp-json/events/v2/search/",
+				getApiUrl("/backend/wp-json/events/v2/search/"),
 				{ search: query }
 			);
 			setEvents(response.data.events);
