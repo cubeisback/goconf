@@ -19,7 +19,7 @@ const User = () => {
                     <LkMenu />
 					<UserMainScreen />
                 </div>
-				<div>TEST CALLBACK MODAL</div>
+				{/* <div>TEST CALLBACK MODAL</div> */}
             </Container>
         </div>
 		</>

@@ -152,14 +152,37 @@ const UserOrg = () => {
                         <div className={css`flex: 0 1 96px;`}>
 							{/* TODO картинка отображается не сразу, иногда не отображается с каким-то именем (был banner.png) или после сохранения и релоада общего списка */}
 							{item.logo ? 
+							<div className={css`
+									width: 96px;
+									height: 96px;
+									border-radius: 100%;
+									background-color: #F5F7FA;
+									overflow: hidden;
+									margin-bottom: 16px;
+									padding: 10px;
+									
+									img {
+										object-fit: contain;
+										width: 100%;
+										height: 100%;
+									}
+								`}>
 							<img src={item.logo} alt={item.name} />
+							</div>
 							:
 							<AvatarIcon/>
 							}
 							
                         </div>
                         <div className={css`flex:1;`}>
-                            <div className={css`font-size:20px;font-weight:500;line-height:1.4;margin-bottom: 8px;`}>{item.name}</div>
+                            <Link href={`/organizer/${item?.slug}`} className={css`
+								font-size:20px;font-weight:500;line-height:1.4;margin-bottom: 8px;
+								transition: .3s ease-in-out;
+
+								&:hover {
+									color: #8553F9;
+								}
+							`}>{item.name}</Link>
                             <div className={css`color: #47474D;font-size: 14px;line-height: 1.16;margin-bottom: 16px;`} dangerouslySetInnerHTML={{ __html: item.text }} />
                             <div className={css`font-size: 14px;line-height: 1.16;`}>Мероприятия <span className={css`color: #8553F9;`}>({item.count})</span></div>
                         </div>

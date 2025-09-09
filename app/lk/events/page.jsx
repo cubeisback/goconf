@@ -213,11 +213,7 @@ const UserEvents = () => {
             <div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
                 <div style={{flex: '0 1 300px'}}>
                     <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Статус</p>
-                    <DropdownInput options={options} placeholder={'Тематика'} isSimple />
-                </div>
-                <div style={{flex: '0 1 300px'}}>
-                    <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Дата проведения</p>
-                    <DropdownInput options={options} placeholder={'Предстоящие'} isSimple />
+                    <DropdownInput options={options} placeholder={'Статус'} isSimple />
                 </div>
             </div>
 
@@ -248,7 +244,8 @@ const UserEvents = () => {
 						</UserEventsBlockItemTop>
 						<div style={{marginBottom: 8, fontSize: 20, fontWeight: 500, lineHeight: 1.4}}>{event.title && event.title}</div>
 						{!event.online &&
-							<div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>{event.cost && formatPrice(event.cost)} руб.</div>
+							event.cost && 
+								<div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>{formatPrice(event.cost)} руб.</div> 
 						}
 						<div className={css`
                                 display: flex;flex-direction: column;gap: 8px;margin-bottom: 24px;
@@ -883,8 +880,8 @@ const UserEvents = () => {
                     flex-direction: column;
                     margin-bottom: 24px;
                 `}>
-                    <div className={cx(inputRadio, radios === 1 && inputRadioActive)} onClick={()=>setRadios(1)}>Онлайн-оплата</div>
-                    <div className={cx(inputRadio, radios === 2 && inputRadioActive)} onClick={()=>setRadios(2)}>Безналичная оплата</div>
+                    <div className={cx(inputRadio, radios === 1 && inputRadioActive)} onClick={()=>setRadios(1)}>Оплата картой или QR-кодом</div>
+                    <div className={cx(inputRadio, radios === 2 && inputRadioActive)} onClick={()=>setRadios(2)}>Оплата по счету для юр.лиц</div>
                 </div>
                 <div className={css`display: flex;gap:16px;`}>
                     <Button onClick={()=>setView(2)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Назад</Button>
