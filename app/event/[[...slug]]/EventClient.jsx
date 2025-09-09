@@ -22,7 +22,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 export default function EventClient({ params }) {
-	const [version, setVersion] = useState(0);
 
 	const theme = useTheme();
 
@@ -170,7 +169,7 @@ export default function EventClient({ params }) {
 					</Breadcrumbs>
 					{pageInfo && <h1 className={pageTitle}>{pageInfo.data.post_title}</h1> }
 					<div className={promoThemes}>
-						<p>Тематика:</p>
+						<p>Направления:</p>
 						{pageInfo && pageInfo.subjects.map(theme => (
 							<Link key={theme.term_id} href={`/events/direction_${theme.slug}`}>{theme.name}</Link>
 						))}
@@ -204,7 +203,7 @@ export default function EventClient({ params }) {
 							max-width: 952px;
 						`}>
 							<div className={css`height: 400px;overflow: hidden;margin-bottom: 40px;`}>
-								<img src={pageInfo.fields.cover.url} alt="" className={css`object-fit: contain;width:100%;height:100%;object-position: 50% 50%;`} />
+								<img src={pageInfo.fields.anons.url} alt="" className={css`object-fit: contain;width:100%;height:100%;object-position: 50% 50%;`} />
 							</div>
 
 							<div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
@@ -232,8 +231,7 @@ export default function EventClient({ params }) {
 								</ol>
 							</div> */}
 
-							{version === 3 && 
-							
+							{pageInfo?.fields?.group_gallery?.gallery &&
 							<div className={css`
 								padding-top: 32px;
 							`}>
@@ -244,7 +242,7 @@ export default function EventClient({ params }) {
 									align-items: center;
 									margin-bottom: 24px;
 								`}>
-									<div className={pageTitle}>Галерея</div>
+									<div className={pageTitle}>{pageInfo.fields.group_gallery.title}</div>
 									<div className={css`
 										display: flex;
 										gap: 16px;
@@ -262,10 +260,10 @@ export default function EventClient({ params }) {
 										}
 									`}>
 										<div ref={navigationPrevRef}>
-											<SliderArrow />
+											<SliderArrow style={{width: 56}} />
 										</div>
 										<div ref={navigationNextRef}style={{transform: 'rotate(180deg)'}}>
-											<SliderArrow />
+											<SliderArrow style={{width: 56}} />
 										</div>
 									</div>
 								</div>
@@ -300,15 +298,30 @@ export default function EventClient({ params }) {
 										},
 									}}
 								>
+									{pageInfo.fields.group_gallery.gallery.map((item, index) => (
+						
 									<SwiperSlide className={css`
 										border-radius: 24px;
 										background-color: #fff;
 										overflow: hidden;
-									`}>
-										<img src={''} alt="" />
+									`} key={index}>
+										<img src={item.url} alt="" />
 									</SwiperSlide>
+
+									))}
 								</Swiper>
 							</div>
+							}
+
+							{pageInfo?.fields?.group_video?.cod &&
+								<div className={css`
+									padding-top: 32px;
+								`}>
+									<div className={pageTitle}>{pageInfo.fields.group_video.title}</div>
+									<div>
+										{pageInfo.fields.group_video.cod}
+									</div>
+								</div>
 							}
 
 						</motion.div>
@@ -466,10 +479,10 @@ export default function EventClient({ params }) {
 							}
 							</div>
 							
-							{version === 2 && <a href="/" className={css`
+							<a href="/" className={css`
 								color: ${theme.colors.purple};
-							`}>Это ваше мероприятие?</a>}
-							{version === 3 && <Button green style={{width: '100%'}}>На сайт мероприятия</Button>}
+							`}>Это ваше мероприятие?</a>
+							<Button green="true" style={{width: '100%'}}>На сайт мероприятия</Button>
 						</motion.div>
 					</div>
 					}
@@ -502,13 +515,6 @@ export default function EventClient({ params }) {
 
 			<MainEvents id={pageInfo && pageInfo.data.ID} similar={true} />
 			<Form />
-
-			<Helper>
-				<h2>Версия</h2>
-				<p onClick={()=>setVersion(1)}>Для пользователей</p>
-				<p onClick={()=>setVersion(2)}>Для админа</p>
-				<p onClick={()=>setVersion(3)}>Стандарт</p>
-			</Helper>
 		</>
 	);
 }

@@ -237,10 +237,10 @@ export const MainEventsSlider = () => {
 					) : 
                         events && events.items.map((item, index) => (
                             <SwiperSlide key={index} style={{borderRadius: 24, backgroundColor: '#fff', overflow: 'hidden'}}>
-                                <Link href={`/event/${item.slug}`} style={{width: '100%'}}>
+                                <Link href={`/event/${item.slug}`} style={{width: '100%', height: 256}}>
                                     <img src={item.cover} alt="" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
                                 </Link>
-                                <div style={{padding: 24, display: 'flex', flexDirection: 'column', gap: 16}}>
+                                <div style={{padding: 24, display: 'flex', flexDirection: 'column', gap: 16, height: 256}}>
                                     <div>
 										{item.format.map((f, idx) => (
 											<SliderFormatsItem key={idx}>
@@ -253,7 +253,7 @@ export const MainEventsSlider = () => {
 
                                     <SliderItemTitle href={`/event/${item.slug}`} dangerouslySetInnerHTML={{ __html: item.title }} />
                                     
-                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto'}}>
                                         <div>
                                             <SliderItemDate>
 												

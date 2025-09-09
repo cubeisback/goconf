@@ -12,6 +12,41 @@ import Under from "@/public/images/svg/underline_icon.svg";
 import ListBullets from "@/public/images/svg/list_bullets_icon.svg";
 import ListNumbers from "@/public/images/svg/list_numbers_icon.svg";
 import Header from "@/public/images/svg/header_icon.svg";
+import { css } from '@emotion/css';
+
+const textEditorField = css`
+	background: #fff;
+	border-radius: 0 0 28px 28px;
+	padding: 16px;
+	font-size: 16px;
+	line-height: 1.5;
+	overflow-y: auto;
+
+	p {
+		line-height: 1.28;
+	}
+	h2 {
+			font-size: 24px;
+			line-height: 1.34;
+	}
+	h3 {
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 1.4;
+	}
+	ul {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+	}
+	ol {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+	}
+`;
 
 export default function TextEditor({ content, onChange }) {
   const editor = useEditor({
@@ -201,7 +236,7 @@ export default function TextEditor({ content, onChange }) {
 				display: 'flex',
 				gap: 8
 				}}>
-				{[1, 2, 3, 4, 5, 6].map((level) => (
+				{[2, 3].map((level) => (
 					
 				<button
 					key={level}
@@ -251,15 +286,16 @@ export default function TextEditor({ content, onChange }) {
 
       {/* Редактор */}
       <div
-	  	className="texteditor_main"
-        style={{
-			background: '#fff',
-			borderRadius: '0 0 28px 28px',
-			padding: 16,
-			fontSize: 16,
-			lineHeight: 1.5,
-			overflowY: "auto",
-        }}
+	  	// className=""
+		className={`texteditor_main ${textEditorField}`}
+        // style={{
+		// 	background: '#fff',
+		// 	borderRadius: '0 0 28px 28px',
+		// 	padding: 16,
+		// 	fontSize: 16,
+		// 	lineHeight: 1.5,
+		// 	overflowY: "auto",
+        // }}
       >
         <EditorContent editor={editor} />
       </div>

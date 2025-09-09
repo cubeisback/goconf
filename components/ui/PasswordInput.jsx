@@ -18,7 +18,7 @@ export const PasswordInput = ({ text, value, onChange, style }) => {
       <input
         type={showPassword ? "text" : "password"}
         value={value}
-        className={cx(input, css`padding-right: 46px;`)}
+        className={cx(input, css`padding-right: 46px; border: 1px solid #fff;`)}
         onChange={(e) => onChange(e.target.value)}
         placeholder={text}
 		style={style}

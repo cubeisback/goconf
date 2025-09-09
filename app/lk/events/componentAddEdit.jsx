@@ -434,7 +434,6 @@ const {
 								}    
 							`}>
 								<p className={css`color: #47474D;`}>Название</p>
-								<p className={css`color: #6C6C71;`}>Юридическое наименование вашей организации или ИП</p>
 							</div>
 							<input className={input} type="text" placeholder="Название" name="name" value={dataEvent.name} onChange={handleDataEventChange} />
 						</div>
@@ -529,52 +528,6 @@ const {
 								
 								<div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}
 								style={{cursor: "pointer"}}
-								onClick={clickAnons}
-								>
-									<input type="file"
-										ref={anonsInputRef}
-										style={{ display: 'none' }}
-										onChange={handleAnonsChange} />
-									{dataEvent?.anons?.id && !anonsPreview ? 
-										<img src={dataEvent.anons.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
-									:
-										
-										anonsPreview ? <img src={anonsPreview} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} /> : <AvatarIcon />
-									}
-									
-								</div>
-								{/* TODO надо проверить, Рома писал что анонс и большая встают в разные места */}
-								
-								{/* {dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>} */}
-								{dataEvent?.anons?.id || anonsPreview ?
-								<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
-									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
-									<div style={{cursor: 'pointer'}}>
-										<RemoveIcon onClick={()=>removeAnons(dataEvent.anons.id)} />
-									</div>
-								</div>
-								:
-								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={clickAnons}>Загрузить</div>
-								}
-								
-								<div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
-									<p><span>Разрешение</span>&nbsp;&mdash; 400&times;270 пикселей</p>
-									<p><span>Формат</span>&nbsp;&mdash; PNG или JPEG</p>
-								</div>
-							</div>
-							<div className={css`
-								flex: 1;
-								font-size: 14px;
-								line-height: 1.16;
-							`}>
-								<div className={css`color: #47474D;margin-bottom: 4px;`}>Широкое изображение на&nbsp;странице события</div>
-								<div className={css`color: #6C6C71;margin-bottom: 16px;`}>Изображение на&nbsp;внутренней странице мероприятия</div>
-								{/* <div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}>
-									<AvatarIcon />
-								</div>
-								 */}
-								<div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}
-								style={{cursor: "pointer"}}
 								onClick={clickCover}
 								>
 									<input type="file"
@@ -600,6 +553,51 @@ const {
 								</div>
 								:
 								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={clickCover}>Загрузить</div>
+								}
+								
+								<div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
+									<p><span>Разрешение</span>&nbsp;&mdash; 400&times;270 пикселей</p>
+									<p><span>Формат</span>&nbsp;&mdash; PNG или JPEG</p>
+								</div>
+							</div>
+							<div className={css`
+								flex: 1;
+								font-size: 14px;
+								line-height: 1.16;
+							`}>
+								<div className={css`color: #47474D;margin-bottom: 4px;`}>Широкое изображение на&nbsp;странице события</div>
+								<div className={css`color: #6C6C71;margin-bottom: 16px;`}>Изображение на&nbsp;внутренней странице мероприятия</div>
+								{/* <div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}>
+									<AvatarIcon />
+								</div>
+								 */}
+								<div className={css`background-color: #fff;border-radius: 24px;display: flex;align-items:center;justify-content: center;height: 226px;margin-bottom: 8px;`}
+								style={{cursor: "pointer"}}
+								onClick={clickAnons}
+								>
+									<input type="file"
+										ref={anonsInputRef}
+										style={{ display: 'none' }}
+										onChange={handleAnonsChange} />
+									{dataEvent?.anons?.id && !anonsPreview ? 
+										<img src={dataEvent.anons.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
+									:
+										
+										anonsPreview ? <img src={anonsPreview} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} /> : <AvatarIcon />
+									}
+									
+								</div>
+								
+								{/* {dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>} */}
+								{dataEvent?.anons?.id || anonsPreview ?
+								<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
+									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+									<div style={{cursor: 'pointer'}}>
+										<RemoveIcon onClick={()=>removeAnons(dataEvent.anons.id)} />
+									</div>
+								</div>
+								:
+								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={clickAnons}>Загрузить</div>
 								}
 								<div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
 									<p><span>Разрешение</span>&nbsp;&mdash; 960&times;420 пикселей</p>
@@ -658,7 +656,17 @@ const {
 							line-height: 1.2;
 						`}>Описание</div>
 
-						<TextEditor
+						<div className={css`margin-bottom: 24px;`}>
+							<div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;
+								@media(max-width: 575px) {
+									flex-direction: column;
+									gap: 8px;
+								}    
+							`}>
+								<p className={css`color: #47474D;`}>Детальное описание</p>
+								<p className={css`color: #6C6C71;`}>Максимальное количество символов - 200</p>
+							</div>
+							<TextEditor
 														content={dataEvent.content}
 														onChange={(html) =>
 														setDataEvent((prev) => ({
@@ -667,6 +675,9 @@ const {
 														}))
 														}
 													/>
+							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{dataEvent.short_text.length} / 5000</div>
+						</div>
+						
 						
 					</UserMain>
 					}

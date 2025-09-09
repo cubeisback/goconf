@@ -414,15 +414,15 @@ const AddEdit = () => {
 						<div className={css`display: flex;gap:24px;flex-wrap:wrap;margin-bottom: 40px;`}>
 							<div className={css`flex: 0 1 calc(33.333333% - 16px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>ВКонтакте</p>
-								<input className={input} type="text" placeholder="Укажите ссылку" name="vk" value={dataOrganization.socials.vk} onChange={handleSocialChange} />
+								<input className={input} type="text" placeholder="Укажите ссылку" name="vk" value={dataOrganization.socials?.vk ?? ''} onChange={handleSocialChange} />
 							</div>
 							<div className={css`flex: 0 1 calc(33.333333% - 16px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Telegram</p>
-								<input className={input} type="text" placeholder="Укажите ссылку" name="tg" value={dataOrganization.socials.tg} onChange={handleSocialChange} />
+								<input className={input} type="text" placeholder="Укажите ссылку" name="tg" value={dataOrganization.socials?.tg ?? ''} onChange={handleSocialChange} />
 							</div>
 							<div className={css`flex: 0 1 calc(33.333333% - 16px);`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>YouTube</p>
-								<input className={input} type="text" placeholder="Укажите ссылку" name="youtube" value={dataOrganization.socials.youtube} onChange={handleSocialChange} />
+								<input className={input} type="text" placeholder="Укажите ссылку" name="youtube" value={dataOrganization.socials?.youtube ?? ''} onChange={handleSocialChange} />
 							</div>
 						</div>
 

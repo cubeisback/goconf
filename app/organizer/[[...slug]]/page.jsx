@@ -1,7 +1,6 @@
 'use client'
 
 import { Breadcrumbs, Button, Container, pagePromo, PageTitle } from "@/styles/ui";
-import OrgLogo from '@/public/images/svg/org_logo.svg'
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Form } from '@/components/Form';
@@ -25,7 +24,7 @@ const Organizer = () => {
 		  .then((response) => {
 			setPageInfo(response.data);
 			setOrgEvens(response.data["similar-events"])
-			console.log('организатор ', response.data["similar-events"]);
+			console.log('организатор ', response.data);
 		  })
 		  .catch((error) => {
 			console.log(error);
@@ -35,19 +34,52 @@ const Organizer = () => {
     const theme = useTheme();
 
     const text = css`
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
+		display: flex;
+		flex-direction: column;
+		// gap: 24px;
+		gap: 16px;
 
-        & > p {
-            line-height: 1.28;
-        }
-        & > div {
-            font-size: 18px;
-            font-weight: 500;
-            line-height: 1.36;
-        }
-    `;
+		& > p {
+			line-height: 1.28;
+		}
+		& > div {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 1.36;
+		}
+		& > h1 {
+			font-size: 28px;
+			font-family: Impact;
+			line-height: 1.34;
+			font-weight: normal;
+		}
+		& > h2 {
+			font-size: 24px;
+			line-height: 1.34;
+		}
+		& > h3 {
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 1.4;
+		}
+		& > h4 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 1.36;
+		}
+		& > ul {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+		& > ol {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+	`;
 
     return (
         <>
@@ -56,7 +88,7 @@ const Organizer = () => {
                     <Breadcrumbs>
                         <Link href="/">Главная</Link>
                         <Link href="/org">Организаторы</Link>
-                        <p>АКАР</p>
+                        <p>{pageInfo && pageInfo.h1}</p>
                     </Breadcrumbs>
 					<PageTitle>{pageInfo && pageInfo.h1}</PageTitle>
                 </Container>
@@ -87,12 +119,28 @@ const Organizer = () => {
                             flex: 1;
                             max-width: 952px;
                         `}>
-							<OrgLogo className={css`margin-bottom: 40px;`} />
-                            {/* <div className={text} dangerouslySetInnerHTML={{ __html: text }} /> */}
-                            <div className={text}>
-                                <p>Ассоциация коммуникационных агентств России — это созданная в 1993 году некоммерческая организация, которая включает в себя более 200 профессиональных игроков рынка коммуникационных услуг России.</p>
-                                <p>Являясь одним из крупнейших объединений отечественной рекламной индустрии, Ассоциация активно участвует в развитии саморегулирования отрасли, способствует выстраиванию эффективной коммуникации между агентствами и рекламодателями, создает индустриально значимые продукты, проводит исследования рынка.</p>
-                            </div>
+							{pageInfo?.fields?.logo && 
+								<div className={css`
+									width: 96px;
+									height: 96px;
+									border-radius: 100%;
+									background-color: #F5F7FA;
+									overflow: hidden;
+									margin-bottom: 16px;
+									padding: 10px;
+									
+									img {
+										object-fit: contain;
+										width: 100%;
+										height: 100%;
+									}
+								`}>
+									<img src={pageInfo.fields.logo} alt="" />
+								</div>
+							 }
+							{pageInfo?.text &&
+                            	<div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.text }} />
+							}
                         </motion.div>
                         <motion.div 
                         initial={{ opacity: 0, x: 80 }}
@@ -117,41 +165,37 @@ const Organizer = () => {
                                 border-radius: 28px;
                                 padding: 24px;
                                 margin-bottom: 14px;
+								display: flex;
+								flex-direction: column;
+								gap: 16px;
+								
                             `}>
-                            <div className={css`
-                                display: flex;
-                                flex-direction: column;
-                                padding: 14px 0;
-                                gap: 8px;
-                            `}>
-                                <p className={css`
+                            {pageInfo?.fields?.address && 
+								<p className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>г. Москва, ул. Полковая, д.3, стр.3</p>
-                            </div>
-                            <div className={css`
-                                display: flex;
-                                flex-direction: column;
-                                padding: 14px 0;
-                                gap: 8px;
-                            `}>
-                                <p className={css`
+                                `}>{pageInfo.fields.address}</p>
+							}
+                            {pageInfo?.fields?.address && 
+								<a href={pageInfo.fields.link} target="_blank" className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
-                                `}>8 (495) 662-39-88</p>
-                            </div>
-                            <div className={css`
-                                display: flex;
-                                flex-direction: column;
-                                padding: 14px 0;
-                                gap: 8px;
-                            `}>
-                                <a href="mailto:pr@akarussia.ru" className={css`
+                                `}>{pageInfo.fields.link}</a>
+							}
+							{pageInfo?.fields?.phones && 
+								<a href={`tel:${pageInfo.fields.phones[0]}`} className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                     color: ${theme.colors.purple};
-                                `}>pr@akarussia.ru</a>
-                            </div>
+                                `}>{pageInfo.fields.phones[0]}</a>
+							}
+							{pageInfo?.fields?.emails && 
+								<a href={`mailto:${pageInfo.fields.emails[0]}`} className={css`
+                                    font-size: 14px;
+                                    line-height: 1.16;
+                                    color: ${theme.colors.purple};
+                                `}>{pageInfo.fields.emails[0]}</a>
+							}
                             </div>
                             
                             <Button green='true'>

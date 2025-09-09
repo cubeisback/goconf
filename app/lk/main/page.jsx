@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import axios from "axios";
 import { getApiUrl } from "@/functions/functions";
+import styled from "@emotion/styled";
 
 //TODO перенести весь компонент в основной page.jsx
 
@@ -134,49 +135,72 @@ const UserMainScreen = () => {
 	// password*
 	// confirm_password*
 
-	//TODO доделать валидацию пароля
+
+	const Error = styled.div`
+		font-size: 12px;
+		color: #FC1234;
+		padding-left: 10px;
+	`;
 
 	const [passwordChange, setPasswordChange] = useState('');
 	const [passwordChangeConfirm, setPasswordChangeConfirm] = useState('');
-	const [passwordError, setPasswordError] = useState(false);
+	const [passwordError, setPasswordError] = useState('');
+	const [passwordChangeSuccess, setPasswordChangeSuccess] = useState(false);
+	
+	useEffect(()=>{
+		passwordChangeSuccess && setTimeout(()=>{
+			setPasswordChangeSuccess(false)
+		}, 3000)
+	}, [passwordChangeSuccess])
 
-	const handleUpdateUserPassword = async() => {
+	const handleUpdateUserPassword = async () => {
 		const authTokenRaw = localStorage.getItem('authToken');
 		const authToken = JSON.parse(authTokenRaw);
 		const token = authToken?.state?.token;
 
-		console.log('pswd change', passwordChange, passwordChangeConfirm)
-		if(
-			passwordChange.trim() !== '' &&
-			passwordChangeConfirm.trim() !== '' &&
-			passwordChange === passwordChangeConfirm
-		) {
-			console.log('vse ok')
-			setPasswordError(false);
-			try {
-				const response = await axios.post(
-				getApiUrl("/backend/wp-json/account/v2/password/"),
-				{
-					password: passwordChange,
-					confirm_password: passwordChangeConfirm,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-				);
+		console.log('pswd change', passwordChange, passwordChangeConfirm);
 
-				if (response.status === 200) {
-					console.log("Update password successful", response.data);
-				}
-			} catch (error) {
-				console.error("Update password error", error);
+		// 1. Проверка на пустые пароли
+		if (!passwordChange.trim() || !passwordChangeConfirm.trim()) {
+			setPasswordError('Заполните пароли');
+			return;
+		}
+
+		// 2. Проверка на совпадение
+		if (passwordChange !== passwordChangeConfirm) {
+			setPasswordError('Пароли не совпадают');
+			return;
+		}
+
+		// 3. Проверка сложности пароля
+		const strongPasswordRegex = /^(?=.*\d).{8,}$/; // хотя бы одна цифра и минимум 8 символов
+		if (!strongPasswordRegex.test(passwordChange)) {
+			setPasswordError('Пароль должен содержать не менее 8 символов и содержать хотя бы одну цифру');
+			return;
+		}
+
+		// Если всё ок
+		setPasswordError('');
+		setPasswordChangeSuccess(true);
+		try {
+			const response = await axios.post(
+			getApiUrl('/backend/wp-json/account/v2/password/'),
+			{
+				password: passwordChange,
+				confirm_password: passwordChangeConfirm,
+			},
+			{
+				headers: {
+				Authorization: `Bearer ${token}`,
+				},
 			}
-		} else {
-			console.log('huinya')
-			setPasswordError(true)
-			
+			);
+
+			if (response.status === 200) {
+			console.log('Update password successful', response.data);
+			}
+		} catch (error) {
+			console.error('Update password error', error);
 		}
 	};
 
@@ -286,9 +310,8 @@ const UserMainScreen = () => {
                             `}>Изменить пароль</div>
                             <div className={inputItem}>
                                 <p>Пароль</p>
-								{/* <PasswordInput text='Пароль' value={passwordLogin} onChange={setPasswordLogin} style={errorsLogin.passwordLogin && {borderColor: '#FC1234'}} /> */}
-                                <PasswordInput text='Введите пароль' value={passwordChange} onChange={setPasswordChange} />
-								{/* {passwordError && 
+                                <PasswordInput text='Введите пароль' value={passwordChange} onChange={setPasswordChange} style={passwordError ? { borderColor: "#FC1234" } : {}} />
+								{passwordChangeSuccess && 
 									<AnimatePresence>
 										<motion.div 
 											initial={{ opacity: 0, x: -20, }}
@@ -296,15 +319,26 @@ const UserMainScreen = () => {
 											exit={{ opacity: 0, x: 0 }}
 											transition={{ duration: .3 }}
 											>
-											<Error>{message}</Error>
+											<Error style={{color: theme.colors.purple}}>Пароль успешно изменен</Error>
 										</motion.div>
 									</AnimatePresence>
-								} */}
+								}
+								{passwordError && 
+									<AnimatePresence>
+										<motion.div 
+											initial={{ opacity: 0, x: -20, }}
+											animate={{ opacity: 1, x: 0 }}
+											exit={{ opacity: 0, x: 0 }}
+											transition={{ duration: .3 }}
+											>
+											<Error>{passwordError}</Error>
+										</motion.div>
+									</AnimatePresence>
+								}
                             </div>
-                            
                             <div className={inputItem}>
                                 <p>Повторите пароль</p>
-                                <PasswordInput text='Повторите пароль' value={passwordChangeConfirm} onChange={setPasswordChangeConfirm} />
+                                <PasswordInput text='Повторите пароль' value={passwordChangeConfirm} onChange={setPasswordChangeConfirm} style={passwordError ? { borderColor: "#FC1234" } : {}} />
                             </div>
                             <Button
 								onClick={()=>handleUpdateUserPassword()}
