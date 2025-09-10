@@ -27,6 +27,7 @@ import { useMultiImageUpload } from "@/functions/useGalleryUpload";
 import { useConfirmModal } from "@/store/confirmModalStore";
 import DraftIcon from "@/public/images/svg/draft_icon.svg";
 import BackIcon from "@/public/images/svg/back_icon.svg";
+import styled from "@emotion/styled";
 
 const EventsAddEdit = () => {
 	const router = useRouter();
@@ -427,6 +428,61 @@ const {
 			});
 		};
 	
+	
+	const Error = styled.div`
+		font-size: 12px;
+		color: #FC1234;
+		padding-left: 10px;
+	`
+
+	const ErrorWrapper = (message) => {
+		return (
+			<AnimatePresence>
+				<motion.div 
+					initial={{ opacity: 0, x: -20, }}
+					animate={{ opacity: 1, x: 0 }}
+					exit={{ opacity: 0, x: 0 }}
+					transition={{ duration: .3 }}
+					>
+					<Error>{message}</Error>
+				</motion.div>
+			</AnimatePresence>
+		)
+	}
+	const [eventErrors, setEventErrors] = useState({
+		name: '',
+		date_start: '',
+		date_end: ''
+	});
+
+	const firstScreenCheck = () => {
+
+		const newErrors = {};
+
+		if (!dataEvent.name.trim()) {
+		newErrors.name = 'Введите название события';
+		}
+
+		if (!dataEvent.date_start.trim()) {
+		newErrors.date_start = 'Выберите дату начала';
+		}
+
+		if (!dataEvent.date_end.trim()) {
+		newErrors.date_end = 'Выберите дату окончания';
+		}
+
+		setEventErrors(newErrors);
+
+		// Если ошибок нет, продолжаем
+		if (Object.keys(newErrors).length === 0) {
+		console.log('Все поля заполнены, можно продолжать');
+		setView(prev => prev + 1)
+		} else {
+		console.log('Есть ошибки, исправьте их');
+
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+	};
 
     return( 
 		<LkWrapper>
@@ -448,7 +504,7 @@ const {
 								}}>Основные данные</UserEventNavItem>
 							<UserEventNavSeparator></UserEventNavSeparator>
 							<UserEventNavItem $isActive={view >= 2 && true} $isFilled={view >= 3 && true} onClick={()=>{
-								setView(2);
+								firstScreenCheck();
 								window.scrollTo({ top: 0, behavior: 'smooth' })
 								}}>Место и время</UserEventNavItem>
 							<UserEventNavSeparator></UserEventNavSeparator>
@@ -473,7 +529,8 @@ const {
 							`}>
 								<p className={css`color: #47474D;`}>Название</p>
 							</div>
-							<input className={input} type="text" placeholder="Название" name="name" value={dataEvent.name} onChange={handleDataEventChange} />
+							<input className={input} type="text" placeholder="Название" name="name" value={dataEvent.name} onChange={handleDataEventChange} style={eventErrors.name ? {borderColor: '#FC1234'} : {}} />
+							{eventErrors.name && <div style={{marginTop: 8}}>{ErrorWrapper(eventErrors.name)}</div>}
 						</div>
 									
 						<div className={css`margin-bottom: 24px;`}>
@@ -532,6 +589,54 @@ const {
 								<input className={input} type="text" placeholder="Ссылка на сайт мероприятия" name="link" value={dataEvent.link} onChange={handleDataEventChange} />
 								<p className={css`color: #6C6C71;`}>Укажите ссылку на сайт мероприятия или форму регистрации. Она будет отображаться на странице события после активации тарифа <span className={css`color: #191921;`}>«Расширенный»</span>. Оплатить тариф можно в любой момент.</p>
 							</div>
+						</div>
+						
+						<div className={css`
+										display: flex;
+										flex-wrap: wrap;
+										gap: 24px;
+										margin-bottom: 48px;
+										font-size: 14px;
+
+										& > div {
+											flex: 0 1 calc(33.333333% - 16px);
+											max-width: calc(33.333333% - 16px);
+											display: flex;
+											flex-direction: column;
+											gap: 8px;
+											color: #47474D;
+											height: max-content;
+
+											@media(max-width: 575px) {
+												flex: 0 1 100%;
+												max-width: 100%;
+											}
+										}
+									`}>
+						<div>
+											<p>Дата начала</p>
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' error={eventErrors.date_start && true} />
+											{eventErrors.date_start && ErrorWrapper(eventErrors.date_start)}
+										</div>
+										<div>
+											<p>Дата окончания</p>
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_end} changeDate={testCalendar} whatDate='date_end' error={eventErrors.date_end && true} />
+											{eventErrors.date_end && ErrorWrapper(eventErrors.date_end)}
+										</div>
+										<div>
+											<p>Время начала</p>
+											<input
+												type="text"
+												className={input}
+												value={dataEvent.time_start}
+												onChange={handleInputChange}
+												onBlur={handleBlur}
+												placeholder="Время начала"
+												maxLength={5}
+												name="time_start"
+											/>
+										</div>
+
 						</div>
 
 						<div className={css`
@@ -826,7 +931,7 @@ const {
 											<p>Адрес</p>
 											<input className={input} type="text" placeholder="Введите адрес" name="address" value={dataEvent.address} onChange={handleDataEventChange} />
 										</div>
-										<div>
+										{/* <div>
 											<p>Дата начала</p>
 											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' />
 										</div>
@@ -846,7 +951,7 @@ const {
 												maxLength={5}
 												name="time_start"
 											/>
-										</div>
+										</div> */}
 									</div>
 								</motion.div>
 								) : (
@@ -877,7 +982,7 @@ const {
 											}
 										}
 									`}>
-										<div>
+										{/* <div>
 											<p>Дата начала</p>
 											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' />
 										</div>
@@ -896,7 +1001,7 @@ const {
 												placeholder="Время начала"
 												maxLength={5}
 											/>
-										</div>
+										</div> */}
 										<div className={css`
 											flex: 0 1 100%!important;
 											max-width: 100%!important;
@@ -1085,7 +1190,7 @@ const {
 							}
 						`}>
 						{view == 1 ? 
-							<Button onClick={()=>{setView(prev => prev + 1)}}>Продолжить</Button>
+							<Button onClick={()=>{firstScreenCheck()}}>Продолжить</Button>
 						: view == 2 ? 
 						<>
 							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>

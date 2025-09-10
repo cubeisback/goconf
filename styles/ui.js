@@ -206,6 +206,7 @@ export const inputItem = css`
 export const input = css`
   padding: 14px 16px;
   background-color: #fff;
+  border: 1px solid #fff;
   border-radius: 28px;
   width: 100%;
   font-size: 14px;
@@ -242,6 +243,7 @@ export const filterSelector = css`
   font-size: 14px;
   line-height: 1.28;
   position: relative;
+  border: 1px solid #fff;
 
   @media (max-width: 1339px) {
     flex: 0 1 calc(33.3333333% - 10.666666px);
