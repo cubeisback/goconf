@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 import {ru} from 'date-fns/locale/ru';
 import "@/components/ui/my-datepicker.css";
 
-const EventDate = ({title, fixmob, initialDate, changeDate, whatDate}) => {
+const EventDate = ({title, fixmob, initialDate, changeDate, whatDate, error}) => {
     const [startDate, setStartDate] = useState(initialDate || null);
     const [showDate, setShowDate] = useState(false);
     const datePickerRef = useRef(null);
@@ -64,6 +64,7 @@ const EventDate = ({title, fixmob, initialDate, changeDate, whatDate}) => {
                   left: ${fixmob && '-30vw'};
                 }
             }
+			${error && 'border-color: #FC1234;'}
           `)} onClick={()=>setShowDate(true)}>
               <p>{startDate ? startDate : title}</p>
               <CalendarIcon />
