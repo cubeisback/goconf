@@ -75,6 +75,14 @@ const UserMainScreen = () => {
 		handleGetUserInfo()
 	},[])
 
+	const [infoChangeSuccess, setInfoChangeSuccess] = useState(false);
+	
+	useEffect(()=>{
+		infoChangeSuccess && setTimeout(()=>{
+			setInfoChangeSuccess(false)
+		}, 3000)
+	}, [infoChangeSuccess])
+
 	const handleUpdateUserInfo = async(number) => {
 		const authTokenRaw = localStorage.getItem('authToken');
 		const authToken = JSON.parse(authTokenRaw);
@@ -110,6 +118,7 @@ const UserMainScreen = () => {
 
 			if (response.status === 200) {
 				console.log("Update successful", response.data);
+				setInfoChangeSuccess(true)
 			}
 		} catch (error) {
 			console.error("Update error", error);
@@ -280,6 +289,19 @@ const UserMainScreen = () => {
                                 <p>Телефон</p>
                                 <input type="text" className={input} value={userData.phone} placeholder="Телефон" onChange={(e) => setUserData(prev => ({ ...prev, phone: e.target.value }))} />
                             </div>
+								{infoChangeSuccess && 
+									<AnimatePresence>
+										<motion.div 
+											initial={{ opacity: 0, x: -20, }}
+											animate={{ opacity: 1, x: 0 }}
+											exit={{ opacity: 0, x: 0 }}
+											transition={{ duration: .3 }}
+											style={{width: '100%'}}
+											>
+											<Error style={{color: theme.colors.purple}}>Данные успешно сохранены</Error>
+										</motion.div>
+									</AnimatePresence>
+								}
                             <Button 
 								// className={cx(css`opacity: .2; pointer-events: none;`)}
 								onClick={()=>handleUpdateUserInfo(1)}
@@ -447,6 +469,19 @@ const UserMainScreen = () => {
 							}))} 
 							/>
                         </div>
+						{infoChangeSuccess && 
+									<AnimatePresence>
+										<motion.div 
+											initial={{ opacity: 0, x: -20, }}
+											animate={{ opacity: 1, x: 0 }}
+											exit={{ opacity: 0, x: 0 }}
+											transition={{ duration: .3 }}
+											style={{width: '100%'}}
+											>
+											<Error style={{color: theme.colors.purple}}>Данные успешно сохранены</Error>
+										</motion.div>
+									</AnimatePresence>
+								}
                         <Button onClick={()=>handleUpdateUserInfo(2)}>Сохранить изменения</Button>
                     </div>
                 </motion.div>
