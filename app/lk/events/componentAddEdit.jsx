@@ -301,6 +301,7 @@ const {
 	handleUploadImage: uploadAnons,
 	handleRemoveImage: removeAnons,
 	handleButtonClick: clickAnons,
+	handleRemovePreview: removeAnonsPreview,
 	file: anonsFile,
 	} = useImageUpload({
 	token,
@@ -308,7 +309,7 @@ const {
 	setData: setDataEvent,
 	targetKey: "anons",
 });
-
+// TODO доделать логику. Если изображение было с сервера, и его заменяют на новое, то старое нужно удалить с сервера
 const {
 	previewUrl: coverPreview,
 	inputRef: coverInputRef,
@@ -316,6 +317,7 @@ const {
 	handleUploadImage: uploadCover,
 	handleRemoveImage: removeCover,
 	handleButtonClick: clickCover,
+	handleRemovePreview: removeCoverPreview,
 	file: coverFile,
 	} = useImageUpload({
 	token,
@@ -404,6 +406,26 @@ const {
 			});
 		};
 
+		const handleRemoveImageModal = (id, version) => {
+			openModal({
+			title: 'Подтвердить действие',
+			description: `Вы действительно хотите удалить данное изображение?`,
+			onConfirm: async () => {
+				try {
+					version === 1 ?
+					removeCover(id)
+					:
+					version === 2 ?
+					removeAnons(id)
+					:
+					removeGalleryImage(id)
+				} catch (e) {
+					console.error(e);
+				}
+			},
+			confirmText: 'Удалить',
+			});
+		};
 	
 
     return( 
@@ -559,17 +581,27 @@ const {
 									
 								</div>
 								
-								{/* {dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>} */}
-								{dataEvent?.cover?.id || coverPreview ?
+								{dataEvent?.cover?.id || coverPreview ? (
 								<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
-									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
+									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>
+									998.05 кб
+									</div>
 									<div style={{cursor: 'pointer'}}>
-										<RemoveIcon onClick={()=>removeCover(dataEvent.cover.id)} />
+									{dataEvent?.cover?.id && !coverPreview ? (
+										<RemoveIcon onClick={() => handleRemoveImageModal(dataEvent.cover.id, 1)} />
+									) : (
+										<RemoveIcon onClick={removeCoverPreview} />
+									)}
 									</div>
 								</div>
-								:
-								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={clickCover}>Загрузить</div>
-								}
+								) : (
+								<div
+									className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`}
+									onClick={clickCover}
+								>
+									Загрузить
+								</div>
+								)}
 								
 								<div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
 									<p><span>Разрешение</span>&nbsp;&mdash; 400&times;270 пикселей</p>
@@ -603,18 +635,28 @@ const {
 									}
 									
 								</div>
-								
 								{/* {dataEvent?.anons?.id && <div onClick={()=>handleRemoveImage(dataEvent.anons.id)}>УДАЛИТЬ КАРТИНКУ</div>} */}
-								{dataEvent?.anons?.id || anonsPreview ?
-								<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
-									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
-									<div style={{cursor: 'pointer'}}>
-										<RemoveIcon onClick={()=>removeAnons(dataEvent.anons.id)} />
-									</div>
-								</div>
-								:
-								<div className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`} onClick={clickAnons}>Загрузить</div>
-								}
+								{dataEvent?.anons?.id || anonsPreview ? (
+  <div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
+    <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>
+      998111.05 кб
+    </div>
+    <div style={{cursor: 'pointer'}}>
+      {dataEvent?.anons?.id && !anonsPreview ?  (
+        <RemoveIcon onClick={() => handleRemoveImageModal(dataEvent.anons.id, 2)} />
+      ) : (
+        <RemoveIcon onClick={removeAnonsPreview} />
+      )}
+    </div>
+  </div>
+) : (
+  <div
+    className={css`color: ${theme.colors.purple};margin-bottom: 8px;cursor: pointer`}
+    onClick={clickAnons}
+  >
+    Загрузить
+  </div>
+)}
 								<div className={css`font-size: 12px; color: #6C6C71; span {color: ${theme.colors.font};}`}>
 									<p><span>Разрешение</span>&nbsp;&mdash; 960&times;420 пикселей</p>
 									<p><span>Формат</span>&nbsp;&mdash; PNG или JPEG</p>
@@ -953,7 +995,7 @@ const {
 				</div>
 				<div>
 					<EditIcon onClick={() => startReplace(index)} />
-					<RemoveIcon onClick={() => removeGalleryImage(img.id)} />
+					<RemoveIcon onClick={() => handleRemoveImageModal(img.id, 3)} />
 				</div>
 			</div>
 		</div>
@@ -966,34 +1008,42 @@ const {
 			<div>
 				<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>{src.size}</div>
 				<div>
-					{/* <EditIcon /> */}
 					<RemoveIcon onClick={() => removeTempGallery(idx)} />
 				</div>
 			</div>
-      {/* <img src={src} alt="" width={80} /> */}
-      {/* <button onClick={() => removeTempGallery(idx)}>Убрать</button> */}
     </div>
   ))}
 
-  {/* добавить фото */}
+  {/* заглушки (если меньше 3 элементов всего) */}
+{Array.from(
+  { length: Math.max(0, 3 - (dataEvent.gallery.length + galleryPreviews.length)) }
+).map((_, i) => {
+  const index = dataEvent.gallery.length + galleryPreviews.length + i; // продолжаем индекс
+  return (
+    <div key={"placeholder-" + i}  onClick={clickGallery}>
+      <div
+        className={css`
+          border-radius: 16px;
+          background: #f0f0f5;
+          height: 200px; /* подогнать под размер картинок */
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #999;
+          font-size: 14px;
+        `}
+      >
+        {/* вместо картинки просто иконка/фон */}
+        <span>Заглушка</span>
+      </div>
+      <div>
+        Загрузить
+      </div>
+    </div>
+  );
+})}
   
-
-
-								{/* {dataEvent.gallery && dataEvent.gallery.map((image, index) => (
-									<div key={index}>
-										<img src={image.url} alt="" />
-										<div>
-											<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>998.05 кб</div>
-											<div>
-												<EditIcon />
-												<RemoveIcon />
-												{image.id}
-											</div>
-										</div>
-
-										
-									</div>
-								))} */}
 								
 							</div>
 							{(dataEvent.gallery.length + galleryPreviews.length) < 9 && (
