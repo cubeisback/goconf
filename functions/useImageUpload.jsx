@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { getApiUrl } from "./functions";
 
@@ -20,7 +20,6 @@ export const useImageUpload = ({
     setPreviewUrl(imageUrl);
     setFile(selectedFile);
 
-    // Чтобы onChange срабатывал даже при выборе того же файла
     e.target.value = null;
   };
 
@@ -35,24 +34,19 @@ export const useImageUpload = ({
         getApiUrl("/backend/wp-json/images/v2/upload"),
         formData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      console.log("Файл успешно загружен:", response.data);
+      const newImage = { id: response.data.id, url: response.data.url };
 
-      const newImage = {
-        id: response.data.id,
-        url: response.data.url,
-      };
-
-      // Обновляем стейт (например, data.anons)
       setData((prev) => ({
         ...prev,
         [targetKey]: newImage,
       }));
+
+      setPreviewUrl(null);
+      setFile(null);
 
       return newImage;
     } catch (error) {
@@ -67,26 +61,21 @@ export const useImageUpload = ({
     try {
       const response = await axios.get(
         getApiUrl(`/backend/wp-json/images/v2/delete?id=${id}`),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      console.log("Файл успешно удален:", response);
-
       if (response.status === 200) {
-        setData((prev) => ({
-          ...prev,
-          [targetKey]: {},
-        }));
-        setPreviewUrl(null);
-        setFile(null);
+        setData((prev) => ({ ...prev, [targetKey]: {} }));
       }
     } catch (error) {
       console.error("Ошибка удаления изображения:", error);
     }
+  };
+
+  // ❗ Новый метод: удаление только превью (без запроса)
+  const handleRemovePreview = () => {
+    setPreviewUrl(null);
+    setFile(null);
   };
 
   const handleButtonClick = () => {
@@ -99,7 +88,8 @@ export const useImageUpload = ({
     handleFileChange,
     handleUploadImage,
     handleRemoveImage,
+    handleRemovePreview, // экспортируем
     handleButtonClick,
-    file, // <- можешь проверять, выбран ли файл
+    file,
   };
 };
