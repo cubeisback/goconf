@@ -13,6 +13,7 @@ import ListBullets from "@/public/images/svg/list_bullets_icon.svg";
 import ListNumbers from "@/public/images/svg/list_numbers_icon.svg";
 import Header from "@/public/images/svg/header_icon.svg";
 import { css } from '@emotion/css';
+import CharacterCount from '@tiptap/extension-character-count';
 
 const textEditorField = css`
 	background: #fff;
@@ -57,11 +58,19 @@ export default function TextEditor({ content, onChange }) {
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
+	  CharacterCount.configure({
+		limit: 5000,
+	  }),
     ],
     content: content || "",
-    onUpdate({ editor }) {
-      onChange?.(editor.getHTML());
-    },
+    // onUpdate({ editor }) {
+    //   onChange?.(editor.getHTML());
+    // },
+	onUpdate({ editor }) {
+		const html = editor.getHTML();
+		const length = editor.storage.characterCount.characters();
+		onChange?.(html, length); // пробрасываем и html, и длину
+	},
     editorProps: {
       transformPastedHTML(html) {
         // Удаляем все ссылки <a> из вставленного HTML

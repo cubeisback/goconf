@@ -25,6 +25,8 @@ import TextEditor from "@/components/ui/Editor";
 import EventDate from "./add/EventDate";
 import { useMultiImageUpload } from "@/functions/useGalleryUpload";
 import { useConfirmModal } from "@/store/confirmModalStore";
+import DraftIcon from "@/public/images/svg/draft_icon.svg";
+import BackIcon from "@/public/images/svg/back_icon.svg";
 
 const EventsAddEdit = () => {
 	const router = useRouter();
@@ -105,6 +107,8 @@ const EventsAddEdit = () => {
 		broadcast: '',
 		video: ''
 	});
+
+	const [contentLength, setContentLength] = useState(0);
 
 	useEffect(()=>{
 		setDataEvent((prev) => ({
@@ -388,6 +392,18 @@ const {
 			});
 		};
 
+	const handleSubmitModalDraft = () => {
+			openModal({
+			title: 'Сохранение',
+			description: `Вы действительно хотите сохранить черновик?`,
+			onConfirm: () => {
+				handleSubmitTest('draft'), 
+				router.replace('/lk/events')
+			},
+			confirmText: 'Сохранить',
+			});
+		};
+
 	
 
     return( 
@@ -448,8 +464,8 @@ const {
 								<p className={css`color: #47474D;`}>Краткое описание для анонса</p>
 								<p className={css`color: #6C6C71;`}>Максимальное количество символов - 200</p>
 							</div>
-							<textarea className={textarea} name="short_text" id="" placeholder="Краткое описание" value={dataEvent.short_text} onChange={handleDataEventChange}></textarea>
-							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{dataEvent.short_text.length} / 200</div>
+							<textarea className={textarea} name="short_text" id="" placeholder="Краткое описание" value={dataEvent.short_text} onChange={handleDataEventChange} maxLength={200}></textarea>
+							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}><span>{dataEvent.short_text.length}</span> / 200</div>
 						</div>
 
 						<div className={css`
@@ -487,12 +503,12 @@ const {
 								<p>Организатор</p>
 								<EventDropdown full={true} options={metaParameters && metaParameters.companies} items={dataEvent.organizator} incomeFunction={handleDataEventChangeOrganizator} placeholder={'Выбрать организатора'} />
 								{/* <DropdownInput full={true} options={metaParameters && metaParameters.companies} placeholder={'Выбрать организатора'} /> */}
-								<p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/lk/org" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
+								<p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/lk/org" target="_blank" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
 							</div>
 							<div>
 								<p>Ссылка на сайт мероприятия</p>
 								<input className={input} type="text" placeholder="Ссылка на сайт мероприятия" name="link" value={dataEvent.link} onChange={handleDataEventChange} />
-								<p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
+								<p className={css`color: #6C6C71;`}>Укажите ссылку на сайт мероприятия или форму регистрации. Она будет отображаться на странице события после активации тарифа <span className={css`color: #191921;`}>«Расширенный»</span>. Оплатить тариф можно в любой момент.</p>
 							</div>
 						</div>
 
@@ -664,18 +680,19 @@ const {
 								}    
 							`}>
 								<p className={css`color: #47474D;`}>Детальное описание</p>
-								<p className={css`color: #6C6C71;`}>Максимальное количество символов - 200</p>
+								<p className={css`color: #6C6C71;`}>Максимальное количество символов - 5000</p>
 							</div>
 							<TextEditor
-														content={dataEvent.content}
-														onChange={(html) =>
-														setDataEvent((prev) => ({
-															...prev,
-															content: html,
-														}))
-														}
-													/>
-							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{dataEvent.short_text.length} / 5000</div>
+								content={dataEvent.content}
+								onChange={(html, length) => {
+									setDataEvent((prev) => ({
+									...prev,
+									content: html, // только HTML кладём в dataEvent
+									}));
+									setContentLength(length); // длину сохраняем в отдельный стейт
+								}}
+							/>
+							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{contentLength} / 5000</div>
 						</div>
 						
 						
@@ -843,7 +860,7 @@ const {
 											max-width: 100%!important;
 										`}>
 											<p>Ссылка на трансляцию</p>
-											<input className={input} type="text" placeholder="https://" name="broadcast" value={dataEvent.broadcast} onChange={handleDataEventChange} />
+											<input className={input} type="text" placeholder="https://" name="broadcast" value={dataEvent?.broadcast ?? ''} onChange={handleDataEventChange} />
 											<p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
 										</div>
 									</div>
@@ -855,6 +872,7 @@ const {
 
 					{view === 3 && 
 					<>
+					<div className={css`color: #6C6C71;margin: 48px 0; font-size: 14px;`}>По статистике, события с фото и видео получают до 20% больше трафика. Материалы отображаются на странице при активации тарифа <span className={css`color: #191921;`}>«Расширенный»</span>. Оплатить тариф можно в любое время.</div>
 						<div className={css`
 							margin-bottom: 8px;
 							font-family: Impact;
@@ -993,8 +1011,7 @@ const {
 							margin-bottom: 16px;
 							font-size: 12px;
 						`}>Вы можете добавить Iframe с Ютуба или ВК</div>
-						{/* <textarea className={cx(textarea, css`margin-bottom: 40px;`)} name="" id="" placeholder="https://" ></textarea> */}
-						<textarea className={textarea} name="video" id="" placeholder="https://" value={dataEvent.video} onChange={handleDataEventChange}></textarea>
+						<textarea className={cx(textarea, css`margin-bottom: 40px;`)} name="video" id="" placeholder="https://" value={dataEvent.video} onChange={handleDataEventChange}></textarea>
 					</>
 					}
 
@@ -1002,34 +1019,40 @@ const {
 						display: flex;
 						gap:16px;
 						align-items:center;
+						justify-content: space-between;
 
 						@media(max-width: 575px) {
 							flex-direction: column;
 						}
 					`}>
+						<div className={css`
+							display: flex;
+							gap:16px;
+							align-items:center;
+
+							@media(max-width: 575px) {
+								flex-direction: column;
+							}
+						`}>
 						{view == 1 ? 
 							<Button onClick={()=>{setView(prev => prev + 1)}}>Продолжить</Button>
 						: view == 2 ? 
 						<>
-							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer'}}>Назад</div>
+							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
 							<Button onClick={()=>{setView(prev => prev + 1)}}>Продолжить</Button>
 							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{handleSubmitModal()}}>Отправить на модерацию</Button>
-							{/* <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`} onClick={()=>console.log(dataEvent)}>Сохранить в черновик</div> */}
 						</>
 						: 
 						<>
-							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer'}}>Назад</div>
+							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
 							<Button onClick={()=>{handleSubmitModal()}}>Отправить на модерацию</Button>
-							{/* <Button onClick={()=>{view < 3 ? setView(prev => prev + 1) : handleAddEventSubmit()}}>Опубликовать</Button> */}
 						</>
 						}
-						{/* <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{view > 1 ? setView(prev => prev - 1) : setBack(1)}}>Отменить</Button>
-						<Button onClick={()=>{view < 3 ? setView(prev => prev + 1) : handleAddEventSubmit()}}> {view > 2 ? 'Опубликовать' : 'Продолжить'}</Button>
-						
-						<div onClick={handleSubmitTest}>ОТПРАВИТЬ НОВЫАЯ</div>
-
-						 */}
-						 <div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;`} onClick={()=>{handleSubmitTest('draft')}}>Сохранить в черновик</div>
+						</div>
+						<div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;cursor: pointer;    display: flex
+;
+    align-items: center;
+    gap: 8px;`} onClick={()=>{handleSubmitModalDraft()}}>Сохранить в черновик <DraftIcon /></div>
 					</div>
 					</UserMain>
 				</div>

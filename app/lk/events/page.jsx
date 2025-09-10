@@ -15,6 +15,7 @@ import LkMenu from "@/components/ui/LkMenu";
 import Link from "next/link";
 import axios from "axios";
 import { formatDate, formatPrice, getApiUrl } from "@/functions/functions";
+import { useConfirmModal } from "@/store/confirmModalStore";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
@@ -182,6 +183,26 @@ const UserEvents = () => {
 				console.error("Update password error", error);
 			}
 	};
+
+	const { openModal } = useConfirmModal();
+		const handleSubmitDeleteModal = (id) => {
+			openModal({
+			title: 'Подтвердить действие',
+			description: `Вы действительно хотите удалить данное мероприятие?`,
+			onConfirm: async () => {
+				try {
+					await handleRemoveEvent(id);
+					setEvents(prev => prev.filter(o => o.id !== id)); // мгновенно в UI
+					// подстрахуемся актуальным списком
+					await handleGetEvents();
+				} catch (e) {
+					console.error(e);
+					await handleGetEvents(); // откатимся к серверному состоянию при ошибке
+				}
+			},
+			confirmText: 'Удалить',
+			});
+		};
 	
 
 
@@ -221,7 +242,63 @@ const UserEvents = () => {
 				{events && events.map((event, index) => (
 					<div key={index}>
 					<UserEventsBlockHead>
-						<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>Тариф <b style={{marginLeft: 4}}>&laquo;Базовый&raquo;</b> <span style={{width: 20, height: 20, backgroundColor: '#D7DADD', borderRadius: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center',  marginLeft: 8}}>?</span></div>
+						<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>Тариф <b style={{marginLeft: 4}}>&laquo;Базовый&raquo;</b> 
+							<div style={{width: 20, height: 20, backgroundColor: '#D7DADD', borderRadius: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center',  marginLeft: 8, position: 'relative'}} className={css`
+								&:hover {
+
+									& > div {
+										opacity: 1;
+										pointer-events: all;
+									}
+								}
+							`}>? 
+								<div className={css`
+									border-radius: 8px;
+									border: 1px solid #F5F7FA;
+									background: #FFF;
+									box-shadow: 0 196px 55px 0 rgba(0, 0, 0, 0.00), 0 125px 50px 0 rgba(0, 0, 0, 0.01), 0 71px 42px 0 rgba(0, 0, 0, 0.02), 0 31px 31px 0 rgba(0, 0, 0, 0.03), 0 8px 17px 0 rgba(0, 0, 0, 0.04);
+									padding: 8px 16px;
+									display: flex;
+									flex-direction: column;
+									gap: 16px;
+									width: 336px;
+									position: absolute;
+									top: calc(100% + 8px);
+									left: -32px;
+									font-size: 14px;
+									opacity: 0;
+									pointer-events: none;
+									transition: .3s ease-in-out;									
+									
+									ul {
+										display: flex;
+										flex-direction: column;
+										gap: 16px;
+
+										li {
+											position: relative;
+											gap: 8px;
+											display: flex;
+											align-items: center;
+
+											&::before {
+												content: '';
+												width: 16px;
+												height: 16px;
+												background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><g clip-path="url(%23clip0_10636_65551)"><path d="M16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8Z" fill="%23D7DADD"/><path d="M4 8H12" stroke="%23191921"/></g><defs><clipPath id="clip0_10636_65551"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>');
+											}
+										}
+									}
+								`}>
+									<p>Сейчас не доступно</p>
+									<ul>
+										<li>Ссылка на сайт с UTM</li>
+										<li>Аналитика мероприятия</li>
+										<li>Добавление фото/видео материалов</li>
+									</ul>
+								</div>
+							</div>
+						</div>
                         <div style={{fontSize: 14}}>Подключите тариф <span style={{color: '#8553F9', fontWeight: 500}}>&laquo;Расширенный&raquo;</span> для доступа ко&nbsp;всем возможностям</div>
 					</UserEventsBlockHead>
 					<UserEventsBlockItem>
@@ -230,19 +307,44 @@ const UserEvents = () => {
 							<UserEventsBlockItemTopStatus style={{backgroundColor: '#69B90F'}}>Опубликовано</UserEventsBlockItemTopStatus>
 							: event.status === 'draft' ? 
 							<UserEventsBlockItemTopStatus style={{backgroundColor: '#B5B7B9'}}>Черновик</UserEventsBlockItemTopStatus>
+							: event.status === 'rejected' ? 
+							<UserEventsBlockItemTopStatus style={{backgroundColor: '#FF5B3B', display: 'flex', alignItems: 'flex-end', gap: 8}}>Отклонено <div style={{height: 16}}>
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_8695_27252)">
+<circle cx="8" cy="8" r="8" fill="white"/>
+<path d="M7.27902 4.23674C7.22732 4.12041 7.20147 3.95884 7.20147 3.75204C7.20147 3.54524 7.28548 3.36429 7.45351 3.20918C7.62153 3.04116 7.8348 2.95714 8.0933 2.95714C8.36473 2.95714 8.578 3.04762 8.7331 3.22857C8.90113 3.3966 8.98514 3.60986 8.98514 3.86837C8.98514 4.12687 8.90113 4.34014 8.7331 4.50816C8.56507 4.67619 8.35181 4.7602 8.0933 4.7602C7.69262 4.7602 7.42119 4.58571 7.27902 4.23674ZM8.79126 11.2551C8.79126 11.5912 8.83004 11.9531 8.90759 12.3408H9.8382L9.91575 12.9224C9.45045 13.0259 8.90759 13.0776 8.28718 13.0776C7.6797 13.0776 7.37596 12.8966 7.37596 12.5347L7.41473 11.1776V7.53265C7.41473 7.33878 7.40181 7.16429 7.37596 7.00918C7.22085 6.94456 7.03344 6.91225 6.81371 6.91225H6.17392V6.29184C6.48412 6.21429 6.9365 6.17551 7.53106 6.17551C8.13854 6.17551 8.55861 6.21429 8.79126 6.29184V11.2551Z" fill="#FF5B3B"/>
+</g>
+<defs>
+<clipPath id="clip0_8695_27252">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</div></UserEventsBlockItemTopStatus>
+							: event.status === 'archived' ? 
+							<UserEventsBlockItemTopStatus style={{backgroundColor: '#6C6C71'}}>В архиве</UserEventsBlockItemTopStatus>
 							:
 							<UserEventsBlockItemTopStatus style={{backgroundColor: '#8553F9'}}>На модерации</UserEventsBlockItemTopStatus>
 							}
 							
+							{event.date_publish && 
 							<UserEventsBlockItemTopPublishDate>Дата публикации: {event.date_publish}</UserEventsBlockItemTopPublishDate>
+							}
 							<UserEventsBlockItemTopIcons>
 								<Link href={`/lk/events/edit/?id=${event.id}`}>
 									<EditIcon  />
 								</Link>
-								<RemoveIcon onClick={()=>handleRemoveEvent(event.id)} />
+								<RemoveIcon  onClick={()=>handleSubmitDeleteModal(event.id)} />
 							</UserEventsBlockItemTopIcons>
 						</UserEventsBlockItemTop>
-						<div style={{marginBottom: 8, fontSize: 20, fontWeight: 500, lineHeight: 1.4}}>{event.title && event.title}</div>
+						<Link href={`/event/${event.slug}`} target="_blank" 
+						style={{marginBottom: 8, fontSize: 20, fontWeight: 500, lineHeight: 1.4}}
+						className={css`
+							&:hover {
+								color: #8553F9;
+							}	
+						`}
+						>{event.title && event.title}</Link>
 						{!event.online &&
 							event.cost && 
 								<div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>{formatPrice(event.cost)} руб.</div> 
