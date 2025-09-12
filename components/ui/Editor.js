@@ -11,10 +11,18 @@ import Italic from "@/public/images/svg/italic_icon.svg";
 import Under from "@/public/images/svg/underline_icon.svg";
 import ListBullets from "@/public/images/svg/list_bullets_icon.svg";
 import ListNumbers from "@/public/images/svg/list_numbers_icon.svg";
+import H2 from "@/public/images/svg/h2_icon.svg";
+import H3 from "@/public/images/svg/h3_icon.svg";
+import FormatClean from "@/public/images/svg/format_clean_icon.svg";
 import Header from "@/public/images/svg/header_icon.svg";
 import { css } from '@emotion/css';
 import CharacterCount from '@tiptap/extension-character-count';
 
+const textEditorPanel = css`
+	button {
+		display: flex;
+	}
+`;
 const textEditorField = css`
 	background: #fff;
 	border-radius: 0 0 28px 28px;
@@ -108,7 +116,7 @@ export default function TextEditor({ content, onChange }) {
   return (
     <>
       {/* Панель инструментов */}
-		<div className="texteditor_panel" style={{ 
+		<div className={`texteditor_panel ${textEditorPanel}`} style={{ 
 			userSelect: "none",
 			borderRadius: '28px 28px 0px 0px',
 			border: '2px solid #FFF',
@@ -124,11 +132,26 @@ export default function TextEditor({ content, onChange }) {
 				display: 'flex', 
 				alignItems: 'center', 
 				justifyContent: 'center', 
-				padding: 3, 
-				borderRadius: 6, 
-				border: '1px solid #f5f7fa', 
-				borderColor: editor.isActive("bold") ? "#191921" : "#f5f7fa" 
+				// padding: 3, 
+				// borderRadius: 6, 
+				// border: '1px solid #f5f7fa', 
+				// borderColor: editor.isActive("bold") ? "#191921" : "#f5f7fa" 
 			}}
+			className={css`
+						svg {
+							path {
+								transition: .3s ease-in-out;
+
+								fill: ${editor.isActive("bold") && '#000'};
+							}
+
+							&:hover {
+								path {
+									fill: #000;
+								}
+							}
+						}
+					`}
           title="Жирный (Ctrl+B)"
         >
           <Bold />
@@ -140,11 +163,26 @@ export default function TextEditor({ content, onChange }) {
           style={{ display: 'flex', 
 				alignItems: 'center', 
 				justifyContent: 'center', 
-				padding: 3, 
-				borderRadius: 6, 
-				border: '1px solid #f5f7fa', 
-				borderColor: editor.isActive("italic") ? "#191921" : "#f5f7fa" 
+				// padding: 3, 
+				// borderRadius: 6, 
+				// border: '1px solid #f5f7fa', 
+				// borderColor: editor.isActive("italic") ? "#191921" : "#f5f7fa" 
 			}}
+			className={css`
+						svg {
+							path {
+								transition: .3s ease-in-out;
+
+								fill: ${editor.isActive("italic") && '#000'};
+							}
+
+							&:hover {
+								path {
+									fill: #000;
+								}
+							}
+						}
+					`}
           title="Курсив (Ctrl+I)"
         >
           <Italic />
@@ -157,11 +195,26 @@ export default function TextEditor({ content, onChange }) {
 			display: 'flex',
 			alignItems: 'center', 
 				justifyContent: 'center', 
-				padding: 3, 
-				borderRadius: 6, 
-				border: '1px solid #f5f7fa', 
-				borderColor: editor.isActive("underline") ? "#191921" : "#f5f7fa" 
+				// padding: 3, 
+				// borderRadius: 6, 
+				// border: '1px solid #f5f7fa', 
+				// borderColor: editor.isActive("underline") ? "#191921" : "#f5f7fa" 
           }}
+		  className={css`
+						svg {
+							path {
+								transition: .3s ease-in-out;
+
+								fill: ${editor.isActive("underline") && '#000'};
+							}
+
+							&:hover {
+								path {
+									fill: #000;
+								}
+							}
+						}
+					`}
           title="Подчеркнутый (Ctrl+U)"
         >
           <Under />
@@ -205,12 +258,27 @@ export default function TextEditor({ content, onChange }) {
           style={{
 			display: 'flex',
 			alignItems: 'center', 
-				justifyContent: 'center', 
-				padding: 3, 
-				borderRadius: 6, 
-				border: '1px solid #f5f7fa', 
-				borderColor: editor.isActive("bulletList") ? "#191921" : "#f5f7fa" 
+			justifyContent: 'center', 
+				// padding: 3, 
+				// borderRadius: 6, 
+				// border: '1px solid #f5f7fa', 
+				// borderColor: editor.isActive("bulletList") ? "#191921" : "#f5f7fa" 
           }}
+		  className={css`
+						svg {
+							path {
+								transition: .3s ease-in-out;
+
+								fill: ${editor.isActive("bulletList") && '#000'};
+							}
+
+							&:hover {
+								path {
+									fill: #000;
+								}
+							}
+						}
+					`}
         >
           <ListBullets />
         </button>
@@ -222,11 +290,26 @@ export default function TextEditor({ content, onChange }) {
 			display: 'flex',
 			alignItems: 'center', 
 				justifyContent: 'center', 
-				padding: 3, 
-				borderRadius: 6, 
-				border: '1px solid #f5f7fa', 
-				borderColor: editor.isActive("orderedList") ? "#191921" : "#f5f7fa" 
+				// padding: 3, 
+				// borderRadius: 6, 
+				// border: '1px solid #f5f7fa', 
+				// borderColor: editor.isActive("orderedList") ? "#191921" : "#f5f7fa" 
           }}
+		  className={css`
+						svg {
+							path {
+								transition: .3s ease-in-out;
+
+								fill: ${editor.isActive("orderedList") && '#000'};
+							}
+
+							&:hover {
+								path {
+									fill: #000;
+								}
+							}
+						}
+					`}
         >
           <ListNumbers />
         </button>
@@ -245,8 +328,8 @@ export default function TextEditor({ content, onChange }) {
 			position: 'relative',
 			alignItems: 'center', 
 				justifyContent: 'center', 
-				padding: 3, 
-				borderRadius: 6, 
+				// padding: 3, 
+				// borderRadius: 6, 
 				}}>
 			{/* <Header /> */}
 			<div style={{
@@ -261,13 +344,23 @@ export default function TextEditor({ content, onChange }) {
 					key={level}
 					onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
 					title={`Заголовок H${level}`}
-					style={{
-					fontWeight: editor.isActive("heading", { level })
-						? "bold"
-						: "normal",
-					}}
+					className={css`
+						svg {
+							path {
+								transition: .3s ease-in-out;
+
+								fill: ${editor.isActive("heading", { level }) && '#000'};
+							}
+
+							&:hover {
+								path {
+									fill: #000;
+								}
+							}
+						}
+					`}
 				>
-					H{level}
+					{level === 2 ? <H2/> : <H3/>}
 				</button>
 				
 				))}
@@ -295,11 +388,24 @@ export default function TextEditor({ content, onChange }) {
 		  style={{
 			alignItems: 'center', 
 				justifyContent: 'center', 
-				padding: 3, 
-				borderRadius: 6, 
+				// padding: 3, 
+				// borderRadius: 6, 
 		  }}
+		  className={css`
+						svg {
+							path {
+								transition: .3s ease-in-out;
+							}
+
+							&:hover {
+								path {
+									fill: #000;
+								}
+							}
+						}
+					`}
         >
-          ✖
+          <FormatClean />
         </button>
       </div>
 

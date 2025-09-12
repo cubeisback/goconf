@@ -16,12 +16,14 @@ import Link from "next/link";
 import axios from "axios";
 import { formatDate, formatPrice, getApiUrl } from "@/functions/functions";
 import { useConfirmModal } from "@/store/confirmModalStore";
+import Loader from "@/public/images/svg/preloader.svg";
 
 const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
 
 const UserEvents = () => {
     const theme = useTheme();
     const [view, setView] = useState(1);
+	const [loading, setLoading] = useState(true);
 	// const [editId, setEditId] = useState(null);
     
     // TODO
@@ -54,6 +56,9 @@ const UserEvents = () => {
 				}
 			} catch (error) {
 				console.error("Update password error", error);
+			}
+			finally {
+				setLoading(false); // 🔹 всегда выключаем загрузку
 			}
 	};
 
@@ -239,7 +244,18 @@ const UserEvents = () => {
             </div>
 
             <UserEventsBlock>
-				{events && events.map((event, index) => (
+				{loading ? (
+												<div className={css`
+													width: 100%;
+													height: 100%;
+													justify-content: center;
+													display: flex;
+				
+													svg {
+														width: 24px;
+													}
+												`}><Loader /></div> // 🔹 прелоадер
+											) : events.length > 0 ? (events.map((event, index) => (
 					<div key={index}>
 					<UserEventsBlockHead>
 						<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>Тариф <b style={{marginLeft: 4}}>&laquo;Базовый&raquo;</b> 
@@ -331,7 +347,7 @@ const UserEvents = () => {
 							<UserEventsBlockItemTopPublishDate>Дата публикации: {event.date_publish}</UserEventsBlockItemTopPublishDate>
 							}
 							<UserEventsBlockItemTopIcons>
-								<Link href={`/lk/events/edit/?id=${event.id}`}>
+								<Link href={`/lk/events/edit/?id=${event.id}`} style={{display: 'flex'}}>
 									<EditIcon  />
 								</Link>
 								<RemoveIcon  onClick={()=>handleSubmitDeleteModal(event.id)} />
@@ -393,7 +409,10 @@ const UserEvents = () => {
 							setView(2)}}>Опции для продвижения</Button>
 					</UserEventsBlockItem>
 					</div>
-				))}
+				))
+							) : (
+								<div>Ничего не найдено</div>
+							)}
 				{/* <p>статичные</p>
                 <div className={css`
                     border-radius: 28px;

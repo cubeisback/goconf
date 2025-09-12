@@ -562,6 +562,7 @@ export const UserEventsBlockItemTop = styled.div`
     gap: 16px;
     align-items: center;
     margin-bottom: 24px;
+	justify-content: space-between;
 
     @media(max-width: 575px) {
         flex-wrap: wrap;
