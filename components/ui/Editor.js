@@ -47,6 +47,16 @@ const textEditorField = css`
 			flex-direction: column;
 			gap: 10px;
 	}
+
+	& > div {
+		& > div {
+			& > * {
+				&:last-child {
+					padding-bottom: 16px;	
+				}
+			}
+		}
+	}
 `;
 
 export default function TextEditor({ content, onChange }) {

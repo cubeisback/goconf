@@ -1,5 +1,8 @@
 import { useConfirmModal } from '@/store/confirmModalStore';
+import { Button } from '@/styles/ui';
+import { css, cx } from '@emotion/css';
 import { AnimatePresence, motion } from 'framer-motion';
+import CloseIcon from "@/public/images/svg/close.svg";
 
 export const ConfirmModal = () => {
   const {
@@ -47,32 +50,23 @@ export const ConfirmModal = () => {
             exit={{ y: 40, opacity: 0 }}
             transition={{ duration: 0.3 }}
             style={{
-              background: '#fff',
-              borderRadius: '28px',
-              padding: '24px',
-              maxWidth: '90%',
-              width: '400px',
+				background: '#fff',
+				borderRadius: '28px',
+				padding: '40px 64px',
+				maxWidth: '90%',
+				width: '480px',
+				boxShadow: '0 111px 31px 0 rgba(0, 0, 0, 0.00), 0 71px 28px 0 rgba(0, 0, 0, 0.01), 0 40px 24px 0 rgba(0, 0, 0, 0.05), 0 18px 18px 0 rgba(0, 0, 0, 0.09), 0 4px 10px 0 rgba(0, 0, 0, 0.10)',
+				position: 'relative',
             }}
           >
-            <h1 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>
+			<CloseIcon style={{position: 'absolute', right: 16, top: 16, cursor: 'pointer'}} onClick={handleCancel} />
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', textAlign: 'center' }}>
               {title}
             </h1>
-            <p style={{ marginBottom: '24px' }}>{description}</p>
+            <p style={{ fontSize: '14px', marginBottom: '32px', textAlign: 'center' }}>{description}</p>
             
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-              <button
-                onClick={handleCancel}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: '#f0f0f0',
-                  cursor: 'pointer',
-                }}
-              >
-                {cancelText}
-              </button>
-              <button
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+              {/* <button
                 onClick={handleConfirm}
                 style={{
                   padding: '8px 16px',
@@ -84,7 +78,32 @@ export const ConfirmModal = () => {
                 }}
               >
                 {confirmText}
-              </button>
+              </button> */}
+			  <Button onClick={handleConfirm}>
+				<p>
+					<span>{confirmText}</span>
+					<span>{confirmText}</span>
+				</p>
+			  </Button>
+
+			  {/* <button
+                onClick={handleCancel}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: '#f0f0f0',
+                  cursor: 'pointer',
+                }}
+              >
+                {cancelText}
+              </button> */}
+			  <Button className={cx(css`color:#8553F9!important;background-color:#fff!important; span {color:#8553F9!important;}`)} onClick={handleCancel}>
+				<p>
+					<span>{cancelText}</span>
+					<span>{cancelText}</span>
+				</p>
+			  </Button>
             </div>
           </motion.div>
         </motion.div>

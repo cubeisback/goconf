@@ -16,8 +16,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useConfirmModal } from "@/store/confirmModalStore";
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from "@emotion/styled";
+import { useTheme } from "@emotion/react";
+import RemoveIcon from "@/public/images/svg/remove.svg";
 
 const AddEdit = () => {
+	const theme = useTheme();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const id = searchParams.get('id');
@@ -103,6 +106,9 @@ const AddEdit = () => {
 		phones: []
 	})
 
+	const [contentLength, setContentLength] = useState(0);
+	
+
 	const handleDataOrganizaionChange = (e) => {
 		const { name, value, type, checked } = e.target;
 
@@ -164,6 +170,7 @@ const AddEdit = () => {
 		handleUploadImage,
 		handleRemoveImage,
 		handleButtonClick,
+		handleRemovePreview,
 		file,
 	} = useImageUpload({
 		token,
@@ -243,6 +250,7 @@ const AddEdit = () => {
 			if (Object.keys(errors).length > 0) {
 				closeModal()
 				setOrganizatorErrors(errors);
+				window.scrollTo({ top: 0, behavior: 'smooth' });
 				// return;
 			} else {
 				handleSubmitTest(), 
@@ -252,6 +260,22 @@ const AddEdit = () => {
 		confirmText: 'Сохранить',
 		});
 	};
+
+
+		const handleRemoveImageModal = (id) => {
+			openModal({
+			title: 'Подтвердить действие',
+			description: `Вы действительно хотите удалить данное изображение?`,
+			onConfirm: async () => {
+				try {
+					handleRemoveImage(id)
+				} catch (e) {
+					console.error(e);
+				}
+			},
+			confirmText: 'Удалить',
+			});
+		};
 	
 	
 	return (
@@ -284,7 +308,7 @@ const AddEdit = () => {
 							</div>
 							<input className={input} type="text" placeholder="Название" name="name" value={dataOrganization.name} onChange={handleDataOrganizaionChange} style={organizatorErrors.name && {border: '1px solid #FC1234'}} />
 							{organizatorErrors.name && 
-								ErrorWrapper(organizatorErrors.name)
+								<div style={{marginTop: 8}}>{ErrorWrapper(organizatorErrors.name)}</div>
 							}
 						</div>
 						
@@ -298,7 +322,42 @@ const AddEdit = () => {
 
 						<div className={css`display: flex;flex-direction:column;gap:8px;margin-bottom:24px;`}>
 							<div className={css`color: #47474D;font-size: 14px;line-height:1.16;`}>Логотип</div>
-							{previewUrl ? (
+							<div style={{ width: 96, height: 96, borderRadius: '100%', backgroundColor: '#fff', padding: 10, cursor: 'pointer', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+										
+										{dataOrganization?.logo?.id && !previewUrl ? 
+											<img src={dataOrganization.logo.url} alt="preview" style={{objectFit: 'contain', objectPosition: '50% 50%', width: '100%', height: '100%'}} onClick={handleButtonClick} />
+										:
+																	
+											previewUrl ? <img src={previewUrl} alt="preview" style={{objectFit: 'contain', objectPosition: '50% 50%', width: '100%', height: '100%'}} onClick={handleButtonClick} /> : <AvatarIcon style={{position: 'absolute'}} onClick={handleButtonClick} />
+										}
+							</div>
+							
+							<div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
+								<div className={css`color: #8553F9;font-size: 14px;line-height:1.16;cursor: pointer;`} onClick={handleButtonClick}>Выберите файл</div>
+								<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
+																<div style={{cursor: 'pointer', height: 24}} className={css`
+																	svg {
+																		path {
+																			transition: .3s ease-in-out;
+																		}
+
+																		&:hover {
+																			path {
+																				stroke: #8553F9;
+																			}
+																		}
+																	}
+																`}>
+																{dataOrganization?.logo?.id && !previewUrl ? (
+																	<RemoveIcon onClick={() => handleRemoveImageModal(dataOrganization.logo.id)} />
+																) : (
+																	previewUrl ? <RemoveIcon onClick={handleRemovePreview} /> : null
+																)}
+																</div>
+															</div>
+							</div>
+							
+							{/* {previewUrl ? (
 								<div>
 									<div style={{ width: 96, height: 96, borderRadius: '100%', backgroundColor: '#fff', padding: 10, cursor: 'pointer', overflow: 'hidden' }}>
 										<img src={previewUrl} alt="preview" style={{objectFit: 'contain', objectPosition: '50% 50%', width: '100%', height: '100%'}} onClick={handleButtonClick} />
@@ -314,7 +373,6 @@ const AddEdit = () => {
 									<div style={{ width: 96, height: 96, borderRadius: '100%', backgroundColor: '#fff', padding: 10, cursor: 'pointer', overflow: 'hidden' }}>
 										<img src={dataOrganization.logo.url} alt="preview" style={{objectFit: 'contain', objectPosition: '50% 50%', width: '100%', height: '100%'}} onClick={handleButtonClick} />
 									</div>
-								{/* TODO удаление картинки только после основного запроса */}
 								{dataOrganization.logo?.id && (
 									<button onClick={() => handleRemoveImage(dataOrganization.logo.id)}>Удалить</button>
 								)}
@@ -324,7 +382,7 @@ const AddEdit = () => {
 								
 							)}
 							
-							<div className={css`color: #8553F9;font-size: 14px;line-height:1.16;cursor: pointer;`} onClick={handleButtonClick}>Выберите файл</div>
+							<div className={css`color: #8553F9;font-size: 14px;line-height:1.16;cursor: pointer;`} onClick={handleButtonClick}>Выберите файл</div> */}
 							<div>
 								<div className={css`font-size: 12px;line-height:1.2;`}>Маскимальный размер <span className={css`color: #6C6C71;`}>- 1мб</span></div>
 								<div className={css`font-size: 12px;line-height:1.2;`}>Формат <span className={css`color: #6C6C71;`}>- PNG или SVG</span></div>
@@ -336,7 +394,7 @@ const AddEdit = () => {
 								<p className={css`color: #47474D;`}>Краткое описание</p>
 								<p className={css`color: #6C6C71;`}>Используется для поисковых систем (мета-описание)</p>
 							</div>
-							<textarea className={textarea} placeholder="Краткое описание" name="text_short" value={dataOrganization.text_short.replace(/<[^>]*>?/gm, '')} onChange={handleDataOrganizaionChange} ></textarea>
+							<textarea className={textarea} placeholder="Краткое описание" name="text_short" value={dataOrganization.text_short.replace(/<[^>]*>?/gm, '')} onChange={handleDataOrganizaionChange} maxLength={200}></textarea>
 							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{dataOrganization.text_short.length} / 200</div>
 						</div>
 					
@@ -346,15 +404,25 @@ const AddEdit = () => {
 								<p className={css`color: #6C6C71;`}>Детальное описание для страницы компании</p>
 							</div>
 							<TextEditor
+								content={dataOrganization.text}
+								onChange={(html, length) => {
+									setDataOrganization((prev) => ({
+										...prev,
+										text: html,
+									}));
+									setContentLength(length);
+								}}
+							/>
+							{/* <TextEditor
 								content={dataOrganization?.text || ""}
-								onChange={(html) =>
+								onChange={(html, length) =>
 								setDataOrganization((prev) => ({
 									...prev,
 									text: html,
 								}))
 								}
-							/>
-							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{dataOrganization.text.length} / 5000</div>
+							/> */}
+							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}>{contentLength} / 5000</div>
 						</div>
 
 						<div className={css`

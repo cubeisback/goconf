@@ -12,9 +12,12 @@ import axios from "axios";
 import AvatarIcon from "@/public/images/svg/avatar.svg";
 import { useAuthReady } from "@/hooks/useAuthReady";
 import { useConfirmModal } from "@/store/confirmModalStore";
+import Loader from "@/public/images/svg/preloader.svg";
 
 const UserOrg = () => {
 	const { ready, token } = useAuthReady();
+	const [organizations, setOrganizations] = useState([]);
+	const [loading, setLoading] = useState(true);
 	
 	useEffect(() => {
 		if (!ready) return;
@@ -23,7 +26,7 @@ const UserOrg = () => {
 	}, [ready, token]);
 	
 	// https://dev.goconf.ru/wp-json/account/v2/companies/
-	const [organizations, setOrganizations] = useState(null)
+	
 	const handleGetOrganizations = async() => {
 		try {
 			const response = await axios.get(
@@ -41,6 +44,8 @@ const UserOrg = () => {
 		} catch (error) {
 			console.error("organizations error", error);
 			setOrganizations(null)
+		} finally {
+			setLoading(false); // 🔹 всегда выключаем загрузку
 		}
 	};
 
@@ -114,9 +119,22 @@ const UserOrg = () => {
                 display: flex;
                 flex-direction: column;
                 gap: 32px;
+				height: 100%;
             `}>
-				{organizations ? organizations.map((item, index)=>(
-				<div
+				{loading ? (
+								<div className={css`
+									width: 100%;
+									height: 100%;
+									justify-content: center;
+									display: flex;
+
+									svg {
+										width: 24px;
+									}
+								`}><Loader /></div> // 🔹 прелоадер
+							) : organizations.length > 0 ? (
+								organizations.map((item, index) => (
+									<div
 				key={index}
 				 className={css`
                     border-radius: 28px;
@@ -140,7 +158,22 @@ const UserOrg = () => {
 						<div className={css`padding: 3px 8px 5px; border-radius: 8px; color: #fff; background-color: #8553F9; font-size: 14px; line-height: 1.16;`}>На модерации</div>
 						}
                         
-                        <div className={css`display: flex; gap: 16px;`}>
+                        <div className={css`
+							display: flex;
+							gap: 16px;
+
+							svg {
+									path {
+										transition: .3s ease-in-out;
+									}
+
+									&:hover {
+										path {
+											stroke: #8553F9;
+										}
+									}
+								}
+						`}>
 							<Link href={`/lk/org/edit/?id=${item.id}`}>
 								<EditIcon />
 							</Link>
@@ -188,10 +221,11 @@ const UserOrg = () => {
                         </div>
                     </div>
                 </div>
-				))
-			:
-			<div>Ничего не найдено</div>
-			}
+								))
+							) : (
+								<div>Ничего не найдено</div>
+							)}
+				
                 
             </div>
         </UserMain>

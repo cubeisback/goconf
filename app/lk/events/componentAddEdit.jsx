@@ -503,13 +503,14 @@ const {
 								window.scrollTo({ top: 0, behavior: 'smooth' })
 								}}>Основные данные</UserEventNavItem>
 							<UserEventNavSeparator></UserEventNavSeparator>
-							<UserEventNavItem $isActive={view >= 2 && true} $isFilled={view >= 3 && true} onClick={()=>{
+							{/* <UserEventNavItem $isActive={view >= 2 && true} $isFilled={view >= 3 && true} onClick={()=>{
 								firstScreenCheck();
 								window.scrollTo({ top: 0, behavior: 'smooth' })
-								}}>Место и время</UserEventNavItem>
-							<UserEventNavSeparator></UserEventNavSeparator>
-							<UserEventNavItem $isActive={view >= 3 && true} onClick={()=>{
-								setView(3);
+								}}>Место и время</UserEventNavItem> */}
+							{/* <UserEventNavSeparator></UserEventNavSeparator> */}
+							<UserEventNavItem $isActive={view >= 2 && true} onClick={()=>{
+								firstScreenCheck()
+								// setView(2);
 								window.scrollTo({ top: 0, behavior: 'smooth' })
 								}}>Дополнительная информация</UserEventNavItem>
 						</UserEventNav>
@@ -592,6 +593,42 @@ const {
 						</div>
 						
 						<div className={css`
+							display: flex;
+							gap: 16px;
+							justify-content: space-between;
+							align-items: center;
+							margin-bottom: 24px;
+						`}><div className={css`
+							font-family: Impact;
+							font-size: 36px;
+							line-height: 1.12;
+						`}>Формат события</div></div>
+						<div className={css`
+							display: flex;
+							gap: 4px;
+							padding: 4px;
+							background-color: #fff;
+							border-radius: 28px;
+							max-width: max-content;
+							margin-bottom: 32px;
+
+							@media(max-width: 575px) {
+								flex-direction: column;
+								max-width: 100%;
+							}
+						`}>
+							<div className={cx(tabItem, activeTab === 1 && tabItemActive)} onClick={()=>setActiveTab(1)}>Оффлайн</div>
+							<div className={cx(tabItem, activeTab === 2 && tabItemActive)} onClick={()=>setActiveTab(2)}>Онлайн</div>
+						</div>
+						<AnimatePresence>
+							{activeTab === 1 ? (
+								<motion.div
+									key="tab1"
+									initial={{opacity: 0, y: 40}}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ duration: .3 }}
+								>
+									<div className={css`
 										display: flex;
 										flex-wrap: wrap;
 										gap: 24px;
@@ -605,7 +642,6 @@ const {
 											flex-direction: column;
 											gap: 8px;
 											color: #47474D;
-											height: max-content;
 
 											@media(max-width: 575px) {
 												flex: 0 1 100%;
@@ -613,6 +649,107 @@ const {
 											}
 										}
 									`}>
+										<div className={css`
+											flex: 0 1 calc(50% - 12px)!important;
+											max-width: calc(50% - 12px)!important;
+
+											@media(max-width: 575px) {
+												flex: 0 1 100%!important;
+												max-width: 100%!important;
+											}
+										`}>
+											<p>Город</p>
+											{dataEvent.city?.name &&
+											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} value={dataEvent.city?.name} items={[]} fullCityData={true} placeholder={'Выбрать город'} />
+											}
+										</div>
+										<div className={css`
+											flex: 0 1 calc(50% - 12px)!important;
+											max-width: calc(50% - 12px)!important;
+
+											@media(max-width: 575px) {
+												flex: 0 1 100%!important;
+												max-width: 100%!important;
+											}
+										`}>
+											<p>Адрес</p>
+											<input className={input} type="text" placeholder="Введите адрес" name="address" value={dataEvent.address} onChange={handleDataEventChange} />
+										</div>
+						<div>
+											<p>Дата начала</p>
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' error={eventErrors.date_start && true} />
+											{eventErrors.date_start && ErrorWrapper(eventErrors.date_start)}
+										</div>
+										<div>
+											<p>Дата окончания</p>
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_end} changeDate={testCalendar} whatDate='date_end' error={eventErrors.date_end && true} />
+											{eventErrors.date_end && ErrorWrapper(eventErrors.date_end)}
+										</div>
+										<div>
+											<p>Время начала</p>
+											<input
+												type="text"
+												className={input}
+												value={dataEvent.time_start}
+												onChange={handleInputChange}
+												onBlur={handleBlur}
+												placeholder="Время начала"
+												maxLength={5}
+												name="time_start"
+											/>
+										</div>
+										{/* <div>
+											<p>Дата начала</p>
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' />
+										</div>
+										<div>
+											<p>Дата окончания</p>
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_end} changeDate={testCalendar} whatDate='date_end' />
+										</div>
+										<div>
+											<p>Время начала</p>
+											<input
+												type="text"
+												className={input}
+												value={dataEvent.time_start}
+												onChange={handleInputChange}
+												onBlur={handleBlur}
+												placeholder="Время начала"
+												maxLength={5}
+												name="time_start"
+											/>
+										</div> */}
+									</div>
+								</motion.div>
+								) : (
+								<motion.div
+									key="tab2"
+									initial={{opacity: 0, y: 40}}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ duration: .3 }}
+								>
+									<div className={css`
+										display: flex;
+										flex-wrap: wrap;
+										gap: 24px;
+										margin-bottom: 48px;
+										font-size: 14px;
+
+										& > div {
+											flex: 0 1 calc(33.333333% - 16px);
+											max-width: calc(33.333333% - 16px);
+											display: flex;
+											flex-direction: column;
+											gap: 8px;
+											color: #47474D;
+
+											@media(max-width: 575px) {
+												flex: 0 1 100%;
+												max-width: 100%;
+											}
+										}
+									`}>
+										
 						<div>
 											<p>Дата начала</p>
 											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' error={eventErrors.date_start && true} />
@@ -637,7 +774,38 @@ const {
 											/>
 										</div>
 
-						</div>
+										{/* <div>
+											<p>Дата начала</p>
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' />
+										</div>
+										<div>
+											<p>Дата окончания</p>
+											<EventDate title='Выберите дату' initialDate={dataEvent.date_end} changeDate={testCalendar} whatDate='date_end' />
+										</div>
+										<div>
+											<p>Время начала</p>
+											<input
+												type="text"
+												className={input}
+												value={dataEvent.time_start}
+												onChange={handleInputChange}
+												onBlur={handleBlur}
+												placeholder="Время начала"
+												maxLength={5}
+											/>
+										</div> */}
+										<div className={css`
+											flex: 0 1 100%!important;
+											max-width: 100%!important;
+										`}>
+											<p>Ссылка на трансляцию</p>
+											<input className={input} type="text" placeholder="https://" name="broadcast" value={dataEvent?.broadcast ?? ''} onChange={handleDataEventChange} />
+											<p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
+										</div>
+									</div>
+								</motion.div>
+							)}
+						</AnimatePresence>
 
 						<div className={css`
 							margin-bottom: 32px;
@@ -691,7 +859,19 @@ const {
 									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>
 									998.05 кб
 									</div>
-									<div style={{cursor: 'pointer'}}>
+									<div style={{cursor: 'pointer'}} className={css`
+		svg {
+																		path {
+																			transition: .3s ease-in-out;
+																		}
+
+																		&:hover {
+																			path {
+																				stroke: #8553F9;
+																			}
+																		}
+																	}
+																`}>
 									{dataEvent?.cover?.id && !coverPreview ? (
 										<RemoveIcon onClick={() => handleRemoveImageModal(dataEvent.cover.id, 1)} />
 									) : (
@@ -744,9 +924,21 @@ const {
 								{dataEvent?.anons?.id || anonsPreview ? (
   <div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
     <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>
-      998111.05 кб
+      998.05 кб
     </div>
-    <div style={{cursor: 'pointer'}}>
+    <div style={{cursor: 'pointer'}} className={css`
+		svg {
+																		path {
+																			transition: .3s ease-in-out;
+																		}
+
+																		&:hover {
+																			path {
+																				stroke: #8553F9;
+																			}
+																		}
+																	}
+																`}>
       {dataEvent?.anons?.id && !anonsPreview ?  (
         <RemoveIcon onClick={() => handleRemoveImageModal(dataEvent.anons.id, 2)} />
       ) : (
@@ -845,179 +1037,16 @@ const {
 						
 					</UserMain>
 					}
-					{view === 2 && 
+					{/* {view === 2 && 
 					<UserMain
 					initial={{ opacity: 0, y: 50 }}
 					animate={{ opacity: 1, y: 0 }} 
 					transition={{ duration: .3 }}>
-						<div className={css`
-							display: flex;
-							gap: 16px;
-							justify-content: space-between;
-							align-items: center;
-							margin-bottom: 24px;
-						`}><div className={css`
-							font-family: Impact;
-							font-size: 36px;
-							line-height: 1.12;
-						`}>Формат события</div></div>
-						<div className={css`
-							display: flex;
-							gap: 4px;
-							padding: 4px;
-							background-color: #fff;
-							border-radius: 28px;
-							max-width: max-content;
-							margin-bottom: 32px;
-
-							@media(max-width: 575px) {
-								flex-direction: column;
-								max-width: 100%;
-							}
-						`}>
-							<div className={cx(tabItem, activeTab === 1 && tabItemActive)} onClick={()=>setActiveTab(1)}>Оффлайн</div>
-							<div className={cx(tabItem, activeTab === 2 && tabItemActive)} onClick={()=>setActiveTab(2)}>Онлайн</div>
-						</div>
-						<AnimatePresence>
-							{activeTab === 1 ? (
-								<motion.div
-									key="tab1"
-									initial={{opacity: 0, y: 40}}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ duration: .3 }}
-								>
-									<div className={css`
-										display: flex;
-										flex-wrap: wrap;
-										gap: 24px;
-										margin-bottom: 48px;
-										font-size: 14px;
-
-										& > div {
-											flex: 0 1 calc(33.333333% - 16px);
-											max-width: calc(33.333333% - 16px);
-											display: flex;
-											flex-direction: column;
-											gap: 8px;
-											color: #47474D;
-
-											@media(max-width: 575px) {
-												flex: 0 1 100%;
-												max-width: 100%;
-											}
-										}
-									`}>
-										<div className={css`
-											flex: 0 1 calc(50% - 12px)!important;
-											max-width: calc(50% - 12px)!important;
-
-											@media(max-width: 575px) {
-												flex: 0 1 100%!important;
-												max-width: 100%!important;
-											}
-										`}>
-											<p>Город</p>
-											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} value={dataEvent.city?.name} items={[]} fullCityData={true} placeholder={'Выбрать город'} />
-										</div>
-										<div className={css`
-											flex: 0 1 calc(50% - 12px)!important;
-											max-width: calc(50% - 12px)!important;
-
-											@media(max-width: 575px) {
-												flex: 0 1 100%!important;
-												max-width: 100%!important;
-											}
-										`}>
-											<p>Адрес</p>
-											<input className={input} type="text" placeholder="Введите адрес" name="address" value={dataEvent.address} onChange={handleDataEventChange} />
-										</div>
-										{/* <div>
-											<p>Дата начала</p>
-											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' />
-										</div>
-										<div>
-											<p>Дата окончания</p>
-											<EventDate title='Выберите дату' initialDate={dataEvent.date_end} changeDate={testCalendar} whatDate='date_end' />
-										</div>
-										<div>
-											<p>Время начала</p>
-											<input
-												type="text"
-												className={input}
-												value={dataEvent.time_start}
-												onChange={handleInputChange}
-												onBlur={handleBlur}
-												placeholder="Время начала"
-												maxLength={5}
-												name="time_start"
-											/>
-										</div> */}
-									</div>
-								</motion.div>
-								) : (
-								<motion.div
-									key="tab2"
-									initial={{opacity: 0, y: 40}}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ duration: .3 }}
-								>
-									<div className={css`
-										display: flex;
-										flex-wrap: wrap;
-										gap: 24px;
-										margin-bottom: 48px;
-										font-size: 14px;
-
-										& > div {
-											flex: 0 1 calc(33.333333% - 16px);
-											max-width: calc(33.333333% - 16px);
-											display: flex;
-											flex-direction: column;
-											gap: 8px;
-											color: #47474D;
-
-											@media(max-width: 575px) {
-												flex: 0 1 100%;
-												max-width: 100%;
-											}
-										}
-									`}>
-										{/* <div>
-											<p>Дата начала</p>
-											<EventDate title='Выберите дату' initialDate={dataEvent.date_start} changeDate={testCalendar} whatDate='date_start' />
-										</div>
-										<div>
-											<p>Дата окончания</p>
-											<EventDate title='Выберите дату' initialDate={dataEvent.date_end} changeDate={testCalendar} whatDate='date_end' />
-										</div>
-										<div>
-											<p>Время начала</p>
-											<input
-												type="text"
-												className={input}
-												value={dataEvent.time_start}
-												onChange={handleInputChange}
-												onBlur={handleBlur}
-												placeholder="Время начала"
-												maxLength={5}
-											/>
-										</div> */}
-										<div className={css`
-											flex: 0 1 100%!important;
-											max-width: 100%!important;
-										`}>
-											<p>Ссылка на трансляцию</p>
-											<input className={input} type="text" placeholder="https://" name="broadcast" value={dataEvent?.broadcast ?? ''} onChange={handleDataEventChange} />
-											<p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
-										</div>
-									</div>
-								</motion.div>
-							)}
-						</AnimatePresence>
+						
 					</UserMain>
-					}
+					} */}
 
-					{view === 3 && 
+					{view === 2 && 
 					<>
 					<div className={css`color: #6C6C71;margin: 48px 0; font-size: 14px;`}>По статистике, события с фото и видео получают до 20% больше трафика. Материалы отображаются на странице при активации тарифа <span className={css`color: #191921;`}>«Расширенный»</span>. Оплатить тариф можно в любое время.</div>
 						<div className={css`
@@ -1058,16 +1087,9 @@ const {
 									}
 
 									img {
-										border-radius: 16px;
-										margin-bottom: 8px;
+										width: 100%;
+										height: 100%;
 										object-fit: cover;
-									}
-									
-									div {
-										display: flex;
-										justify-content: space-between;
-										gap: 8px;
-										align-items: center;
 									}
 								}
 							`}>	
@@ -1093,12 +1115,43 @@ const {
 	{dataEvent.gallery.map((img, index) => (
 		<div key={img.id || index}>
 
-			<img src={replacePreviews[index]?.url || img.url} alt="" />
-			<div>
+			<div
+        className={css`
+			height: 192px;
+			background-color: #fff;
+			cursor: pointer;
+			border-radius: 16px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+        `}>
+			<img src={replacePreviews[index]?.url || img.url} alt="" onClick={() => startReplace(index)}  />
+			</div>
+			<div className={css`
+					display: flex;
+										justify-content: space-between;
+										gap: 8px;
+										align-items: center;
+					margin-top: 8px;
+				`}>
 				<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>
 					{replacePreviews[index]?.size || img.size || "-"}
 				</div>
-				<div>
+				<div className={css`
+		svg {
+		cursor: pointer;
+																		path {
+																			transition: .3s ease-in-out;
+																		}
+
+																		&:hover {
+																			path {
+																				stroke: #8553F9;
+																			}
+																		}
+																	}
+																`}>
 					<EditIcon onClick={() => startReplace(index)} />
 					<RemoveIcon onClick={() => handleRemoveImageModal(img.id, 3)} />
 				</div>
@@ -1109,8 +1162,26 @@ const {
   {/* временные превью (ещё не отправлены) */}
   {galleryPreviews.map((src, idx) => (
     <div key={"temp-" + idx}>
+		<div
+        className={css`
+			height: 192px;
+			background-color: #fff;
+			cursor: pointer;
+			border-radius: 16px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+        `}>
 		<img src={src.url} alt="" />
-			<div>
+		</div>
+			<div className={css`
+					display: flex;
+										justify-content: space-between;
+										gap: 8px;
+										align-items: center;
+					margin-top: 8px;
+				`}>
 				<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>{src.size}</div>
 				<div>
 					<RemoveIcon onClick={() => removeTempGallery(idx)} />
@@ -1128,21 +1199,22 @@ const {
     <div key={"placeholder-" + i}  onClick={clickGallery}>
       <div
         className={css`
-          border-radius: 16px;
-          background: #f0f0f5;
-          height: 200px; /* подогнать под размер картинок */
-          margin-bottom: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #999;
-          font-size: 14px;
+			height: 192px;
+			background-color: #fff;
+			cursor: pointer;
+			border-radius: 16px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
         `}
-      >
-        {/* вместо картинки просто иконка/фон */}
-        <span>Заглушка</span>
+      ><AvatarIcon />
       </div>
-      <div>
+      <div className={css`
+		color: #8553F9;
+		font-size: 14px;
+		margin-top: 8px;
+		cursor: pointer;
+		`}>
         Загрузить
       </div>
     </div>
@@ -1191,12 +1263,12 @@ const {
 						`}>
 						{view == 1 ? 
 							<Button onClick={()=>{firstScreenCheck()}}>Продолжить</Button>
-						: view == 2 ? 
-						<>
-							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
-							<Button onClick={()=>{setView(prev => prev + 1)}}>Продолжить</Button>
-							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{handleSubmitModal()}}>Отправить на модерацию</Button>
-						</>
+						// : view == 2 ? 
+						// <>
+						// 	<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
+						// 	<Button onClick={()=>{setView(prev => prev + 1)}}>Продолжить</Button>
+						// 	<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{handleSubmitModal()}}>Отправить на модерацию</Button>
+						// </>
 						: 
 						<>
 							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
