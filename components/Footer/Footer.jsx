@@ -31,12 +31,9 @@ export const Footer = () => {
     <FooterWrapper>
         <div>© GoCONF 2025</div>
         <div><a href="mailto:info@goconf.ru">info@goconf.ru</a></div>
-
-		<div>
-			<Link href="/offer">Публичная оферта</Link>
-			<Link href="/privacy">Политика конфиденциальности</Link>
-			<Link href="/agreement">Пользовательское соглашение</Link>
-		</div>
+		<div><Link href="/offer">Публичная оферта</Link></div>
+		<div><Link href="/privacy">Политика конфиденциальности</Link></div>
+		<div><Link href="/agreement">Пользовательское соглашение</Link></div>
     </FooterWrapper>
   );
 }

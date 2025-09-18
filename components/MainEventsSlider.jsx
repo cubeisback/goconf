@@ -114,7 +114,7 @@ const SkeletonItem = styled.div`
 	padding: 1rem;
 	border-radius: 24px;
 	animation: pulse 1.5s infinite;
-	height: 441px;
+	height: 512px;
 	width: 33%;
 
 	@keyframes pulse {
