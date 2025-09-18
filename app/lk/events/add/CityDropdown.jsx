@@ -42,21 +42,32 @@ const CityDropdown = ({
   fullCityData = false 
 }) => {
   const theme = useTheme();
-  const [query, setQuery] = useState(value || '');
+
+const getNormalizedValue = (val, full) => {
+	if (!val) return '';
+	if (full && typeof val === 'object') return val.name || '';
+	return typeof val === 'string' ? val : '';
+};
+const [query, setQuery] = useState(getNormalizedValue(value, fullCityData));
+const [selectedValue, setSelectedValue] = useState(getNormalizedValue(value, fullCityData));
+
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(value || '');
   const [showFullList, setShowFullList] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
   const [cities, setCities] = useState([]);
 
-  useEffect(() => {
-    if (value !== undefined && value !== selectedValue) {
-      setQuery(fullCityData ? value.name : value);
-      setSelectedValue(fullCityData ? value.name : value);
-    }
-  }, [value]);
+//   useEffect(() => {
+//     if (value !== undefined && value !== selectedValue) {
+//       setQuery(fullCityData ? value.name : value);
+//       setSelectedValue(fullCityData ? value.name : value);
+//     }
+//   }, [value]);
+useEffect(() => {
+  setQuery(getNormalizedValue(value, fullCityData));
+  setSelectedValue(getNormalizedValue(value, fullCityData));
+}, [value, fullCityData]);
   
   useEffect(() => {    
     if (options) {

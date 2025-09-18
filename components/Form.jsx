@@ -1,5 +1,5 @@
 import { Container } from "@/styles/ui"
-import FormSvg from "@/public/images/svg/form.svg";
+// import FormSvg from "@/public/images/svg/form.svg";
 import styled from "@emotion/styled";
 import DropdownInput from "@/components/ui/DropdownInput";
 import useFiltersStore from "@/store/useFiltersStore";
@@ -23,7 +23,9 @@ const FormBlock = styled.div`
         padding: 16px;
     }
 
-    svg {
+    img {
+		height: max-content;
+		
         @media(max-width: 991px) {
             display: none;
         }
@@ -112,7 +114,8 @@ export const Form = () => {
                         </FormMain>
                         <FormAgree>Нажимая &laquo;Подписаться&raquo;, вы&nbsp;соглашаетесь получать материалы компании GoConf на&nbsp;свой электронный адрес и&nbsp;даете согласие на&nbsp;обработку персональных данных</FormAgree>
                     </FormBlockLeft>
-                    <FormSvg />
+                    {/* <FormSvg /> */}
+					<img src="/images/form.png" alt="" />
                 </FormBlock>
             </Container>
         </FormWrapper>

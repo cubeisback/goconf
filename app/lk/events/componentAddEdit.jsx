@@ -620,13 +620,8 @@ const {
 							<div className={cx(tabItem, activeTab === 1 && tabItemActive)} onClick={()=>setActiveTab(1)}>Оффлайн</div>
 							<div className={cx(tabItem, activeTab === 2 && tabItemActive)} onClick={()=>setActiveTab(2)}>Онлайн</div>
 						</div>
-						<AnimatePresence>
 							{activeTab === 1 ? (
-								<motion.div
-									key="tab1"
-									initial={{opacity: 0, y: 40}}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ duration: .3 }}
+								<div
 								>
 									<div className={css`
 										display: flex;
@@ -659,9 +654,7 @@ const {
 											}
 										`}>
 											<p>Город</p>
-											{dataEvent.city?.name &&
-											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} value={dataEvent.city?.name} items={[]} fullCityData={true} placeholder={'Выбрать город'} />
-											}
+											<CityDropdown options={metaParameters && metaParameters?.cities} handleDataOrganizaionCityChange={handleDataEventCityChange} value={dataEvent.city || null} fullCityData={true} placeholder={'Выбрать город'} />
 										</div>
 										<div className={css`
 											flex: 0 1 calc(50% - 12px)!important;
@@ -720,13 +713,9 @@ const {
 											/>
 										</div> */}
 									</div>
-								</motion.div>
+								</div>
 								) : (
-								<motion.div
-									key="tab2"
-									initial={{opacity: 0, y: 40}}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ duration: .3 }}
+								<div
 								>
 									<div className={css`
 										display: flex;
@@ -803,9 +792,8 @@ const {
 											<p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
 										</div>
 									</div>
-								</motion.div>
+								</div>
 							)}
-						</AnimatePresence>
 
 						<div className={css`
 							margin-bottom: 32px;

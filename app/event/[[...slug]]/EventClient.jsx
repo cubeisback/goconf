@@ -203,7 +203,7 @@ export default function EventClient({ params }) {
 							max-width: 952px;
 						`}>
 							<div className={css`height: 400px;overflow: hidden;margin-bottom: 40px;`}>
-								<img src={pageInfo.fields.anons.url} alt="" className={css`object-fit: contain;width:100%;height:100%;object-position: 50% 50%;`} />
+								<img src={pageInfo.fields.anons?.url} alt="" className={css`object-fit: contain;width:100%;height:100%;object-position: 50% 50%;`} />
 							</div>
 
 							<div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
@@ -250,6 +250,11 @@ export default function EventClient({ params }) {
 										& > div {
 											display: flex;
 											cursor: pointer;
+
+											&.swiper-button-disabled {
+												filter: grayscale(1);
+												cursor: default;
+											}
 										}
 
 										svg {
@@ -273,7 +278,7 @@ export default function EventClient({ params }) {
 										prevEl: navigationPrevRef.current,
 										nextEl: navigationNextRef.current,
 									}}
-									loop
+									loop={pageInfo.fields.group_gallery.gallery.length > 1}
 									onSwiper={(swiper) => {
 										setTimeout(() => {
 											if (swiper.params) {
@@ -292,9 +297,11 @@ export default function EventClient({ params }) {
 									breakpoints={{
 										640: {
 											slidesPerView: 2,
+											loop: pageInfo.fields.group_gallery.gallery.length > 2
 										},
 										1024: {
-										slidesPerView: 3,
+											slidesPerView: 3,
+											loop: pageInfo.fields.group_gallery.gallery.length > 3
 										},
 									}}
 								>
@@ -304,8 +311,10 @@ export default function EventClient({ params }) {
 										border-radius: 24px;
 										background-color: #fff;
 										overflow: hidden;
+										height: auto;
+										max-height: 168px;
 									`} key={index}>
-										<img src={item.url} alt="" />
+										<img src={item.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
 									</SwiperSlide>
 
 									))}
@@ -479,10 +488,16 @@ export default function EventClient({ params }) {
 							}
 							</div>
 							
-							<a href="/" className={css`
-								color: ${theme.colors.purple};
-							`}>Это ваше мероприятие?</a>
-							<Button green="true" style={{width: '100%'}}>На сайт мероприятия</Button>
+							{!pageInfo.company && 
+								<a href="/" className={css`
+									color: ${theme.colors.purple};
+								`}>Это ваше мероприятие?</a> 
+							}
+							{pageInfo.events_link && 
+								<Link href={pageInfo.events_link} target="_blank">
+									<Button green="true" style={{width: '100%'}}>На сайт мероприятия</Button>
+								</Link>
+							}
 						</motion.div>
 					</div>
 					}
