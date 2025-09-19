@@ -10,55 +10,68 @@ import axios from "axios";
 import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 
-
 export const MainEventsTest = () => {
-	const theme = useTheme();
+  const theme = useTheme();
 
-	const [limit, setLimit] = useState(5);
+  const [nearEvents, setNearEvents] = useState([]);   // массив всех событий
+  const [currentPage, setCurrentPage] = useState(1);  // текущая страница
+  const [total, setTotal] = useState(0);              // всего событий
+  const [loading, setLoading] = useState(false);
 
-	const [nearEvents, setNearEvents] = useState(null)
-   
-	useEffect(() => {
-		axios
-				.get(getApiUrl("/backend/wp-json/events/v2/search/"))
-				.then((response) => {
-				  setNearEvents(response.data.events);
-				  console.log('Ближайшие события TEST', response)
-				})
-				.catch((error) => {
-				  console.log(error);
-				});
-	  }, []);
+  const loadEvents = async (page) => {
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        getApiUrl("/backend/wp-json/events/v2/filter/"),
+        { load_page: page },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-	return (
-		<div className={css`
-			padding: 120px 0;
+      setNearEvents(prev => [...prev, ...res.data.events]); // добавляем новые
+      setTotal(res.data.total); // сохраняем общее количество
+    } catch (e) {
+      console.error("Ошибка загрузки событий:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-			@media(max-width: 575px) {
-				padding: 64px 0;
-			}
-		`}>
-			<Container>
-				
-				<div className={css`
-					text-align: center;
-					font-family: Impact;
-					margin-bottom: 96px;
-					font-size: 56px;
-					line-height: 1.15;
+  // загружаем первую страницу
+  useEffect(() => {
+    loadEvents(1);
+  }, []);
 
-					@media(max-width: 575px) {
-						font-size: 32px;
-						margin-bottom: 48px;
-					}
-				`}>Ближайшие события</div> 
-				
-				
-				
-				<div className={css`
-					margin-bottom: 32px;
-				`}>
-					{nearEvents && nearEvents.slice(0, limit).map((item, index) => (
+  const handleLoadMore = () => {
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    loadEvents(nextPage);
+  };
+
+  const allLoaded = nearEvents.length >= total;
+
+  return (
+    <div className={css`
+      padding: 120px 0;
+      @media(max-width: 575px) {
+        padding: 64px 0;
+      }
+    `}>
+      <Container>
+        <div className={css`
+          text-align: center;
+          font-family: Impact;
+          margin-bottom: 96px;
+          font-size: 56px;
+          line-height: 1.15;
+
+          @media(max-width: 575px) {
+            font-size: 32px;
+            margin-bottom: 48px;
+          }
+        `}>Ближайшие события</div> 
+
+        <div className={css`margin-bottom: 32px;`}>
+          {nearEvents && nearEvents.map((item, index) => (
 						<motion.div 
 							initial={{ y: 50, opacity: 0 }}
 							animate={{ y: 0, opacity: 1 }}
@@ -258,25 +271,35 @@ export const MainEventsTest = () => {
 							</DoubleLinkArrow>
 						</motion.div>
 					))}
-				</div>
-					<div className={css`
-						margin: 0 auto;
-						padding: 14px 32px;
-						border-radius: 28px;
-						border: 2px solid ${theme.colors.purple};
-						background-color: #fff;
-						width: max-content;
-						color: ${theme.colors.purple};
-						line-height: 1.28;
-						cursor: pointer;
-						transition: ${theme.transition};  
-						
-						&:hover {
-							background-color: ${theme.colors.purple};
-							color: #fff;
-						}
-					`} onClick={()=>setLimit(prev => prev+5)}>Показать еще +</div>
-			</Container>
-		</div>
-	)
+        </div>
+
+        {/* Кнопка "Показать еще" */}
+        {!allLoaded && (
+          <div
+            className={css`
+              margin: 0 auto;
+              padding: 14px 32px;
+              border-radius: 28px;
+              border: 2px solid ${theme.colors.purple};
+              background-color: #fff;
+              width: max-content;
+              color: ${theme.colors.purple};
+              line-height: 1.28;
+              cursor: pointer;
+              transition: ${theme.transition};  
+              &:hover {
+                background-color: ${theme.colors.purple};
+                color: #fff;
+              }
+              opacity: ${loading ? 0.6 : 1};
+              pointer-events: ${loading ? "none" : "auto"};
+            `}
+            onClick={handleLoadMore}
+          >
+            {loading ? "Загрузка..." : "Показать еще +"}
+          </div>
+        )}
+      </Container>
+    </div>
+  )
 };
