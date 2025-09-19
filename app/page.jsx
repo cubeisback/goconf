@@ -159,7 +159,7 @@ export default function Main() {
 					>
 						Афиша бизнес-событий 
 					<div style={{display: 'inline-block', paddingLeft: 16}}>
-					<AnimatedTitleSpan><em>Go</em></AnimatedTitleSpan><span className={css`color: ${theme.colors.purple}`}>Conf</span>
+					<AnimatedTitleSpan><em>Go</em></AnimatedTitleSpan><span className={css`color: ${theme.colors.purple}`}>CONF</span>
 					</div>
 					</AnimatedTitle>
 					<AnimatedSubtitle
