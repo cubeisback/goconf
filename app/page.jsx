@@ -163,7 +163,7 @@ export default function Main() {
 					animate={{ x: 0, opacity: 1 }}
 					transition={{ duration: 0.3 }}
 					>
-						Делаем поиск профессиональных событий удобным, а&nbsp;привлечение участников эффективным
+						Делаем поиск профессиональных событий удобным,<br/> а&nbsp;привлечение участников эффективным
 					</AnimatedSubtitle>
 				</PromoMain>
 
