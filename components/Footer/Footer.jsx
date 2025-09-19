@@ -6,9 +6,11 @@ const FooterWrapper = styled.footer`
     background-color: #191921;
     color: #fff;
     display: flex;
+	flex-wrap: wrap;
+	gap: 32px;
     justify-content: space-between;
 
-    @media(max-width: 767px) {
+    @media(max-width: 991px) {
         padding: 32px 16px;
         flex-direction: column;
         align-items: center;

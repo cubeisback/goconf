@@ -223,7 +223,8 @@ const resetFilter = () => {
                     width: 100%;
                     border-radius: 28px;
                     background-color: ${theme.colors.purple};
-                    margin-bottom: ${full ? '24px' : '95px' };
+                    // margin-bottom: ${full ? '24px' : '95px' };
+					margin-bottom: 24px;
                     display: flex;
                     gap: 16px;
                     padding: 16px;

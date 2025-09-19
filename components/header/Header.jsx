@@ -22,6 +22,11 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useAuthReady } from "@/hooks/useAuthReady";
 import { useWindowSize } from "@/hooks/useWindowSize";
 
+import EventsIcon from "@/public/images/svg/events.svg";
+import OrgIcon from "@/public/images/svg/people.svg";
+import CartIcon from "@/public/images/svg/cart.svg";
+import ExitIcon from "@/public/images/svg/exit.svg";
+
 const HeaderBlock = styled.header`
 	position: fixed;
     top: 0;
@@ -159,6 +164,7 @@ const Burger = styled.div`
           
 `
 
+
 export const Header = () => {
 	// const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 	const { ready } = useAuthReady();
@@ -170,7 +176,27 @@ export const Header = () => {
 	
 	// const width = useWindowSizeStore((state) => state.width);
 	const { width } = useWindowSize();
-	// const theme = useTheme();
+	const theme = useTheme();
+
+	const menuItem = css`
+        padding: 12px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 18px;
+        transition: ${theme.transition};
+
+        &:hover {
+            background-color: #F5F7FA;
+        }
+
+        & > p {
+            line-height: 1.28;
+        }
+        
+    `;
+	const logout = useAuthStore((state) => state.logout);
 
 	const [notifications, setNotifications] = useState(false);
 	const notificationsRef = useRef(null);
@@ -292,6 +318,18 @@ export const Header = () => {
           <div style={{cursor: 'pointer'}} ref={iconRef} onClick={toggleNotifications}>
             <NotificationIcon />
           </div>
+		  <div className={css`
+			position: relative;
+
+			& > div {
+				opacity: 0;
+				pointer-events: none;
+			}
+			&:hover > div {
+				opacity: 1;
+				pointer-events: all;
+			}
+		  `}>
           <Link className={css`
             white-space: nowrap;
             overflow: hidden;
@@ -302,6 +340,58 @@ export const Header = () => {
 			? user.user.data.display_name
 			: <UserIcon32 />}
 		  </Link>
+		  <div className={css`
+                        padding: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+                        border-radius: 28px;
+                        background-color: #fff;
+                        box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
+                        min-height: 368px;
+						width: 250px;
+						position: absolute;
+						right: 0;
+
+						@media(max-width: 1199px) {
+							display: none;
+						}
+                    `}
+					>
+                        <div className={css`
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+                            border-bottom: 1px solid #D7DADD;
+                            margin-bottom: 8px;
+                            padding-bottom: 8px;
+                        `}>
+                            <Link  href="/lk" className={menuItem}>
+                                <UserIcon />
+                                <p>Профиль</p>
+                            </Link>
+                            <Link  href="/lk/events" className={menuItem}>
+                                <EventsIcon />
+                                <p>Мероприятия</p>
+                            </Link>
+                            <Link  href="/lk/org" className={menuItem}>
+                                <OrgIcon />
+                                <p>Организаторы</p>
+                            </Link>
+                            <Link  href="/lk/orders" className={menuItem}>
+                                <CartIcon />
+                                <p>Заказы</p>
+                            </Link>
+                        </div>
+                        <div className={cx(menuItem, css`
+                            margin-top: auto;
+                        `)} onClick={logout}>
+                            <ExitIcon />
+                            <p>Выйти</p>
+                        </div>
+
+            </div>
+		  </div>
           </>
           :
           <div onClick={()=>setIsModalOpen(true)} className={css`display: flex;gap:5px;align-items:center;line-height:1.28;cursor:pointer;`}>

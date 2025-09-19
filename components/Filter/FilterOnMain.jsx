@@ -57,7 +57,6 @@ export const FilterOnMain = ({full, setEvents}) => {
 	width: 100%;
                     border-radius: 28px;
                     background-color: ${theme.colors.purple};
-                    margin-bottom: ${full ? '16px' : '95px' };
                     display: flex;
                     gap: 16px;
                     padding: 16px;

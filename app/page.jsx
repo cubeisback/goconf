@@ -118,6 +118,7 @@ export default function Main() {
 	`
 	const PurpleBg = styled.div`
 		position: relative;
+		background-color: #F5F7FA;
 
 				&::before {
 					content: '';
@@ -127,7 +128,7 @@ export default function Main() {
 					width: 200vw;
 					height: 600px;
 					background-color: ${({ theme }) => theme.colors.purple};
-					z-index: -1;
+					// z-index: -1;
 
 					@media(max-width: 1339px) {
 						content: none;
@@ -142,7 +143,7 @@ export default function Main() {
 
 	return (
 		<>
-			<div>
+			<div style={{backgroundColor: '#F5F7FA', paddingBottom: 95}}>
 			<Container>
 				<PromoMain>
 					
