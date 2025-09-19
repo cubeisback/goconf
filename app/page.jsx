@@ -13,6 +13,7 @@ import styled from "@emotion/styled";
 import { ConfirmRegistration } from '@/components/ConfirmRegistration';
 import { Suspense, useEffect } from 'react';
 import { ResetPassword } from '@/components/ResetPassword';
+import { MainEventsTest } from '@/components/MainEventsTest';
 
 export default function Main() {
 	const theme = useTheme();
@@ -180,7 +181,7 @@ export default function Main() {
 			
 			<Formats />
 			
-			<MainEvents />
+			<MainEventsTest />
 
 			<Form />
 
