@@ -19,8 +19,8 @@ export default function Main() {
 	const theme = useTheme();
 
 	const PromoMain = styled.div`
-	padding-top: 300px;
-					padding-bottom: 80px;
+	padding-top: 180px;
+					padding-bottom: 64px;
 
 					@media(max-width: 1439px) {
 						padding-top: 160px;
@@ -38,16 +38,16 @@ export default function Main() {
 	const AnimatedTitle = styled(motion.div)`
 	font-family: Impact;
 						text-align: center;
-						font-size: 90px;
+						font-size: 56px;
 						line-height: 1.1;
-						margin-bottom: 32px;
+						margin-bottom: 16px;
 
 						@media(max-width: 1439px) {
-							font-size: 60px;
+							// font-size: 60px;
 						}
 						@media(max-width: 575px) {
 							font-size: 40px;
-							margin-bottom: 24px;
+							// margin-bottom: 24px;
 						}
 
 						span {
@@ -57,12 +57,12 @@ export default function Main() {
 								&::before {
 									content: '';
 									position: absolute;
-									left: -15px;
-									top: 0;
-									width: 117px;
-									height: 118px;
-									background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="117" height="118" viewBox="0 0 117 118" fill="none"><path d="M7.16575 8.95115L0.676199 107.71C0.318542 113.152 4.84611 117.66 10.2873 117.278L108.63 110.371C113.345 110.04 117 106.119 117 101.394V15.2737C117 10.5208 113.304 6.58722 108.561 6.29118L16.707 0.558744C11.7576 0.249861 7.49091 4.00281 7.16575 8.95115Z" fill="%23B3ED73"/></svg>');
-									z-index: -1;
+									left: -10px;
+									top: -4px;
+									width: 76px;
+									height: 77px;
+									background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="76" height="77" viewBox="0 0 76 77" fill="none"><path d="M4.42376 5.83338L0.194579 70.1934C-0.038503 73.7404 2.91208 76.6778 6.45806 76.4288L70.5474 71.9281C73.6197 71.7124 76.0018 69.1572 76.0018 66.0773V9.95374C76.0018 6.85632 73.5933 4.29284 70.5019 4.09991L10.6417 0.364128C7.41623 0.162832 4.63567 2.6086 4.42376 5.83338Z" fill="%23B3ED73"/></svg>');
+									// z-index: -1;
 									background-size: cover;
 
 									@media(max-width: 1439px) {
@@ -76,6 +76,10 @@ export default function Main() {
 									}
 								}
 							}
+								em {
+									font-style: normal;
+									position: relative;
+								}
 							&:nth-of-type(2) {
 								color: ${({ theme }) => theme.colors.purple};
 							}
@@ -86,14 +90,14 @@ export default function Main() {
 	position: relative;
 
 						&::before {
-							content: '';
+							// content: '';
 							position: absolute;
 							left: -15px;
 							top: 0;
-							width: 117px;
-							height: 118px;
-							background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="117" height="118" viewBox="0 0 117 118" fill="none"><path d="M7.16575 8.95115L0.676199 107.71C0.318542 113.152 4.84611 117.66 10.2873 117.278L108.63 110.371C113.345 110.04 117 106.119 117 101.394V15.2737C117 10.5208 113.304 6.58722 108.561 6.29118L16.707 0.558744C11.7576 0.249861 7.49091 4.00281 7.16575 8.95115Z" fill="%23B3ED73"/></svg>');
-							z-index: -1;
+							width: 76px;
+							height: 77px;
+							background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="76" height="77" viewBox="0 0 76 77" fill="none"><path d="M4.42376 5.83338L0.194579 70.1934C-0.038503 73.7404 2.91208 76.6778 6.45806 76.4288L70.5474 71.9281C73.6197 71.7124 76.0018 69.1572 76.0018 66.0773V9.95374C76.0018 6.85632 73.5933 4.29284 70.5019 4.09991L10.6417 0.364128C7.41623 0.162832 4.63567 2.6086 4.42376 5.83338Z" fill="%23B3ED73"/></svg>');
+							// z-index: -1;
 							background-size: cover;
 
 							@media(max-width: 1439px) {
@@ -108,7 +112,7 @@ export default function Main() {
 						}
 	`
 	const AnimatedSubtitle = styled(motion.div)`
-	font-size: 20px;
+	font-size: 18px;
 						text-align: center;
 						line-height: 1.4;
 
@@ -144,7 +148,7 @@ export default function Main() {
 
 	return (
 		<>
-			<div style={{backgroundColor: '#F5F7FA', paddingBottom: 95}}>
+			<div style={{backgroundColor: '#F5F7FA', paddingBottom: 64}}>
 			<Container>
 				<PromoMain>
 					
@@ -155,7 +159,7 @@ export default function Main() {
 					>
 						Афиша бизнес-событий 
 					<div style={{display: 'inline-block', paddingLeft: 16}}>
-					<AnimatedTitleSpan>Go</AnimatedTitleSpan><span className={css`color: ${theme.colors.purple}`}>Conf</span>
+					<AnimatedTitleSpan><em>Go</em></AnimatedTitleSpan><span className={css`color: ${theme.colors.purple}`}>Conf</span>
 					</div>
 					</AnimatedTitle>
 					<AnimatedSubtitle
