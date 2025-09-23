@@ -52,24 +52,22 @@ export function decodeHtmlEntities(str) {
 //   };
   
 export const getApiUrl = (url) => {
-  // SSR на сервере
+  // SSR (Node.js)
   if (typeof window === 'undefined') {
-    // Боевой сервер
     if (process.env.NODE_ENV === 'production') {
-      // Apache слушает 127.0.0.1:8080, реальный путь без /backend
-      return `http://127.0.0.1:8080${url.replace(/^\/backend/, '')}`;
+      // Боевое окружение — обращаемся локально через HTTP, Nginx проксирует
+      return `http://127.0.0.1${url}`;
+    } else {
+      // Локальная разработка — через публичный URL (через Nginx)
+      return `https://goconf.ru${url}`;
     }
-
-    // Локальная разработка (Node.js SSR на localhost)
-    return `https://goconf.ru${url}`;
   }
 
   // Клиентский браузер
   if (window.location.hostname === 'localhost') {
-    // Локально браузер обращается к локальному Nginx/Apache
     return `https://goconf.ru${url}`;
   }
 
-  // На боевом сайте через Nginx прокси
+  // На боевом сайте через Nginx
   return url;
 };
