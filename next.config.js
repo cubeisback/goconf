@@ -23,20 +23,20 @@ const nextConfig = {
   },
 
   // Используем rewrites только в development
-  async rewrites() {
-    // В production не используем rewrites, т.к. nginx уже проксирует
-    if (process.env.NODE_ENV === 'production') {
-      return [];
-    }
+//   async rewrites() {
+//     // В production не используем rewrites, т.к. nginx уже проксирует
+//     if (process.env.NODE_ENV === 'production') {
+//       return [];
+//     }
     
-    // В development используем rewrites для доступа к API
-    return [
-      {
-        source: '/backend/:path*',
-        destination: 'https://goconf.ru/backend/:path*',
-      },
-    ];
-  },
+//     // В development используем rewrites для доступа к API
+//     return [
+//       {
+//         source: '/backend/:path*',
+//         destination: 'https://goconf.ru/backend/:path*',
+//       },
+//     ];
+//   },
 };
 
 module.exports = nextConfig;
