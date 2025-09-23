@@ -789,14 +789,14 @@ const {
 												maxLength={5}
 											/>
 										</div> */}
-										<div className={css`
+										{/* <div className={css`
 											flex: 0 1 100%!important;
 											max-width: 100%!important;
 										`}>
 											<p>Ссылка на трансляцию</p>
 											<input className={input} type="text" placeholder="https://" name="broadcast" value={dataEvent?.broadcast ?? ''} onChange={handleDataEventChange} />
-											{/* <p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p> */}
-										</div>
+											<p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
+										</div> */}
 									</div>
 								</div>
 							)}
