@@ -40,7 +40,8 @@ export function decodeHtmlEntities(str) {
 export const getApiUrl = (url) => {
 	if (typeof window === "undefined") {
 	  // SSR (на сервере) — всегда отдаём полный URL
-	  return `https://goconf.ru${url}`;
+	//   return `https://goconf.ru${url}`;
+	  return `http://localhost:8080${url.replace(/^\/backend/, '')}`;
 	}
   
 	if (window.location.hostname === "localhost") {
