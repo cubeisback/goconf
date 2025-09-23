@@ -216,9 +216,9 @@ const Organizer = () => {
 									}
 								}
 								`}>
-									{key === 'vk' && <Link href={value}><VkIcon/></Link>}
-									{key === 'tg' && <Link href={value}><TgIcon/></Link>}
-									{key === 'youtube' && <Link href={value}><YtIcon/></Link>}
+									{key === 'vk' && <a href={value} target="_blank"><VkIcon/></a>}
+									{key === 'tg' && <a href={value} target="_blank"><TgIcon/></a>}
+									{key === 'youtube' && <a href={value} target="_blank"><YtIcon/></a>}
 								</div>
 								))}
 							</div>
@@ -226,14 +226,14 @@ const Organizer = () => {
                             </div>
                             
 							{pageInfo?.fields?.link && 
-							<Link href={pageInfo.fields.link}>
+							<a href={pageInfo.fields.link} target="_blank">
 								<Button green='true'>
 									<p>
 										<span>Перейти на сайт</span>
 										<span>Перейти на сайт</span>
 									</p>
 								</Button>
-							</Link>
+							</a>
 							}
                         </motion.div>
                     </div>

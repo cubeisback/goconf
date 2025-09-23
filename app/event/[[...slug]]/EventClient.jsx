@@ -494,9 +494,14 @@ export default function EventClient({ params }) {
 								`}>Это ваше мероприятие?</a> 
 							}
 							{pageInfo.fields.events_link && 
-								<Link href={pageInfo.fields.events_link} target="_blank" style={{marginTop: 14}}>
-									<Button green="true" style={{width: '100%'}}>На сайт мероприятия</Button>
-								</Link>
+								<a href={pageInfo.fields.events_link} target="_blank" style={{marginTop: 14}}>
+									<Button green="true" style={{width: '100%'}}>
+										<p>
+											<span>На сайт мероприятия</span>
+											<span>На сайт мероприятия</span>
+										</p>
+									</Button>
+								</a>
 							}
 						</motion.div>
 					</div>
