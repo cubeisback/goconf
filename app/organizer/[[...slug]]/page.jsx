@@ -22,8 +22,11 @@
 import { getOrganizatorSeoSSR } from '@/lib/getOrganizatorSeoSSR';
 import OrganizerClient from './OrganizerClient';
 
-export async function generateMetadata({ params }) {
-  const seo = await getOrganizatorSeoSSR(params.slug);
+export async function generateMetadata(props) {
+  const { slug } = props.params;
+
+  // SSR-запрос через локальный сервер
+  const seo = await getOrganizatorSeoSSR(slug);
 
   return {
     title: seo?.title || 'Организатор',
