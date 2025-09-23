@@ -37,22 +37,37 @@ export function decodeHtmlEntities(str) {
 // 	return url;
 // };
 
+// export const getApiUrl = (url) => {
+// 	if (typeof window === "undefined") {
+// 	  // SSR (на сервере) — всегда отдаём полный URL
+// 	  return `https://goconf.ru${url}`;
+// 	}
+  
+// 	if (window.location.hostname === "localhost") {
+// 	  return `https://goconf.ru${url}`;
+// 	}
+  
+// 	// На клиенте, если не localhost
+// 	return url;
+//   };
+
 export const getApiUrl = (url) => {
-	// На сервере (SSR)
-	if (typeof window === "undefined") {
-		// В development используем внешний API
-		if (process.env.NODE_ENV === "development") {
-			return `https://goconf.ru${url}`;
-		}
-		// В production на сервере используем localhost (API на том же сервере)
-		return `http://localhost${url}`;
-	}
-  
-	// На клиенте в development (localhost)
-	if (window.location.hostname === "localhost") {
-		return `https://goconf.ru${url}`;
-	}
-  
-	// На клиенте в production
-	return url;
+  if (typeof window === "undefined") {
+    // SSR
+    if (process.env.NODE_ENV === 'production') {
+      // На проде: обращаемся напрямую к внутреннему Apache
+      return `http://127.0.0.1:8080${url}`;
+    } else {
+      // Локальная разработка: через полный URL (dev сервер Nginx/rewrites)
+      return `https://goconf.ru${url}`;
+    }
+  }
+
+  // Клиентский код
+  if (window.location.hostname === 'localhost') {
+    return `https://goconf.ru${url}`;
+  }
+
+  return url; // относительный URL на проде для браузера
 };
+  
