@@ -37,17 +37,36 @@ export function decodeHtmlEntities(str) {
 // 	return url;
 // };
 
+// export const getApiUrl = (url) => {
+// 	if (typeof window === "undefined") {
+// 	  // SSR (на сервере) — всегда отдаём полный URL
+// 	  return `https://goconf.ru${url}`;
+// 	}
+  
+// 	if (window.location.hostname === "localhost") {
+// 	  return `https://goconf.ru${url}`;
+// 	}
+  
+// 	// На клиенте, если не localhost
+// 	return url;
+//   };
+
 export const getApiUrl = (url) => {
-	if (typeof window === "undefined") {
-	  // SSR (на сервере) — всегда отдаём полный URL
-	  return `https://goconf.ru${url}`;
-	}
-  
-	if (window.location.hostname === "localhost") {
-	  return `https://goconf.ru${url}`;
-	}
-  
-	// На клиенте, если не localhost
-	return url;
-  };
+  // если абсолютный путь — сразу возвращаем
+  if (url.startsWith("http")) return url;
+
+  if (typeof window === "undefined") {
+    // SSR всегда к боевому бэкенду
+    return `https://goconf.ru${url}`;
+  }
+
+  if (window.location.hostname === "localhost") {
+    // локально — тоже к боевому, так как WP локально не крутится
+    return `https://goconf.ru${url}`;
+  }
+
+  // на клиенте в проде можно ходить относительным путём
+  return url;
+};
+
   
