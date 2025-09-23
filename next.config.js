@@ -1,9 +1,6 @@
 const fs = require('fs');
 const dotenv = require('dotenv');
 
-
-// Подключаем кастомный env-файл
-// ENV_FILE будет передаваться в workflow через export или npm run build
 const envFile = process.env.ENV_FILE || '.env.production';
 
 if (fs.existsSync(envFile)) {
@@ -25,11 +22,18 @@ const nextConfig = {
     return config;
   },
 
+  // Используем rewrites только в development
   async rewrites() {
+    // В production не используем rewrites, т.к. nginx уже проксирует
+    if (process.env.NODE_ENV === 'production') {
+      return [];
+    }
+    
+    // В development используем rewrites для доступа к API
     return [
       {
-        source: '/api/backend/:path*',
-        destination: 'https://dev.goconf.ru/backend/:path*',
+        source: '/backend/:path*',
+        destination: 'https://goconf.ru/backend/:path*',
       },
     ];
   },
