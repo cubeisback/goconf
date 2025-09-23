@@ -66,7 +66,7 @@ export const EventsFiltered = ({onPage, similar, events, total}) => {
                                     justify-content: space-between;
                                 }
                                 @media(max-width: 575px) {
-                                    gap: 20px;
+                                    gap: 20px 8px;
                                 }
 
                                 &:last-of-type {
@@ -160,6 +160,10 @@ export const EventsFiltered = ({onPage, similar, events, total}) => {
                                 display: flex;
                                 flex-direction: column;
                                 gap: 16px;
+
+								@media(max-width: 575px) {
+									max-width: calc(100% - 58px);
+								}
                             `}>
                                 <div className={css`
                                     font-size: 14px;

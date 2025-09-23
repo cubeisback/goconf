@@ -10,7 +10,15 @@ export const useImageUpload = ({
 }) => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [file, setFile] = useState(null);
+  const [previewSize, setPreviewSize] = useState(null); // 👉 размер локального файла
   const inputRef = useRef(null);
+
+  // формат размера
+  const formatSize = (bytes) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+  };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -19,6 +27,7 @@ export const useImageUpload = ({
     const imageUrl = URL.createObjectURL(selectedFile);
     setPreviewUrl(imageUrl);
     setFile(selectedFile);
+    setPreviewSize(formatSize(selectedFile.size)); // 👉 сохраняем размер
 
     e.target.value = null;
   };
@@ -38,7 +47,11 @@ export const useImageUpload = ({
         }
       );
 
-      const newImage = { id: response.data.id, url: response.data.url };
+      const newImage = { 
+        id: response.data.id, 
+        url: response.data.url, 
+        size: formatSize(file.size) // 👉 записываем размер в объект
+      };
 
       setData((prev) => ({
         ...prev,
@@ -47,6 +60,7 @@ export const useImageUpload = ({
 
       setPreviewUrl(null);
       setFile(null);
+      setPreviewSize(null);
 
       return newImage;
     } catch (error) {
@@ -72,10 +86,11 @@ export const useImageUpload = ({
     }
   };
 
-  // ❗ Новый метод: удаление только превью (без запроса)
+  // удалить только превью (без запроса)
   const handleRemovePreview = () => {
     setPreviewUrl(null);
     setFile(null);
+    setPreviewSize(null);
   };
 
   const handleButtonClick = () => {
@@ -84,11 +99,12 @@ export const useImageUpload = ({
 
   return {
     previewUrl,
+    previewSize, // 👉 экспортируем размер превью
     inputRef,
     handleFileChange,
     handleUploadImage,
     handleRemoveImage,
-    handleRemovePreview, // экспортируем
+    handleRemovePreview,
     handleButtonClick,
     file,
   };

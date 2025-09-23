@@ -202,8 +202,8 @@ export default function EventClient({ params }) {
 							flex: 1;
 							max-width: 952px;
 						`}>
-							<div className={css`height: 400px;overflow: hidden;margin-bottom: 40px;`}>
-								<img src={pageInfo.fields.anons?.url} alt="" className={css`object-fit: contain;width:100%;height:100%;object-position: 50% 50%;`} />
+							<div className={css`height: 400px;overflow: hidden;margin-bottom: 40px; @media(max-width: 575px) {height: 160px;}`}>
+								<img src={pageInfo.fields.anons?.url} alt="" className={css`object-fit: cover;width:100%;height:100%;object-position: 50% 50%; border-radius: 16px;`} />
 							</div>
 
 							<div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
@@ -488,13 +488,13 @@ export default function EventClient({ params }) {
 							}
 							</div>
 							
-							{!pageInfo.company && 
+							{!pageInfo.company[0] && 
 								<a href="/" className={css`
 									color: ${theme.colors.purple};
 								`}>Это ваше мероприятие?</a> 
 							}
-							{pageInfo.events_link && 
-								<Link href={pageInfo.events_link} target="_blank">
+							{pageInfo.fields.events_link && 
+								<Link href={pageInfo.fields.events_link} target="_blank" style={{marginTop: 14}}>
 									<Button green="true" style={{width: '100%'}}>На сайт мероприятия</Button>
 								</Link>
 							}

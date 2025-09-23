@@ -7,7 +7,7 @@ import ArrowDown from "@/public/images/svg/arrowDown.svg";
 import { useTheme } from '@emotion/react';
 import styled from "@emotion/styled";
 
-const EventDropdown = ({ full, options, placeholder, incomeFunction, items }) => {
+const EventDropdown = ({ full, options, placeholder, incomeFunction, items, type }) => {
   const theme = useTheme();
 
   const Dropdown = styled.div`
@@ -147,6 +147,9 @@ const EventDropdown = ({ full, options, placeholder, incomeFunction, items }) =>
                 }
               `}
             >
+			<li onClick={() => {setIsOpen(false), incomeFunction(null)}}>
+				{type == 'org' && 'Организатор'}
+			  </li>
               {(Array.isArray(options) ? options : []).map((option) => {
                 return (
                   <li 

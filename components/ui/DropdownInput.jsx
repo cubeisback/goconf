@@ -74,7 +74,8 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
   
   // Фильтрация опций на основе введенного текста
   const filteredOptions = values.filter(option =>
-		option.includes(query) && option.toLowerCase().includes(query.toLowerCase())
+		// option.includes(query) && option.toLowerCase().includes(query.toLowerCase())
+		option.toLowerCase().includes(query.toLowerCase())
   );
 
   const handleChange = (event) => {
@@ -216,6 +217,7 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
 				{type == 'direction' && 'Все тематики'}
 				{type == 'city' && 'Все города'}
 				{type == 'format' && 'Все форматы'}
+				{type == 'status' && 'Статус'}
 			  </li>
               {(showFullList ? values : filteredOptions).map((option) => {
                 const originalIndex = values.indexOf(option);

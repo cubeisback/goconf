@@ -11,6 +11,9 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getApiUrl } from "@/functions/functions";
+import VkIcon from "@/public/images/svg/vk_icon.svg";
+import YtIcon from "@/public/images/svg/yt_icon.svg";
+import TgIcon from "@/public/images/svg/tg_icon.svg";
 
 const Organizer = () => {
 	const { slug } = useParams();
@@ -176,12 +179,12 @@ const Organizer = () => {
                                     line-height: 1.16;
                                 `}>{pageInfo.fields.address}</p>
 							}
-                            {pageInfo?.fields?.address && 
+                            {/* {pageInfo?.fields?.address && 
 								<a href={pageInfo.fields.link} target="_blank" className={css`
                                     font-size: 14px;
                                     line-height: 1.16;
                                 `}>{pageInfo.fields.link}</a>
-							}
+							} */}
 							{pageInfo?.fields?.phones && 
 								<a href={`tel:${pageInfo.fields.phones[0]}`} className={css`
                                     font-size: 14px;
@@ -196,14 +199,42 @@ const Organizer = () => {
                                     color: ${theme.colors.purple};
                                 `}>{pageInfo.fields.emails[0]}</a>
 							}
+							{pageInfo?.fields?.socials && (
+							<div className={css`
+								display: flex;
+								gap: 8px;
+							`}>
+								{Object.entries(pageInfo.fields.socials).map(([key, value], index) => (
+								<div key={index} className={css`
+								svg path {
+									transition: ${theme.transition};
+								}
+
+								&:hover {
+									svg path {
+										fill: ${theme.colors.purple};
+									}
+								}
+								`}>
+									{key === 'vk' && <Link href={value}><VkIcon/></Link>}
+									{key === 'tg' && <Link href={value}><TgIcon/></Link>}
+									{key === 'youtube' && <Link href={value}><YtIcon/></Link>}
+								</div>
+								))}
+							</div>
+							)}
                             </div>
                             
-                            <Button green='true'>
-								<p>
-									<span>Перейти на сайт</span>
-									<span>Перейти на сайт</span>
-								</p>
-							</Button>
+							{pageInfo?.fields?.link && 
+							<Link href={pageInfo.fields.link}>
+								<Button green='true'>
+									<p>
+										<span>Перейти на сайт</span>
+										<span>Перейти на сайт</span>
+									</p>
+								</Button>
+							</Link>
+							}
                         </motion.div>
                     </div>
                   

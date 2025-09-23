@@ -27,6 +27,7 @@ export const MainEventsTest = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
+	  console.log('near on main', res)
       setNearEvents(prev => [...prev, ...res.data.events]); // добавляем новые
       setTotal(res.data.total); // сохраняем общее количество
     } catch (e) {
@@ -89,7 +90,7 @@ export const MainEventsTest = () => {
 									justify-content: space-between;
 								}
 								@media(max-width: 575px) {
-									gap: 20px;
+									gap: 20px 8px;
 								}
 
 								&:last-of-type {
@@ -185,6 +186,10 @@ export const MainEventsTest = () => {
 								display: flex;
 								flex-direction: column;
 								gap: 16px;
+
+								@media(max-width: 575px) {
+									max-width: calc(100% - 58px);
+								}
 							`}>
 								<div className={css`
 									font-size: 14px;

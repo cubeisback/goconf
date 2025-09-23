@@ -16,6 +16,12 @@ const EventDate = ({title, fixmob, initialDate, changeDate, whatDate, error}) =>
     const [showDate, setShowDate] = useState(false);
     const datePickerRef = useRef(null);
 
+	useEffect(() => {
+	if (initialDate) {
+		setStartDate(initialDate);
+	}
+	}, [initialDate]);
+
     const customRu = {
       ...ru,
       localize: {

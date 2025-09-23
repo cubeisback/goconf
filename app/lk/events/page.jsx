@@ -18,8 +18,6 @@ import { formatDate, formatPrice, getApiUrl } from "@/functions/functions";
 import { useConfirmModal } from "@/store/confirmModalStore";
 import Loader from "@/public/images/svg/preloader.svg";
 
-const options = ['Варинат 1', 'Варинат 2', 'Варинат 3', 'Варинат 4', 'Варинат 5', 'Варинат 6', 'Ы'];
-
 const UserEvents = () => {
     const theme = useTheme();
     const [view, setView] = useState(1);
@@ -69,8 +67,27 @@ const UserEvents = () => {
 	// удалить дату публикации если пустая
 	// TODO
 
+	const [statuses, setStatuses] = useState({});
+	const loadStatuses = async () => {
+		try {
+		const res = await axios.get(
+			getApiUrl("/backend/wp-json/account/v2/statuses/"),
+			// { load_page: page },
+			// { headers: { "Content-Type": "application/json" } }
+		);
+
+		console.log('statuses ', res.data)
+		setStatuses(res.data)
+		//   setNearEvents(prev => [...prev, ...res.data.events]); // добавляем новые
+		//   setTotal(res.data.total); // сохраняем общее количество
+		} catch (e) {
+		console.error("Ошибка загрузки событий:", e);
+		}
+	};
+
 	useEffect(() => {
 		handleGetEvents()
+		loadStatuses()
 	}, []);
 
 	// https://dev.goconf.ru/wp-json/account/v2/events/remove/
@@ -239,7 +256,7 @@ const UserEvents = () => {
             <div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
                 <div style={{flex: '0 1 300px'}}>
                     <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Статус</p>
-                    <DropdownInput options={options} placeholder={'Статус'} isSimple />
+                    <DropdownInput options={statuses} type={'status'} placeholder={'Статус'} isSimple />
                 </div>
             </div>
 
@@ -255,7 +272,7 @@ const UserEvents = () => {
 														width: 24px;
 													}
 												`}><Loader /></div> // 🔹 прелоадер
-											) : events.length > 0 ? (events.map((event, index) => (
+											) : events && events.length > 0 ? (events.map((event, index) => (
 					<div key={index}>
 					<UserEventsBlockHead>
 						<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>Тариф <b style={{marginLeft: 4}}>&laquo;Базовый&raquo;</b> 
@@ -362,7 +379,7 @@ const UserEvents = () => {
 						`}
 						>{event.title && event.title}</Link>
 						{!event.online &&
-							event.cost && 
+							event.cost > 0 && 
 								<div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>{formatPrice(event.cost)} руб.</div> 
 						}
 						<div className={css`
@@ -397,7 +414,9 @@ const UserEvents = () => {
 																})()
 																}
 							</div>
-                            <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}`}><b>Организатор:</b> ????</div>
+							{event.company.length > 0 && 
+                            <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}; width: max-content`}><b>Организатор:</b> {event.company[0].name}</div>
+							}
                         </div>
 						<Button onClick={()=>{
 							setDataForPayment((prev) => ({
