@@ -51,26 +51,29 @@ export function decodeHtmlEntities(str) {
 // 	return url;
 //   };
 
+// export const getApiUrl = (url) => {
+//   console.log("getApiUrl input:", url, "typeof window:", typeof window);
+
+//   if (url.startsWith("http")) return url;
+
+//   if (typeof window === "undefined") {
+//     const full = `https://goconf.ru${url}`;
+//     console.log("SSR ->", full);
+//     return full;
+//   }
+
+//   if (window.location.hostname === "localhost") {
+//     const full = `https://goconf.ru${url}`;
+//     console.log("Local client ->", full);
+//     return full;
+//   }
+
+//   console.log("Client prod ->", url);
+//   return url;
+// };
 export const getApiUrl = (url) => {
-  console.log("getApiUrl input:", url, "typeof window:", typeof window);
-
   if (url.startsWith("http")) return url;
-
-  if (typeof window === "undefined") {
-    const full = `https://goconf.ru${url}`;
-    console.log("SSR ->", full);
-    return full;
-  }
-
-  if (window.location.hostname === "localhost") {
-    const full = `https://goconf.ru${url}`;
-    console.log("Local client ->", full);
-    return full;
-  }
-
-  console.log("Client prod ->", url);
-  return url;
+  return `https://goconf.ru${url}`; // или без www, как у тебя реально
 };
-
 
   
