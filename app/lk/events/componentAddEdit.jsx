@@ -109,6 +109,7 @@ const EventsAddEdit = () => {
 		video: ''
 	});
 
+	const [dataEventStatus, setDataEventStatus] = useState(null)
 	const [contentLength, setContentLength] = useState(0);
 
 	useEffect(()=>{
@@ -214,7 +215,7 @@ const EventsAddEdit = () => {
 
 
 	const dfsdfsdfsd2 = async(id) => {
-		console.log("dsfsjdhfds ID ID ", id)
+		// console.log("dsfsjdhfds ID ID ", id)
 		try {
 			const response = await axios.get(
 			getApiUrl(`/backend/wp-json/account/v2/events/get_edit/?id=${id}`),
@@ -227,6 +228,7 @@ const EventsAddEdit = () => {
 			console.log("get edit info ", response);
 			if (response.status === 200) {
 				setDataEvent(response.data.data)
+				setDataEventStatus(response.data.status)
 			}
 		} catch (error) {
 			console.error(error);
@@ -297,6 +299,7 @@ const EventsAddEdit = () => {
 
 const {
 	previewUrl: anonsPreview,
+	previewSize: anonsSize,
 	inputRef: anonsInputRef,
 	handleFileChange: handleAnonsChange,
 	handleUploadImage: uploadAnons,
@@ -313,6 +316,7 @@ const {
 // TODO доделать логику. Если изображение было с сервера, и его заменяют на новое, то старое нужно удалить с сервера
 const {
 	previewUrl: coverPreview,
+	previewSize: coverSize,
 	inputRef: coverInputRef,
 	handleFileChange: handleCoverChange,
 	handleUploadImage: uploadCover,
@@ -388,7 +392,8 @@ const {
 			title: 'Сохранение',
 			description: `Вы действительно хотите сохранить?`,
 			onConfirm: () => {
-				handleSubmitTest('moderation'), 
+				// handleSubmitTest(dataEventStatus ? dataEventStatus : 'moderation'), 
+				handleSubmitTest('moderation');
 				router.replace('/lk/events')
 			},
 			confirmText: 'Сохранить',
@@ -497,6 +502,7 @@ const {
 						<UserMainTitles>
 							<UserMainTitlesTitle>{id ? 'Редактирование': 'Добавить событие'}</UserMainTitlesTitle>
 						</UserMainTitles>
+						{/* <div onClick={()=>console.log('текущий статус для отправки', dataEvent)}>123</div> */}
 						<UserEventNav>
 							<UserEventNavItem $isActive={view >= 1 && true} $isFilled={view >= 2 && true} onClick={()=>{
 								setView(1);
@@ -581,7 +587,7 @@ const {
 							</div>
 							<div>
 								<p>Организатор</p>
-								<EventDropdown full={true} options={metaParameters && metaParameters.companies} items={dataEvent.organizator} incomeFunction={handleDataEventChangeOrganizator} placeholder={'Выбрать организатора'} />
+								<EventDropdown full={true} options={metaParameters && metaParameters.companies} items={dataEvent.organizator} incomeFunction={handleDataEventChangeOrganizator} type={'org'} placeholder={'Выбрать организатора'} />
 								{/* <DropdownInput full={true} options={metaParameters && metaParameters.companies} placeholder={'Выбрать организатора'} /> */}
 								<p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/lk/org" target="_blank" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
 							</div>
@@ -789,7 +795,7 @@ const {
 										`}>
 											<p>Ссылка на трансляцию</p>
 											<input className={input} type="text" placeholder="https://" name="broadcast" value={dataEvent?.broadcast ?? ''} onChange={handleDataEventChange} />
-											<p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p>
+											{/* <p className={css`color: #6C6C71;`}>Добавление ссылок доступно пользователям со&nbsp;статусом <span className={css`color: ${theme.colors.font};`}>&laquo;Стандарт&raquo;</span> или <span className={css`color: ${theme.colors.font};`}>&laquo;Бизнес&raquo;</span>. <Link href='' className={css`color: ${theme.colors.purple};`}>Сменить статус</Link></p> */}
 										</div>
 									</div>
 								</div>
@@ -845,7 +851,9 @@ const {
 								{dataEvent?.cover?.id || coverPreview ? (
 								<div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
 									<div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>
-									998.05 кб
+									{coverPreview 
+									? coverSize
+									: dataEvent.cover?.size}
 									</div>
 									<div style={{cursor: 'pointer'}} className={css`
 		svg {
@@ -912,7 +920,9 @@ const {
 								{dataEvent?.anons?.id || anonsPreview ? (
   <div style={{display: 'flex', justifyContent: 'space-between', gap: '8px', alignItems: 'center'}}>
     <div className={css`font-size: 12px;color:#6C6C71;line-height: 1.2;`}>
-      998.05 кб
+      {anonsPreview 
+									? anonsSize
+									: dataEvent.anons?.size}
     </div>
     <div style={{cursor: 'pointer'}} className={css`
 		svg {
@@ -1250,7 +1260,12 @@ const {
 							}
 						`}>
 						{view == 1 ? 
+						<>
 							<Button onClick={()=>{firstScreenCheck()}}>Продолжить</Button>
+							{/* {dataEventStatus === 'publish' && 
+							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{handleSubmitModal()}}>Сохранить</Button>
+							} */}
+						</>
 						// : view == 2 ? 
 						// <>
 						// 	<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
@@ -1261,6 +1276,7 @@ const {
 						<>
 							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
 							<Button onClick={()=>{handleSubmitModal()}}>Отправить на модерацию</Button>
+							{/* {dataEventStatus === 'publish' ? 'Сохранить' : 'Отправить на модерацию'} */}
 						</>
 						}
 						</div>
