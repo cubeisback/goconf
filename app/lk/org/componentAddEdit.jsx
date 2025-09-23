@@ -495,7 +495,7 @@ const AddEdit = () => {
 						</div>
 
 						<div className={css`display: flex;gap:16px;`}>
-							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Предпросмотр</Button>
+							{/* <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Предпросмотр</Button> */}
 							<Button 
 							// onClick={()=>{console.log(dataOrganization)}}
 							onClick={handleSubmitTestModal}

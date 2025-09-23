@@ -20,6 +20,7 @@ import { decodeHtmlEntities, formatDate, formatPrice, getApiUrl } from '@/functi
 // import { DocumentDescription, DocumentTitle } from '@/functions/DocumentMeta';
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useAuthReady } from "@/hooks/useAuthReady";
 
 export default function EventClient({ params }) {
 
@@ -31,7 +32,7 @@ export default function EventClient({ params }) {
 	// const [seoTitle, setSeoTitle] = useState(null)
 	// const [seoDescription, setSeoDescription] = useState(null)
 
-	const [event, setEvent] = useState(null);
+	// const [event, setEvent] = useState(null);
 	// const location = useLocation();
 	// const [pageInfo, setPageInfo] = useState(null)
 	// useEffect(() => {
@@ -51,6 +52,8 @@ export default function EventClient({ params }) {
 	//     });
 	// }, [location.pathname]);
 
+	const { ready, token } = useAuthReady();
+
 	const { slug } = useParams(); // получаем параметр пути
 	const [pageInfo, setPageInfo] = useState(null);
 	useEffect(() => {
@@ -65,10 +68,25 @@ export default function EventClient({ params }) {
 		  })
 		  .catch((error) => {
 			console.log(error);
+
+			if(token) {
+				axios
+				.get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				)
+				.then((res) => {
+					setPageInfo(res.data);
+					console.log('preview ', res);
+				})
+			}
 		  });
 	}, [slug]);
 
-
+	
 
 	// const [similarItems, setSimilarItems] = useState(null)
 	// useEffect(() => {

@@ -20,7 +20,7 @@ export const MainEvents = ({onPage, similar, id, events, orgPage}) => {
    
     useEffect(() => {
         if (events === undefined || events === null) {
-            if(similar) {
+            if(similar && id) {
                 axios
                 .get(getApiUrl(`/backend/wp-json/events/v2/similar-events/?id=${id}`))
                 .then((response) => {
