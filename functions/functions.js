@@ -52,22 +52,17 @@ export function decodeHtmlEntities(str) {
 //   };
   
 export const getApiUrl = (url) => {
-  // SSR (Node.js)
   if (typeof window === 'undefined') {
     if (process.env.NODE_ENV === 'production') {
-      // Боевое окружение — обращаемся локально через HTTP, Nginx проксирует
-      return `http://127.0.0.1${url}`;
+      return `http://217.114.14.2${url}`; // Node.js SSR
     } else {
-      // Локальная разработка — через публичный URL (через Nginx)
-      return `https://goconf.ru${url}`;
+      return `https://goconf.ru${url}`; // локально через публичный URL
     }
   }
 
-  // Клиентский браузер
   if (window.location.hostname === 'localhost') {
     return `https://goconf.ru${url}`;
   }
 
-  // На боевом сайте через Nginx
   return url;
 };
