@@ -38,16 +38,21 @@ export function decodeHtmlEntities(str) {
 // };
 
 export const getApiUrl = (url) => {
+	// На сервере (SSR)
 	if (typeof window === "undefined") {
-	  // SSR (на сервере) — всегда отдаём полный URL
-	  return `https://goconf.ru${url}`;
+		// В development используем внешний API
+		if (process.env.NODE_ENV === "development") {
+			return `https://goconf.ru${url}`;
+		}
+		// В production на сервере используем localhost (API на том же сервере)
+		return `http://localhost${url}`;
 	}
   
+	// На клиенте в development (localhost)
 	if (window.location.hostname === "localhost") {
-	  return `https://goconf.ru${url}`;
+		return `https://goconf.ru${url}`;
 	}
   
-	// На клиенте, если не localhost
+	// На клиенте в production
 	return url;
-  };
-  
+};
