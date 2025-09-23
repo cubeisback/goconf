@@ -52,21 +52,25 @@ export function decodeHtmlEntities(str) {
 //   };
 
 export const getApiUrl = (url) => {
-  // если абсолютный путь — сразу возвращаем
+  console.log("getApiUrl input:", url, "typeof window:", typeof window);
+
   if (url.startsWith("http")) return url;
 
   if (typeof window === "undefined") {
-    // SSR всегда к боевому бэкенду
-    return `https://goconf.ru${url}`;
+    const full = `https://goconf.ru${url}`;
+    console.log("SSR ->", full);
+    return full;
   }
 
   if (window.location.hostname === "localhost") {
-    // локально — тоже к боевому, так как WP локально не крутится
-    return `https://goconf.ru${url}`;
+    const full = `https://goconf.ru${url}`;
+    console.log("Local client ->", full);
+    return full;
   }
 
-  // на клиенте в проде можно ходить относительным путём
+  console.log("Client prod ->", url);
   return url;
 };
+
 
   
