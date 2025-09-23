@@ -48,7 +48,7 @@ export const getApiUrl = (url) => {
 	}
   
 	// На клиенте, если не localhost
-	return `https://goconf.ru${url}`;
+	return url;
   };
   
   

@@ -206,6 +206,8 @@ export default function OrganizerClient({ params }) {
 							`}>
 								{Object.entries(pageInfo.fields.socials).map(([key, value], index) => (
 								<div key={index} className={css`
+									height: 40px;
+
 								svg path {
 									transition: ${theme.transition};
 								}
