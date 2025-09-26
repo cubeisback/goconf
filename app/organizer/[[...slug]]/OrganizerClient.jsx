@@ -130,7 +130,7 @@ export default function OrganizerClient({ params }) {
 									background-color: #F5F7FA;
 									overflow: hidden;
 									margin-bottom: 16px;
-									padding: 10px;
+									padding: 14px;
 									
 									img {
 										object-fit: contain;
