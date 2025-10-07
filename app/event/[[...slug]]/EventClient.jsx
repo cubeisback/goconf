@@ -413,6 +413,7 @@ export default function EventClient({ params }) {
 										}
 									})()
 									}
+									{pageInfo.fields.events_time_start && `, ${pageInfo.fields.events_time_start}` }
 								</p>
 							</div>
 							{pageInfo.cities[0] && 

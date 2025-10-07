@@ -126,6 +126,8 @@ const EventsAddEdit = () => {
 	const handleDataEventChange = (e) => {
 		const { name, value, type, checked } = e.target;
 
+		if (name === 'cost' && Number(value) < 0) return;
+
 		setDataEvent((prev) => ({
 			...prev,
 			[name]: type === 'checkbox' ? checked : value,
@@ -392,8 +394,8 @@ const {
 			title: 'Сохранение',
 			description: `Вы действительно хотите сохранить?`,
 			onConfirm: () => {
-				// handleSubmitTest(dataEventStatus ? dataEventStatus : 'moderation'), 
-				handleSubmitTest('moderation');
+				handleSubmitTest(dataEventStatus ? dataEventStatus : 'moderation'), 
+				// handleSubmitTest('moderation');
 				router.replace('/lk/events')
 			},
 			confirmText: 'Сохранить',
@@ -481,7 +483,9 @@ const {
 		// Если ошибок нет, продолжаем
 		if (Object.keys(newErrors).length === 0) {
 		console.log('Все поля заполнены, можно продолжать');
-		setView(prev => prev + 1)
+			if(view < 2) {
+				setView(prev => prev + 1)
+			}
 		} else {
 		console.log('Есть ошибки, исправьте их');
 
@@ -548,7 +552,7 @@ const {
 								}    
 							`}>
 								<p className={css`color: #47474D;`}>Краткое описание для анонса</p>
-								<p className={css`color: #6C6C71;`}>Максимальное количество символов - 200</p>
+								{/* <p className={css`color: #6C6C71;`}>Максимальное количество символов - 200</p> */}
 							</div>
 							<textarea className={textarea} name="short_text" id="" placeholder="Краткое описание" value={dataEvent.short_text} onChange={handleDataEventChange} maxLength={200}></textarea>
 							<div className={css`color: #6C6C71;font-size: 14px;line-height:1.16;text-align: right;margin-top: 8px;`}><span>{dataEvent.short_text.length}</span> / 200</div>
@@ -993,7 +997,7 @@ const {
 								<p>Стоимость участия</p>
 								{!dataEvent?.free &&
 									<div className={css`display: flex;gap:8px;align-items: center;`}>
-										<input className={input} type="number" placeholder="Введите стоимость" name="cost" value={dataEvent.cost ? dataEvent.cost : ''} onChange={handleDataEventChange} />
+										<input className={input} type="number" placeholder="Введите стоимость" name="cost" value={dataEvent.cost ? dataEvent.cost : ''} onChange={handleDataEventChange} min="0" />
 										<p className={css`color: #47474D;`}>руб.</p>
 									</div>
 								}
@@ -1017,7 +1021,7 @@ const {
 								}    
 							`}>
 								<p className={css`color: #47474D;`}>Детальное описание</p>
-								<p className={css`color: #6C6C71;`}>Максимальное количество символов - 5000</p>
+								{/* <p className={css`color: #6C6C71;`}>Максимальное количество символов - 5000</p> */}
 							</div>
 							<TextEditor
 								content={dataEvent.content}
@@ -1275,7 +1279,7 @@ const {
 						: 
 						<>
 							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
-							<Button onClick={()=>{handleSubmitModal()}}>Отправить на модерацию</Button>
+							<Button onClick={()=>{handleSubmitModal()}}>{dataEventStatus === 'publish' ? 'Сохранить' : 'Отправить на модерацию'}</Button>
 							{/* {dataEventStatus === 'publish' ? 'Сохранить' : 'Отправить на модерацию'} */}
 						</>
 						}
