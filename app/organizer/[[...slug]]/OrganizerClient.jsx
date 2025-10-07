@@ -229,7 +229,7 @@ export default function OrganizerClient({ params }) {
                             
 							{pageInfo?.fields?.link && 
 							<a href={pageInfo.fields.link} target="_blank">
-								<Button green='true'>
+								<Button green='true' style={{width: '100%'}}>
 									<p>
 										<span>Перейти на сайт</span>
 										<span>Перейти на сайт</span>

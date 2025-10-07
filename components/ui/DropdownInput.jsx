@@ -60,8 +60,8 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
       if(filterValues) {
         const checkedValue = filterValues[type];
         if (checkedValue) {
-          setSelectedValue(options[checkedValue]);
-          setQuery(options[checkedValue]);
+          setSelectedValue(options[checkedValue] ?? '');
+          setQuery(options[checkedValue] ?? '');
         } else {
           // если значение отсутствует, сбрасываем выбор
           setSelectedValue(null);
@@ -75,7 +75,7 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
   // Фильтрация опций на основе введенного текста
   const filteredOptions = values.filter(option =>
 		// option.includes(query) && option.toLowerCase().includes(query.toLowerCase())
-		option.toLowerCase().includes(query.toLowerCase())
+		option.toLowerCase().includes(query?.toLowerCase())
   );
 
   const handleChange = (event) => {
