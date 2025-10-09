@@ -14,13 +14,15 @@ import { useLocation } from 'react-router';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import axios from 'axios';
 import { decodeHtmlEntities, formatDate, formatPrice, getApiUrl } from '@/functions/functions';
 // import { DocumentDescription, DocumentTitle } from '@/functions/DocumentMeta';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAuthReady } from "@/hooks/useAuthReady";
+import { ModalEvent } from "./Modal";
+import { Modal } from "@/components/ui/Modal";
 
 export default function EventClient({ params }) {
 
@@ -173,6 +175,14 @@ export default function EventClient({ params }) {
 			gap: 10px;
 		}
 	`;
+
+
+	const [isFullscreen, setIsFullscreen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
 
 	return (
 		<>
@@ -331,14 +341,94 @@ export default function EventClient({ params }) {
 										overflow: hidden;
 										height: auto;
 										max-height: 168px;
-									`} key={index}>
-										<img src={item.url} alt="" style={{objectFit: 'scale-down', width: '100%', height: '100%'}} />
+									`} key={index}
+									onClick={() => {
+										console.log('hui1')
+										setActiveIndex(index);
+										setIsFullscreen(true);
+										console.log('hui2')
+									}}
+									>
+										<img src={item.url} alt="" style={{objectFit: 'cover', width: '100%', height: '100%', cursor: 'pointer', transition: '.3s ease-in-out'}} className={css`
+											
+											&:hover {
+												transform: scale(1.05);
+											}`} />
 									</SwiperSlide>
 
 									))}
 								</Swiper>
+
+
+								{/* --- Фуллскрин модалка --- */}
+      {isFullscreen && (
+        <div
+          className="fullscreen-overlay"
+        //   onClick={() => setIsFullscreen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.9)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <Swiper
+            modules={[Navigation, Pagination]}
+            navigation
+            pagination={{ clickable: true }}
+            initialSlide={activeIndex}
+            style={{ width: "90%", height: "90%" }}
+            // onClick={(e) => e.stopPropagation()} // чтобы не закрывалось при клике по изображению
+          >
+            {pageInfo.fields.group_gallery.gallery.map((item, index) => (
+              <SwiperSlide key={index}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                  }}
+                >
+                  <img
+                    src={item.big}
+                    alt=""
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          {/* Кнопка закрытия */}
+          <button
+            onClick={() => setIsFullscreen(false)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "30px",
+              background: "transparent",
+              color: "#fff",
+              fontSize: "2rem",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
 							</div>
 							}
+
+							
 
 							{pageInfo?.fields?.group_video?.cod &&
 								<div className={css`
@@ -508,9 +598,11 @@ export default function EventClient({ params }) {
 							</div>
 							
 							{!pageInfo.company[0] && 
-								<a href="/" className={css`
+								<div className={css`
 									color: ${theme.colors.purple};
-								`}>Это ваше мероприятие?</a> 
+									cursor: pointer;
+								`}
+								onClick={()=>{setIsModalOpen(true)}}>Это ваше мероприятие?</div> 
 							}
 							{pageInfo.fields.events_link && 
 								<a href={pageInfo.fields.events_link} target="_blank" style={{marginTop: 14}}>
@@ -554,6 +646,9 @@ export default function EventClient({ params }) {
 
 			<MainEvents id={pageInfo && pageInfo.data.ID} similar={true} />
 			<Form />
+
+			<ModalEvent isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} onReg={()=>setIsModalOpen2(true)} eventName={pageInfo && pageInfo.data.post_title} />
+			<Modal isOpen={isModalOpen2} onClose={()=>setIsModalOpen2(false)} />
 		</>
 	);
 }
