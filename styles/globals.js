@@ -105,4 +105,21 @@ input[type=number] {
 			outline: none!important;
 		}
 	}
+
+	.swiper-button-prev, .swiper-button-next {
+		width: 56px;
+		height: 56px;
+
+		&::after {
+			content: '';
+			background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 56 56" style="width: 56px;"><g clip-path="url(%23slider_arrow_svg__a)"><circle cx="28" cy="28" r="27.125" stroke="%238553F9" stroke-width="2"></circle><g clip-path="url(%23slider_arrow_svg__b)"><path stroke="%238553F9" stroke-width="2" d="M20 28h16m-16 0 8-8m-8 8 8 8"></path></g></g><defs><clipPath id="slider_arrow_svg__a"><path fill="%23fff" d="M0 0h56v56H0z"></path></clipPath><clipPath id="slider_arrow_svg__b"><path fill="%23fff" d="M18 18h20v20H18z"></path></clipPath></defs></svg>');
+			width: 100%;
+			height: 100%;
+			background-size: cover;
+		}
+	}
+	.swiper-button-next {
+		transform: rotate(180deg);
+	}
+	
 `;
