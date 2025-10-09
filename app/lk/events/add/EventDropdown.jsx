@@ -7,7 +7,7 @@ import ArrowDown from "@/public/images/svg/arrowDown.svg";
 import { useTheme } from '@emotion/react';
 import styled from "@emotion/styled";
 
-const EventDropdown = ({ full, options, placeholder, incomeFunction, items, type }) => {
+const EventDropdown = ({ options, placeholder, incomeFunction, items, type }) => {
   const theme = useTheme();
 
   const Dropdown = styled.div`
@@ -109,7 +109,7 @@ const EventDropdown = ({ full, options, placeholder, incomeFunction, items, type
               border-radius: 28px;
               background-color: #fff;
               box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
-              width: ${full ? '100%' : '150%'};
+              width: 100%;
               left: 0;
               top: calc(100% + 4px);
               padding: 12px 14px 12px 0;

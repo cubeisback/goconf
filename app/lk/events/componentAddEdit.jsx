@@ -5,7 +5,6 @@ import { css, cx } from "@emotion/css";
 import { Button, Container, input, LkWrapper, textarea, UserEventNav, UserEventNavItem, UserEventNavSeparator, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from "react";
-import DropdownInput from "@/components/ui/DropdownInput";
 import { useTheme } from "@emotion/react";
 import AvatarIcon from "@/public/images/svg/avatar.svg";
 import EditIcon from "@/public/images/svg/edit.svg";
@@ -28,6 +27,7 @@ import { useConfirmModal } from "@/store/confirmModalStore";
 import DraftIcon from "@/public/images/svg/draft_icon.svg";
 import BackIcon from "@/public/images/svg/back_icon.svg";
 import styled from "@emotion/styled";
+import EventMultiDropdown from "./add/EventMultiDropdown";
 
 const EventsAddEdit = () => {
 	const router = useRouter();
@@ -581,18 +581,15 @@ const {
 						`}>
 							<div>
 								<p>Тематика мероприятия</p>
-								<EventDropdown full={true} options={metaParameters && metaParameters.subjects} items={dataEvent.subject} incomeFunction={handleDataEventChangeSubject} placeholder={'Выбрать тематики'} />
-								{/* <DropdownInput full={full} options={metaParameters && metaParameters.subjects} type={'direction'} placeholder={'ТематикаФЫВ'} /> */}
+								<EventMultiDropdown options={metaParameters && metaParameters.subjects} items={dataEvent.subject} incomeFunction={handleDataEventChangeSubject} placeholder={'Выбрать тематики'} />
 							</div>
 							<div>
 								<p>Формат мероприятия</p>
-								<EventDropdown full={true} options={metaParameters && metaParameters.formats} items={dataEvent.format} incomeFunction={handleDataEventChangeFormat} placeholder={'Выбрать формат'} />
-								{/* <DropdownInput full={true} options={options} placeholder={'Выбрать формат'} /> */}
+								<EventMultiDropdown options={metaParameters && metaParameters.formats} items={dataEvent.format} incomeFunction={handleDataEventChangeFormat} placeholder={'Выбрать формат'} />
 							</div>
 							<div>
 								<p>Организатор</p>
-								<EventDropdown full={true} options={metaParameters && metaParameters.companies} items={dataEvent.organizator} incomeFunction={handleDataEventChangeOrganizator} type={'org'} placeholder={'Выбрать организатора'} />
-								{/* <DropdownInput full={true} options={metaParameters && metaParameters.companies} placeholder={'Выбрать организатора'} /> */}
+								<EventDropdown options={metaParameters && metaParameters.companies} items={dataEvent.organizator} incomeFunction={handleDataEventChangeOrganizator} type={'org'} placeholder={'Выбрать организатора'} />
 								<p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/lk/org" target="_blank" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
 							</div>
 							<div>
