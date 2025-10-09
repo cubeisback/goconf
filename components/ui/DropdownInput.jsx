@@ -35,7 +35,7 @@ const Input = styled.input`
     }
 `
 
-const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChange, type, filterValues }) => {
+const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChange, type, filterValues, incomeFunction }) => {
   const theme = useTheme();
 
 
@@ -84,7 +84,7 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
     setShowFullList(false); // Показывать фильтрованный список при вводе
   };
 
-  const handleSelect = (value, type, index) => {
+  const handleSelect = (value, type, index, e) => {
     // if(!isSimple) {
       setSelectedValue(value);
       setQuery(value); // Подставляем выбранное значение в инпут
@@ -100,7 +100,9 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
     //   console.log('asfas', keys[index], type)
     }
     console.log('values', values)
-    console.log('filteredOptions', filteredOptions)
+	// console.log('pidr', value, index, keys[index])
+    incomeFunction(keys[index])
+	
   };
 
   const handleFocus = () => {
