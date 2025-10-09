@@ -60,6 +60,48 @@ const UserEvents = () => {
 			}
 	};
 
+	// const [dataForStatusEvents, setDataForStatusEvents] = useState({
+	// 	status: 'moderation',
+	// })
+	// const handleChangeStatus = (newStatus) => {
+	// 	setDataForStatusEvents((prev) => ({
+	// 		...prev,
+	// 		status: newStatus,
+	// 	}));
+	// };
+
+	const testStatusEvents = async(currentStatus) => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+		setLoading(true);
+
+		// console.log('currentStatus ', currentStatus)
+			try {
+				const response = await axios.post(
+				getApiUrl("/backend/wp-json/account/v2/events/"),
+
+				{status: currentStatus},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				console.log('testStatusEvents', response.data.items)
+				if (response.status === 200) {
+					setEvents(response.data.items)
+					// console.log("testStatusEvents", response.data);
+				}
+			} catch (error) {
+				console.error("Update password error", error);
+				setEvents()
+			}
+			finally {
+				setLoading(false); // 🔹 всегда выключаем загрузку
+			}
+	};
+
 	// TODO
 	// дата старта событий
 	// добавить поиски у выпадающих списков
@@ -256,7 +298,7 @@ const UserEvents = () => {
             <div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
                 <div style={{flex: '0 1 300px'}}>
                     <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Статус</p>
-                    <DropdownInput options={statuses} type={'status'} placeholder={'Статус'} isSimple />
+                    <DropdownInput options={statuses} type={'status'} placeholder={'Статус'} isSimple incomeFunction={testStatusEvents} />
                 </div>
             </div>
 
