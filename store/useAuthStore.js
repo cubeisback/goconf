@@ -3,6 +3,23 @@ import axios from 'axios';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+function decodeWpToken(token) {
+  try {
+    const decoded = JSON.parse(atob(token));
+    if (decoded?.data) {
+      const inner = JSON.parse(decoded.data);
+      return inner; // { user_id, exp }
+    }
+    return null;
+  } catch (e) {
+    console.warn('Ошибка при декодировании WP токена:', e);
+    return null;
+  }
+}
+
+console.log(decodeWpToken("eyJkYXRhIjoie1widXNlcl9pZFwiOjM2LFwiZXhwXCI6MTc2MjQ5MDA1NX0iLCJzaWciOiJiMDdjNDJkMjAxNTA4YWJkYmRmM2FiMGYyM2RkZDdhYTk2YTA3NjQwNDk0MTNlYjU3NWNlY2Q3MGI0MTFjMzRiIn0="))
+
+
 export const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -20,43 +37,60 @@ export const useAuthStore = create(
         set({ token: null, isAuthenticated: false, user: null });
       },
 
+      isTokenExpired: () => {
+        const token = get().token;
+        if (!token) return true;
+
+        const decoded = decodeWpToken(token);
+        if (!decoded || !decoded.exp) return true;
+
+        const now = Math.floor(Date.now() / 1000);
+        return decoded.exp < now;
+      },
+
       fetchUser: async () => {
         const token = get().token;
         if (!token) return;
 
+        if (get().isTokenExpired()) {
+          console.warn('Токен истёк, выполняем logout');
+          get().logout();
+          return;
+        }
+
         try {
-          const res = await axios
-            .get(getApiUrl('/backend/wp-json/users/v2/profile/'), {
+          const res = await axios.get(getApiUrl('/backend/wp-json/users/v2/profile/'), {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          })
-          // .then(resfsa=>console.log(resfsa));
-// console.log('res', res)
-          // if (!res.ok) {
-          //   if (res.status === 401) {
-          //     get().logout();
-          //   }
-          //   return;
-          // }
+          });
 
-          if(res.status !== 200) {
+          if (res.status !== 200) {
             get().logout();
-            return
+            return;
           }
 
-          //TODO проверить логины
-          
-
-          // const data = await res.json();
           set({ user: res.data });
-          console.log('user', res)
+          console.log('user', res.data);
         } catch (err) {
           console.error('Ошибка при получении профиля:', err);
+          if (err.response?.status === 401) {
+            get().logout();
+          }
         }
       },
 
-      setHasHydrated: () => set({ hasHydrated: true }),
+      setHasHydrated: () => {
+        const store = get();
+        const token = store.token;
+
+        if (token && store.isTokenExpired()) {
+          console.warn('Токен истёк после восстановления из localStorage');
+          store.logout();
+        }
+
+        set({ hasHydrated: true });
+      },
     }),
     {
       name: 'authToken',
@@ -66,7 +100,7 @@ export const useAuthStore = create(
         user: state.user,
       }),
       onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated?.(); // <== вот это нужно, иначе `hasHydrated` всегда false
+        state?.setHasHydrated?.();
       },
     }
   )
