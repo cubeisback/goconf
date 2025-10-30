@@ -17,8 +17,6 @@ function decodeWpToken(token) {
   }
 }
 
-console.log(decodeWpToken("eyJkYXRhIjoie1widXNlcl9pZFwiOjM2LFwiZXhwXCI6MTc2MjQ5MDA1NX0iLCJzaWciOiJiMDdjNDJkMjAxNTA4YWJkYmRmM2FiMGYyM2RkZDdhYTk2YTA3NjQwNDk0MTNlYjU3NWNlY2Q3MGI0MTFjMzRiIn0="))
-
 
 export const useAuthStore = create(
   persist(

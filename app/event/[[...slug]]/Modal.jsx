@@ -7,6 +7,8 @@ import { Button } from '@/styles/ui';
 import { useTheme } from '@emotion/react';
 import styled from "@emotion/styled";
 import { useAuthReady } from '@/hooks/useAuthReady';
+import axios from 'axios';
+import { getApiUrl } from '@/functions/functions';
 
 const modalBackdrop = css`
   position: fixed;
@@ -227,7 +229,7 @@ const ModalClose = styled.div`
 	}
 `;
 
-export const ModalEvent = ({ isOpen, onClose, onReg, eventName }) => {
+export const ModalEvent = ({ isOpen, onClose, onReg, eventName, eventId }) => {
   	const theme = useTheme();
 
   const modalClose = css`
@@ -247,6 +249,31 @@ export const ModalEvent = ({ isOpen, onClose, onReg, eventName }) => {
 
   const [view, setView] = useState(1);
   const { ready } = useAuthReady();
+const [accessWasSended, setAccessWasSended] = useState();
+  const sendEventAccess = async() => {
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+		try {
+				const response = await axios.post(
+				getApiUrl("/backend/wp-json/events/v2/access-request/"),
+				{id: eventId},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				console.log('sendEventAccess', response)
+				if (response.status === 200) {
+					setView(2)
+				}
+		} catch (error) {
+			console.error("Update password error", error);
+			setAccessWasSended('Запрос уже отправлен, дождитесь ответа')
+			setView(2)
+		}
+	};
     return (
       <>
         <AnimatePresence>
@@ -296,7 +323,7 @@ export const ModalEvent = ({ isOpen, onClose, onReg, eventName }) => {
 						<p>Мы&nbsp;публикуем события со&nbsp;всего интернета. Если это ваше событие, и&nbsp;вы&nbsp;хотите получить доступ к&nbsp;редактированию, нажмите на&nbsp;кнопку &laquo;Отправить запрос&raquo;.</p>
 						<p>После успешной модерации событие появится в&nbsp;вашем личном кабинете,и вы&nbsp;сможете управлять&nbsp;им. Как правило, это занимает не&nbsp;более 30&nbsp;минут.</p>
 					</div>
-					<Button $button type="submit" style={{width: '100%'}} onClick={()=>setView(2)}>
+					<Button $button type="submit" style={{width: '100%'}} onClick={sendEventAccess}>
 								<p>
 									<span>Отправить запрос</span>
 									<span>Отправить запрос</span>
@@ -308,7 +335,11 @@ export const ModalEvent = ({ isOpen, onClose, onReg, eventName }) => {
 						<div className={modalTitle}>Запрос отправлен</div>
 						<div className={modalText}>
 							<p><b>Мероприятие</b>&nbsp;&mdash; {eventName}</p>
+							{accessWasSended ?
+							<p>{accessWasSended}</p>
+							:
 							<p>Запрос успешно отправлен. В&nbsp;ближайшее время мы&nbsp;его обработаем. На&nbsp;контактный E-mail придет уведомление с&nbsp;результатами обработки. В&nbsp;случае успеха, событие появится в&nbsp;вашем личном кабинете.</p>
+							}
 						</div>
 						<Button $button type="submit" style={{width: '100%'}} onClick={onClose}>
 								<p>

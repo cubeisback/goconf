@@ -158,13 +158,23 @@ const UserEvents = () => {
 	}
 
 
+	const [costOption, setCostOption] = useState(0);
+
+	const costOptionChange = (ver) => {
+		setCostOption((prev) => {
+			if (ver === 'plus' && prev < 3) return prev + 1;
+			if (ver === 'minus' && prev > 0) return prev - 1;
+			return prev;
+		});
+	};
+
 	const [dataForPayments, setDataForPayment] = useState({
 		id: '',
 		title: '',
 
 		promo: 'cost_7',
-		tariff: 0,
-		pay: 'pay_ur',
+		tariff: 1,
+		pay: 'pay_tochka',
 
 		info: {
 			name: '',
@@ -173,27 +183,94 @@ const UserEvents = () => {
 			kpp: '',
 		},
 	});
+	
+	
+	const [actualTariffs, setActualTariffs] = useState({})
+	const orderedKeys = ["cost_7", "cost_14", "cost_21", "cost_28"];
+	const tariffsArray = orderedKeys.map(key => actualTariffs[key]);
+	const getTariffs = async() => {
+		try {
+			const response = await axios.get(
+				getApiUrl("/backend/wp-json/account/v2/promotion/tariffs/"),
+			);
+			console.log('tariffs', response.data)
+			if (response.status === 200) {
+				setActualTariffs(response.data)
+			}
+		} catch (error) {
+			console.error("Update password error", error);
+		}
+	};
 
 	useEffect(()=>{
-		console.log(dataForPayments)
-	}, [dataForPayments])
-
-	const getTariffs = async() => {
-			try {
-				const response = await axios.get(
-					getApiUrl("/backend/wp-json/account/v2/promotion/tariffs/"),
-				);
-				console.log('tariffs', response.data)
-				if (response.status === 200) {
-					// console.log("events", response.data);
-				}
-			} catch (error) {
-				console.error("Update password error", error);
-			}
-	};
+		getTariffs()
+	}, [])
 
 	const [tariffOne, setTariffOne] = useState(true);
 	const [tariffTwo, setTariffTwo] = useState(false);
+
+	useEffect(()=>{
+		tariffOne 
+		? 
+		setDataForPayment((prev) => ({
+			...prev,
+			tariff: 1,
+		}))
+		:
+		setDataForPayment((prev) => ({
+			...prev,
+			tariff: 0,
+		}))
+	}, [tariffOne])
+
+	useEffect(()=>{
+		const promoMap = {
+			0: "cost_7",
+			1: "cost_14",
+			2: "cost_21",
+			3: "cost_28",
+		};
+
+		tariffTwo 
+		? 
+		setDataForPayment((prev) => ({
+			...prev,
+			promo: promoMap[costOption] || "cost_7",
+		}))
+		:
+		setDataForPayment((prev) => ({
+			...prev,
+			promo: '',
+		}))
+	}, [tariffTwo])
+
+	useEffect(()=>{
+		radios === 1 
+		?
+		setDataForPayment((prev) => ({
+			...prev,
+			pay: 'pay_tochka',
+		}))
+		:
+		setDataForPayment((prev) => ({
+			...prev,
+			pay: 'pay_ur',
+		}))
+	}, [radios])
+
+	useEffect(() => {
+		const promoMap = {
+			0: "cost_7",
+			1: "cost_14",
+			2: "cost_21",
+			3: "cost_28",
+		};
+
+		setDataForPayment(prev => ({
+			...prev,
+			promo: promoMap[costOption] || "cost_7",
+		}));
+	}, [costOption]);
 
 	const getUrData = async() => {
 		const authTokenRaw = localStorage.getItem('authToken');
@@ -225,6 +302,7 @@ const UserEvents = () => {
 			}
 	};
 
+	const [orderUrError, setOrderUrError] = useState();
 	const addOrder = async() => {
 		const authTokenRaw = localStorage.getItem('authToken');
 		const authToken = JSON.parse(authTokenRaw);
@@ -240,8 +318,39 @@ const UserEvents = () => {
 				}
 				);
 				console.log('addOrder', response.data)
-				if (response.status === 200) {
+				// if (response.status === 200) {
 					// console.log("events", response.data);
+				// }
+			} catch (error) {
+				console.error("Update password error", error);
+				setOrderUrError(error.response.data.message)
+			}
+	};
+
+	const addOrderTochka = async() => {
+		console.log(dataForPayments)
+		const authTokenRaw = localStorage.getItem('authToken');
+		const authToken = JSON.parse(authTokenRaw);
+		const token = authToken?.state?.token;
+			try {
+				const response = await axios.post(
+				getApiUrl("/backend/wp-json/account/v2/promotion/add/"),
+				{
+					id: dataForPayments.id,
+					promo: dataForPayments.promo,
+					tariff: dataForPayments.tariff,
+					pay: dataForPayments.pay,					
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+				);
+				console.log('addOrder', response.data)
+				if (response.status === 200 && response.data?.redirect) {
+					// автоматический переход на страницу оплаты
+					window.location.href = response.data.redirect;
 				}
 			} catch (error) {
 				console.error("Update password error", error);
@@ -268,14 +377,32 @@ const UserEvents = () => {
 			});
 		};
 	
-
+	// const checkArchive = async() => {
+	// 	const authTokenRaw = localStorage.getItem('authToken');
+	// 	const authToken = JSON.parse(authTokenRaw);
+	// 	const token = authToken?.state?.token;
+	// 	try {
+	// 			const response = await axios.get(
+	// 			getApiUrl(`/backend/wp-json/account/v2/events/archive`),
+	// 			{
+	// 				headers: {
+	// 					Authorization: `Bearer ${token}`,
+	// 				},
+	// 			}
+	// 			);
+	// 			console.log('archive', response)
+	// 			if (response.status === 200) {
+	// 			}
+	// 		} catch (error) {
+	// 			console.error("Update password error", error);
+	// 		}
+	// }
 
     return(
         <LkWrapper>
             <Container>
                 <div style={{display: 'flex', gap: 64}}>
                     <LkMenu />
-                
         {view === 1 && 
         <UserMain
         	initial={{ opacity: 0, x: 50 }}
@@ -297,6 +424,7 @@ const UserEvents = () => {
             
             <div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
                 <div style={{flex: '0 1 300px'}}>
+					{/* <p onClick={checkArchive}>check archive</p> */}
                     <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Статус</p>
                     <DropdownInput options={statuses} type={'status'} placeholder={'Статус'} isSimple incomeFunction={testStatusEvents} />
                 </div>
@@ -343,7 +471,8 @@ const UserEvents = () => {
 									font-size: 14px;
 									opacity: 0;
 									pointer-events: none;
-									transition: .3s ease-in-out;									
+									z-index: 1;
+									transition: .3s ease-in-out;
 									
 									ul {
 										display: flex;
@@ -395,7 +524,9 @@ const UserEvents = () => {
 </clipPath>
 </defs>
 </svg>
-</div></UserEventsBlockItemTopStatus>
+</div> 
+				<span>{event?.rejected}</span>
+</UserEventsBlockItemTopStatus>
 							: event.status === 'archived' ? 
 							<UserEventsBlockItemTopStatus style={{backgroundColor: '#6C6C71'}}>В архиве</UserEventsBlockItemTopStatus>
 							:
@@ -448,8 +579,7 @@ const UserEvents = () => {
 																	} else {
 																	return (
 																		<>
-																		{formatDate(event.date_start)} -<br />
-																		{formatDate(event.date_end)}
+																		{formatDate(event.date_start)} - {formatDate(event.date_end)}
 																		</>
 																	);
 																	}
@@ -829,8 +959,7 @@ const UserEvents = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: .3 }}>
-
-			<div onClick={getTariffs}>ТАРИФЫ</div>
+			
 
             <UserMainTitles>
                 <UserMainTitlesTitle>Опции для продвижения</UserMainTitlesTitle>
@@ -967,12 +1096,24 @@ const UserEvents = () => {
                     </div>
                 
             </div>
-			{/* <div onClick={()=>setView(1)}>Назад</div> */}
+			<div style={{display: 'flex', gap: 16}}>
+			<Button onClick={()=>setView(1)} className={cx(css`background-color:#fff!important;`)}>
+				<p>
+					<span style={{color: '#8553F9'}}>Назад</span>
+					<span>Назад</span>
+				</p>
+			</Button>
             <Button onClick={()=>{
 				if(tariffOne || tariffTwo) {
 					setView(3)
 				} 
-			}}>Перейти к оплате</Button>
+			}}>
+				<p>
+					<span>Перейти к оплате</span>
+					<span>Перейти к оплате</span>
+				</p>
+			</Button>
+			</div>
         </UserMain>
         }
         {view === 3 &&
@@ -1003,7 +1144,7 @@ const UserEvents = () => {
                 <div className={css`border-color: #8553F9!important;`}>Подтверждение покупки</div>
             </div>
             <div className={css`margin-bottom: 8px;color: #6C6C71;font-size: 14px;line-height: 1.16;`}>Событие</div>
-            <div className={css`margin-bottom: 16px; font-size: 20px; font-weight: 500; line-height: 1.4;`}>Налоговая и юридическая безопасность селлера на маркетплейсах</div>
+            <div className={css`margin-bottom: 16px; font-size: 20px; font-weight: 500; line-height: 1.4;`}>{dataForPayments.title}</div>
             <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }} 
@@ -1027,33 +1168,54 @@ const UserEvents = () => {
                     <div className={css`margin-bottom: 16px;color: #6C6C71;font-size: 14px;line-height: 1.16;`}>Промежуточный итог</div>
 					{tariffOne && 
                     <div className={css`
-                        display: flex;gap:16px;justify-content: space-between;margin-bottom: 16px;padding-bottom: 16px;
+                        display: flex;
+						gap: 16px;
+						justify-content: space-between;
+						margin-bottom: 24px;
+						${tariffTwo && 'padding-bottom: 24px;'}
+						${tariffTwo && 'border-bottom: 1px solid #F5F7FA;'}
+
                         @media(max-width: 575px) {
                             flex-direction: column;
                         }
                     `}>
-                        <div style={{flex: '0 1 540px'}}>Тариф «Расширенный»</div>
+                        <div style={{flex: '0 1 500px'}}>Тариф «Расширенный»</div>
 						<div style={{flex: 1}}>бессрочно</div>
-                        <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</div>
+                        <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;text-align: right;`}>5 000 руб.</div>
                     </div>
 					}
 					{tariffTwo && 
                     <div className={css`
-                        display: flex;gap:16px;justify-content: space-between;margin-bottom: 16px;padding-bottom: 16px;
+                        display: flex;gap:16px;justify-content: space-between;margin-bottom: 24px;
                         @media(max-width: 575px) {
                             flex-direction: column;
                         }
                     `}>
-                        <div style={{flex: '0 1 540px'}}>Размещение в сквозном слайдере «Интересные события» (на 7 дней)</div>
-						<div style={{flex: 1, display: 'flex'}}>
-							<div>-</div>
-							<div>7 дней</div>
-							<div>+</div>
+                        <div style={{flex: '0 1 500px'}}>Размещение в&nbsp;сквозном слайдере<br/> &laquo;Интересные события&raquo;</div>
+						<div style={{flex: 1, display: 'flex', gap: 8, background: '#F5F7FA', borderRadius: 8, maxWidth: 'max-content', padding: 4, height: 'max-content', alignItems: 'center'}}>
+							<div onClick={()=>costOptionChange('minus')} style={{cursor: 'pointer', display: 'flex', padding: 6}}>
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="2" viewBox="0 0 14 2" fill="none">
+									<path d="M1 1H13" stroke="#6C6C71" stroke-width="2" stroke-linecap="round"/>
+								</svg>
+							</div>
+							<div style={{minWidth: 67, textAlign: 'center'}}>{costOption === 0 ? '7 дней'
+							: costOption === 1 ? '14 дней'
+							: costOption === 2 ? '21 день'
+							: '28 дней' }</div>
+							<div onClick={()=>costOptionChange('plus')} style={{cursor: 'pointer', display: 'flex', padding: 6}}>
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+									<path d="M1 6.996H13M7.004 1L7.004 13" stroke="#6C6C71" stroke-width="2" stroke-linecap="round"/>
+								</svg>
+							</div>
 						</div>
-                        <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</div>
+                        <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;text-align: right;`}>
+							{tariffsArray[costOption]?.old && <span style={{marginRight: 4, fontSize: 14, color: '#B5B7B9', textDecoration: 'line-through', lineHeight: 1.16}}>{tariffsArray[costOption]?.old} руб.</span>}
+							{tariffsArray[costOption]?.new} руб.
+							{tariffsArray[costOption]?.old - tariffsArray[costOption]?.new > 0 && <p style={{color: '#191921', fontSize: 14, lineHeight: 1.16}}>Экономия {tariffsArray[costOption]?.old - tariffsArray[costOption]?.new} руб.</p>}
+						</div>
                     </div>
 					}
-                    <div style={{display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid #D7DADD'}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>5 000 руб.</span></div>
+                    <div style={{textAlign: 'right', borderTop: '1px solid #D7DADD', paddingTop: 24}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>{(tariffTwo ?Number(tariffsArray[costOption]?.new) : 0) + (tariffOne ? 5000 : 0)} руб.</span></div>
                 </div>
                 <div className={css`color: #6C6C71;margin-bottom: 16px; font-size: 14px;line-height: 1.16;`}>Способ оплаты</div>
                 <div className={css`
@@ -1067,7 +1229,14 @@ const UserEvents = () => {
                 </div>
                 <div className={css`display: flex;gap:16px;`}>
                     <Button onClick={()=>setView(2)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Назад</Button>
-                    <Button onClick={()=>setView(4)}>Подтвердить</Button>
+                    <Button onClick={()=>
+					{
+						radios === 1 ?
+						addOrderTochka()
+						:
+						setView(4)
+					}
+					}>Подтвердить</Button>
                 </div>
 				<div className={
 					css`
@@ -1169,7 +1338,7 @@ const UserEvents = () => {
 											}))} />
 										</div>
 									</div>
-            
+				{orderUrError && <div style={{fontSize: 12, color: '#FC1234', paddingLeft: 10, marginBottom: 8}}>{orderUrError}</div>}
                 <div className={css`display: flex;gap:16px;`}>
                     <Button onClick={()=>setView(3)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Назад</Button>
                     <Button onClick={addOrder}>Получить счет</Button>

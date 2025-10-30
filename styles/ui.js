@@ -424,9 +424,8 @@ export const inputRadio = css`
     top: 4px;
     width: 26px;
     height: 26px;
-    background-color: #fff;
     border-radius: 100%;
-    border: 5px solid rgba(16, 16, 16, 0.2);
+    border: 3px solid rgba(16, 16, 16, 0.2);
     transition: all 0.3s ease;
   }
 `;
@@ -434,6 +433,8 @@ export const inputRadio = css`
 export const inputRadioActive = css`
 	&::before {
 		border-color: #8553F9;
+		background-color: #fff;
+		border-width: 6px;
 	}
 `;
 
@@ -575,6 +576,34 @@ export const UserEventsBlockItemTopStatus = styled.div`
 	color: #fff;
 	font-size: 14px;
 	line-height: 1.16;
+	position: relative;
+
+	span {
+		color: #191921;
+		border-radius: 8px;
+		border: 1px solid #F5F7FA;
+		background: #FFF;
+		box-shadow: 0 196px 55px 0 rgba(0, 0, 0, 0.00), 0 125px 50px 0 rgba(0, 0, 0, 0.01), 0 71px 42px 0 rgba(0, 0, 0, 0.02), 0 31px 31px 0 rgba(0, 0, 0, 0.03), 0 8px 17px 0 rgba(0, 0, 0, 0.04);
+		padding: 8px 16px;
+		display: block;
+		position: absolute;
+		bottom: calc(100% + 8px);
+		left: 0;
+		font-size: 14px;
+		opacity: 0;
+		pointer-events: none;
+		transition: .3s ease-in-out;
+		max-width: 320px;
+		width: max-content;
+
+		@media(max-width: 575px) {
+			max-width: 280px;
+		}
+	}
+	&:hover span {
+		opacity: 1;
+		pointer-events: all;
+	}
 `;
 export const UserEventsBlockItemTopPublishDate = styled.div`
 	flex: 1;

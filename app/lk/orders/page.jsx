@@ -42,7 +42,7 @@ const UserOrders = () => {
 					},
 				}
 				);
-				console.log('history', response.data)
+				// console.log('history', response.data)
 				if (response.status === 200) {
 					setOrders(response.data)
 				}
@@ -56,7 +56,7 @@ const UserOrders = () => {
 	}, [])
 
 	useEffect(()=>{
-		console.log('vot', orders)
+		console.log('history from state', orders)
 	}, [orders])
 
     return (
@@ -76,21 +76,8 @@ const UserOrders = () => {
 				transition={{ duration: .3 }}
             >	
 				<UserMainTitles>
-					<UserMainTitlesTitle>Организаторы</UserMainTitlesTitle>
+					<UserMainTitlesTitle>Заказы</UserMainTitlesTitle>
 				</UserMainTitles>
-                <div className={css`
-                    margin-bottom: 24px;
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 8px;
-
-                    a {
-                        color: ${theme.colors.purple};
-                        display: flex;
-                        align-items: center;
-                        gap: 4px;
-                    }
-                `}>Статус профиля: <Link  href="/">Базовый <EditIcon /></Link></div>
                 <div className={css`
                     display: flex;
                     gap: 4px;
@@ -206,7 +193,7 @@ const UserOrders = () => {
                         `}>{item.status}</div>
                         <div>Дата: {item.date}</div>
                     </div>
-                    <div className={css`color: ${theme.colors.purple};`}>Скачать счет</div>
+                    <a href={item.invoice} target="_blank" className={css`color: ${theme.colors.purple};`}>Скачать счет</a>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}><b>Наименование услуги:</b> 
 					{item.options.map((option, i) => (
@@ -214,7 +201,7 @@ const UserOrders = () => {
 					))}
 				</div>
                 <div><b>№ заказа:</b> <span className={css`color: #6C6C71;`}>5530712</span></div>
-                <div><b>Сумма оплаты:</b> <span className={css`color: ${theme.colors.purple};font-weight: 500;`}>14&nbsp;000&nbsp;руб.</span></div>
+                <div><b>Сумма оплаты:</b> <span className={css`color: ${theme.colors.purple};font-weight: 500;`}>{item.total} руб.</span></div>
                 <div><b>Способ оплаты:</b> <span className={css`color: #6C6C71;`}>Безналичная оплата</span></div>
             </div>
 			))}
