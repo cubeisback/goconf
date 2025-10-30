@@ -597,7 +597,7 @@ export default function EventClient({ params }) {
 							}
 							</div>
 							
-							{!pageInfo.company[0] && 
+							{!pageInfo.fields.events_owner &&
 								<div className={css`
 									color: ${theme.colors.purple};
 									cursor: pointer;
@@ -647,7 +647,7 @@ export default function EventClient({ params }) {
 			<MainEvents id={pageInfo && pageInfo.data.ID} similar={true} />
 			<Form />
 
-			<ModalEvent isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} onReg={()=>setIsModalOpen2(true)} eventName={pageInfo && pageInfo.data.post_title} />
+			<ModalEvent isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} onReg={()=>setIsModalOpen2(true)} eventName={pageInfo && pageInfo.data.post_title} eventId={pageInfo && pageInfo.data.ID} />
 			<Modal isOpen={isModalOpen2} onClose={()=>setIsModalOpen2(false)} />
 		</>
 	);
