@@ -10,6 +10,8 @@ import RemoveIcon from "@/public/images/svg/remove.svg";
 import CheckIcon from "@/public/images/svg/check.svg";
 import UpIcon from "@/public/images/svg/up.svg";
 import InfoIcon from "@/public/images/svg/info.svg";
+import PlusIcon from "@/public/images/svg/plus_icon.svg";
+import MinusIcon from "@/public/images/svg/minus_icon.svg";
 import DropdownInput from "@/components/ui/DropdownInput";
 import LkMenu from "@/components/ui/LkMenu";
 import Link from "next/link";
@@ -444,8 +446,24 @@ const UserEvents = () => {
 												`}><Loader /></div> // 🔹 прелоадер
 											) : events && events.length > 0 ? (events.map((event, index) => (
 					<div key={index}>
-					<UserEventsBlockHead>
-						<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>Тариф <b style={{marginLeft: 4}}>&laquo;Базовый&raquo;</b> 
+					<UserEventsBlockHead $active={event.tariff.value === 'advanced' && true }>
+						<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>
+							{event.promotion && 
+							<div className={css`
+								display: flex;
+								margin-right: 16px;
+
+								svg {
+									stroke: ${event.tariff.value === 'default' ? '#8553F9' : '#fff'};
+									stroke-width: 1.5px;
+								}	
+							`}>
+								<UpIcon />
+							</div>
+							}
+							{event.tariff.value === 'default' ? 
+							<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>
+							Тариф <b style={{marginLeft: 4}}>&laquo;Базовый&raquo;</b> 
 							<div style={{width: 20, height: 20, backgroundColor: '#D7DADD', borderRadius: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center',  marginLeft: 8, position: 'relative'}} className={css`
 								&:hover {
 
@@ -502,8 +520,17 @@ const UserEvents = () => {
 									</ul>
 								</div>
 							</div>
+							</div>
+							:
+							<div style={{display: 'flex', alignItems: 'center', fontSize: 14, color: '#fff'}}>Тариф <b style={{marginLeft: 4}}>&laquo;Расширенный&raquo;</b></div>
+							}
 						</div>
-                        <div style={{fontSize: 14}}>Подключите тариф <span style={{color: '#8553F9', fontWeight: 500}}>&laquo;Расширенный&raquo;</span> для доступа ко&nbsp;всем возможностям</div>
+                        <div style={{fontSize: 14}}>
+							{event.tariff.value === 'default' ?
+							<p>Подключите тариф <span style={{color: '#8553F9', fontWeight: 500}}>&laquo;Расширенный&raquo;</span> для доступа ко&nbsp;всем возможностям</p>
+							: <p style={{color: '#fff'}}>Полный доступ к&nbsp;возможностям</p>
+							}
+						</div>
 					</UserEventsBlockHead>
 					<UserEventsBlockItem>
 						<UserEventsBlockItemTop>
@@ -590,6 +617,7 @@ const UserEvents = () => {
                             <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}; width: max-content`}><b>Организатор:</b> {event.company[0].name}</div>
 							}
                         </div>
+						<div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
 						<Button onClick={()=>{
 							setDataForPayment((prev) => ({
 								...prev,
@@ -597,7 +625,19 @@ const UserEvents = () => {
 								title: event.title
 							}));
 							getUrData();
-							setView(2)}}>Опции для продвижения</Button>
+							setView(2)}}>
+								<p>
+									<span>Опции для продвижения</span>
+									<span>Опции для продвижения</span>
+								</p>
+						</Button>
+						{event.tariff.value === 'advanced' && 
+							<div style={{borderRadius: 16, background: '#F5F7FA', display: 'flex', gap: 8, padding: 12, color: '#47474D', fontSize: 14, lineHeight: 1.16}}>
+								<p><span style={{display: 'block', fontSize: 16, marginBottom: 4, fontWeight: 500, lineHeight: 1.28}}>{event.views}</span> Просмотров</p>
+								<p><span style={{display: 'block', fontSize: 16, marginBottom: 4, fontWeight: 500, lineHeight: 1.28}}>{event.conversion}</span> Переходов</p>
+							</div>
+						}
+						</div>
 					</UserEventsBlockItem>
 					</div>
 				))
@@ -1096,6 +1136,7 @@ const UserEvents = () => {
                     </div>
                 
             </div>
+			{!tariffOne && !tariffTwo && <div style={{fontSize: 12, color: '#FC1234', paddingLeft: 10, marginBottom: 8}}>Выберите хотя бы одну опцию</div>}
 			<div style={{display: 'flex', gap: 16}}>
 			<Button onClick={()=>setView(1)} className={cx(css`background-color:#fff!important;`)}>
 				<p>
@@ -1193,19 +1234,15 @@ const UserEvents = () => {
                     `}>
                         <div style={{flex: '0 1 500px'}}>Размещение в&nbsp;сквозном слайдере<br/> &laquo;Интересные события&raquo;</div>
 						<div style={{flex: 1, display: 'flex', gap: 8, background: '#F5F7FA', borderRadius: 8, maxWidth: 'max-content', padding: 4, height: 'max-content', alignItems: 'center'}}>
-							<div onClick={()=>costOptionChange('minus')} style={{cursor: 'pointer', display: 'flex', padding: 6}}>
-								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="2" viewBox="0 0 14 2" fill="none">
-									<path d="M1 1H13" stroke="#6C6C71" stroke-width="2" stroke-linecap="round"/>
-								</svg>
+							<div onClick={()=>costOptionChange('minus')} style={{cursor: 'pointer', display: 'flex'}}>
+								<MinusIcon/>
 							</div>
 							<div style={{minWidth: 67, textAlign: 'center'}}>{costOption === 0 ? '7 дней'
 							: costOption === 1 ? '14 дней'
 							: costOption === 2 ? '21 день'
 							: '28 дней' }</div>
-							<div onClick={()=>costOptionChange('plus')} style={{cursor: 'pointer', display: 'flex', padding: 6}}>
-								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-									<path d="M1 6.996H13M7.004 1L7.004 13" stroke="#6C6C71" stroke-width="2" stroke-linecap="round"/>
-								</svg>
+							<div onClick={()=>costOptionChange('plus')} style={{cursor: 'pointer', display: 'flex'}}>
+								<PlusIcon/>
 							</div>
 						</div>
                         <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;text-align: right;`}>
@@ -1228,7 +1265,12 @@ const UserEvents = () => {
                     <div className={cx(inputRadio, radios === 2 && inputRadioActive)} onClick={()=>setRadios(2)}>Оплата по счету для юр.лиц</div>
                 </div>
                 <div className={css`display: flex;gap:16px;`}>
-                    <Button onClick={()=>setView(2)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Назад</Button>
+                    <Button onClick={()=>setView(2)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>
+						<p>
+							<span style={{color: '#8553F9'}}>Назад</span>
+							<span>Назад</span>
+						</p>
+					</Button>
                     <Button onClick={()=>
 					{
 						radios === 1 ?
@@ -1236,7 +1278,12 @@ const UserEvents = () => {
 						:
 						setView(4)
 					}
-					}>Подтвердить</Button>
+					}>
+						<p>
+							<span>Подтвердить</span>
+							<span>Подтвердить</span>
+						</p>
+					</Button>
                 </div>
 				<div className={
 					css`
@@ -1340,8 +1387,18 @@ const UserEvents = () => {
 									</div>
 				{orderUrError && <div style={{fontSize: 12, color: '#FC1234', paddingLeft: 10, marginBottom: 8}}>{orderUrError}</div>}
                 <div className={css`display: flex;gap:16px;`}>
-                    <Button onClick={()=>setView(3)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Назад</Button>
-                    <Button onClick={addOrder}>Получить счет</Button>
+                    <Button onClick={()=>setView(3)} className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>
+						<p>
+							<span style={{color: '#8553F9'}}>Назад</span>
+							<span>Назад</span>
+						</p>
+					</Button>
+                    <Button onClick={addOrder}>
+						<p>
+							<span>Получить счет</span>
+							<span>Получить счет</span>
+						</p>
+					</Button>
                 </div>
         </motion.div>
 		}
