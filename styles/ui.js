@@ -545,13 +545,13 @@ export const UserEventsBlockItem = styled.div`
     }
 `;
 export const UserEventsBlockHead = styled.div`
-	background-color: #F5F7FA;
+	background-color: ${({ $active, theme }) => ($active ? theme.colors.purple : "#F5F7FA")};
 	padding: 16px 32px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	border-radius: 28px 28px 0px 0px;
-	border: 2px solid #fff;
+	border: 2px solid ${({ $active, theme }) => ($active ? theme.colors.purple : "#fff")};;
 	border-bottom: none;
 
     @media(max-width: 575px) {
