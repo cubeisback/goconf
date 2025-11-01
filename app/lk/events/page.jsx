@@ -304,6 +304,12 @@ const UserEvents = () => {
 			}
 	};
 
+	const [isTariffActive, setIsTariffActive] = useState(false)
+	useEffect(()=>{
+		setTariffOne(isTariffActive ? false : true)
+		setTariffTwo(isTariffActive ? true : false)
+	}, [isTariffActive])
+
 	const [orderUrError, setOrderUrError] = useState();
 	const addOrder = async() => {
 		const authTokenRaw = localStorage.getItem('authToken');
@@ -624,6 +630,7 @@ const UserEvents = () => {
 								id: event.id,
 								title: event.title
 							}));
+							setIsTariffActive(event.tariff.value === 'advanced');
 							getUrData();
 							setView(2)}}>
 								<p>
@@ -1029,6 +1036,8 @@ const UserEvents = () => {
             <div className={css`margin-bottom: 8px;color: #6C6C71;font-size: 14px;line-height: 1.16;`}>Событие</div>
             <div className={css`margin-bottom: 16px; font-size: 20px; font-weight: 500; line-height: 1.4;`}>{dataForPayments.title}</div>
             {/* <div className={css`margin-bottom: 8px; color: #6C6C71; font-size: 14px;line-height: 1.16;`}>Опции для продвижения</div> */}
+			
+			{!isTariffActive && 
             <div className={css`display: flex; flex-direction: column;gap: 8px; margin-bottom: 24px;`}>
                 
                     <div className={css`
@@ -1095,7 +1104,7 @@ const UserEvents = () => {
                     </div>
                 
             </div>
-
+			}
 			<div className={css`display: flex; flex-direction: column;gap: 8px; margin-bottom: 24px;`}>
                 
                     <div className={css`

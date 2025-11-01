@@ -99,7 +99,7 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
       handleFilterChange(keys[index], type);
     //   console.log('asfas', keys[index], type)
     }
-    console.log('values', values)
+    // console.log('values', values)
 	// console.log('pidr', value, index, keys[index])
     incomeFunction(keys[index])
 	

@@ -1,12 +1,10 @@
 "use client"
 
 import Link from "next/link";
-
-import { css, cx } from "@emotion/css";
+import { css } from "@emotion/css";
 import { motion } from 'framer-motion';
 import { useEffect, useState } from "react";
-import { Container, container, lkContainer, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
-// import EditIcon from "@/public/images/svg/edit.svg";
+import { Container, LkWrapper, UserMain, UserMainTitles, UserMainTitlesTitle } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
 import LkMenu from "@/components/ui/LkMenu";
 import axios from "axios";
@@ -33,6 +31,7 @@ const UserOrders = () => {
 					},
 				}
 				);
+				console.log('his', response.data)
 				if (response.status === 200) {
 					setOrders(response.data)
 				}
@@ -40,7 +39,7 @@ const UserOrders = () => {
 				console.error("Update password error", error);
 			}
 			finally {
-				setLoading(false); // 🔹 всегда выключаем загрузку
+				setLoading(false);
 			}
 	};
 
@@ -68,7 +67,7 @@ const UserOrders = () => {
 					},
 				}
 				);
-				console.log('history', response)
+				// console.log('history', response)
 				if (response.status === 200) {
 					setOrders(response.data)
 					setOrdersError()
@@ -83,13 +82,9 @@ const UserOrders = () => {
 			}
 	};
     return (
-		<div className={lkContainer}>
+		<LkWrapper>
             <Container>
-                <div
-                    className={css`
-                    display: flex;
-                    gap: 64px;
-                `}>
+                <div style={{display: 'flex', gap: 64}}>
                     <LkMenu />
                 
         <UserMain>
@@ -101,10 +96,8 @@ const UserOrders = () => {
 				<UserMainTitles>
 					<UserMainTitlesTitle>Заказы</UserMainTitlesTitle>
 				</UserMainTitles>
-                {/* <div onClick={getHistSort}>test</div> */}
 				<div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
                 <div style={{flex: '0 1 300px'}}>
-					{/* <p onClick={checkArchive}>check archive</p> */}
                     <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Статус</p>
                     <DropdownInput options={statuses} type={'status'} placeholder={'Статус'} isSimple incomeFunction={getHistSort} />
                 </div>
@@ -186,7 +179,7 @@ const UserOrders = () => {
                 
                 <div><b>&#8470; заказа:</b> <span className={css`color: #6C6C71;`}> {item.id}</span></div>
                 <div><b>Сумма оплаты:</b> <span className={css`color: ${theme.colors.purple};font-weight: 500;`}>{item.total} руб.</span></div>
-				<div><b>Дата оплаты:</b> <span className={css`color: ${theme.colors.purple};font-weight: 500;`}>{item.date} руб.</span></div>
+				<div><b>Дата оплаты:</b> <span className={css`color: #6C6C71;`}>{item.date}</span></div>
                 <div><b>Способ оплаты:</b> <span className={css`color: #6C6C71;`}>{item.payment}</span></div>
 
 				<div style={{width: '100%', height: 1, background: '#D7DADD', margin: '8px 0'}}></div>
@@ -230,7 +223,7 @@ const UserOrders = () => {
 
 		</div>
             </Container>
-        </div>
+        </LkWrapper>
     )
 }
 
