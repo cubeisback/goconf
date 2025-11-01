@@ -31,7 +31,7 @@ const UserOrders = () => {
 					},
 				}
 				);
-				console.log('his', response.data)
+				// console.log('his', response.data)
 				if (response.status === 200) {
 					setOrders(response.data)
 				}
