@@ -355,9 +355,6 @@ const {
 
 
 
-
-
-
 	const handleSubmitTest = async (status) => {
 		const anons = await uploadAnons();
 		const cover = await uploadCover();
@@ -387,16 +384,20 @@ const {
 		await handleAddEventSubmit(payload, status); // основной запрос
 	};
 
-
+	const [isLoading, setIsLoading] = useState(false)
 	const { openModal } = useConfirmModal();
 		const handleSubmitModal = () => {
 			openModal({
 			title: 'Сохранение',
 			description: `Вы действительно хотите сохранить?`,
-			onConfirm: () => {
-				handleSubmitTest(dataEventStatus ? dataEventStatus : 'moderation'), 
-				// handleSubmitTest('moderation');
-				router.replace('/lk/events')
+			onConfirm: async() => {
+				try {
+					setIsLoading(true)
+					await handleSubmitTest(dataEventStatus ? dataEventStatus : 'moderation');
+					router.replace('/lk/events');
+				} finally {
+					setIsLoading(false)
+				}
 			},
 			confirmText: 'Сохранить',
 			});
@@ -1262,7 +1263,12 @@ const {
 						`}>
 						{view == 1 ? 
 						<>
-							<Button onClick={()=>{firstScreenCheck()}}>Продолжить</Button>
+							<Button onClick={()=>{firstScreenCheck()}}>
+								<p>
+									<span>Продолжить</span>
+									<span>Продолжить</span>
+								</p>
+							</Button>
 							{/* {dataEventStatus === 'publish' && 
 							<Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)} onClick={()=>{handleSubmitModal()}}>Сохранить</Button>
 							} */}
@@ -1276,7 +1282,21 @@ const {
 						: 
 						<>
 							<div onClick={()=>{setView(prev => prev - 1)}} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, width: 112}}><BackIcon /> Назад</div>
-							<Button onClick={()=>{handleSubmitModal()}}>{dataEventStatus === 'publish' ? 'Сохранить' : 'Отправить на модерацию'}</Button>
+							<Button onClick={()=>{handleSubmitModal()}}>
+								<p>
+									<span>{isLoading
+								? 'Сохранение...'
+								: dataEventStatus === 'publish'
+									? 'Сохранить'
+									: 'Отправить на модерацию'}</span>
+									<span>{isLoading
+								? 'Сохранение...'
+								: dataEventStatus === 'publish'
+									? 'Сохранить'
+									: 'Отправить на модерацию'}</span>
+								</p>
+								
+							</Button>
 							{/* {dataEventStatus === 'publish' ? 'Сохранить' : 'Отправить на модерацию'} */}
 						</>
 						}

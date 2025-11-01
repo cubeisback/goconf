@@ -11,7 +11,7 @@ import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 
 
-export const MainEvents = ({onPage, similar, id, events, orgPage}) => {
+export const MainEvents = ({onPage, similar, id, events, archive}) => {
     const theme = useTheme();
 
     const [limit, setLimit] = useState(5);
@@ -47,7 +47,7 @@ export const MainEvents = ({onPage, similar, id, events, orgPage}) => {
 
     return (
         <div className={css`
-            padding: 120px 0;
+            padding: ${archive ? '0 0 120px' : '120px 0'};
 
             @media(max-width: 575px) {
                 padding: 64px 0;
@@ -77,7 +77,7 @@ export const MainEvents = ({onPage, similar, id, events, orgPage}) => {
                     @media(max-width: 575px) {
                         font-size: 32px;
                     }
-				`}>Предстоящие мероприятия</div>
+				`}>{archive ? 'Прошедшие мероприятия' : 'Предстоящие мероприятия'}</div>
 				}
                 <div className={css`
                     margin-bottom: 32px;

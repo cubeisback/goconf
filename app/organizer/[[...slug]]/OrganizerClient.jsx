@@ -19,6 +19,7 @@ export default function OrganizerClient({ params }) {
 	const { slug } = useParams();
 	const [pageInfo, setPageInfo] = useState(null);
 	const [orgEvents, setOrgEvens] = useState(null);
+	const [archiveOrgEvents, setArchiveOrgEvens] = useState(null);
 	useEffect(() => {
 		if (!slug) return;
 	
@@ -28,6 +29,16 @@ export default function OrganizerClient({ params }) {
 			setPageInfo(response.data);
 			setOrgEvens(response.data["similar-events"])
 			console.log('организатор ', response.data);
+		  })
+		  .catch((error) => {
+			console.log(error);
+		  });
+		
+		axios
+		  .get(getApiUrl(`/backend/wp-json/org/v2/archive/?slug=${slug}`))
+		  .then((response) => {
+			setArchiveOrgEvens(response.data.items)
+			console.log('архивные ', response.data);
 		  })
 		  .catch((error) => {
 			console.log(error);
@@ -98,7 +109,7 @@ export default function OrganizerClient({ params }) {
             </div>
 
             <div className={css`
-                padding: 32px 0 0;
+                padding: ${orgEvents?.length > 0 ? '32px 0 0' : '32px 0 120px'};
 
                 @media(max-width: 575px) {
                     padding-bottom: 64px;
@@ -243,8 +254,9 @@ export default function OrganizerClient({ params }) {
                 </Container>
             </div>
 			
-			{orgEvents && <MainEvents similar={true} events={orgEvents} onPage={true} />}
-            
+			{orgEvents?.length > 0 && <MainEvents similar={true} events={orgEvents} onPage={true} />}
+
+			{archiveOrgEvents?.length > 0 && <MainEvents similar={true} archive={true} events={archiveOrgEvents} onPage={true} />}
 
             <Form />
         </>
