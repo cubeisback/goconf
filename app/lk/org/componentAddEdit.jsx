@@ -35,6 +35,7 @@ const AddEdit = () => {
 		handleGetOrganizationsMeta()
 	}, [ready, token]);
 	
+	const [organizationStatus, setOrganizationStatus] = useState();
 
 	useEffect(()=>{
 		id && token && handleGetOrganizatorWithId(id)
@@ -51,6 +52,7 @@ const AddEdit = () => {
 				}
 			);
 			setDataOrganization(response.data.data)
+			setOrganizationStatus(response.data.status)
 			setDataOrganization((prev) => {
 				return {
 					...prev,
@@ -142,13 +144,13 @@ const AddEdit = () => {
 		}));
 	};
 
-	const handleAddOrganizationSubmit = async(items) => {
+	const handleAddOrganizationSubmit = async(items, status) => {
 		try {
 			const response = await axios.post(
 			getApiUrl("/backend/wp-json/account/v2/company/editor/"),
 			{
 				...(id ? { id } : {}),
-				status: 'moderation',
+				status: status,
 				data: items
 			},
 			{
@@ -179,7 +181,7 @@ const AddEdit = () => {
 		targetKey: "logo",
 	});
 
-	const handleSubmitTest = async () => {
+	const handleSubmitTest = async (status) => {
 		let testImage = dataOrganization.logo;
 
 		if (file) {
@@ -193,7 +195,7 @@ const AddEdit = () => {
 			logo: testImage,
 			// другие поля
 		};
-		await handleAddOrganizationSubmit(payload); // основной запрос
+		await handleAddOrganizationSubmit(payload, status); // основной запрос
 	};
 
 
@@ -253,7 +255,7 @@ const AddEdit = () => {
 				window.scrollTo({ top: 0, behavior: 'smooth' });
 				// return;
 			} else {
-				handleSubmitTest(), 
+				handleSubmitTest(organizationStatus ? organizationStatus : 'moderation'),
 				router.replace('/lk/org')
 			}
 		},
@@ -304,6 +306,7 @@ const AddEdit = () => {
 						<div className={css`margin-bottom: 24px;`}>
 							<div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;`}>
 								<p className={css`color: #47474D;`}>Название</p>
+								{organizationStatus}
 								<p className={css`color: #6C6C71;`}>Юридическое наименование вашей организации или ИП</p>
 							</div>
 							<input className={input} type="text" placeholder="Название" name="name" value={dataOrganization.name} onChange={handleDataOrganizaionChange} style={organizatorErrors.name && {border: '1px solid #FC1234'}} />
