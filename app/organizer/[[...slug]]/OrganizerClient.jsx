@@ -38,7 +38,6 @@ export default function OrganizerClient({ params }) {
 		  .get(getApiUrl(`/backend/wp-json/org/v2/archive/?slug=${slug}`))
 		  .then((response) => {
 			setArchiveOrgEvens(response.data.items)
-			console.log('архивные ', response.data);
 		  })
 		  .catch((error) => {
 			console.log(error);
