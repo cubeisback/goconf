@@ -643,7 +643,7 @@ const UserEvents = () => {
 						</Button>
 						}
 						{event.tariff.value === 'advanced' && 
-							<div style={{borderRadius: 16, background: '#F5F7FA', display: 'flex', gap: 8, padding: 12, color: '#47474D', fontSize: 14, lineHeight: 1.16}}>
+							<div style={{borderRadius: 16, background: '#F5F7FA', display: 'flex', gap: 8, padding: 12, color: '#47474D', fontSize: 14, lineHeight: 1.16, position: 'absolute', right: 32, bottom: 24}}>
 								<p><span style={{display: 'block', fontSize: 16, marginBottom: 4, fontWeight: 500, lineHeight: 1.28}}>{event.views}</span> Просмотров</p>
 								<p><span style={{display: 'block', fontSize: 16, marginBottom: 4, fontWeight: 500, lineHeight: 1.28}}>{event.conversion}</span> Переходов</p>
 							</div>
