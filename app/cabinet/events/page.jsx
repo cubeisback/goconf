@@ -418,8 +418,8 @@ const UserEvents = () => {
         	transition={{ duration: .3 }}>
             <UserMainTitles>
                 <UserMainTitlesTitle>Мои мероприятия</UserMainTitlesTitle>
-                {/* <Link href="/lk/add">+ Добавить событие</Link> */}
-				<Link href="/lk/events/add"><Button 
+                {/* <Link href="/cabinet/add">+ Добавить событие</Link> */}
+				<Link href="/cabinet/events/add"><Button 
 				// onClick={()=>setView(5)}
 				>
 					<p>
@@ -570,7 +570,7 @@ const UserEvents = () => {
 							<UserEventsBlockItemTopPublishDate>Дата публикации: {event.date_publish}</UserEventsBlockItemTopPublishDate>
 							}
 							<UserEventsBlockItemTopIcons>
-								<Link href={`/lk/events/edit/?id=${event.id}`} style={{display: 'flex'}}>
+								<Link href={`/cabinet/events/edit/?id=${event.id}`} style={{display: 'flex'}}>
 									<EditIcon  />
 								</Link>
 								<RemoveIcon  onClick={()=>handleSubmitDeleteModal(event.id)} />

@@ -236,7 +236,7 @@ const UserMainScreen = () => {
                 margin-bottom: 24px;
             `}>
                 <div>Статус профиля:</div>
-                <Link  href="/lk/status" className={css`color: ${theme.colors.purple};display: flex;align-items: center;gap: 4px;`}>Базовый <EditIcon /></Link>
+                <Link  href="/cabinet/status" className={css`color: ${theme.colors.purple};display: flex;align-items: center;gap: 4px;`}>Базовый <EditIcon /></Link>
             </div> */}
             <div className={css`
                 display: flex;

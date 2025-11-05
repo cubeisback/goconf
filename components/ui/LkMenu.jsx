@@ -130,15 +130,15 @@ export default function LkMenu () {
                                 <UserIcon />
                                 <p>Профиль</p>
                             </Link>
-                            <Link  href="/lk/events" className={cx(menuItem, pathname === '/lk/events' && activeMenuItem)}>
+                            <Link  href="/cabinet/events" className={cx(menuItem, pathname === '/cabinet/events' && activeMenuItem)}>
                                 <EventsIcon />
                                 <p>Мероприятия</p>
                             </Link>
-                            <Link  href="/lk/org" className={cx(menuItem, pathname === '/lk/org' && activeMenuItem)}>
+                            <Link  href="/cabinet/org" className={cx(menuItem, pathname === '/cabinet/org' && activeMenuItem)}>
                                 <OrgIcon />
                                 <p>Организаторы</p>
                             </Link>
-                            <Link  href="/lk/orders" className={cx(menuItem, pathname === '/lk/orders' && activeMenuItem)}>
+                            <Link  href="/cabinet/orders" className={cx(menuItem, pathname === '/cabinet/orders' && activeMenuItem)}>
                                 <CartIcon />
                                 <p>Заказы</p>
                             </Link>
@@ -156,7 +156,7 @@ export default function LkMenu () {
                                 font-size: 14px;
                                 line-height:1.16;
                             `}>Статус профиля:</div>
-                            <Link  href="/lk/status" className={css`
+                            <Link  href="/cabinet/status" className={css`
                                 color: ${theme.colors.purple};
                                 display: flex;
                                 justify-content: space-between;
@@ -227,23 +227,23 @@ export default function LkMenu () {
                             padding: 8px 24px;
                         }
                     `}>
-                        <Link  href="/lk" className={cx(menuItem, pathname === '/lk' && activeMenuItem)}>
+                        <Link  href="/cabinet" className={cx(menuItem, pathname === '/lk' && activeMenuItem)}>
                             <UserIcon />
                             <p>Профиль</p>
                         </Link>
-                        <Link  href="/lk/events" className={cx(menuItem, pathname === '/lk/events' && activeMenuItem)}>
+                        <Link  href="/cabinet/events" className={cx(menuItem, pathname === '/cabinet/events' && activeMenuItem)}>
                             <EventsIcon />
                             <p>Мероприятия</p>
                         </Link>
-                        <Link  href="/lk/org" className={cx(menuItem, pathname === '/lk/org' && activeMenuItem)}>
+                        <Link  href="/cabinet/org" className={cx(menuItem, pathname === '/cabinet/org' && activeMenuItem)}>
                             <OrgIcon />
                             <p>Организаторы</p>
                         </Link>
-                        <Link  href="/lk/orders" className={cx(menuItem, pathname === '/lk/orders' && activeMenuItem)}>
+                        <Link  href="/cabinet/orders" className={cx(menuItem, pathname === '/cabinet/orders' && activeMenuItem)}>
                             <CartIcon />
                             <p>Заказы</p>
                         </Link>
-                        {/* <Link  href="/lk/status" className={cx(menuItem, pathname === '/lk/status' && activeMenuItem)}>
+                        {/* <Link  href="/cabinet/status" className={cx(menuItem, pathname === '/cabinet/status' && activeMenuItem)}>
                             <StatusIcon />
                             <p>Статус</p>
                         </Link> */}

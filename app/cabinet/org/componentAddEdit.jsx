@@ -230,7 +230,7 @@ const AddEdit = () => {
 		onConfirm: () => {
 			// if(dataOrganization.name != '') {
 			// 	handleSubmitTest(), 
-			// 	router.replace('/lk/org')
+			// 	router.replace('/cabinet/org')
 			// } else {
 			// 	set
 			// 	closeModal()
@@ -256,7 +256,7 @@ const AddEdit = () => {
 				// return;
 			} else {
 				handleSubmitTest(organizationStatus ? organizationStatus : 'moderation'),
-				router.replace('/lk/org')
+				router.replace('/cabinet/org')
 			}
 		},
 		confirmText: 'Сохранить',
