@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
+import axios from 'axios';
+import { getApiUrl } from '@/functions/functions';
 
 export function GoogleSocialLogin() {
 	const params = useSearchParams();
@@ -17,19 +19,19 @@ export function GoogleSocialLogin() {
 
 	useEffect(() => {
 		if (code) {
-		fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}${localuri}`)
-			.then(res => res.json())
+		// fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}${localuri}`)
+		axios
+			.get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=google_oauth&code=${code}${localuri}`))
+			// .then(res => res.json())
 			.then(data => {
 				console.log('Ответ от WP:', data);
-				if (data.token) {
-					login(data.token);
+				if (data.data.token) {
+					login(data.data.token);
 					router.push('/');
 				}
 			});
 		}
 	}, [code]);
-
-	//TODO переделать логин на axios как в yandex
 	
 	return (
 		<div style={{position: 'fixed', width: '100vw', height: '100vh', background: '#fff', zIndex: 99}}>

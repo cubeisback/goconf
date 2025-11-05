@@ -174,7 +174,7 @@ const UserEvents = () => {
 		id: '',
 		title: '',
 
-		promo: 'cost_7',
+		promo: '',
 		tariff: 1,
 		pay: 'pay_tochka',
 
@@ -237,7 +237,7 @@ const UserEvents = () => {
 		? 
 		setDataForPayment((prev) => ({
 			...prev,
-			promo: promoMap[costOption] || "cost_7",
+			promo: promoMap[costOption] || "",
 		}))
 		:
 		setDataForPayment((prev) => ({
@@ -261,6 +261,8 @@ const UserEvents = () => {
 	}, [radios])
 
 	useEffect(() => {
+		if (!tariffTwo) return;
+
 		const promoMap = {
 			0: "cost_7",
 			1: "cost_14",
@@ -270,7 +272,7 @@ const UserEvents = () => {
 
 		setDataForPayment(prev => ({
 			...prev,
-			promo: promoMap[costOption] || "cost_7",
+			promo: promoMap[costOption] || "",
 		}));
 	}, [costOption]);
 
