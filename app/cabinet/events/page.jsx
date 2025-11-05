@@ -626,6 +626,7 @@ const UserEvents = () => {
 							}
                         </div>
 						<div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+						{event.status === 'publish' &&
 						<Button onClick={()=>{
 							setDataForPayment((prev) => ({
 								...prev,
@@ -640,6 +641,7 @@ const UserEvents = () => {
 									<span>Опции для продвижения</span>
 								</p>
 						</Button>
+						}
 						{event.tariff.value === 'advanced' && 
 							<div style={{borderRadius: 16, background: '#F5F7FA', display: 'flex', gap: 8, padding: 12, color: '#47474D', fontSize: 14, lineHeight: 1.16}}>
 								<p><span style={{display: 'block', fontSize: 16, marginBottom: 4, fontWeight: 500, lineHeight: 1.28}}>{event.views}</span> Просмотров</p>
