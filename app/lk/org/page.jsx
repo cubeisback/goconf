@@ -132,7 +132,7 @@ const UserOrg = () => {
 										width: 24px;
 									}
 								`}><Loader /></div> // 🔹 прелоадер
-							) : organizations.length > 0 ? (
+							) : organizations?.length > 0 ? (
 								organizations.map((item, index) => (
 									<div
 				key={index}

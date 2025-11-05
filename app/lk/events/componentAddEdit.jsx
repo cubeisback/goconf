@@ -393,8 +393,8 @@ const {
 			onConfirm: async() => {
 				try {
 					setIsLoading(true)
-					await handleSubmitTest(dataEventStatus ? dataEventStatus : 'moderation');
-					router.replace('/lk/events');
+					await handleSubmitTest(dataEventStatus === 'publish' ? 'publish' : 'moderation');
+					router.replace('/cabinet/events');
 				} finally {
 					setIsLoading(false)
 				}
@@ -409,7 +409,7 @@ const {
 			description: `Вы действительно хотите сохранить черновик?`,
 			onConfirm: () => {
 				handleSubmitTest('draft'), 
-				router.replace('/lk/events')
+				router.replace('/cabinet/events')
 			},
 			confirmText: 'Сохранить',
 			});
@@ -591,7 +591,7 @@ const {
 							<div>
 								<p>Организатор</p>
 								<EventDropdown options={metaParameters && metaParameters.companies} items={dataEvent.organizator} incomeFunction={handleDataEventChangeOrganizator} type={'org'} placeholder={'Выбрать организатора'} />
-								<p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/lk/org" target="_blank" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
+								<p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/cabinet/org" target="_blank" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
 							</div>
 							<div>
 								<p>Ссылка на сайт мероприятия</p>
