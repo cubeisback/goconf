@@ -1257,13 +1257,13 @@ const UserEvents = () => {
 							</div>
 						</div>
                         <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;text-align: right;`}>
-							{tariffsArray[costOption]?.old && <span style={{marginRight: 4, fontSize: 14, color: '#B5B7B9', textDecoration: 'line-through', lineHeight: 1.16}}>{tariffsArray[costOption]?.old} руб.</span>}
-							{tariffsArray[costOption]?.new} руб.
-							{tariffsArray[costOption]?.old - tariffsArray[costOption]?.new > 0 && <p style={{color: '#191921', fontSize: 14, lineHeight: 1.16}}>Экономия {tariffsArray[costOption]?.old - tariffsArray[costOption]?.new} руб.</p>}
+							{tariffsArray[costOption]?.old && <span style={{marginRight: 4, fontSize: 14, color: '#B5B7B9', textDecoration: 'line-through', lineHeight: 1.16}}>{Number(tariffsArray[costOption]?.old).toLocaleString('ru-RU')} руб.</span>}
+							{Number(tariffsArray[costOption]?.new).toLocaleString('ru-RU')} руб.
+							{tariffsArray[costOption]?.old - tariffsArray[costOption]?.new > 0 && <p style={{color: '#191921', fontSize: 14, lineHeight: 1.16}}>Экономия {(tariffsArray[costOption]?.old - tariffsArray[costOption]?.new).toLocaleString('ru-RU')} руб.</p>}
 						</div>
                     </div>
 					}
-                    <div style={{textAlign: 'right', borderTop: '1px solid #D7DADD', paddingTop: 24}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>{(tariffTwo ?Number(tariffsArray[costOption]?.new) : 0) + (tariffOne ? 5000 : 0)} руб.</span></div>
+                    <div style={{textAlign: 'right', borderTop: '1px solid #D7DADD', paddingTop: 24}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>{((tariffTwo ?Number(tariffsArray[costOption]?.new) : 0) + (tariffOne ? 5000 : 0)).toLocaleString('ru-RU')} руб.</span></div>
                 </div>
                 <div className={css`color: #6C6C71;margin-bottom: 16px; font-size: 14px;line-height: 1.16;`}>Способ оплаты</div>
                 <div className={css`
