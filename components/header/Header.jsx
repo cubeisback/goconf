@@ -249,7 +249,7 @@ export const Header = () => {
 
 	const makeEventsBtn = () => {
 		ready ? 
-		router.push('/lk/events/add')
+		router.push('/cabinet/events/add')
 		: 
 		setIsModalOpen(true)
 	}
@@ -304,7 +304,7 @@ export const Header = () => {
           </SearchWrapper>
           } */}
           {width > 768 && 
-            // <Link href="/lk/events/add">
+            // <Link href="/cabinet/events/add">
               <Button onClick={()=>makeEventsBtn()}>
                 <p>
                   <span>Разместить событие</span>
@@ -335,7 +335,7 @@ export const Header = () => {
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 136px;
-          `} href="/lk"> 
+          `} href="/cabinet"> 
 		  	{width > 575 && user?.user?.data?.display_name
 			? user.user.data.display_name
 			: <UserIcon32 />}
@@ -366,19 +366,19 @@ export const Header = () => {
                             margin-bottom: 8px;
                             padding-bottom: 8px;
                         `}>
-                            <Link  href="/lk" className={menuItem}>
+                            <Link  href="/cabinet" className={menuItem}>
                                 <UserIcon />
                                 <p>Профиль</p>
                             </Link>
-                            <Link  href="/lk/events" className={menuItem}>
+                            <Link  href="/cabinet/events" className={menuItem}>
                                 <EventsIcon />
                                 <p>Мероприятия</p>
                             </Link>
-                            <Link  href="/lk/org" className={menuItem}>
+                            <Link  href="/cabinet/org" className={menuItem}>
                                 <OrgIcon />
                                 <p>Организаторы</p>
                             </Link>
-                            <Link  href="/lk/orders" className={menuItem}>
+                            <Link  href="/cabinet/orders" className={menuItem}>
                                 <CartIcon />
                                 <p>Заказы</p>
                             </Link>
@@ -442,7 +442,7 @@ export const Header = () => {
           ref={notificationsRef}
           >
             <div className={css`margin-bottom: center;font-size:18px;font-weight:500;line-height:1.36;`}>Уведомления</div>
-            <Link href="/lk/notifications" className={css`position:absolute;top:16px;right:16px;`} onClick={()=>setNotifications(false)}>
+            <Link href="/cabinet/notifications" className={css`position:absolute;top:16px;right:16px;`} onClick={()=>setNotifications(false)}>
               <SettingsIcon />
             </Link>
             <NotificationImg className={css`margin-bottom:8px;`} />
@@ -533,7 +533,7 @@ export const Header = () => {
           gap: 32px;
           align-items: center;
         `}>
-          {/* <Link href="/lk/events/add"> */}
+          {/* <Link href="/cabinet/events/add"> */}
               <Button onClick={()=>makeEventsBtn()}>
                 <p>
                   <span>Разместить событие</span>

@@ -105,7 +105,7 @@ const UserOrg = () => {
         transition={{ duration: .3 }}>
             <UserMainTitles>
                 <UserMainTitlesTitle>Организаторы</UserMainTitlesTitle>
-				<Link href="/lk/org/add">
+				<Link href="/cabinet/org/add">
 					<Button>
 						<p>
 							<span>+ Добавить организатора</span>
@@ -174,7 +174,7 @@ const UserOrg = () => {
 									}
 								}
 						`}>
-							<Link href={`/lk/org/edit/?id=${item.id}`}>
+							<Link href={`/cabinet/org/edit/?id=${item.id}`}>
 								<EditIcon />
 							</Link>
                             

@@ -488,7 +488,7 @@ const Org = () => {
                             <Button style={{margin: '0 auto'}} className={cx(css`@media(max-width: 991px) {width: 100%!important;}`)}
 								onClick={()=>{
 									token ?
-										router.push('/lk/events')
+										router.push('/cabinet/events')
 									:
 										setIsModalOpen(true)
 								}}
