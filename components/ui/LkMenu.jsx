@@ -1,4 +1,3 @@
-import useWindowSizeStore from "@/store/useWindowSizeStore";
 import { motion } from 'framer-motion';
 import { css, cx } from "@emotion/css";
 import Link from "next/link";
@@ -20,7 +19,6 @@ import { useWindowSize } from "@/hooks/useWindowSize";
 
 export default function LkMenu () {
 	const logout = useAuthStore((state) => state.logout);
-	// const width = useWindowSizeStore((state) => state.width);
 	const { width } = useWindowSize();
 	const pathname = usePathname();
 	const theme = useTheme();
