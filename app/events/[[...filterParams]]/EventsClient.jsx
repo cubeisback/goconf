@@ -23,6 +23,9 @@ export default function EventsClient({ params }) {
 	const [seoDescription, setSeoDescription] = useState(null);
 	const [query, setQuery] = useState('');
 	const [formatItems, setFormatItems] = useState(null);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [loading, setLoading] = useState(false);
+	const [currentFilters, setCurrentFilters] = useState({});
 
 	useEffect(() => {
 		axios
@@ -33,21 +36,186 @@ export default function EventsClient({ params }) {
 			.catch(console.error);
 	}, []);
 
-	const handleSubmit = useCallback(async (e) => {
-		e.preventDefault();
-		try {
-			const response = await axios.post(
-				getApiUrl("/backend/wp-json/events/v2/search/"),
-				{ search: query }
-			);
-			setEvents(response.data.events);
-			setTotal(response.data.total);
-			setSeoTitle(response.data.seo.title);
-			setSeoDescription(response.data.seo.description);
-		} catch (error) {
-			console.error('Ошибка при поиске:', error);
-		}
-	}, [query]);
+	// НОВАЯ функция для загрузки дополнительных событий с фильтрами
+const handleLoadMoreWithFilters = useCallback(async () => {
+    const nextPage = currentPage + 1;
+    setLoading(true);
+    
+    try {
+        // Используем тот же эндпоинт, что и в фильтрах
+        const response = await axios.post(
+            getApiUrl("/backend/wp-json/events/v2/filter/"),
+            {
+                ...currentFilters,
+                load_page: nextPage
+            }
+        );
+        
+        // Защита от дубликатов
+        setEvents(prev => {
+            const eventsMap = new Map();
+            prev.forEach(event => eventsMap.set(event.id, event));
+            response.data.events.forEach(event => eventsMap.set(event.id, event));
+            return Array.from(eventsMap.values());
+        });
+        
+        setTotal(response.data.total);
+        setCurrentPage(nextPage);
+        
+        console.log('Догрузка - загружено событий:', response.data.events.length, 'Всего:', response.data.total);
+    } catch (error) {
+        console.error('Ошибка при загрузке:', error);
+    } finally {
+        setLoading(false);
+    }
+}, [currentPage, currentFilters]);
+
+	const [activeMode, setActiveMode] = useState('filters'); // 'filters' | 'search' | 'all'
+
+const handleSearchSubmit = useCallback(async (e, page = 1, loadMore = false) => {
+    if (e) e.preventDefault();
+    
+    setLoading(true);
+    try {
+        // Если поиск не пустой - используем поиск
+        if (query.trim()) {
+            const response = await axios.post(
+                getApiUrl("/backend/wp-json/events/v2/search/"),
+                { 
+                    search: query,
+                    load_page: page,
+                }
+            );
+            
+            if (loadMore) {
+                // Защита от дубликатов при догрузке
+                setEvents(prev => {
+                    const eventsMap = new Map();
+                    prev.forEach(event => eventsMap.set(event.id, event));
+                    response.data.events.forEach(event => eventsMap.set(event.id, event));
+                    return Array.from(eventsMap.values());
+                });
+            } else {
+                setEvents(response.data.events);
+                setCurrentPage(1);
+            }
+            
+            setTotal(response.data.total);
+            setSeoTitle(response.data.seo.title);
+            setSeoDescription(response.data.seo.description);
+            
+            console.log('Поиск - загружено событий:', response.data.events.length, 'Всего:', response.data.total);
+        } 
+        // Если поиск пустой И есть активные фильтры - используем фильтры
+        else if (Object.keys(currentFilters).length > 0) {
+            const response = await axios.post(
+                getApiUrl("/backend/wp-json/events/v2/filter/"),
+                {
+                    ...currentFilters,
+                    load_page: page
+                }
+            );
+            
+            if (loadMore) {
+                // Защита от дубликатов при догрузке
+                setEvents(prev => {
+                    const eventsMap = new Map();
+                    prev.forEach(event => eventsMap.set(event.id, event));
+                    response.data.events.forEach(event => eventsMap.set(event.id, event));
+                    return Array.from(eventsMap.values());
+                });
+            } else {
+                setEvents(response.data.events);
+                setCurrentPage(1);
+            }
+            
+            setTotal(response.data.total);
+            console.log('Фильтры - загружено событий:', response.data.events.length, 'Всего:', response.data.total);
+        }
+        // Если поиск пустой И нет фильтров - загружаем все события
+        else {
+            const response = await axios.post(
+                getApiUrl("/backend/wp-json/events/v2/filter/"),
+                {
+                    load_page: page
+                }
+            );
+            
+            if (loadMore) {
+                // Защита от дубликатов при догрузке
+                setEvents(prev => {
+                    const eventsMap = new Map();
+                    prev.forEach(event => eventsMap.set(event.id, event));
+                    response.data.events.forEach(event => eventsMap.set(event.id, event));
+                    return Array.from(eventsMap.values());
+                });
+            } else {
+                setEvents(response.data.events);
+                setCurrentPage(1);
+            }
+            
+            setTotal(response.data.total);
+            console.log('Все события - загружено:', response.data.events.length, 'Всего:', response.data.total);
+        }
+        
+    } catch (error) {
+        console.error('Ошибка при загрузке:', error);
+    } finally {
+        setLoading(false);
+    }
+}, [query, currentFilters]);
+
+
+	
+
+
+	// Функция для определения, какую функцию загрузки использовать
+	// const handleLoadMore = useCallback(() => {
+	// 	// Если есть активные фильтры (не только поиск), используем фильтрованную загрузку
+	// 	if (Object.keys(currentFilters).length > 0 && 
+	// 		(!query || Object.keys(currentFilters).some(key => 
+	// 			key !== 'dateStart' && key !== 'dateEnd' && currentFilters[key]))) {
+	// 		handleLoadMoreWithFilters();
+	// 	} else {
+	// 		// Иначе используем поисковую загрузку
+	// 		handleSearchSubmit(null, currentPage + 1, true);
+	// 	}
+	// }, [currentPage, currentFilters, query, handleSearchSubmit, handleLoadMoreWithFilters]);
+	
+	// Функция для загрузки дополнительных событий
+const handleLoadMore = useCallback(() => {
+    const nextPage = currentPage + 1;
+    
+    if (query.trim()) {
+        // Если есть поисковый запрос - используем поиск
+        handleSearchSubmit(null, nextPage, true);
+    } else if (Object.keys(currentFilters).length > 0) {
+        // Если есть фильтры - используем фильтры
+        handleLoadMoreWithFilters();
+    } else {
+        // Иначе загружаем все события
+        handleSearchSubmit(null, nextPage, true);
+    }
+}, [currentPage, query, currentFilters, handleSearchSubmit, handleLoadMoreWithFilters]);
+
+// Функция для сброса поиска (при очистке поля)
+// const handleSearchReset = useCallback(() => {
+//     setQuery('');
+//     // При сбросе поиска загружаем события с текущими фильтрами
+//     if (Object.keys(currentFilters).length > 0) {
+//         // Используем фильтры
+//         handleLoadMoreWithFilters(); // Это перезагрузит события с фильтрами
+//     } else {
+//         // Или загружаем все события
+//         handleSearchSubmit(null, 1, false);
+//     }
+// }, [currentFilters, handleLoadMoreWithFilters, handleSearchSubmit]);
+
+// useEffect(() => {
+//     if (Object.keys(currentFilters).length > 0 && query) {
+//         setQuery(''); // Сбрасываем поисковый запрос при применении фильтров
+//     }
+// }, [currentFilters]);
 
 	return (
 		<>
@@ -59,7 +227,7 @@ export default function EventsClient({ params }) {
 					</Breadcrumbs>
 					<h1 className={pageTitle}>{pageH1}</h1>
 
-					<form onSubmit={handleSubmit} className={css`
+					<form onSubmit={handleSearchSubmit} className={css`
 						background-color: #fff;
 						border-radius: 28px;
 						padding: 14px 16px;
@@ -117,6 +285,9 @@ export default function EventsClient({ params }) {
 						setQuery={setQuery}
 						setSeoDescription={setSeoDescription}
 						setSeoTitle={setSeoTitle}
+						setCurrentFilters={setCurrentFilters}
+						setCurrentPage={setCurrentPage} // Добавляем для сброса пагинации
+						setLoading={setLoading}
 					/>
 						
 					{/* {total && <p className={css`padding-bottom: 24px;`}>Найдено событий: {total}</p>} */}
@@ -159,7 +330,14 @@ export default function EventsClient({ params }) {
 					</div>
 				</Container>
 
-				<EventsFiltered onPage events={events} total={total} />
+				<EventsFiltered 
+					onPage 
+					events={events} 
+					total={total} 
+					loading={loading}
+					onLoadMore={handleLoadMore}
+					currentPage={currentPage}
+				/>
 
 				<div className={css`
 					padding: 64px 0;

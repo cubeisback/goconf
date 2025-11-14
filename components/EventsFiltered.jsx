@@ -10,17 +10,20 @@ import { formatDate } from "../functions/functions";
 import Link from "next/link";
 
 
-export const EventsFiltered = ({onPage, similar, events, total}) => {
+export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadMore, currentPage }) => {
     const theme = useTheme();
 	
-    const [limit, setLimit] = useState(5);
+    // const [limit, setLimit] = useState(5);
 
     const [nearEvents, setNearEvents] = useState(null)
    
     useEffect(() => {
         setNearEvents(events);
-		console.log('filtered events', events)
+		console.log('filtered events ', events, events?.length, total)
     }, [events]);
+
+	// Проверяем, все ли события загружены
+  const allLoaded = events && total && events.length >= total;
 
     return (
         <div className={css`
@@ -48,12 +51,12 @@ export const EventsFiltered = ({onPage, similar, events, total}) => {
                 <div className={css`
                     margin-bottom: 32px;
                 `}>
-                    {nearEvents && nearEvents.slice(0, limit).map((item, index) => (
+                    {nearEvents && nearEvents.map((item) => (
                         <motion.div 
                             initial={{ y: 50, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.3 }}
-                            key={index} 
+                            key={item.id} 
                             className={css`
                                 padding-bottom: 32px;
                                 margin-bottom: 32px;
@@ -253,15 +256,42 @@ export const EventsFiltered = ({onPage, similar, events, total}) => {
                 </div>
 
                 {!similar &&
-                nearEvents && limit < total && (
-                    <ButtonMore onClick={()=>setLimit(prev => prev+5)}>
-						<p>
-							<span>Показать еще +</span>
-							<span>Показать еще +</span>
-						</p>
-					</ButtonMore>
-                )
+                // nearEvents && limit < total && (
+                //     <ButtonMore onClick={()=>setLimit(prev => prev+5)}>
+				// 		<p>
+				// 			<span>Показать еще +</span>
+				// 			<span>Показать еще +</span>
+				// 		</p>
+				// 	</ButtonMore>
+                // )
+				!allLoaded && events && events.length > 0 && (
+        
+		<div
+            className={css`
+              margin: 0 auto;
+              padding: 14px 32px;
+              border-radius: 28px;
+              border: 2px solid ${theme.colors.purple};
+              background-color: #fff;
+              width: max-content;
+              color: ${theme.colors.purple};
+              line-height: 1.28;
+              cursor: pointer;
+              transition: ${theme.transition};  
+              &:hover {
+                background-color: ${theme.colors.purple};
+                color: #fff;
+              }
+              opacity: ${loading ? 0.6 : 1};
+              pointer-events: ${loading ? "none" : "auto"};
+            `}
+            onClick={onLoadMore}
+          >
+            {loading ? "Загрузка..." : "Показать еще +"}
+          </div>
+      )
                 }
+				
             </Container>
         </div>
     )
