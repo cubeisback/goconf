@@ -13,7 +13,19 @@ import { usePathname, useRouter } from 'next/navigation';
 import { getApiUrl } from '@/functions/functions';
 import { useDateStore } from '@/store/useDateStore';
 
-export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQuery, setSeoTitle, setSeoDescription}) => {
+export const Filter = ({
+	full, 
+	setEvents, 
+	setTotal, 
+	setPageH1, 
+	setPageText, 
+	setQuery, 
+	setSeoTitle, 
+	setSeoDescription,
+	setCurrentFilters,
+	setCurrentPage,
+	setLoading
+}) => {
     const theme = useTheme();
 
     const filtersData = useFiltersStore((state) => state.filtersData)
@@ -40,179 +52,176 @@ export const Filter = ({full, setEvents, setTotal, setPageH1, setPageText, setQu
   
     // Обновление formData из URL и отправка запроса
     useEffect(() => {
-		if (typeof window !== 'undefined') {
-			const sessionDate = window.sessionStorage.getItem('date-store');
-			
-			if (filterParams.length > 0) {
+    if (typeof window !== 'undefined') {
+        const sessionDate = window.sessionStorage.getItem('date-store');
+        const parsedDate = sessionDate ? JSON.parse(sessionDate) : null;
+        
+        let formDataToSet;
 
-				// if (sessionDate) {
-				// 	const parsed = JSON.parse(sessionDate);
-				// 		setStartDate(parsed?.state?.mainDates?.dateStart);
-				// 		setStartDate(parsed?.state?.mainDates?.dateEnd);
-				// } else {
-				
-				// }
+        if (filterParams.length > 0) {
+            const filters = filterParams.reduce((acc, param) => {
+                const [key, value] = param.split("_");
+                if (key && value) acc[key] = value;
+                return acc;
+            }, {});
 
-				const filters = filterParams.reduce((acc, param) => {
-				const [key, value] = param.split("_");
-				if (key && value) {
-					acc[key] = value;
-				}
-				return acc;
-				}, {});
-		
-				console.log("Parsed filters from URL:", filters);
-		
-				setFilterValues(filters);
+            console.log("Parsed filters from URL:", filters);
+            setFilterValues(filters);
 
-				if (sessionDate) {
-					const parsed = JSON.parse(sessionDate);
-					const updatedForm = {
-					city: filters.city || null,
-					format: filters.format || null,
-					direction: filters.direction || null,
-					dateStart: filters.start || parsed?.state?.mainDates?.dateStart,
-					dateEnd: filters.end || parsed?.state?.mainDates?.dateEnd,
-					isOnline: filters.isOnline === "true",
-					isFree: filters.isFree === "true",
-					};
-					setFormData(updatedForm);
-					handleSubmit(updatedForm); // Отправляем запрос сразу
-				} else {
-					const updatedForm = {
-					city: filters.city || null,
-					format: filters.format || null,
-					direction: filters.direction || null,
-					dateStart: filters.start || null,
-					dateEnd: filters.end || null,
-					isOnline: filters.isOnline === "true",
-					isFree: filters.isFree === "true",
-					};
-					setFormData(updatedForm);
-					handleSubmit(updatedForm); // Отправляем запрос сразу
-				}
-				
-			} else {
-				if (sessionDate) {
-					const parsed = JSON.parse(sessionDate);
-					const defaultForm = {
-						city: null,
-						format: null,
-						direction: null,
-						dateStart: parsed?.state?.mainDates?.dateStart,
-						dateEnd: parsed?.state?.mainDates?.dateEnd,
-						isOnline: false,
-						isFree: false,
-						// load_page: 1
-					};
-					setFilterValues({});
-					setFormData(defaultForm);
-					handleSubmit(defaultForm);
-				} else {
-					const defaultForm = {
-						city: null,
-						format: null,
-						direction: null,
-						dateStart: null,
-						dateEnd: null,
-						isOnline: false,
-						isFree: false,
-						// load_page: 1
-					};
-					setFilterValues({});
-					setFormData(defaultForm);
-					handleSubmit(defaultForm);	
-				}
-				
-			}
-		}
-      
-    }, [filterParams]);
+            formDataToSet = {
+                city: filters.city || null,
+                format: filters.format || null,
+                direction: filters.direction || null,
+                dateStart: filters.start || parsedDate?.state?.mainDates?.dateStart || null,
+                dateEnd: filters.end || parsedDate?.state?.mainDates?.dateEnd || null,
+                isOnline: filters.isOnline === "true",
+                isFree: filters.isFree === "true",
+            };
+        } else {
+            setFilterValues({});
+            formDataToSet = {
+                city: null,
+                format: null,
+                direction: null,
+                dateStart: parsedDate?.state?.mainDates?.dateStart || null,
+                dateEnd: parsedDate?.state?.mainDates?.dateEnd || null,
+                isOnline: false,
+                isFree: false,
+            };
+        }
+
+        setFormData(formDataToSet);
+        if (setQuery) {
+            setQuery('');
+        }
+        if (setCurrentFilters) {
+            setCurrentFilters(formDataToSet);
+        }
+        
+        handleFilterSubmit(formDataToSet, 1);
+    }
+}, [filterParams]);
 
     const handleFilterChange = (newValue, type) => {
-      	const updatedFilters = { ...filterValues, [type]: newValue };
-      	setFilterValues(updatedFilters);
+		const updatedFilters = { ...filterValues, [type]: newValue };
+		setFilterValues(updatedFilters);
 
-    	const order = ['direction', 'city', 'format'];
-
+		const order = ['direction', 'city', 'format'];
 		const filterString = order
 			.filter(key => updatedFilters[key])
 			.map(key => `${key}_${updatedFilters[key]}`)
 			.join('/');
-    
+		
 		router.push(`/events/${filterString}`);
-    
-		setFormData(prev => ({
-			...prev,
+		
+		const updatedForm = {
+			...formData,
 			[type]: newValue
-		}));
-    };
+		};
+		
+		setFormData(updatedForm);
+		if (setQuery) {
+			setQuery('');
+		}
+		handleFilterSubmit(updatedForm, 1);
+	};
   
     // Отправка запроса
-    const handleSubmit = async (data) => {
-		console.log('запрос ушел ')
-      try {
+	const handleFilterSubmit = async (data, page = 1) => {
+    console.log('запрос ушел с фильтрами:', data);
+    setLoading(true);
+    try {
         const res = await axios.post(
-          getApiUrl("/backend/wp-json/events/v2/filter/"),
-          data,
-          {
-            headers: {
-              "Content-Type": "application/json",
+            getApiUrl("/backend/wp-json/events/v2/filter/"),
+            {
+                ...data,
+                load_page: page
             },
-          }
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
         );
+        
         console.log("Запрос из фильтра:", res.data);
-        setEvents(res.data.events);
+        
+        // Если это не первая страница, защищаем от дубликатов
+        if (page > 1) {
+            setEvents(prev => {
+                const eventsMap = new Map();
+                prev.forEach(event => eventsMap.set(event.id, event));
+                res.data.events.forEach(event => eventsMap.set(event.id, event));
+                return Array.from(eventsMap.values());
+            });
+        } else {
+            setEvents(res.data.events);
+        }
+        
         setTotal(res.data.total);
         setPageH1(res.data.h1);
         setPageText(res.data.text);
-		setSeoTitle(res.data.seo.title);
-		setSeoDescription(res.data.seo.description);
-		useDateStore.getState().resetMainDates();
-      } catch (err) {
+        setSeoTitle(res.data.seo.title);
+        setSeoDescription(res.data.seo.description);
+        
+        // Сохраняем текущие фильтры
+        if (setCurrentFilters) {
+            setCurrentFilters(data);
+        }
+        
+        // Сбрасываем пагинацию при новом фильтре (только если page = 1)
+        if (setCurrentPage && page === 1) {
+            setCurrentPage(1);
+        }
+        
+        useDateStore.getState().resetMainDates();
+    } catch (err) {
         console.log("Error:", err.message);
-      }
-    };
+    } finally {
+        setLoading(false);
+    }
+};
   
-    // Здесь можешь рендерить список events и форму фильтрации
-    const handleBooleanFilterChange = (key) => {
-      const updatedForm = {
-        ...formData,
-        [key]: !formData[key],
-      };
-      setFormData(updatedForm);
-      handleSubmit(updatedForm);
-    };
+    // Обновляем обработчики
+	const handleBooleanFilterChange = (key) => {
+		const updatedForm = {
+			...formData,
+			[key]: !formData[key],
+		};
+		setFormData(updatedForm);
+		handleFilterSubmit(updatedForm, 1);
+	};
 
 	const handleDateChange = (newValue, type) => {
-	const updatedForm = {
-		...formData,
-		[type === 'start' ? 'dateStart' : 'dateEnd']: newValue,
+		const updatedForm = {
+			...formData,
+			[type === 'start' ? 'dateStart' : 'dateEnd']: newValue,
+		};
+		setFormData(updatedForm);
+		if (setQuery) {
+			setQuery('');
+		}
+		handleFilterSubmit(updatedForm, 1);
 	};
 
-	setFormData(updatedForm);
-	handleSubmit(updatedForm);
+
+	const resetFilter = () => {
+		const defaultForm = {
+			city: null,
+			format: null,
+			direction: null,
+			dateStart: null,
+			dateEnd: null,
+			isOnline: false,
+			isFree: false,
+		};
+
+		setQuery('');
+		setFilterValues({});
+		setFormData(defaultForm);
+		router.push("/events");
+		handleFilterSubmit(defaultForm, 1);
 	};
-
-
-const resetFilter = () => {
-	// Сброс в начальное состояние
-	const defaultForm = {
-		city: null,
-		format: null,
-		direction: null,
-		dateStart: null,
-		dateEnd: null,
-		isOnline: false,
-		isFree: false,
-	};
-
-	setQuery(''); // Удаляем значение поиска
-	setFilterValues({});
-	setFormData(defaultForm);
-	router.push("/events"); // Удаляем фильтры из URL
-	handleSubmit(defaultForm); // Делаем новый запрос
-}
 
     return (
         <motion.div

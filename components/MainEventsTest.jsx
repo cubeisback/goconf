@@ -19,23 +19,41 @@ export const MainEventsTest = () => {
   const [loading, setLoading] = useState(false);
 
   const loadEvents = async (page) => {
-    setLoading(true);
-    try {
-      const res = await axios.post(
-        getApiUrl("/backend/wp-json/events/v2/filter/"),
-        { load_page: page },
-        { headers: { "Content-Type": "application/json" } }
-      );
+  setLoading(true);
+  try {
+    const res = await axios.post(
+      getApiUrl("/backend/wp-json/events/v2/filter/"),
+      { load_page: page },
+      { headers: { "Content-Type": "application/json" } }
+    );
 
-	  console.log('near on main', res)
-      setNearEvents(prev => [...prev, ...res.data.events]); // добавляем новые
-      setTotal(res.data.total); // сохраняем общее количество
-    } catch (e) {
-      console.error("Ошибка загрузки событий:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log('Loading page:', page, 'Events:', res.data.events.length);
+
+    setNearEvents(prev => {
+      // Создаем Map для быстрого поиска дубликатов по ID
+      const eventsMap = new Map();
+      
+      // Добавляем существующие события
+      prev.forEach(event => eventsMap.set(event.id, event));
+      
+      // Добавляем новые события (дубликаты перезапишутся)
+      res.data.events.forEach(event => eventsMap.set(event.id, event));
+      
+      // Преобразуем обратно в массив
+      const uniqueEvents = Array.from(eventsMap.values());
+      
+      console.log('After merge - prev:', prev.length, 'new:', res.data.events.length, 'unique:', uniqueEvents.length);
+      
+      return uniqueEvents;
+    });
+    
+    setTotal(res.data.total);
+  } catch (e) {
+    console.error("Ошибка загрузки событий:", e);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // загружаем первую страницу
   useEffect(() => {
@@ -72,12 +90,12 @@ export const MainEventsTest = () => {
         `}>Ближайшие события</div> 
 
         <div className={css`margin-bottom: 32px;`}>
-          {nearEvents && nearEvents.map((item, index) => (
+          {nearEvents && nearEvents.map((item) => (
 						<motion.div 
 							initial={{ y: 50, opacity: 0 }}
 							animate={{ y: 0, opacity: 1 }}
 							transition={{ duration: 0.3 }}
-							key={index} 
+							key={item.id} 
 							className={css`
 								padding-bottom: 32px;
 								margin-bottom: 32px;
