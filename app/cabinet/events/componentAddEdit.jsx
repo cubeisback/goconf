@@ -147,15 +147,23 @@ const EventsAddEdit = () => {
 		});
 	};
 
+	// const handleDataEventChangeFormat = (formatItem) => {
+	// 	setDataEvent((prev) => {
+	// 		const exists = prev.format.some(item => item.id === formatItem.id);
+
+	// 		return {
+	// 			...prev,
+	// 			format: exists
+	// 				? prev.format.filter(item => item.id !== formatItem.id) // удалить
+	// 				: [...prev.format, formatItem] // добавить
+	// 		};
+	// 	});
+	// };
 	const handleDataEventChangeFormat = (formatItem) => {
 		setDataEvent((prev) => {
-			const exists = prev.format.some(item => item.id === formatItem.id);
-
 			return {
 				...prev,
-				format: exists
-					? prev.format.filter(item => item.id !== formatItem.id) // удалить
-					: [...prev.format, formatItem] // добавить
+				format: [formatItem]
 			};
 		});
 	};
@@ -586,7 +594,7 @@ const {
 							</div>
 							<div>
 								<p>Формат мероприятия</p>
-								<EventMultiDropdown options={metaParameters && metaParameters.formats} items={dataEvent.format} incomeFunction={handleDataEventChangeFormat} placeholder={'Выбрать формат'} />
+								<EventDropdown options={metaParameters && metaParameters.formats} items={dataEvent.format} incomeFunction={handleDataEventChangeFormat} type={'format'} placeholder={'Выбрать формат'} />
 							</div>
 							<div>
 								<p>Организатор</p>

@@ -41,7 +41,7 @@ const EventDropdown = ({ options, placeholder, incomeFunction, items, type }) =>
   const dropdownRef = useRef(null);
 
   const handleFocus = () => {
-    setIsOpen(true);
+	options.length > 0 && setIsOpen(true);
   };
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const EventDropdown = ({ options, placeholder, incomeFunction, items, type }) =>
             transition: ${theme.transition};
             transform: rotate(${isOpen ? '-180deg' : '0deg'});
           `} 
-          onClick={() => setIsOpen(prev => !prev)} 
+          onClick={() => options.length > 0 && setIsOpen(prev => !prev)}
         />
       </Dropdown>
 
@@ -148,7 +148,8 @@ const EventDropdown = ({ options, placeholder, incomeFunction, items, type }) =>
               `}
             >
 			<li onClick={() => {setIsOpen(false), incomeFunction(null)}}>
-				{type == 'org' && 'Организатор'}
+				{type == 'org' && 'Выбрать организатора'}
+				{type == 'format' && 'Выбрать формат'}
 			  </li>
               {(Array.isArray(options) ? options : []).map((option) => {
                 return (
