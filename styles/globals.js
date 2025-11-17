@@ -55,6 +55,12 @@ export const globalStyles = (props) => css`
 
   html, body {
     touch-action: manipulation;
+
+	@media(max-width: 991px) {
+		touch-action: manipulation;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
   }
 
   input,
