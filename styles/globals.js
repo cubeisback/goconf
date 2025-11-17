@@ -41,7 +41,7 @@ export const globalStyles = (props) => css`
 
   body {
     font-family: 'StyreneAWeb', sans-serif;
-    // overflow-x: hidden;
+    overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
     line-height: 1.28;
     font-size: 16px;
@@ -54,9 +54,7 @@ export const globalStyles = (props) => css`
   }
 
   html, body {
-	touch-action: manipulation;
-	overflow-x: hidden;
-	overflow-y: auto;
+    touch-action: manipulation;
   }
 
   input,
