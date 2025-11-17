@@ -640,8 +640,8 @@ const UserEvents = () => {
 							getUrData();
 							setView(2)}}>
 								<p>
-									<span>Опции для продвижения</span>
-									<span>Опции для продвижения</span>
+									<span>Продвигать событие</span>
+									<span>Продвигать событие</span>
 								</p>
 						</Button>
 						}

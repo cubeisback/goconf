@@ -3,6 +3,7 @@
 import { Button, Container, PageNotFound, PageNotFoundBlock, PageNotFoundBlockImg, PageNotFoundBlockInfo, PageNotFoundBlockInfoImg, PageNotFoundBlockInfoText, PageNotFoundBlockInfoTitle } from "@/styles/ui";
 import Img404 from "@/public/images/svg/404.svg";
 import { MainEvents } from "@/components/MainEvents";
+import Link from "next/link";
 
 export default function NotFoundPage() {
 
@@ -15,7 +16,14 @@ export default function NotFoundPage() {
                             <PageNotFoundBlockInfoImg>(｡•́︿•̀｡) 404</PageNotFoundBlockInfoImg>
                             <PageNotFoundBlockInfoTitle>Страница не найдена</PageNotFoundBlockInfoTitle>
                             <PageNotFoundBlockInfoText>К&nbsp;сожалению мы&nbsp;ничего не&nbsp;нашли по&nbsp;вашему запросу</PageNotFoundBlockInfoText>
-                            <Button button_404="true">На главную</Button>
+							<Link href="/">
+								<Button button_404="true">
+									<p>
+										<span>На главную</span>
+										<span>На главную</span>
+									</p>
+								</Button>
+							</Link>
                         </PageNotFoundBlockInfo>
                         <PageNotFoundBlockImg>
                             <Img404 />
