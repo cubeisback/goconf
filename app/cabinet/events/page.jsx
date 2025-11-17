@@ -19,8 +19,10 @@ import axios from "axios";
 import { formatDate, formatPrice, getApiUrl } from "@/functions/functions";
 import { useConfirmModal } from "@/store/confirmModalStore";
 import Loader from "@/public/images/svg/preloader.svg";
+import { useRouter } from "next/navigation";
 
 const UserEvents = () => {
+	const router = useRouter();
     const theme = useTheme();
     const [view, setView] = useState(1);
 	const [loading, setLoading] = useState(true);
@@ -328,9 +330,10 @@ const UserEvents = () => {
 				}
 				);
 				console.log('addOrder', response.data)
-				// if (response.status === 200) {
-					// console.log("events", response.data);
-				// }
+				if (response.status === 200) {
+					window.open(response.data.link, '_blank', 'noopener,noreferrer');
+					router.replace('/cabinet/orders');
+				}
 			} catch (error) {
 				console.error("Update password error", error);
 				setOrderUrError(error.response.data.message)
