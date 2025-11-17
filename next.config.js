@@ -22,6 +22,19 @@ const nextConfig = {
     return config;
   },
 
+  images: {
+    domains: ['goconf.ru'], // добавьте этот домен
+    // или используйте remotePatterns (рекомендуется для Next.js 12.3+)
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'goconf.ru',
+        port: '',
+        pathname: '/backend/wp-content/uploads/**',
+      },
+    ],
+  },
+
   // Используем rewrites только в development
 //   async rewrites() {
 //     // В production не используем rewrites, т.к. nginx уже проксирует
