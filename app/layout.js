@@ -13,7 +13,11 @@ export const viewport = {
 	initialScale: 1,
 	maximumScale: 1,
 	userScalable: false,
+	viewportFit: 'cover'
 };
+{/* <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> */}
 
 export default function RootLayout({ children }) {
   return (
@@ -45,11 +49,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-		<noindex>
-			<ThemeWrapper>
-				{children}
-			</ThemeWrapper>
-		</noindex>
+		<ThemeWrapper>
+			{children}
+		</ThemeWrapper>
       </body>
     </html>
   );
