@@ -124,7 +124,7 @@ export default function LkMenu () {
                             margin-bottom: 8px;
                             padding-bottom: 8px;
                         `}>
-                            <Link  href="/lk" className={cx(menuItem, pathname === '/lk' && activeMenuItem)}>
+                            <Link  href="/cabinet" className={cx(menuItem, pathname === '/cabinet' && activeMenuItem)}>
                                 <UserIcon />
                                 <p>Профиль</p>
                             </Link>
@@ -225,7 +225,7 @@ export default function LkMenu () {
                             padding: 8px 24px;
                         }
                     `}>
-                        <Link  href="/cabinet" className={cx(menuItem, pathname === '/lk' && activeMenuItem)}>
+                        <Link  href="/cabinet" className={cx(menuItem, pathname === '/cabinet' && activeMenuItem)}>
                             <UserIcon />
                             <p>Профиль</p>
                         </Link>
@@ -241,10 +241,6 @@ export default function LkMenu () {
                             <CartIcon />
                             <p>Заказы</p>
                         </Link>
-                        {/* <Link  href="/cabinet/status" className={cx(menuItem, pathname === '/cabinet/status' && activeMenuItem)}>
-                            <StatusIcon />
-                            <p>Статус</p>
-                        </Link> */}
                     </motion.div>
                     }
 		</>
