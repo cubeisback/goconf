@@ -49,7 +49,7 @@ export default async function sitemap() {
 
     // События из WordPress
     const eventRoutes = wpEvents.map((event) => ({
-      url: `${currentBaseUrl}/events/${event.slug}`,
+      url: `${currentBaseUrl}/event/${event.slug}`,
       lastModified: new Date(event.modified),
       changeFrequency: 'weekly',
       priority: 0.8,
