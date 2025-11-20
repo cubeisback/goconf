@@ -112,7 +112,7 @@ export default function Main() {
 						}
 	`
 	const AnimatedSubtitle = styled(motion.div)`
-	font-size: 18px;
+		font-size: 18px;
 						text-align: center;
 						line-height: 1.4;
 
@@ -120,6 +120,12 @@ export default function Main() {
 							font-size: 16px;
 							line-height: 1.22;
 						}
+
+		br {
+			@media(max-width: 575px) {
+				display: none;
+			}
+		}
 	`
 	const PurpleBg = styled.div`
 		position: relative;
