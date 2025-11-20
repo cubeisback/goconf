@@ -4,9 +4,33 @@ import Script from "next/script";
 export const metadata = {
   title: "GoConf",
   description: "Конференции и события",
-  icons: {
-    icon: "/favicon.png",
-  },
+	icons: {
+		icon: [
+			// PNG favicon
+			{
+				url: "/favicon.png",
+				type: "image/png",
+			},
+			// SVG favicon 120x120
+			{
+				url: "/favicon.svg",
+				type: "image/svg+xml",
+				sizes: "120x120",
+			},
+			// ICO favicon (традиционный)
+			{
+				url: "/favicon.ico",
+				sizes: "any",
+			},
+			],
+			apple: [
+			// Apple touch icon
+			{
+				url: "/apple-touch-icon.png",
+				type: "image/png",
+			},
+		],
+	},
 };
 export const viewport = {
 	width: 'device-width',

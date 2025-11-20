@@ -154,6 +154,7 @@ const SliderItemDate = styled.div`
         font-size: 24px;
     }
 `
+const getRandomOrder = () => Math.random() - 0.5;
 
 export const MainEventsSlider = () => {
     const navigationPrevRef = useRef(null);
@@ -166,7 +167,7 @@ export const MainEventsSlider = () => {
         .get(getApiUrl("/backend/wp-json/events/v2/interesting-events/"))
         .then((response) => {
 			setEvents(response.data);
-			console.log('ОШИБКА ТУТ', response.data)
+			// console.log('ОШИБКА ТУТ', response.data)
 			setIsLoading(false);
         })
         .catch((error) => {
@@ -174,7 +175,9 @@ export const MainEventsSlider = () => {
 			setIsLoading(false);
         });
 
-    }, [])
+    }, []);
+
+	const shuffledItems = events?.items ? [...events.items].sort(getRandomOrder) : [];
 
     return (       
         <SliderBlock>
@@ -195,7 +198,6 @@ export const MainEventsSlider = () => {
                     </Next>
                 </SliderBlockTopNav>
             </SliderBlockTop>
-                    
                     <SliderMainPart>
                     <Swiper 
                         modules={[Navigation]} 
@@ -224,7 +226,7 @@ export const MainEventsSlider = () => {
                                 slidesPerView: 2,
                             },
                             1024: {
-                              slidesPerView: 3,
+                              	slidesPerView: 3,
                             },
                         }}
                     >   
@@ -235,7 +237,7 @@ export const MainEventsSlider = () => {
 							))}
 						</div>
 					) : 
-                        events && events.items.map((item, index) => (
+                        shuffledItems.map((item, index) => (
                             <SwiperSlide key={index} style={{borderRadius: 24, backgroundColor: '#fff', overflow: 'hidden'}}>
                                 <Link href={`/event/${item.slug}`} style={{width: '100%', height: 256}}>
                                     <img src={item.cover} alt="" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
