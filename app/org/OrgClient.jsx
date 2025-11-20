@@ -52,9 +52,9 @@ const OrgClient = () => {
 							<OrgPageBlockItemPrice>{item.cost}</OrgPageBlockItemPrice>
 							<OrgPageBlockItemList $index={index}>
 								<p><span>Описание события, обложка, дата и место проведения</span></p>
-								<p style={{color: index == 0 && '#D7DADD'}}>Ссылка на сайт</p>
-								<p style={{color: index == 0 && '#D7DADD'}}>Аналитика (просмотры, переходы)</p>
-								<p style={{color: index == 0 && '#D7DADD'}}>Фото и видео</p>
+								<p style={{color: index == 0 && '#D7DADD'}}><span>Ссылка на сайт</span></p>
+								<p style={{color: index == 0 && '#D7DADD'}}><span>Аналитика (просмотры, переходы)</span></p>
+								<p style={{color: index == 0 && '#D7DADD'}}><span>Фото и видео</span></p>
 							</OrgPageBlockItemList>
 							<Button style={{margin: '0 auto'}}
 								onClick={()=>{

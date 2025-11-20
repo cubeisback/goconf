@@ -132,6 +132,7 @@ const UserMainScreen = () => {
             padding: 14px 32px;
             cursor: pointer;
             border-radius: 32px;
+			text-align: center;
         `;
         const tabItemActive = css`
             background-color: ${theme.colors.purple};

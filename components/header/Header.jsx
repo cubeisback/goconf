@@ -131,7 +131,7 @@ const Burger = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
-    width: 48px;
+    width: 26px;
     height: 48px;
     align-items: center;
     justify-content: center;
@@ -141,24 +141,24 @@ const Burger = styled.div`
               position: absolute;
               background-color: ${({ theme }) => theme.colors.purple};
               height: 2px;
-              width: 24px;
+              width: 22px;
               transition: ${({ theme }) => theme.transition};
 
               &:nth-of-type(1) {
                 opacity: ${({ $burger }) => $burger ? '0' : '1'};
-                top: 18px;
+                top: 16px;
               }
               &:nth-of-type(2) {
-                top: 24px;
+                top: 22px;
                 transform: rotate(${({ $burger }) => $burger ? '45deg' : '0deg'});
               }
               &:nth-of-type(3) {
                 transform: rotate(${({ $burger }) => $burger ? '-45deg' : '0deg'});
-                top: 24px;
+                top: 22px;
               }
               &:nth-of-type(4) {
                 opacity: ${({ $burger }) => $burger ? '0' : '1'};
-                top: 30px;
+                top: 28px;
               }
     }
           
@@ -248,10 +248,13 @@ export const Header = () => {
 
 
 	const makeEventsBtn = () => {
+		
 		ready ? 
 		router.push('/cabinet/events/add')
 		: 
 		setIsModalOpen(true)
+
+		setBurger(false)
 	}
   
 
@@ -315,7 +318,11 @@ export const Header = () => {
           }
           {ready ?
           <>
-          <div style={{cursor: 'pointer'}} ref={iconRef} onClick={toggleNotifications}>
+          <div className={css`
+			@media(max-width: 575px) {
+				display: flex;
+			}
+			`} style={{cursor: 'pointer'}} ref={iconRef} onClick={toggleNotifications}>
             <NotificationIcon />
           </div>
 		  <div className={css`
@@ -329,13 +336,17 @@ export const Header = () => {
 				opacity: 1;
 				pointer-events: all;
 			}
+
+			@media(max-width: 575px) {
+				display: flex;
+			}
 		  `}>
           <Link className={css`
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 136px;
-          `} href="/cabinet"> 
+          `} href="/cabinet" onClick={()=>setBurger(false)}> 
 		  	{width > 575 && user?.user?.data?.display_name
 			? user.user.data.display_name
 			: <UserIcon32 />}
@@ -473,11 +484,10 @@ export const Header = () => {
           width: 100vw;
           height: 100vh;
           z-index: 2;
-          padding-top: 90px;
+		  padding: 90px 15px 60px 15px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding-bottom: 60px;
         `}
       >
         <div className={css`
@@ -532,6 +542,7 @@ export const Header = () => {
           flex-direction: column;
           gap: 32px;
           align-items: center;
+		  text-align: center;
         `}>
           {/* <Link href="/cabinet/events/add"> */}
               <Button onClick={()=>makeEventsBtn()}>
