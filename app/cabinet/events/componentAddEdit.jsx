@@ -412,16 +412,23 @@ const {
 		};
 
 	const handleSubmitModalDraft = () => {
+		if (validateFirstScreen()) {
 			openModal({
 			title: 'Сохранение',
 			description: `Вы действительно хотите сохранить черновик?`,
-			onConfirm: () => {
-				handleSubmitTest('draft'), 
-				router.replace('/cabinet/events')
+			onConfirm: async() => {
+				try {
+					setIsLoading(true)
+					await handleSubmitTest('draft');
+					router.replace('/cabinet/events');
+				} finally {
+					setIsLoading(false)
+				}
 			},
 			confirmText: 'Сохранить',
 			});
-		};
+		}
+	};
 
 		const handleRemoveImageModal = (id, version) => {
 			openModal({
@@ -471,36 +478,38 @@ const {
 		date_end: ''
 	});
 
+
+	const validateFirstScreen = () => {
+  const newErrors = {};
+
+  if (!dataEvent.name.trim()) {
+    newErrors.name = 'Введите название события';
+  }
+
+  if (!dataEvent.date_start.trim()) {
+    newErrors.date_start = 'Выберите дату начала';
+  }
+
+  if (!dataEvent.date_end.trim()) {
+    newErrors.date_end = 'Выберите дату окончания';
+  }
+
+  setEventErrors(newErrors);
+
+  const isValid = Object.keys(newErrors).length === 0;
+
+  if (!isValid) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  return isValid;
+};
+
 	const firstScreenCheck = () => {
-
-		const newErrors = {};
-
-		if (!dataEvent.name.trim()) {
-		newErrors.name = 'Введите название события';
-		}
-
-		if (!dataEvent.date_start.trim()) {
-		newErrors.date_start = 'Выберите дату начала';
-		}
-
-		if (!dataEvent.date_end.trim()) {
-		newErrors.date_end = 'Выберите дату окончания';
-		}
-
-		setEventErrors(newErrors);
-
-		// Если ошибок нет, продолжаем
-		if (Object.keys(newErrors).length === 0) {
-		console.log('Все поля заполнены, можно продолжать');
-			if(view < 2) {
-				setView(prev => prev + 1)
-			}
-		} else {
-		console.log('Есть ошибки, исправьте их');
-
-		window.scrollTo({ top: 0, behavior: 'smooth' });
-		}
-	};
+  if (validateFirstScreen() && view < 2) {
+    setView(prev => prev + 1);
+  }
+};
 
     return( 
 		<LkWrapper>
@@ -1312,7 +1321,7 @@ const {
 						<div className={css`font-size: 14px;line-height: 1.16;color: #8553F9;cursor: pointer;    display: flex
 ;
     align-items: center;
-    gap: 8px;`} onClick={()=>{handleSubmitModalDraft()}}>Сохранить в черновик <DraftIcon /></div>
+    gap: 8px;`} onClick={()=>{handleSubmitModalDraft()}}>{isLoading ? 'Сохранение...' : 'Сохранить в черновик'} <DraftIcon /></div>
 					</div>
 					</UserMain>
 				</div>
