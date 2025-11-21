@@ -1277,6 +1277,7 @@ const {
 
 							@media(max-width: 575px) {
 								flex-direction: column;
+								width: 100%;
 							}
 						`}>
 						{view == 1 ? 

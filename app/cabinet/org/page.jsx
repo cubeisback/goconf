@@ -105,7 +105,9 @@ const UserOrg = () => {
         transition={{ duration: .3 }}>
             <UserMainTitles>
                 <UserMainTitlesTitle>Организаторы</UserMainTitlesTitle>
-				<Link href="/cabinet/org/add">
+				<Link href="/cabinet/org/add" className={css`@media(max-width: 575px) {
+									width: 100%;
+								}`}>
 					<Button>
 						<p>
 							<span>+ Добавить организатора</span>
@@ -141,6 +143,10 @@ const UserOrg = () => {
                     background-color: #fff;
                     box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
                     padding: 24px 32px;
+
+					@media(max-width: 575px) {
+						padding: 16px;
+					}
                 `}>
                     <div className={css`
                         display: flex;
@@ -181,7 +187,9 @@ const UserOrg = () => {
                             <RemoveIcon style={{cursor: 'pointer'}} onClick={()=>handleSubmitDeleteModal(item.id)} />
                         </div>
                     </div>
-                    <div className={css`display: flex; gap: 24px;`}>
+                    <div className={css`display: flex; gap: 24px; @media(max-width: 575px) {
+									flex-direction: column;
+								}`}>
                         <div className={css`flex: 0 1 96px;`}>
 							{/* TODO картинка отображается не сразу, иногда не отображается с каким-то именем (был banner.png) или после сохранения и релоада общего списка */}
 							{item.logo ? 

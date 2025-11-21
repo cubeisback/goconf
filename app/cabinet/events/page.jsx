@@ -424,7 +424,10 @@ const UserEvents = () => {
             <UserMainTitles>
                 <UserMainTitlesTitle>Мои мероприятия</UserMainTitlesTitle>
                 {/* <Link href="/cabinet/add">+ Добавить событие</Link> */}
-				<Link href="/cabinet/events/add"><Button 
+				<Link href="/cabinet/events/add" className={css`
+				@media(max-width: 575px) {
+					width: 100%;
+				}`}><Button 
 				// onClick={()=>setView(5)}
 				>
 					<p>
@@ -436,7 +439,12 @@ const UserEvents = () => {
             </UserMainTitles>
             
             <div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
-                <div style={{flex: '0 1 300px'}}>
+                <div className={css`
+				flex: 0 1 300px;
+				
+				@media(max-width: 575px) {
+					flex: 0 1 100%;
+				}`}>
 					{/* <p onClick={checkArchive}>check archive</p> */}
                     <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Статус</p>
                     <DropdownInput options={statuses} type={'status'} placeholder={'Статус'} isSimple incomeFunction={testStatusEvents} />
@@ -475,7 +483,12 @@ const UserEvents = () => {
 							{event.tariff.value === 'default' ? 
 							<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>
 							Тариф <b style={{marginLeft: 4}}>&laquo;Базовый&raquo;</b> 
-							<div style={{width: 20, height: 20, backgroundColor: '#D7DADD', borderRadius: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center',  marginLeft: 8, position: 'relative'}} className={css`
+							<div style={{width: 20, height: 20, backgroundColor: '#D7DADD', borderRadius: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center',  marginLeft: 8}} className={css`
+							position: relative;
+
+							@media(max-width: 575px) {
+								position: static;
+							}
 								&:hover {
 
 									& > div {
@@ -502,6 +515,12 @@ const UserEvents = () => {
 									pointer-events: none;
 									z-index: 1;
 									transition: .3s ease-in-out;
+
+									@media(max-width: 575px) {
+										left: 50%;
+										transform: translateX(-50%);
+										top: 46px;
+									}
 									
 									ul {
 										display: flex;
@@ -628,7 +647,12 @@ const UserEvents = () => {
                             <div className={css`font-size: 14px; line-height: 1.16;  & > b {font-weight: 500}; width: max-content`}><b>Организатор:</b> {event.company[0].name}</div>
 							}
                         </div>
-						<div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+						<div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}} className={css`
+							@media(max-width: 575px) {
+								flex-direction: column;
+								gap: 8px;
+							}	
+						`}>
 						{event.status === 'publish' &&
 						<Button onClick={()=>{
 							setDataForPayment((prev) => ({
@@ -646,7 +670,19 @@ const UserEvents = () => {
 						</Button>
 						}
 						{event.tariff.value === 'advanced' && 
-							<div style={{borderRadius: 16, background: '#F5F7FA', display: 'flex', gap: 8, padding: 12, color: '#47474D', fontSize: 14, lineHeight: 1.16, position: 'absolute', right: 32, bottom: 24}}>
+							<div style={{borderRadius: 16, background: '#F5F7FA', display: 'flex', gap: 8, padding: 12, color: '#47474D', fontSize: 14, lineHeight: 1.16}} className={css`
+								position: absolute;
+								right: 32px;
+								bottom: 24px;
+
+								@media(max-width: 575px) {
+									position: relative;
+									right: 0;
+									top: 0;
+									width: 100%;
+									justify-content: space-between;
+								}
+							`}>
 								<p><span style={{display: 'block', fontSize: 16, marginBottom: 4, fontWeight: 500, lineHeight: 1.28}}>{event.views}</span> Просмотров</p>
 								<p><span style={{display: 'block', fontSize: 16, marginBottom: 4, fontWeight: 500, lineHeight: 1.28}}>{event.conversion}</span> Переходов</p>
 							</div>

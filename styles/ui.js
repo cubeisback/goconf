@@ -444,7 +444,7 @@ export const lkContainer = css`
             background-color: #F5F7FA;
 
             min-height: calc(100vh - 84px);
-
+	
             @media(max-width: 575px) {
                 padding-bottom: 64px;
             }
@@ -457,6 +457,7 @@ export const LkWrapper = styled.div`
 
     @media(max-width: 575px) {
         padding-bottom: 64px;
+		padding-top: 100px;
     }
 `;
 
@@ -551,12 +552,17 @@ export const UserEventsBlockHead = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 16px;
 	border-radius: 28px 28px 0px 0px;
 	border: 2px solid ${({ $active, theme }) => ($active ? theme.colors.purple : "#fff")};;
 	border-bottom: none;
 
     @media(max-width: 575px) {
         flex-direction: column;
+		padding: 16px;
+		text-align: center;
+		gap: 8px;
+		position: relative;
     }
 `;
 export const UserEventsBlockItemTop = styled.div`

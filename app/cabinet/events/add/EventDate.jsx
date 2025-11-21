@@ -70,6 +70,11 @@ const EventDate = ({title, fixmob, initialDate, changeDate, whatDate, error}) =>
                   left: ${fixmob && '-30vw'};
                 }
             }
+
+			@media(max-width: 575px) {
+				flex: 0 1 100%;
+				max-width: 100%;
+			}
 			${error && 'border-color: #FC1234;'}
           `)} onClick={()=>setShowDate(true)}>
               <p>{startDate ? startDate : title}</p>
