@@ -67,7 +67,7 @@ const UserOrders = () => {
 					},
 				}
 				);
-				// console.log('history', response)
+				console.log('history', response)
 				if (response.status === 200) {
 					setOrders(response.data)
 					setOrdersError()
@@ -97,7 +97,13 @@ const UserOrders = () => {
 					<UserMainTitlesTitle>Заказы</UserMainTitlesTitle>
 				</UserMainTitles>
 				<div style={{marginBottom: '32px', display: 'flex', gap: '16px'}}>
-                <div style={{flex: '0 1 300px'}}>
+                <div className={css`
+					flex: 0 1 300px;
+
+					@media(max-width: 575px) {
+						flex: 0 1 100%;
+					}
+				`}>
                     <p style={{marginBottom: '8px', color: '#47474D', fontSize: 14, lineHeight: 1.16}}>Статус</p>
                     <DropdownInput options={statuses} type={'status'} placeholder={'Статус'} isSimple incomeFunction={getHistSort} />
                 </div>
@@ -143,6 +149,10 @@ const UserOrders = () => {
                 b {
                     font-weight: 500;
                 }
+
+				@media(max-width: 575px) {
+					padding: 16px;
+				}
             `}>
 				
                 <div className={css`
@@ -159,6 +169,7 @@ const UserOrders = () => {
                         @media(max-width: 575px) {
                             flex-direction: column;
                             flex: 1;
+							align-items: flex-start;
                         }
                     `}>
                         <div className={css`

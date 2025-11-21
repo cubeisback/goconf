@@ -300,11 +300,20 @@ const AddEdit = () => {
 								font-family: Impact;
 								font-size: 36px;
 								line-height: 1.12;
+								
+								@media(max-width: 575px) {
+									font-size: 28px;
+								}
 							`}>Добавить организатора</div>
 						</div>
 
 						<div className={css`margin-bottom: 24px;`}>
-							<div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;`}>
+							<div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;
+								@media(max-width: 575px) {
+									flex-direction: column;
+									gap: 4px;
+								}
+								`}>
 								<p className={css`color: #47474D;`}>Название</p>
 								<p className={css`color: #6C6C71;`}>Юридическое наименование вашей организации или ИП</p>
 							</div>
@@ -392,7 +401,11 @@ const AddEdit = () => {
 						</div>
 						
 						<div className={css`margin-bottom: 24px;`}>
-							<div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;`}>
+							<div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px; 
+								@media(max-width: 575px) {
+									flex-direction: column;
+									gap: 4px;
+								}`}>
 								<p className={css`color: #47474D;`}>Краткое описание</p>
 								<p className={css`color: #6C6C71;`}>Используется для поисковых систем (мета-описание)</p>
 							</div>
@@ -401,7 +414,11 @@ const AddEdit = () => {
 						</div>
 					
 						<div className={css`margin-bottom: 24px;`}>
-							<div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;`}>
+							<div className={css`display: flex;gap:16px;justify-content:space-between;font-size: 14px;line-height:1.16;margin-bottom:8px;
+								@media(max-width: 575px) {
+									flex-direction: column;
+									gap: 4px;
+								}`}>
 								<p className={css`color: #47474D;`}>Детальное описание</p>
 								<p className={css`color: #6C6C71;`}>Детальное описание для страницы компании</p>
 							</div>
@@ -432,9 +449,16 @@ const AddEdit = () => {
 							font-size: 36px;
 							line-height: 1.12;
 							margin-bottom: 32px;
+
+							@media(max-width: 575px) {
+								font-size: 28px;
+							}
 						`}>Контактные данные</div>
 						<div className={css`display: flex;gap:24px;flex-wrap:wrap;margin-bottom:48px;`}>
-							<div className={css`flex: 0 1 calc(50% - 12px);`}>
+							<div className={css`flex: 0 1 calc(50% - 12px);
+								@media(max-width: 575px) {
+									flex: 0 1 100%;
+								}`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Город</p>
 								<CityDropdown 
 									options={metaParameters?.cities} 
@@ -443,15 +467,21 @@ const AddEdit = () => {
 									placeholder={'Выбрать город'} 
 								/>
 							</div>
-							<div className={css`flex: 0 1 calc(50% - 12px);`}>
+							<div className={css`flex: 0 1 calc(50% - 12px); @media(max-width: 575px) {
+									flex: 0 1 100%;
+								}`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Адрес</p>
 								<input className={input} type="text" placeholder="Укажите адрес" name="address" value={dataOrganization.address} onChange={handleDataOrganizaionChange} />
 							</div>
-							<div className={css`flex: 0 1 calc(50% - 12px);`}>
+							<div className={css`flex: 0 1 calc(50% - 12px); @media(max-width: 575px) {
+									flex: 0 1 100%;
+								}`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>E-mail</p>
 								<input className={input} type="email" placeholder="Укажите E-mail" name="emails" value={dataOrganization.emails[0] || ''} onChange={handleDataOrganizaionChange} />
 							</div>
-							<div className={css`flex: 0 1 calc(50% - 12px);`}>
+							<div className={css`flex: 0 1 calc(50% - 12px); @media(max-width: 575px) {
+									flex: 0 1 100%;
+								}`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Номер телефона</p>
 								{/* {dataOrganization.phones.map((i)=>(
 									<div key={i.value}>{i.value}</div>
@@ -480,17 +510,27 @@ const AddEdit = () => {
 							font-size: 36px;
 							line-height: 1.12;
 							margin-bottom: 32px;
+
+							@media(max-width: 575px) {
+								font-size: 28px;
+							}
 						`}>Ссылки на соцсети</div>
 						<div className={css`display: flex;gap:24px;flex-wrap:wrap;margin-bottom: 40px;`}>
-							<div className={css`flex: 0 1 calc(33.333333% - 16px);`}>
+							<div className={css`flex: 0 1 calc(33.333333% - 16px); @media(max-width: 575px) {
+									flex: 0 1 100%;
+								}`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>ВКонтакте</p>
 								<input className={input} type="text" placeholder="Укажите ссылку" name="vk" value={dataOrganization.socials?.vk ?? ''} onChange={handleSocialChange} />
 							</div>
-							<div className={css`flex: 0 1 calc(33.333333% - 16px);`}>
+							<div className={css`flex: 0 1 calc(33.333333% - 16px); @media(max-width: 575px) {
+									flex: 0 1 100%;
+								}`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Telegram</p>
 								<input className={input} type="text" placeholder="Укажите ссылку" name="tg" value={dataOrganization.socials?.tg ?? ''} onChange={handleSocialChange} />
 							</div>
-							<div className={css`flex: 0 1 calc(33.333333% - 16px);`}>
+							<div className={css`flex: 0 1 calc(33.333333% - 16px); @media(max-width: 575px) {
+									flex: 0 1 100%;
+								}`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>YouTube</p>
 								<input className={input} type="text" placeholder="Укажите ссылку" name="youtube" value={dataOrganization.socials?.youtube ?? ''} onChange={handleSocialChange} />
 							</div>
