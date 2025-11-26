@@ -26,16 +26,6 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
       },
     };
 
-    //   useEffect(() => {
-    //       if(filterValues) {
-    //         const checkedValue = filterValues[type];
-    //         if (checkedValue) {
-    //           setStartDate(filterValues[type])
-    //         } else {
-    //           setStartDate(null)
-    //         }
-    //       }
-    //   }, [filterValues]);
 	useEffect(() => {
   if (filterValues && filterValues[type]) {
     setStartDate(filterValues[type]);
@@ -126,7 +116,7 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
                     locale={customRu}
                     onChange={(date) => {
                         const day = String(date.getDate()).padStart(2, '0');
-                        const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
                         const year = date.getFullYear();
 
                         const formattedDate = `${day}.${month}.${year}`;
@@ -135,7 +125,6 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
                           setShowDate(false);
                         }, 0)
                         handleFilterChange(formattedDate, type)
-						// console.log('type', type)
 						setStoreDate && setStoreDate(formattedDate)
                     }}
                     inline
