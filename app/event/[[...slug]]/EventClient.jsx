@@ -23,41 +23,21 @@ import { useParams } from "next/navigation";
 import { useAuthReady } from "@/hooks/useAuthReady";
 import { ModalEvent } from "./Modal";
 import { Modal } from "@/components/ui/Modal";
+import { notFound } from 'next/navigation';
 
 export default function EventClient({ params }) {
+	const [showNotFound, setShowNotFound] = useState(false);
 
 	const theme = useTheme();
 
 	const navigationPrevRef = useRef(null);
 	const navigationNextRef = useRef(null);
 
-	// const [seoTitle, setSeoTitle] = useState(null)
-	// const [seoDescription, setSeoDescription] = useState(null)
-
-	// const [event, setEvent] = useState(null);
-	// const location = useLocation();
-	// const [pageInfo, setPageInfo] = useState(null)
-	// useEffect(() => {
-	//     const pathParts = location.pathname.split('/');
-	//     const eventId = pathParts[pathParts.length - 1];
-
-	//     axios
-	//     .get(`https://dev.goconf.ru/wp-json/events/v2/single/?slug=${eventId}`)
-	//     .then((response) => {
-	//         setPageInfo(response.data)
-	// 		setSeoTitle(response.data.seo.title)
-	// 		setSeoDescription(response.data.seo.description)
-	//         console.log('page ', response.data)
-	//     })
-	//     .catch((error) => {
-	//         console.log(error)
-	//     });
-	// }, [location.pathname]);
-
 	const { ready, token } = useAuthReady();
 
 	const { slug } = useParams(); // получаем параметр пути
 	const [pageInfo, setPageInfo] = useState(null);
+
 	useEffect(() => {
 		if (!slug) return;
 	
@@ -69,7 +49,7 @@ export default function EventClient({ params }) {
 			console.log('page ', response.data);
 		  })
 		  .catch((error) => {
-			console.log(error);
+			// console.log('asd', error, token);
 
 			if(token) {
 				axios
@@ -84,25 +64,53 @@ export default function EventClient({ params }) {
 					setPageInfo(res.data);
 					console.log('preview ', res);
 				})
+			} else {
+				setShowNotFound(true);
 			}
 		  });
-	}, [slug]);
-
+	}, [slug, token]);
 	
+// 	useEffect(() => {
+//     // Ждем пока аутентификация будет готова и есть slug
+//     if (!ready || !slug) return;
 
-	// const [similarItems, setSimilarItems] = useState(null)
-	// useEffect(() => {
-	//   axios
-	//     .get(`https://dev.goconf.ru/wp-json/events/v2/similar-events/?id={${ID}}`)
-	//     .then((response) => {
-	//         setSimilarItems(response.data)
-	//       console.log('interesting-events ', response.data)
-	//     })
-	//     .catch((error) => {
-	//         console.log(error)
-	//     });
-
-	// }, [])
+//     axios
+//       .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`))
+//       .then((response) => {
+//         setPageInfo(response.data);
+//         setShowNotFound(false);
+//         console.log('page ', response.data);
+//       })
+//       .catch((error) => {
+//         // Если есть токен (пользователь авторизован), пробуем получить превью
+//         if (token) {
+//             axios
+//             .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
+//                 {
+//                     headers: {
+//                         Authorization: `Bearer ${token}`,
+//                     },
+//                 }
+//             )
+//             .then((res) => {
+//                 setPageInfo(res.data);
+//                 setShowNotFound(false);
+//                 console.log('preview ', res);
+//             })
+//             .catch((previewError) => {
+//                 // Если и превью запрос failed, показываем 404
+//                 setShowNotFound(true);
+//             });
+//         } else {
+//             // Если токена нет, сразу показываем 404
+//             setShowNotFound(true);
+//         }
+//       });
+// }, [slug, token, ready]); // Добавляем ready в зависимости
+	
+// 	if (showNotFound) {
+// 		notFound();
+// 	}
 	
 
 	const promoThemes = css`
