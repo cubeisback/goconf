@@ -64,8 +64,9 @@ export const FilterOnMain = ({full, setEvents}) => {
                     flex-wrap: wrap;
 
                     @media(max-width: 1339px) {
-                      margin-bottom: ${full ? '24px' : '-48px'};
-                      padding-bottom: ${full ? '16px' : '80px'};
+                      margin-bottom: ${full ? '24px' : '-24px'};
+                    //   padding-bottom: ${full ? '16px' : '80px'};
+					padding-bottom: 16px;
                     }
 	`
 	const FilterItem = styled.div`
