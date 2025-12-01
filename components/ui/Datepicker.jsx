@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 const CalendarIcon = () => (
   <img src="/images/svg/calendar.svg" alt="CalendarIcon" />
 );
-import { filterSelector } from "@/styles/ui";
+import { filterSelector, SelectorDate } from "@/styles/ui";
 import DatePicker from "react-datepicker";
 import {ru} from 'date-fns/locale/ru';
 // import "react-datepicker/dist/react-datepicker.css"; //TODO remove
@@ -76,25 +76,7 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
     }
 
     return (
-        <div className={cx(filterSelector, css`
-            flex: 0 1 ${full ? '180px' : 'calc(16.666666% - 13.333333px)' };
-            max-width: ${full ? '180px' : 'calc(16.666666% - 13.333333px)'};
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-
-            & > div {
-                background-color: transparent;
-                box-shadow: none;
-                width: 0;
-                height: 0;
-
-                @media(max-width: 991px) {
-                  left: ${fixmob && '-30vw'};
-                }
-            }
-          `)} onClick={()=>setShowDate(true)}>
+        <SelectorDate $full={full} $fixmob={fixmob} onClick={()=>setShowDate(true)}>
               <p>{startDate ? startDate : title}</p>
               <CalendarIcon />
               <motion.div
@@ -131,7 +113,7 @@ const Datepicker = ({full, title, fixmob, handleFilterChange, filterValues, type
                 />
                 </div>
               </motion.div>
-          </div>
+          </SelectorDate>
     )
 }
 
