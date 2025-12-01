@@ -90,8 +90,8 @@ const ButtonType = ({ $button, ...props }) => {
 };
 export const Button = styled(ButtonType)`
 	border-radius: 28px;
-	background: ${({ green, theme }) =>
-		green ? theme.colors.green : theme.colors.purple};
+	background: ${({ green, black, theme }) =>
+		green ? theme.colors.green : black ? '#191921' : theme.colors.purple};
 	border: 2px solid ${({ green, theme }) =>
 		green ? theme.colors.green : theme.colors.purple};
 	padding: 12px 32px;
@@ -101,6 +101,7 @@ export const Button = styled(ButtonType)`
 	width: ${({ full }) => (full ? '100%' : 'max-content')};
 	transition: ${({ theme }) => theme.transition};
 	font-size: 16px;
+	flex: ${({ black }) => black && '1'};
 
 	&:hover {
 		background: #fff;
@@ -140,6 +141,7 @@ export const Button = styled(ButtonType)`
 		transform: translateY(-100%);
 	}
 `;
+
 export const ButtonMore = styled.div`
   	margin: 0 auto;
     padding: 14px 32px;
@@ -282,17 +284,74 @@ export const filterSelector = css`
     }
   }
 `;
-
-export const filterBtn = css`
-  background-color: #191921;
-  color: #fff;
-  text-align: center;
-  font-size: 16px;
-  padding: 14px 32px;
+export const SelectorDate = styled.div`
+  padding: 14px;
+  background-color: #fff;
   border-radius: 28px;
-  cursor: pointer;
-  flex: 1;
+  color: rgba(71, 71, 77, 0.64);
+  font-size: 14px;
+  line-height: 1.28;
+  position: relative;
+  border: 1px solid #fff;
+  flex: 0 1 ${props => props.$full ? '180px' : 'calc(16.666666% - 13.333333px)' };
+			max-width: ${props => props.$full ? '180px' : 'calc(16.666666% - 13.333333px)'};
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			cursor: pointer;
+
+  @media (max-width: 1339px) {
+    flex: 0 1 calc(33.3333333% - 10.666666px);
+    max-width: calc(33.3333333% - 10.666666px);
+  }
+  @media (max-width: 575px) {
+    flex: 0 1 calc(50% - 8px);
+    max-width: calc(50% - 8px);
+  }
+
+  & > label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  & > div {
+    border-radius: 28px;
+    left: 0;
+    top: calc(100% + 4px);
+
+	background-color: transparent;
+				box-shadow: none;
+				width: 0;
+				height: 0;
+
+				@media(max-width: 991px) {
+				  left: ${props => props.$fixmob && '-30vw'};
+				}
+
+    p {
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: #8553F9;
+      }
+    }
+  }
 `;
+
+// export const filterBtn = css`
+//   background-color: #191921;
+//   color: #fff;
+//   text-align: center;
+//   font-size: 16px;
+//   padding: 14px 32px;
+//   border-radius: 28px;
+//   cursor: pointer;
+//   flex: 1;
+// `;
 
 //TODO удалить просто стиль
 export const pagePromo = css`

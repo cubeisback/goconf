@@ -4,7 +4,7 @@
 import { motion } from 'framer-motion';
 import { useTheme } from "@emotion/react";
 import { useState } from "react";
-import { filterBtn } from "@/styles/ui";
+import { Button } from "@/styles/ui";
 import DropdownInput from "@/components/ui/DropdownInput";
 import Datepicker from "@/components/ui/Datepicker";
 import { useRouter } from "next/navigation";
@@ -102,9 +102,12 @@ export const FilterOnMain = ({full, setEvents}) => {
                     <Datepicker full={full} title={'Начало'} handleFilterChange={handleFilterChange} setStoreDate={handleStartDateChange} filterValues={filterValues} type={'start'} />
                     <Datepicker full={full} title={'Окончание'} handleFilterChange={handleFilterChange} setStoreDate={handleEndDateChange} filterValues={filterValues} type={'end'} fixmob={true} /> {/*TODO Передалать на экран*/}
 
-                    {!full && <div className={filterBtn} onClick={()=>handleSubmit()}>
-						<span>Найти</span>
-					</div>}
+                    {!full && <Button black="true" onClick={()=>handleSubmit()}>
+						<p>
+							<span>Найти</span>
+							<span>Найти</span>
+						</p>
+					</Button>}
                     
         </AnimatedFilterBlock>
     )
