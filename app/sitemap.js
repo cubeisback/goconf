@@ -158,6 +158,166 @@
 
 // VARIANT 2
 
+// export const getApiUrl = (url) => {
+//   if (url.startsWith("http")) return url;
+//   return `https://goconf.ru${url}`;
+// };
+
+// const BASE_URL = 'https://goconf.ru';
+
+// function getBaseUrl() {
+//   if (process.env.NODE_ENV === 'development') {
+//     return 'http://localhost:3000';
+//   }
+//   return BASE_URL;
+// }
+
+// export default async function sitemap() {
+//   console.log('=== SITEMAP GENERATION STARTED ===');
+  
+//   const currentBaseUrl = getBaseUrl();
+//   console.log('Current base URL:', currentBaseUrl);
+  
+//   try {
+//     // Получаем все данные из единого API
+//     console.log('Fetching unified sitemap data...');
+//     const sitemapItems = await getSitemapData();
+//     console.log('Sitemap items fetched:', sitemapItems.length);
+    
+//     // Преобразуем данные в формат для sitemap.xml
+//     const routes = sitemapItems.map(item => {
+//       // Определяем URL
+//       let url;
+//       if (item.loc) {
+//         // Используем loc из API, но заменяем домен на текущий (для локальной разработки)
+//         url = item.loc.replace('https://goconf.ru', currentBaseUrl);
+//       } else if (item.slug === '') {
+//         // Главная страница
+//         url = currentBaseUrl;
+//       } else if (item.type === 'event') {
+//         // События
+//         url = `${currentBaseUrl}/event/${item.slug}`;
+//       } else {
+//         // Страницы
+//         url = `${currentBaseUrl}/${item.slug}`;
+//       }
+      
+//       // Определяем дату последнего изменения
+//       let lastModified;
+//       if (item.lastmod) {
+//         lastModified = new Date(item.lastmod);
+//       } else {
+//         // Если даты нет, используем текущую
+//         lastModified = new Date();
+//       }
+      
+//       // Определяем частоту обновления
+//       let changeFrequency;
+//       if (item.changefreq) {
+//         changeFrequency = item.changefreq;
+//       } else if (item.type === 'event') {
+//         changeFrequency = 'weekly';
+//       } else {
+//         changeFrequency = 'monthly';
+//       }
+      
+//       // Определяем приоритет
+//       let priority;
+//       if (item.priority) {
+//         priority = item.priority;
+//       } else if (item.slug === '') {
+//         priority = 1.0; // Главная страница
+//       } else if (item.type === 'event') {
+//         priority = 0.8; // События
+//       } else {
+//         priority = 0.6; // Страницы
+//       }
+      
+//       return {
+//         url,
+//         lastModified,
+//         changeFrequency,
+//         priority,
+//       };
+//     });
+    
+//     // Фильтруем дубликаты и ненужные записи
+//     const filteredRoutes = routes.filter((route, index, self) => {
+//       // Убираем дубликаты по URL
+//       const isDuplicate = self.findIndex(r => r.url === route.url) !== index;
+//       if (isDuplicate) {
+//         console.log(`Removing duplicate: ${route.url}`);
+//         return false;
+//       }
+      
+//       // Убираем записи без URL
+//       if (!route.url || route.url.trim() === '') {
+//         return false;
+//       }
+      
+//       // Убираем главную страницу с slug 'glavnaya'
+//       if (route.url.includes('/glavnaya') || route.url.endsWith('/glavnaya')) {
+//         console.log(`Removing /glavnaya page: ${route.url}`);
+//         return false;
+//       }
+      
+//       return true;
+//     });
+    
+//     console.log('Total routes generated:', filteredRoutes.length);
+//     console.log('=== SITEMAP GENERATION COMPLETED ===');
+    
+//     return filteredRoutes;
+//   } catch (error) {
+//     console.error('=== SITEMAP GENERATION ERROR ===', error);
+//     // Возвращаем хотя бы главную страницу при ошибке
+//     return [
+//       {
+//         url: getBaseUrl(),
+//         lastModified: new Date(),
+//         changeFrequency: 'monthly',
+//         priority: 1,
+//       },
+//     ];
+//   }
+// }
+
+// // Функция для получения данных из sitemap API
+// async function getSitemapData() {
+//   try {
+//     const apiUrl = getApiUrl('/backend/wp-json/sitemap/v2/get/');
+//     console.log('Fetching from:', apiUrl);
+    
+//     const res = await fetch(apiUrl, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       // Кэшируем на 1 час
+//       next: { revalidate: 3600 }
+//     });
+    
+//     if (!res.ok) {
+//       throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+//     }
+    
+//     const data = await res.json();
+    
+//     // Проверяем структуру ответа
+//     if (data.success && data.data && Array.isArray(data.data.urls)) {
+//       return data.data.urls;
+//     } else {
+//       console.warn('Unexpected response structure:', data);
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error fetching sitemap data:', error);
+//     return [];
+//   }
+// }
+
+
+// VARIANT 3
+
 export const getApiUrl = (url) => {
   if (url.startsWith("http")) return url;
   return `https://goconf.ru${url}`;
@@ -173,144 +333,56 @@ function getBaseUrl() {
 }
 
 export default async function sitemap() {
-  console.log('=== SITEMAP GENERATION STARTED ===');
-  
   const currentBaseUrl = getBaseUrl();
-  console.log('Current base URL:', currentBaseUrl);
   
   try {
-    // Получаем все данные из единого API
-    console.log('Fetching unified sitemap data...');
-    const sitemapItems = await getSitemapData();
-    console.log('Sitemap items fetched:', sitemapItems.length);
+    const apiUrl = getApiUrl('/backend/wp-json/sitemap/v2/index/');
+    const res = await fetch(apiUrl, { next: { revalidate: 3600 } });
     
-    // Преобразуем данные в формат для sitemap.xml
-    const routes = sitemapItems.map(item => {
-      // Определяем URL
-      let url;
-      if (item.loc) {
-        // Используем loc из API, но заменяем домен на текущий (для локальной разработки)
-        url = item.loc.replace('https://goconf.ru', currentBaseUrl);
-      } else if (item.slug === '') {
-        // Главная страница
-        url = currentBaseUrl;
-      } else if (item.type === 'event') {
-        // События
-        url = `${currentBaseUrl}/event/${item.slug}`;
-      } else {
-        // Страницы
-        url = `${currentBaseUrl}/${item.slug}`;
-      }
-      
-      // Определяем дату последнего изменения
-      let lastModified;
-      if (item.lastmod) {
-        lastModified = new Date(item.lastmod);
-      } else {
-        // Если даты нет, используем текущую
-        lastModified = new Date();
-      }
-      
-      // Определяем частоту обновления
-      let changeFrequency;
-      if (item.changefreq) {
-        changeFrequency = item.changefreq;
-      } else if (item.type === 'event') {
-        changeFrequency = 'weekly';
-      } else {
-        changeFrequency = 'monthly';
-      }
-      
-      // Определяем приоритет
-      let priority;
-      if (item.priority) {
-        priority = item.priority;
-      } else if (item.slug === '') {
-        priority = 1.0; // Главная страница
-      } else if (item.type === 'event') {
-        priority = 0.8; // События
-      } else {
-        priority = 0.6; // Страницы
-      }
-      
-      return {
-        url,
-        lastModified,
-        changeFrequency,
-        priority,
-      };
-    });
-    
-    // Фильтруем дубликаты и ненужные записи
-    const filteredRoutes = routes.filter((route, index, self) => {
-      // Убираем дубликаты по URL
-      const isDuplicate = self.findIndex(r => r.url === route.url) !== index;
-      if (isDuplicate) {
-        console.log(`Removing duplicate: ${route.url}`);
-        return false;
-      }
-      
-      // Убираем записи без URL
-      if (!route.url || route.url.trim() === '') {
-        return false;
-      }
-      
-      // Убираем главную страницу с slug 'glavnaya'
-      if (route.url.includes('/glavnaya') || route.url.endsWith('/glavnaya')) {
-        console.log(`Removing /glavnaya page: ${route.url}`);
-        return false;
-      }
-      
-      return true;
-    });
-    
-    console.log('Total routes generated:', filteredRoutes.length);
-    console.log('=== SITEMAP GENERATION COMPLETED ===');
-    
-    return filteredRoutes;
-  } catch (error) {
-    console.error('=== SITEMAP GENERATION ERROR ===', error);
-    // Возвращаем хотя бы главную страницу при ошибке
-    return [
-      {
-        url: getBaseUrl(),
-        lastModified: new Date(),
-        changeFrequency: 'monthly',
-        priority: 1,
-      },
-    ];
-  }
-}
-
-// Функция для получения данных из sitemap API
-async function getSitemapData() {
-  try {
-    const apiUrl = getApiUrl('/backend/wp-json/sitemap/v2/get/');
-    console.log('Fetching from:', apiUrl);
-    
-    const res = await fetch(apiUrl, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // Кэшируем на 1 час
-      next: { revalidate: 3600 }
-    });
-    
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-    }
+    if (!res.ok) throw new Error('API error');
     
     const data = await res.json();
     
-    // Проверяем структуру ответа
-    if (data.success && data.data && Array.isArray(data.data.urls)) {
-      return data.data.urls;
-    } else {
-      console.warn('Unexpected response structure:', data);
-      return [];
+    if (!data.success || !data.data?.sitemaps) {
+      throw new Error('Invalid response');
     }
+    
+    // Преобразуем каждый sitemap в индексный формат
+    return data.data.sitemaps.map(sitemap => {
+      let url;
+      
+      if (sitemap.loc) {
+        const backendPath = sitemap.loc.replace('https://goconf.ru/backend/wp-json/sitemap/v2/', '');
+        
+        if (backendPath.startsWith('main')) {
+          url = `${currentBaseUrl}/sitemap-main.xml`;
+        } else if (backendPath.startsWith('events')) {
+          const page = backendPath.includes('page=') ? backendPath.split('page=')[1] : '1';
+          url = `${currentBaseUrl}/sitemap-events/${page}`; // Без .xml
+        } else if (backendPath.startsWith('pages')) {
+          url = `${currentBaseUrl}/sitemap-pages.xml`;
+        } else if (backendPath.startsWith('filters')) {
+          const match = backendPath.match(/direction=([^&]*)/);
+          const direction = match ? match[1] : 'none';
+          url = `${currentBaseUrl}/sitemap-filters/${direction}`; // Без .xml
+        } else {
+          url = sitemap.loc;
+        }
+      }
+      
+      return {
+        url: url || `${currentBaseUrl}/sitemap-unknown`,
+        lastModified: new Date(sitemap.lastmod || Date.now()),
+      };
+    });
+    
   } catch (error) {
-    console.error('Error fetching sitemap data:', error);
-    return [];
+    console.error('Sitemap index error:', error);
+    return [{
+      url: `${getBaseUrl()}/`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 1,
+    }];
   }
 }
