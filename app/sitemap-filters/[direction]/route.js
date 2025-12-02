@@ -28,25 +28,22 @@ export async function GET(request, { params }) {
   const { direction } = params;
   const currentBaseUrl = getBaseUrl();
   
-  console.log(`Generating filters sitemap for direction: ${direction}`);
+  console.log(`Generating filters sitemap for direction: ${direction} (as XML)`);
   
   try {
     const apiUrl = getApiUrl(`/backend/wp-json/sitemap/v2/filters?direction=${direction}`);
     const res = await fetch(apiUrl, {
-      next: { revalidate: 604800 } // Кэш на 7 дней для фильтров (очень редко меняются)
+      next: { revalidate: 604800 } // 7 дней
     });
     
-    if (!res.ok) {
-      throw new Error(`API returned ${res.status}: ${res.statusText}`);
-    }
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
     
     const data = await res.json();
     
     if (!data.success || !data.data?.urls) {
-      throw new Error('Invalid API response structure');
+      throw new Error('Invalid response');
     }
     
-    // Преобразуем данные для фильтров
     const urls = data.data.urls.map(item => ({
       url: item.loc 
         ? item.loc.replace('https://goconf.ru', currentBaseUrl)
@@ -56,29 +53,22 @@ export async function GET(request, { params }) {
       priority: item.priority || 0.4,
     }));
     
-    console.log(`Generated ${urls.length} filter URLs for direction ${direction}`);
-    
     const sitemapXml = generateSitemapXml(urls);
     
     return new NextResponse(sitemapXml, {
-      status: 200,
       headers: {
         'Content-Type': 'application/xml',
-        'Cache-Control': 'public, s-maxage=604800, stale-while-revalidate=259200',
+        'Cache-Control': 'public, s-maxage=604800',
       },
     });
     
   } catch (error) {
-    console.error(`Error generating filters sitemap for direction ${direction}:`, error);
+    console.error('Error:', error);
     
     const emptySitemap = generateSitemapXml([]);
     
     return new NextResponse(emptySitemap, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/xml',
-        'Cache-Control': 'no-cache',
-      },
+      headers: { 'Content-Type': 'application/xml' },
     });
   }
 }

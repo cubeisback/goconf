@@ -32,6 +32,19 @@ images: {
       },
     ],
   },
+
+   async rewrites() {
+    return [
+      {
+        source: '/sitemap-events-:page.xml',
+        destination: '/sitemap-events/:page',
+      },
+      {
+        source: '/sitemap-filters-:direction.xml',
+        destination: '/sitemap-filters/:direction',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
