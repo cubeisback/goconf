@@ -68,11 +68,25 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+		{process.env.NEXT_PUBLIC_VERSION === 'dev' &&
+			<>
+				<meta name="robots" content="noindex, nofollow" />
+				<meta name="googlebot" content="noindex, nofollow" />
+			</>
+		}
       </head>
       <body>
-		<ThemeWrapper>
-			{children}
-		</ThemeWrapper>
+		{process.env.NEXT_PUBLIC_VERSION === 'dev' ? (
+			<noindex>
+				<ThemeWrapper>
+					{children}
+				</ThemeWrapper>
+			</noindex>
+		) : (
+			<ThemeWrapper>
+				{children}
+			</ThemeWrapper>
+		)}
       </body>
     </html>
   );
