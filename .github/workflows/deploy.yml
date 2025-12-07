@@ -48,27 +48,44 @@ jobs:
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
             set -e
             cd /home/thunder/web/dev.goconf.ru/app
-
-            echo "Installing dependencies with memory limit..."
-            NODE_OPTIONS="--max-old-space-size=1024" npm install
-
-            echo "Cleaning previous build..."
+            
+            echo "=== CONFIGURING SYSTEM ==="
+            # Настраиваем swappiness
+            echo "Setting swappiness to 100..."
+            echo "vm.swappiness=100" | sudo tee -a /etc/sysctl.conf
+            sudo sysctl -p
+            
+            # Активируем swap
+            echo "Activating swap with high priority..."
+            sudo swapoff /swapfile 2>/dev/null || true
+            sudo swapon -p 100 /swapfile
+            
+            echo "Memory status:"
+            free -h
+            
+            echo "=== INSTALLING DEPENDENCIES ==="
+            # Очищаем кэш
+            npm cache clean --force
+            
+            # Устанавливаем по частям если нужно
+            echo "Installing critical dependencies first..."
+            NODE_OPTIONS="--max-old-space-size=1024" npm install next react react-dom --no-save
+            
+            echo "Installing all dependencies..."
+            NODE_OPTIONS="--max-old-space-size=2048" npm ci --no-audit --prefer-offline
+            
+            echo "=== BUILDING PROJECT ==="
             rm -rf .next
-
-            echo "Using .env.dev for build..."
             cp .env.dev .env.production
-
-            echo "Building project with memory limit..."
-            NODE_OPTIONS="--max-old-space-size=1024" npm run build
-
-            echo "Restarting PM2 process..."
-            pm2 describe goconf-dev > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-              pm2 restart goconf-dev --update-env --max-memory-restart 300M
-            else
-              pm2 start npm --name "goconf-dev" -- start --max-memory-restart 300M
-            fi
+            NODE_OPTIONS="--max-old-space-size=2048" npm run build
+            
+            echo "=== RESTARTING PM2 ==="
+            # Освобождаем порт
+            sudo fuser -k 3001/tcp 2>/dev/null || true
+            
+            pm2 delete goconf-dev 2>/dev/null || true
+            pm2 start npm --name "goconf-dev" -- start --max-memory-restart 500M
             pm2 save
-
-            echo "Dev deployment completed ✅"
+            
+            echo "✅ Dev deployment completed"
           EOF
