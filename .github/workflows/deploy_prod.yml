@@ -50,9 +50,9 @@ jobs:
             cd /home/thunder/web/goconf.ru/app
 
             echo "=== STOPPING OLD PROCESSES ==="
-            # Более агрессивное освобождение порта
-            sudo fuser -k 3001/tcp 2>/dev/null || true
-            sudo kill -9 $(sudo lsof -t -i:3001) 2>/dev/null || true
+            # Без sudo - используем pkill и fuser от пользователя
+            pkill -f "node.*3001" 2>/dev/null || true
+            fuser -k 3001/tcp 2>/dev/null || true
             sleep 2
             
             echo "=== CLEANING ==="
@@ -92,7 +92,8 @@ jobs:
                 STATIC_FILE=$(find .next/static/chunks -name "main-app-*.js" | head -1 | xargs basename)
                 if curl -s -o /dev/null -w "_next/static file: %{http_code}\n" http://localhost:3001/_next/static/chunks/$STATIC_FILE --max-time 5 | grep -q "200"; then
                   echo "✅ Static files are accessible"
-                  exit 0
+                  echo "✅ Production deployment completed successfully"
+                  exit 0  # Явный успешный выход
                 fi
               fi
               sleep 2
@@ -105,6 +106,10 @@ jobs:
             # Если не запустилось, пробуем альтернативный метод
             echo "Trying alternative startup method..."
             pm2 delete goconf-prod 2>/dev/null || true
+            pkill -f "node.*3001" 2>/dev/null || true
+            fuser -k 3001/tcp 2>/dev/null || true
+            sleep 2
+            
             cd /home/thunder/web/goconf.ru/app
             NODE_ENV=production PORT=3001 node .next/standalone/server.js > /tmp/next.log 2>&1 &
             sleep 3
@@ -113,6 +118,8 @@ jobs:
               echo "✅ Application started via standalone server"
               pm2 start "node .next/standalone/server.js" --name "goconf-prod" --interpreter="node" --env NODE_ENV=production,PORT=3001
               pm2 save --force
+              echo "✅ Production deployment completed via alternative method"
+              exit 0
             else
               echo "❌ Failed to start application"
               cat /tmp/next.log
