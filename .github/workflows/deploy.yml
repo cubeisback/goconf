@@ -56,11 +56,11 @@ jobs:
             
             echo "=== CLEANING OLD FILES ==="
             # Удаляем старые файлы для чистой установки
-            rm -rf node_modules .next package-lock.json npm-debug.log* 2>/dev/null || true
+            rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
             
             echo "=== SAFE DEPENDENCY INSTALLATION ==="
             # Безопасная установка без выполнения скриптов
-            NODE_OPTIONS="--max-old-space-size=1024" npm ci --only=production --ignore-scripts --no-audit --prefer-offline
+            NODE_OPTIONS="--max-old-space-size=1024" npm install --only=production --ignore-scripts --no-audit --prefer-offline
             
             echo "=== SECURITY AUDIT ==="
             npm audit --omit=dev || echo "Audit completed"

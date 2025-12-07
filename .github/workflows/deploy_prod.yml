@@ -62,7 +62,7 @@ jobs:
             
             echo "=== CLEAN INSTALLATION ==="
             # Полная очистка для чистого билда
-            rm -rf node_modules .next package-lock.json npm-debug.log* 2>/dev/null || true
+            rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
             
             # Проверяем package.json на безопасность
             echo "Checking package.json security..."
@@ -74,7 +74,7 @@ jobs:
             
             echo "=== SECURE DEPENDENCY INSTALL ==="
             # Установка только production зависимостей без скриптов
-            NODE_OPTIONS="--max-old-space-size=1024" npm ci --only=production --ignore-scripts --no-audit --prefer-offline
+            NODE_OPTIONS="--max-old-space-size=1024" npm install --only=production --ignore-scripts --no-audit --prefer-offline
             
             echo "=== SECURITY AUDIT ==="
             npm audit --omit=dev --production || echo "Audit warning - check manually"
