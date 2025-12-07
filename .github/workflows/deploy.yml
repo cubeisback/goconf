@@ -13,10 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create .env.dev and ecosystem.config.js
+      - name: Create .env.dev
         run: |
           echo "${{ secrets.ENV_DEV_CONTENT }}" > .env.dev
-          echo "${{ secrets.ECOSYSTEM_CONFIG_CONTENT }}" > ecosystem.config.js
 
       - name: Setup SSH
         env:
@@ -41,7 +40,7 @@ jobs:
             -e "ssh -i ~/.ssh/goconf_key" ./ \
             $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
 
-      - name: Install, Build and Restart PM2 (Next.js 15)
+      - name: Install, Build and Restart PM2
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -50,52 +49,46 @@ jobs:
             set -e
             cd /home/thunder/web/dev.goconf.ru/app
             
-            echo "=== SECURITY CHECK ==="
-            echo "Checking for malware..."
-            # FIX: Добавлено || true чтобы игнорировать код выхода grep
-            ps aux | grep -E "hash|runnv|alive|lived|miner" | grep -v grep || echo "No malware detected"
+            echo "=== STOPPING OLD PROCESSES ==="
+            # Освобождаем порты
+            sudo fuser -k 3000/tcp 2>/dev/null || true
+            sudo fuser -k 3001/tcp 2>/dev/null || true
+            sudo fuser -k 3002/tcp 2>/dev/null || true
             
-            echo "=== CLEANING OLD FILES ==="
+            echo "=== CLEANING ==="
             rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
             
-            echo "=== CHECKING PACKAGE.JSON ==="
-            echo "Next.js version in package.json:"
-            grep '"next"' package.json || echo "Next.js version not found"
-            echo "React version in package.json:"
-            grep '"react"' package.json || echo "React version not found"
+            echo "=== INSTALLING DEPENDENCIES ==="
+            NODE_OPTIONS="--max-old-space-size=1024" npm install --legacy-peer-deps
             
-            echo "=== SAFE DEPENDENCY INSTALLATION ==="
-            NODE_OPTIONS="--max-old-space-size=1024" npm install --only=production --ignore-scripts --no-audit --prefer-offline
+            echo "=== BUILDING PROJECT ==="
+            if [ -f .env.dev ]; then
+              cp .env.dev .env.production
+              echo "Using .env.dev for build"
+            fi
             
-            echo "=== FIXING SECURITY VULNERABILITIES ==="
-            npm audit fix --only=prod --force 2>/dev/null || echo "Audit fix completed or not needed"
-            
-            echo "=== BUILDING PROJECT (Next.js 15) ==="
-            cp .env.dev .env.production 2>/dev/null || true
-            
-            # Сборка Next.js 15 - стабильная, без Turbopack
             NODE_OPTIONS="--max-old-space-size=1024" npm run build
             
             echo "=== RESTARTING PM2 ==="
-            fuser -k 3001/tcp 2>/dev/null || true
-            fuser -k 3000/tcp 2>/dev/null || true
-            
             pm2 delete goconf-dev 2>/dev/null || true
-            pm2 start npm --name "goconf-dev" -- start -- --port=3001
             
-            pm2 restart goconf-dev --update-env --max-memory-restart 300M --node-args="--max-old-space-size=256"
+            # Запускаем правильно
+            NODE_ENV=production PORT=3001 pm2 start npm --name "goconf-dev" -- run start
             
             pm2 save --force
             
             echo "=== VERIFICATION ==="
+            sleep 3
             echo "PM2 Status:"
             pm2 list
             
-            echo "Build check:"
-            ls -la .next/ 2>/dev/null | head -5 || echo "No .next directory"
+            echo "Checking application..."
+            if curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 | grep -q "200\|30"; then
+              echo "✅ Dev application is running on port 3001"
+            else
+              echo "⚠️ Dev application not responding"
+              pm2 logs goconf-dev --lines 10
+            fi
             
-            echo "Memory usage:"
-            free -h
-            
-            echo "✅ Dev deployment completed with Next.js 15"
+            echo "✅ Dev deployment completed"
           EOF
