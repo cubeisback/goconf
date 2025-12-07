@@ -64,9 +64,9 @@ jobs:
             echo "Restarting PM2 process..."
             pm2 describe goconf-dev > /dev/null 2>&1
             if [ $? -eq 0 ]; then
-              pm2 restart goconf-dev
+              pm2 restart goconf-dev --update-env --max-memory-restart 300M
             else
-              pm2 start npm --name "goconf-dev" -- start
+              pm2 start npm --name "goconf-dev" -- start --max-memory-restart 300M
             fi
             pm2 save
 
