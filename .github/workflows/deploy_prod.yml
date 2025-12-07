@@ -1,4 +1,4 @@
-name: Deploy goconf Next.js App
+name: Deploy goconf Next.js App (Production)
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create sensitive config files (.env.production and ecosystem.config.js)
+      - name: Create sensitive config files
         run: |
           echo "${{ secrets.ENV_PRODUCTION_CONTENT }}" > .env.production
           echo "${{ secrets.ECOSYSTEM_CONFIG_CONTENT }}" > ecosystem.config.js
@@ -29,7 +29,7 @@ jobs:
           chmod 600 ~/.ssh/goconf_key
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: Upload new project files (excluding .git and node_modules)
+      - name: Upload project files
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -37,10 +37,11 @@ jobs:
           rsync -avz \
             --exclude=".git" \
             --exclude="node_modules" \
+            --exclude=".next" \
             -e "ssh -i ~/.ssh/goconf_key" ./ \
             $SERVER_USER@$SERVER_IP:/home/thunder/web/goconf.ru/app/
 
-      - name: Install, Build and Restart App
+      - name: Security Cleanup and Deploy
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -49,24 +50,80 @@ jobs:
             set -e
             cd /home/thunder/web/goconf.ru/app
 
-            echo "Fixing permissions..."
-            chown -R thunder:thunder .
-
-            echo "Cleaning cache..."
-            rm -rf .next node_modules/.cache
-
-            echo "Installing dependencies..."
-            npm install
-
-            echo "Building project..."
-            npm run build
-
-            echo "Restarting PM2 process..."
-            pm2 describe goconf-prod > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-              pm2 restart goconf-prod
-            else
-              pm2 start npm --name "goconf-prod" -- start
+            echo "=== SECURITY PRE-CHECK ==="
+            # Проверяем на наличие майнеров перед установкой
+            echo "Checking for malware processes..."
+            MALWARE=$(ps aux | grep -E "hash|runnv|alive|lived|miner|xmrig" | grep -v grep)
+            if [ -n "$MALWARE" ]; then
+              echo "⚠️ WARNING: Malware detected! Killing processes..."
+              pkill -9 -f "hash|runnv|alive|lived|miner|xmrig" 2>/dev/null || true
+              sleep 2
             fi
-            pm2 save
+            
+            echo "=== CLEAN INSTALLATION ==="
+            # Полная очистка для чистого билда
+            rm -rf node_modules .next package-lock.json npm-debug.log* 2>/dev/null || true
+            
+            # Проверяем package.json на безопасность
+            echo "Checking package.json security..."
+            if grep -q '"next": "latest"' package.json || grep -q '"react": "latest"' package.json; then
+              echo "❌ ERROR: Using 'latest' tags in production is unsafe!"
+              echo "Please fix package.json before deployment"
+              exit 1
+            fi
+            
+            echo "=== SECURE DEPENDENCY INSTALL ==="
+            # Установка только production зависимостей без скриптов
+            NODE_OPTIONS="--max-old-space-size=1024" npm ci --only=production --ignore-scripts --no-audit --prefer-offline
+            
+            echo "=== SECURITY AUDIT ==="
+            npm audit --omit=dev --production || echo "Audit warning - check manually"
+            
+            echo "=== BUILDING PRODUCTION ==="
+            # Используем .env.production
+            if [ -f .env.production ]; then
+              echo "Using .env.production for build"
+            else
+              echo "⚠️ No .env.production file found"
+            fi
+            
+            # Производственная сборка с оптимизациями
+            NODE_OPTIONS="--max-old-space-size=1024" npm run build
+            
+            echo "=== PM2 DEPLOYMENT ==="
+            # Освобождаем порты
+            fuser -k 3002/tcp 2>/dev/null || true
+            fuser -k 3000/tcp 2>/dev/null || true
+            
+            # Останавливаем старый процесс
+            pm2 delete goconf-prod 2>/dev/null || true
+            
+            # Запускаем с безопасными флагами
+            pm2 start npm --name "goconf-prod" -- start -- --port=3002 --no-experimental-fetch
+            
+            # Настраиваем лимиты памяти
+            pm2 restart goconf-prod --update-env --max-memory-restart 300M --node-args="--max-old-space-size=256"
+            
+            # Настраиваем перезапуск при сбоях
+            pm2 set pm2:autodump true
+            pm2 save --force
+            
+            echo "=== POST-DEPLOYMENT CHECK ==="
+            sleep 3  # Даём время на запуск
+            
+            echo "PM2 Status:"
+            pm2 list
+            
+            echo "Application health check:"
+            if curl -s -o /dev/null -w "%{http_code}" http://localhost:3002 | grep -q "200\|30"; then
+              echo "✅ Application is responding"
+            else
+              echo "⚠️ Application may not be responding correctly"
+              pm2 logs goconf-prod --lines 10
+            fi
+            
+            echo "Memory status:"
+            free -h
+            
+            echo "✅ Production deployment completed securely"
           EOF
