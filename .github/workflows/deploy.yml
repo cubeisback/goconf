@@ -49,39 +49,28 @@ jobs:
             set -e
             cd /home/thunder/web/dev.goconf.ru/app
             
-            echo "=== CONFIGURING SYSTEM ==="
-            # Настраиваем swappiness
-            echo "Setting swappiness to 100..."
-            echo "vm.swappiness=100" | sudo tee -a /etc/sysctl.conf
-            sudo sysctl -p
-            
-            # Активируем swap
-            echo "Activating swap with high priority..."
-            sudo swapoff /swapfile 2>/dev/null || true
-            sudo swapon -p 100 /swapfile
+            echo "=== CHECKING SYSTEM ==="
+            echo "Current swappiness:"
+            cat /proc/sys/vm/swappiness
             
             echo "Memory status:"
             free -h
             
-            echo "=== INSTALLING DEPENDENCIES ==="
-            # Очищаем кэш
+            echo "=== CLEANING CACHE ==="
             npm cache clean --force
             
-            # Устанавливаем по частям если нужно
-            echo "Installing critical dependencies first..."
-            NODE_OPTIONS="--max-old-space-size=1024" npm install next react react-dom --no-save
-            
-            echo "Installing all dependencies..."
-            NODE_OPTIONS="--max-old-space-size=2048" npm ci --no-audit --prefer-offline
+            echo "=== INSTALLING DEPENDENCIES ==="
+            # Используем меньше памяти
+            npm install --verbose 2>&1 | tail -50
             
             echo "=== BUILDING PROJECT ==="
             rm -rf .next
             cp .env.dev .env.production
-            NODE_OPTIONS="--max-old-space-size=2048" npm run build
+            npm run build
             
             echo "=== RESTARTING PM2 ==="
-            # Освобождаем порт
-            sudo fuser -k 3001/tcp 2>/dev/null || true
+            # Освобождаем порт без sudo
+            fuser -k 3001/tcp 2>/dev/null || true
             
             pm2 delete goconf-dev 2>/dev/null || true
             pm2 start npm --name "goconf-dev" -- start --max-memory-restart 500M
