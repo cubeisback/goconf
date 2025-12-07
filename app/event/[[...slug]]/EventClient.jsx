@@ -30,8 +30,6 @@ export default function EventClient({ params }) {
 
 	const theme = useTheme();
 
-	// test 3
-
 	const navigationPrevRef = useRef(null);
 	const navigationNextRef = useRef(null);
 
@@ -48,7 +46,7 @@ export default function EventClient({ params }) {
 		  .then((response) => {
 			setPageInfo(response.data);
 			// Здесь тоже можно вызывать функции для SEO если нужно
-			console.log('page ', response.data);
+			console.log('page tut bil test yml', response.data);
 		  })
 		  .catch((error) => {
 			// console.log('asd', error, token);
