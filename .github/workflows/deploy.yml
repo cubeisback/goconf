@@ -49,8 +49,8 @@ jobs:
             set -e
             cd /home/thunder/web/dev.goconf.ru/app
 
-            echo "Installing dependencies..."
-            npm install
+            echo "Installing dependencies with memory limit..."
+            NODE_OPTIONS="--max-old-space-size=1024" npm install
 
             echo "Cleaning previous build..."
             rm -rf .next
@@ -58,8 +58,8 @@ jobs:
             echo "Using .env.dev for build..."
             cp .env.dev .env.production
 
-            echo "Building project..."
-            npm run build
+            echo "Building project with memory limit..."
+            NODE_OPTIONS="--max-old-space-size=1024" npm run build
 
             echo "Restarting PM2 process..."
             pm2 describe goconf-dev > /dev/null 2>&1
