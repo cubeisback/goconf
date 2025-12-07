@@ -52,16 +52,19 @@ jobs:
 
             echo "=== SECURITY PRE-CHECK ==="
             echo "Checking for malware processes..."
-            MALWARE=$(ps aux | grep -E "hash|runnv|alive|lived|miner|xmrig" | grep -v grep)
+            # FIX: Используем конструкцию, которая не завершится с ошибкой
+            MALWARE=$(ps aux | grep -E "hash|runnv|alive|lived|miner|xmrig" | grep -v grep || true)
             if [ -n "$MALWARE" ]; then
               echo "⚠️ WARNING: Malware detected! Killing processes..."
               pkill -9 -f "hash|runnv|alive|lived|miner|xmrig" 2>/dev/null || true
               sleep 2
+            else
+              echo "No malware detected"
             fi
             
             echo "=== VERSION CHECK ==="
             echo "Package versions:"
-            grep -E '"next"|"react"|"react-dom"' package.json
+            grep -E '"next"|"react"|"react-dom"' package.json || echo "Package versions not found"
             
             # Проверяем что не используем Next.js 16 с Turbopack
             if grep -q '"next": "16' package.json; then

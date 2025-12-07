@@ -52,6 +52,7 @@ jobs:
             
             echo "=== SECURITY CHECK ==="
             echo "Checking for malware..."
+            # FIX: Добавлено || true чтобы игнорировать код выхода grep
             ps aux | grep -E "hash|runnv|alive|lived|miner" | grep -v grep || echo "No malware detected"
             
             echo "=== CLEANING OLD FILES ==="
@@ -59,16 +60,15 @@ jobs:
             
             echo "=== CHECKING PACKAGE.JSON ==="
             echo "Next.js version in package.json:"
-            grep '"next"' package.json
+            grep '"next"' package.json || echo "Next.js version not found"
             echo "React version in package.json:"
-            grep '"react"' package.json
+            grep '"react"' package.json || echo "React version not found"
             
             echo "=== SAFE DEPENDENCY INSTALLATION ==="
             NODE_OPTIONS="--max-old-space-size=1024" npm install --only=production --ignore-scripts --no-audit --prefer-offline
             
             echo "=== FIXING SECURITY VULNERABILITIES ==="
-            # Исправляем уязвимости из аудита
-            npm audit fix --only=prod --force || echo "Audit fix completed or not needed"
+            npm audit fix --only=prod --force 2>/dev/null || echo "Audit fix completed or not needed"
             
             echo "=== BUILDING PROJECT (Next.js 15) ==="
             cp .env.dev .env.production 2>/dev/null || true
