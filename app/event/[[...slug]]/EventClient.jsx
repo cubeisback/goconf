@@ -30,6 +30,8 @@ export default function EventClient({ params }) {
 
 	const theme = useTheme();
 
+	// test 3
+
 	const navigationPrevRef = useRef(null);
 	const navigationNextRef = useRef(null);
 

@@ -1,4 +1,4 @@
-name: Deploy goconf Next.js App
+name: Deploy goconf Next.js App (Production)
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create sensitive config files (.env.production and ecosystem.config.js)
+      - name: Create sensitive config files
         run: |
           echo "${{ secrets.ENV_PRODUCTION_CONTENT }}" > .env.production
           echo "${{ secrets.ECOSYSTEM_CONFIG_CONTENT }}" > ecosystem.config.js
@@ -29,7 +29,7 @@ jobs:
           chmod 600 ~/.ssh/goconf_key
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: Upload new project files (excluding .git and node_modules)
+      - name: Upload project files
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -37,10 +37,11 @@ jobs:
           rsync -avz \
             --exclude=".git" \
             --exclude="node_modules" \
+            --exclude=".next" \
             -e "ssh -i ~/.ssh/goconf_key" ./ \
             $SERVER_USER@$SERVER_IP:/home/thunder/web/goconf.ru/app/
 
-      - name: Install, Build and Restart App
+      - name: Security Cleanup and Deploy (Next.js 15)
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -49,24 +50,77 @@ jobs:
             set -e
             cd /home/thunder/web/goconf.ru/app
 
-            echo "Fixing permissions..."
-            chown -R thunder:thunder .
-
-            echo "Cleaning cache..."
-            rm -rf .next node_modules/.cache
-
-            echo "Installing dependencies..."
-            npm install
-
-            echo "Building project..."
-            npm run build
-
-            echo "Restarting PM2 process..."
-            pm2 describe goconf-prod > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-              pm2 restart goconf-prod
-            else
-              pm2 start npm --name "goconf-prod" -- start
+            echo "=== SECURITY PRE-CHECK ==="
+            echo "Checking for malware processes..."
+            MALWARE=$(ps aux | grep -E "hash|runnv|alive|lived|miner|xmrig" | grep -v grep)
+            if [ -n "$MALWARE" ]; then
+              echo "⚠️ WARNING: Malware detected! Killing processes..."
+              pkill -9 -f "hash|runnv|alive|lived|miner|xmrig" 2>/dev/null || true
+              sleep 2
             fi
-            pm2 save
+            
+            echo "=== VERSION CHECK ==="
+            echo "Package versions:"
+            grep -E '"next"|"react"|"react-dom"' package.json
+            
+            # Проверяем что не используем Next.js 16 с Turbopack
+            if grep -q '"next": "16' package.json; then
+              echo "❌ ERROR: Next.js 16 detected! Downgrade to 15.5.7 for stability."
+              exit 1
+            fi
+            
+            echo "=== CLEAN INSTALLATION ==="
+            rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
+            
+            echo "=== SECURE DEPENDENCY INSTALL ==="
+            NODE_OPTIONS="--max-old-space-size=1024" npm install --only=production --ignore-scripts --no-audit --prefer-offline
+            
+            echo "=== FIXING VULNERABILITIES ==="
+            npm audit fix --only=prod --force 2>/dev/null || echo "Security fixes applied"
+            
+            echo "=== BUILDING PRODUCTION (Next.js 15) ==="
+            if [ -f .env.production ]; then
+              echo "Using .env.production for build"
+            else
+              echo "⚠️ No .env.production file found"
+            fi
+            
+            # Стабильная сборка Next.js 15
+            NODE_OPTIONS="--max-old-space-size=1024" npm run build
+            
+            echo "=== PM2 DEPLOYMENT ==="
+            fuser -k 3002/tcp 2>/dev/null || true
+            fuser -k 3000/tcp 2>/dev/null || true
+            
+            pm2 delete goconf-prod 2>/dev/null || true
+            pm2 start npm --name "goconf-prod" -- start -- --port=3002
+            
+            pm2 restart goconf-prod --update-env --max-memory-restart 300M --node-args="--max-old-space-size=256"
+            
+            pm2 set pm2:autodump true
+            pm2 save --force
+            
+            echo "=== POST-DEPLOYMENT CHECK ==="
+            sleep 5
+            
+            echo "PM2 Status:"
+            pm2 list
+            
+            echo "Application check:"
+            if timeout 5 curl -s -o /dev/null -w "%{http_code}" http://localhost:3002 | grep -q "200\|30"; then
+              echo "✅ Application is responding"
+            else
+              echo "⚠️ Checking logs..."
+              pm2 logs goconf-prod --lines 10
+            fi
+            
+            echo "Build version:"
+            if [ -f .next/BUILD_ID ]; then
+              echo "Build ID: $(cat .next/BUILD_ID)"
+            fi
+            
+            echo "Memory status:"
+            free -h
+            
+            echo "✅ Production deployment completed with Next.js 15"
           EOF

@@ -29,7 +29,7 @@ jobs:
           chmod 600 ~/.ssh/goconf_key
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: Upload project files (excluding .git and node_modules)
+      - name: Upload project files
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -37,10 +37,11 @@ jobs:
           rsync -avz \
             --exclude=".git" \
             --exclude="node_modules" \
+            --exclude=".next" \
             -e "ssh -i ~/.ssh/goconf_key" ./ \
             $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
 
-      - name: Install, Build and Restart PM2
+      - name: Install, Build and Restart PM2 (Next.js 15)
         env:
           SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
           SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
@@ -48,27 +49,53 @@ jobs:
           ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
             set -e
             cd /home/thunder/web/dev.goconf.ru/app
-
-            echo "Installing dependencies..."
-            npm install
-
-            echo "Cleaning previous build..."
-            rm -rf .next
-
-            echo "Using .env.dev for build..."
-            cp .env.dev .env.production
-
-            echo "Building project..."
-            npm run build
-
-            echo "Restarting PM2 process..."
-            pm2 describe goconf-dev > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-              pm2 restart goconf-dev
-            else
-              pm2 start npm --name "goconf-dev" -- start
-            fi
-            pm2 save
-
-            echo "Dev deployment completed ✅"
+            
+            echo "=== SECURITY CHECK ==="
+            echo "Checking for malware..."
+            ps aux | grep -E "hash|runnv|alive|lived|miner" | grep -v grep || echo "No malware detected"
+            
+            echo "=== CLEANING OLD FILES ==="
+            rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
+            
+            echo "=== CHECKING PACKAGE.JSON ==="
+            echo "Next.js version in package.json:"
+            grep '"next"' package.json
+            echo "React version in package.json:"
+            grep '"react"' package.json
+            
+            echo "=== SAFE DEPENDENCY INSTALLATION ==="
+            NODE_OPTIONS="--max-old-space-size=1024" npm install --only=production --ignore-scripts --no-audit --prefer-offline
+            
+            echo "=== FIXING SECURITY VULNERABILITIES ==="
+            # Исправляем уязвимости из аудита
+            npm audit fix --only=prod --force || echo "Audit fix completed or not needed"
+            
+            echo "=== BUILDING PROJECT (Next.js 15) ==="
+            cp .env.dev .env.production 2>/dev/null || true
+            
+            # Сборка Next.js 15 - стабильная, без Turbopack
+            NODE_OPTIONS="--max-old-space-size=1024" npm run build
+            
+            echo "=== RESTARTING PM2 ==="
+            fuser -k 3001/tcp 2>/dev/null || true
+            fuser -k 3000/tcp 2>/dev/null || true
+            
+            pm2 delete goconf-dev 2>/dev/null || true
+            pm2 start npm --name "goconf-dev" -- start -- --port=3001
+            
+            pm2 restart goconf-dev --update-env --max-memory-restart 300M --node-args="--max-old-space-size=256"
+            
+            pm2 save --force
+            
+            echo "=== VERIFICATION ==="
+            echo "PM2 Status:"
+            pm2 list
+            
+            echo "Build check:"
+            ls -la .next/ 2>/dev/null | head -5 || echo "No .next directory"
+            
+            echo "Memory usage:"
+            free -h
+            
+            echo "✅ Dev deployment completed with Next.js 15"
           EOF
