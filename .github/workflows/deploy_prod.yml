@@ -50,12 +50,14 @@ jobs:
             cd /home/thunder/web/goconf.ru/app
 
             echo "=== STOPPING OLD PROCESSES ==="
-            # Освобождаем порты
-            sudo fuser -k 3000/tcp 2>/dev/null || true
+            # Более агрессивное освобождение порта
             sudo fuser -k 3001/tcp 2>/dev/null || true
-            sudo fuser -k 3002/tcp 2>/dev/null || true
+            sudo kill -9 $(sudo lsof -t -i:3001) 2>/dev/null || true
+            sleep 2
             
             echo "=== CLEANING ==="
+            # Удаляем кэш Server Actions
+            rm -rf .next/standalone .next/server/actions 2>/dev/null || true
             rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
             
             echo "=== INSTALLING DEPENDENCIES ==="
@@ -66,8 +68,9 @@ jobs:
             
             echo "=== RESTARTING PM2 ==="
             pm2 delete goconf-prod 2>/dev/null || true
+            sleep 1
             
-            # Запускаем правильно
+            # Простой запуск без сложных опций
             NODE_ENV=production PORT=3001 pm2 start npm --name "goconf-prod" -- run start
             
             pm2 save --force
@@ -79,21 +82,40 @@ jobs:
             pm2 list
             
             echo "Application check:"
-            if curl -s -o /dev/null -w "%{http_code}" http://localhost:3002 | grep -q "200\|30"; then
-              echo "✅ Production application is running on port 3002"
-              
-              # Проверяем статические файлы
-              echo "Checking static files..."
-              STATIC_FILE=$(find .next/static -name "*.js" | head -1 | xargs basename)
-              if curl -s -o /dev/null -w "_next/static file: %{http_code}\n" http://localhost:3002/_next/static/chunks/$STATIC_FILE | grep -q "200"; then
-                echo "✅ Static files are accessible"
-              else
-                echo "⚠️ Static files may have issues"
+            # Даем больше времени и проверяем несколько раз
+            for i in {1..3}; do
+              if curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 --max-time 10 | grep -q "200\|30"; then
+                echo "✅ Production application is running on port 3001"
+                
+                # Проверяем статические файлы
+                echo "Checking static files..."
+                STATIC_FILE=$(find .next/static/chunks -name "main-app-*.js" | head -1 | xargs basename)
+                if curl -s -o /dev/null -w "_next/static file: %{http_code}\n" http://localhost:3001/_next/static/chunks/$STATIC_FILE --max-time 5 | grep -q "200"; then
+                  echo "✅ Static files are accessible"
+                  exit 0
+                fi
               fi
-            else
-              echo "⚠️ Production application not responding"
-              pm2 logs goconf-prod --lines 20
-            fi
+              sleep 2
+            done
             
-            echo "✅ Production deployment completed"
+            echo "⚠️ Production application not responding after retries"
+            echo "Checking logs..."
+            pm2 logs goconf-prod --lines 30
+            
+            # Если не запустилось, пробуем альтернативный метод
+            echo "Trying alternative startup method..."
+            pm2 delete goconf-prod 2>/dev/null || true
+            cd /home/thunder/web/goconf.ru/app
+            NODE_ENV=production PORT=3001 node .next/standalone/server.js > /tmp/next.log 2>&1 &
+            sleep 3
+            
+            if curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 --max-time 5 | grep -q "200\|30"; then
+              echo "✅ Application started via standalone server"
+              pm2 start "node .next/standalone/server.js" --name "goconf-prod" --interpreter="node" --env NODE_ENV=production,PORT=3001
+              pm2 save --force
+            else
+              echo "❌ Failed to start application"
+              cat /tmp/next.log
+              exit 1
+            fi
           EOF
