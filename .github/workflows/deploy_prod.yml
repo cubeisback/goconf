@@ -68,7 +68,7 @@ jobs:
             pm2 delete goconf-prod 2>/dev/null || true
             
             # Запускаем правильно
-            NODE_ENV=production PORT=3002 pm2 start npm --name "goconf-prod" -- run start
+            NODE_ENV=production PORT=3001 pm2 start npm --name "goconf-prod" -- run start
             
             pm2 save --force
             
