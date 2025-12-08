@@ -1,6 +1,6 @@
 'use client'
 
-import { Breadcrumbs, Button, Container, pagePromo, PageTitle } from "@/styles/ui";
+import { Breadcrumbs, Button, Container, PagePromo, PageTitle } from "@/styles/ui";
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Form } from '@/components/Form';
@@ -96,7 +96,7 @@ export default function OrganizerClient({ params }) {
 
     return (
         <>
-            <div className={pagePromo}>
+            <PagePromo>
                 <Container>
                     <Breadcrumbs>
                         <Link href="/">Главная</Link>
@@ -105,7 +105,7 @@ export default function OrganizerClient({ params }) {
                     </Breadcrumbs>
 					<PageTitle>{pageInfo && pageInfo.h1}</PageTitle>
                 </Container>
-            </div>
+            </PagePromo>
 
             <div className={css`
                 padding: ${orgEvents?.length > 0 ? '32px 0 0' : '32px 0 120px'};

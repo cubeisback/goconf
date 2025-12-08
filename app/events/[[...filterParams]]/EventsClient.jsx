@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
-import { Breadcrumbs, breadcrumbs, Container, input, pagePromo, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, breadcrumbs, Container, input, PagePromo, pageTitle } from "@/styles/ui";
 import { Filter } from '@/components/Filter/Filter';
 import { EventsFiltered } from '@/components/EventsFiltered';
 import { Form } from '@/components/Form';
@@ -219,7 +219,7 @@ const handleLoadMore = useCallback(() => {
 
 	return (
 		<>
-			<div className={pagePromo}>
+			<PagePromo>
 				<Container>
 					<Breadcrumbs>
 						<Link href="/">Главная</Link>
@@ -259,7 +259,7 @@ const handleLoadMore = useCallback(() => {
 						</button>
 					</form>
 				</Container>
-			</div>
+			</PagePromo>
 
 			<div className={css`
 				position: relative;
