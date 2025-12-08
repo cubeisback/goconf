@@ -1,6 +1,6 @@
 "use client"
 
-import { Breadcrumbs, breadcrumbs, Button, Container, pagePromo, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, breadcrumbs, Button, Container, PagePromo, pageTitle } from "@/styles/ui";
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
@@ -17,7 +17,6 @@ import 'swiper/css/navigation';
 import { Navigation, Pagination } from 'swiper/modules';
 import axios from 'axios';
 import { decodeHtmlEntities, formatDate, formatPrice, getApiUrl } from '@/functions/functions';
-// import { DocumentDescription, DocumentTitle } from '@/functions/DocumentMeta';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAuthReady } from "@/hooks/useAuthReady";
@@ -194,9 +193,7 @@ export default function EventClient({ params }) {
 
 	return (
 		<>
-		{/* <DocumentTitle value={decodeHtmlEntities(seoTitle)} /> */}
-		{/* <DocumentDescription value={decodeHtmlEntities(seoDescription)} /> */}
-			<div className={pagePromo}>
+			<PagePromo>
 				<Container>
 					<Breadcrumbs>
 						<Link href="/">Главная</Link>
@@ -211,7 +208,7 @@ export default function EventClient({ params }) {
 						))}
 					</div>
 				</Container>
-			</div>
+			</PagePromo>
 
 			<div className={css`
 				padding: 32px 0 120px;

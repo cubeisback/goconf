@@ -1,6 +1,6 @@
 'use client'
 
-import { Article, Breadcrumbs, Container, pagePromo, PagePromo, pageTitle, PageTitle } from "@/styles/ui";
+import { Article, Breadcrumbs, Container, PagePromo, PageTitle, SkeletonText } from "@/styles/ui";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getApiUrl } from '@/functions/functions';
@@ -9,7 +9,7 @@ import axios from 'axios';
 const About = () => {
 	const [pageInfo, setPageInfo] = useState(null);
 	const [title, setTitle] = useState(null);
-	// const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		axios
@@ -17,8 +17,7 @@ const About = () => {
 		  .then((response) => {
 			setPageInfo(response.data.content)
 			setTitle(response.data.title)
-			// setIsLoading(false)
-			// console.log('agreement ', response.data);
+			setIsLoading(false)
 		  })
 		  .catch((error) => {
 			console.log(error);
@@ -27,17 +26,43 @@ const About = () => {
 
     return (
         <>
-			<div className={pagePromo}>
-						<Container>
-							<Breadcrumbs>
-								<Link href="/">Главная</Link>
-								<p>{title && title}</p>
-							</Breadcrumbs>
-							{title && <h1 className={pageTitle}>{title}</h1>}
-						</Container>
-			</div>
+			<PagePromo>
+				<Container>
+					<Breadcrumbs>
+						<Link href="/">Главная</Link>
+						<p>{title && title}</p>
+					</Breadcrumbs>
+					{isLoading ? 
+						<SkeletonText $height="64" /> : 
+						title && <PageTitle>{title}</PageTitle>
+					}
+				</Container>
+			</PagePromo>
 			<Container>
-				{ pageInfo && <Article dangerouslySetInnerHTML={{ __html:  pageInfo }}></Article> }
+				{isLoading ? 
+					<Article>
+						<SkeletonText />
+						<SkeletonText />
+						<SkeletonText />
+						<SkeletonText $width='90' />
+						<SkeletonText />
+						<SkeletonText />
+						<SkeletonText $width='80' />
+						<SkeletonText />
+						<SkeletonText />
+						<SkeletonText />
+						<SkeletonText />
+						<SkeletonText />
+						<SkeletonText $width='90' />
+						<SkeletonText />
+						<SkeletonText />
+						<SkeletonText $width='80' />
+						<SkeletonText />
+						<SkeletonText />
+					</Article>
+				:
+				pageInfo && <Article dangerouslySetInnerHTML={{ __html:  pageInfo }}></Article> 
+				}
 			</Container>
         </>
     );

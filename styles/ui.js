@@ -353,12 +353,6 @@ export const SelectorDate = styled.div`
 //   flex: 1;
 // `;
 
-//TODO удалить просто стиль
-export const pagePromo = css`
-  background-color: #F5F7FA;
-  padding: 120px 0 32px;
-`;
-
 export const PagePromo = styled.div`
   background-color: #F5F7FA;
   padding: 120px 0 32px;
@@ -1054,5 +1048,33 @@ export const OrgPageInfoImg = styled.div`
 
 	& > img {
 		height: auto!important;
+	}
+`;
+
+
+export const SkeletonText = styled.div`
+	height: ${props => props.$height ? props.$height+`px` : '1em'};
+	width: ${props => props.$width ? props.$width+`%` : '100%'};
+	position: relative;
+	display: inline-block;
+	overflow: hidden;
+	background-color: #eee;
+
+	&::after {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		transform: translateX(-100%);
+		background-image: linear-gradient(90deg, rgba(255,255,255, 0) 0, rgba(255,255,255, 0.2) 20%, rgba(255,255,255, 0.5) 60%,	rgba(255,255,255, 0));
+		animation: skeletonMove 5s infinite;
+		content: '';
+	}
+
+	@keyframes skeletonMove {
+		100% {
+			transform: translateX(100%);
+		}
 	}
 `;
