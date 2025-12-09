@@ -12,7 +12,7 @@ import RemoveIcon from "@/public/images/svg/remove.svg";
 import img_ex_1 from '/public/images/events_1.jpg';
 import LkMenu from "@/components/ui/LkMenu";
 import Image from "next/image";
-import { getApiUrl } from "@/functions/functions";
+import { detectVideoType, getApiUrl, VideoPlayer } from "@/functions/functions";
 import axios from "axios";
 import { useAuthReady } from "@/hooks/useAuthReady";
 import { useImageUpload } from "@/functions/useImageUpload";
@@ -134,6 +134,16 @@ const EventsAddEdit = () => {
 			[name]: type === 'checkbox' ? checked : value,
 		}));
 	};
+
+	const [videoPreview, setVideoPreview] = useState(null);
+	useEffect(() => {
+		if (dataEvent.video) {
+		const videoData = detectVideoType(dataEvent.video);
+		setVideoPreview(videoData);
+		} else {
+		setVideoPreview(null);
+		}
+	}, [dataEvent.video]);
 
 	const handleDataEventChangeSubject = (subjectItem) => {
 		setDataEvent((prev) => {
@@ -1256,7 +1266,26 @@ const {
 							margin-bottom: 16px;
 							font-size: 12px;
 						`}>Вы можете добавить Iframe с Ютуба или ВК</div>
-						<textarea className={cx(textarea, css`margin-bottom: 40px;`)} name="video" id="" placeholder="https://" value={dataEvent.video} onChange={handleDataEventChange}></textarea>
+						<textarea className={cx(textarea, css`margin-bottom: 20px;`)} name="video" id="" placeholder="Вставьте iframe или ссылку на видео (YouTube или VK)" value={dataEvent.video} onChange={handleDataEventChange}></textarea>
+						
+						{/* Preview под полем ввода */}
+						{videoPreview && (
+							<div style={{ marginBottom: '20px' }}>
+							<p style={{fontSize: 14, marginBottom: 10}}>Предпросмотр видео:</p>
+							<VideoPlayer videoData={videoPreview} />
+							</div>
+						)}
+
+						{/* Сообщение о неподдерживаемом формате */}
+						{dataEvent.video && !videoPreview && (
+							<div style={{ 
+							marginBottom: '20px', 
+							color: '#FC1234',
+							fontSize: '12px'
+							}}>
+							Неподдерживаемый формат видео. Вставьте iframe или прямую ссылку на YouTube/VK.
+							</div>
+						)}
 					</>
 					}
 

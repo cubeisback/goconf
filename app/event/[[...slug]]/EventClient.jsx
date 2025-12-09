@@ -16,7 +16,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation, Pagination } from 'swiper/modules';
 import axios from 'axios';
-import { decodeHtmlEntities, formatDate, formatPrice, getApiUrl } from '@/functions/functions';
+import { decodeHtmlEntities, detectVideoType, formatDate, formatPrice, getApiUrl, VideoPlayer } from '@/functions/functions';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAuthReady } from "@/hooks/useAuthReady";
@@ -191,6 +191,17 @@ export default function EventClient({ params }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
 
+
+  const [videoPreview, setVideoPreview] = useState(null);
+	useEffect(() => {
+		if (pageInfo?.fields?.group_video?.cod) {
+		const videoData = detectVideoType(pageInfo.fields.group_video.cod);
+		setVideoPreview(videoData);
+		} else {
+		setVideoPreview(null);
+		}
+	}, [pageInfo?.fields?.group_video?.cod]);
+
 	return (
 		<>
 			<PagePromo>
@@ -235,8 +246,21 @@ export default function EventClient({ params }) {
 							flex: 1;
 							max-width: 952px;
 						`}>
-							<div className={css`height: 400px;overflow: hidden;margin-bottom: 40px; @media(max-width: 575px) {height: 160px;}`}>
-								<img src={pageInfo.fields.anons?.url} alt="" className={css`object-fit: cover;width:100%;height:100%;object-position: 50% 50%; border-radius: 16px;`} />
+							<div className={css`
+								// height: 400px;
+								overflow: hidden;
+								margin-bottom: 40px;
+								@media(max-width: 575px) {
+									// height: 160px;
+								}`}>
+								<img src={pageInfo.fields.anons?.url} alt="" 
+								// className={css`
+								// 	object-fit: cover;
+								// 	width:100%;height:100%;
+								// 	object-position: 50% 50%;
+								// 	border-radius: 16px;`}
+								style={{width: '100%', borderRadius: 16}} 
+								/>
 							</div>
 
 							<div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
@@ -419,7 +443,7 @@ export default function EventClient({ params }) {
 								`}>
 									<div className={pageTitle}>{pageInfo.fields.group_video.title}</div>
 									<div>
-										{pageInfo.fields.group_video.cod}
+										<VideoPlayer videoData={videoPreview} />
 									</div>
 								</div>
 							}

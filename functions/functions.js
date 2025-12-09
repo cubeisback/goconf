@@ -76,4 +76,144 @@ export const getApiUrl = (url) => {
   return `https://goconf.ru${url}`; // или без www, как у тебя реально
 };
 
-  
+
+
+// utils/videoUtils.js
+export const detectVideoType = (input) => {
+  if (!input || input.trim() === '') return null;
+
+  const trimmedInput = input.trim();
+
+  // Проверяем, является ли ввод iframe
+  if (trimmedInput.startsWith('<iframe')) {
+    return parseIframe(trimmedInput);
+  }
+
+  // Проверяем, является ли ввод ссылкой
+  if (trimmedInput.startsWith('http')) {
+    return parseUrl(trimmedInput);
+  }
+
+  return null;
+};
+
+const parseIframe = (iframe) => {
+  // Извлекаем src из iframe
+  const srcMatch = iframe.match(/src=["']([^"']+)["']/);
+  if (!srcMatch) return null;
+
+  const src = srcMatch[1];
+  return parseSource(src);
+};
+
+const parseUrl = (url) => {
+  return parseSource(url);
+};
+
+const parseSource = (src) => {
+  // YouTube
+  if (src.includes('youtube.com') || src.includes('youtu.be')) {
+    const videoId = extractYouTubeId(src);
+    if (!videoId) return null;
+    
+    return {
+      type: 'youtube',
+      id: videoId,
+      embedUrl: `https://www.youtube.com/embed/${videoId}`,
+      originalSrc: src
+    };
+  }
+
+  // VK
+  if (src.includes('vk.com') || src.includes('vkvideo.ru')) {
+    const videoId = extractVKId(src);
+    if (!videoId) return null;
+    
+    return {
+      type: 'vk',
+      id: videoId,
+      embedUrl: `https://vk.com/video_ext.php?${videoId}`,
+      originalSrc: src
+    };
+  }
+
+  return null;
+};
+
+const extractYouTubeId = (url) => {
+  // Регулярки для разных форматов YouTube
+  const patterns = [
+    /(?:youtube\.com\/embed\/)([\w\-_]+)/,
+    /(?:youtube\.com\/watch\?v=)([\w\-_]+)/,
+    /(?:youtu\.be\/)([\w\-_]+)/,
+    /(?:youtube\.com\/.*[?&]v=)([\w\-_]+)/
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+
+  return null;
+};
+
+const extractVKId = (url) => {
+  // Для ссылок типа https://vk.com/video-127553155_456244359
+  const vkPattern1 = /video-(\d+_\d+)/;
+  const match1 = url.match(vkPattern1);
+  if (match1) return `oid=-${match1[1].split('_')[0]}&id=${match1[1].split('_')[1]}`;
+
+  // Для ссылок типа https://vkvideo.ru/video-127553155_456244359
+  const vkPattern2 = /video\/(?:video-)?(\d+_\d+)/;
+  const match2 = url.match(vkPattern2);
+  if (match2) return `oid=-${match2[1].split('_')[0]}&id=${match2[1].split('_')[1]}`;
+
+  // Для embed ссылок
+  const vkPattern3 = /video_ext\.php\?(.+)/;
+  const match3 = url.match(vkPattern3);
+  if (match3) return match3[1];
+
+  return null;
+};
+
+// components/VideoPlayer.jsx
+export const VideoPlayer = ({ videoData }) => {
+  if (!videoData) return null;
+
+  const { type, embedUrl } = videoData;
+
+  const commonIframeProps = {
+    width: "560",
+    height: "315",
+    frameBorder: "0",
+    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+    allowFullScreen: true,
+    title: "Video player"
+  };
+
+  if (type === 'youtube') {
+    return (
+      <div className="video-container">
+        <iframe
+          src={embedUrl}
+          {...commonIframeProps}
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
+      </div>
+    );
+  }
+
+  if (type === 'vk') {
+    return (
+      <div className="video-container">
+        <iframe
+          src={embedUrl}
+          {...commonIframeProps}
+          referrerPolicy="no-referrer"
+        />
+      </div>
+    );
+  }
+
+  return null;
+};
