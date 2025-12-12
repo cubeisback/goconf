@@ -43,6 +43,8 @@ export const MainEventsTest = () => {
       const uniqueEvents = Array.from(eventsMap.values());
       
       console.log('After merge - prev:', prev.length, 'new:', res.data.events.length, 'unique:', uniqueEvents.length);
+
+	  console.log('h', uniqueEvents)
       
       return uniqueEvents;
     });
@@ -260,7 +262,7 @@ export const MainEventsTest = () => {
 										}
 									}
 								`}>
-									{item.subject.map((direction, index) => (
+									{item.subject?.map((direction, index) => (
 										<Link key={index} href={`/events/direction_${direction.slug}`}>{direction.name}</Link>
 									))}
 								</div>
