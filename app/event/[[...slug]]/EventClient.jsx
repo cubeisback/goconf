@@ -68,6 +68,39 @@ export default function EventClient({ params }) {
 			}
 		  });
 	}, [slug, token]);
+
+	 const handleClickConversion = async (e) => {
+		e.preventDefault();
+		
+		// if (isLoading) return;
+		
+		// setIsLoading(true);
+		// https://goconf.ru/backend/wp-json/events/v2/increment-click/ 
+		try {
+		// Отправляем GET-запрос на бэкенд с авторизацией
+		await axios.post(
+			getApiUrl(`/backend/wp-json/events/v2/increment-click/`),
+			{
+				event_id: pageInfo.data.ID
+			},
+			{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			}
+		);
+		
+		// После успешной отправки запроса открываем ссылку
+		window.open(pageInfo.fields.events_link, '_blank');
+		
+		} catch (error) {
+		console.error('Error tracking click:', error);
+		// В случае ошибки всё равно открываем ссылку
+		window.open(pageInfo.fields.events_link, '_blank');
+		} finally {
+		// setIsLoading(false);
+		}
+	};
 	
 // 	useEffect(() => {
 //     // Ждем пока аутентификация будет готова и есть slug
@@ -615,7 +648,7 @@ export default function EventClient({ params }) {
 								onClick={()=>{setIsModalOpen(true)}}>Это ваше мероприятие?</div> 
 							}
 							{pageInfo.fields.events_link && 
-								<a href={pageInfo.fields.events_link} target="_blank" style={{marginTop: 14}}>
+								<a href={pageInfo.fields.events_link} target="_blank" style={{marginTop: 14}} rel="noopener noreferrer" onClick={handleClickConversion}>
 									<Button green="true" style={{width: '100%'}}>
 										<p>
 											<span>На сайт мероприятия</span>
