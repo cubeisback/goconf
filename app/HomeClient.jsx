@@ -35,7 +35,8 @@ export default function Main() {
 					}
 	`
 
-	const AnimatedTitle = styled(motion.div)`
+	const AnimatedTitle = styled(motion.h1)`
+	font-weight: normal;
 	font-family: Impact;
 						text-align: center;
 						font-size: 56px;

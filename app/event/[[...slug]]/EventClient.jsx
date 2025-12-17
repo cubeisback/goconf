@@ -48,29 +48,31 @@ export default function EventClient({ params }) {
 			console.log('page tut bil test yml', response.data);
 		  })
 		  .catch((error) => {
-			// console.log('asd', error, token);
+			console.log('asd', error, token);
+			setShowNotFound(true);
 
-			if(token) {
-				axios
-				.get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
-					{
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					}
-				)
-				.then((res) => {
-					setPageInfo(res.data);
-					console.log('preview ', res);
-				})
-			} else {
-				setShowNotFound(true);
-			}
+			// if(token) {
+			// 	axios
+			// 	.get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
+			// 		{
+			// 			headers: {
+			// 				Authorization: `Bearer ${token}`,
+			// 			},
+			// 		}
+			// 	)
+			// 	.then((res) => {
+			// 		setPageInfo(res.data);
+			// 		console.log('preview ', res);
+			// 	})
+			// } else {
+			// 	console.log('123')
+			// 	setShowNotFound(true);
+			// }
 		  });
 	}, [slug, token]);
 
 	 const handleClickConversion = async (e) => {
-		e.preventDefault();
+		// e.preventDefault();
 		
 		// if (isLoading) return;
 		
@@ -140,9 +142,9 @@ export default function EventClient({ params }) {
 //       });
 // }, [slug, token, ready]); // Добавляем ready в зависимости
 	
-// 	if (showNotFound) {
-// 		notFound();
-// 	}
+	if (showNotFound) {
+		notFound();
+	}
 	
 
 	const promoThemes = css`
@@ -656,7 +658,6 @@ export default function EventClient({ params }) {
 										</p>
 									</a>
 								</Button>
-								
 							}
 						</motion.div>
 					</div>
