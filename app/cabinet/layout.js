@@ -24,5 +24,7 @@ export default function LkLayout({ children }) {
 	// Пока не гидратировано — можно показать спиннер или пусто
 	if (!token) return null;
 
-  return <>{children}</>;
+  return <>
+	{children}
+  </>;
 }

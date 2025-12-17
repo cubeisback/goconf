@@ -1,3 +1,4 @@
+import JivoChat from "@/components/JivoChat/JivoChat";
 import ThemeWrapper from "./theme-wrapper";
 import Script from "next/script";
 
@@ -85,6 +86,7 @@ export default function RootLayout({ children }) {
 		) : (
 			<ThemeWrapper>
 				{children}
+				<JivoChat />
 			</ThemeWrapper>
 		)}
       </body>

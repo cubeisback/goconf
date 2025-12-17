@@ -36,7 +36,7 @@ const UserOrders = () => {
 					setOrders(response.data)
 				}
 			} catch (error) {
-				console.error("Update password error", error);
+				console.error("Ошибка получения заказов", error);
 			}
 			finally {
 				setLoading(false);
@@ -57,6 +57,7 @@ const UserOrders = () => {
 		const authToken = JSON.parse(authTokenRaw);
 		const token = authToken?.state?.token;
 		setLoading(true);
+		console.log('currentStatus', currentStatus)
 			try {
 				const response = await axios.post(
 					getApiUrl("/backend/wp-json/account/v2/promotion/history/"),
