@@ -648,14 +648,15 @@ export default function EventClient({ params }) {
 								onClick={()=>{setIsModalOpen(true)}}>Это ваше мероприятие?</div> 
 							}
 							{pageInfo.fields.events_link && 
-								<a href={pageInfo.fields.events_link} target="_blank" style={{marginTop: 14}} rel="noopener noreferrer" onClick={handleClickConversion}>
-									<Button green="true" style={{width: '100%'}}>
+								<Button green="true" style={{width: '100%', marginTop: !pageInfo.fields.events_owner && 14}}>
+									<a href={pageInfo.fields.events_link} target="_blank" rel="noopener noreferrer" onClick={handleClickConversion}>
 										<p>
 											<span>На сайт мероприятия</span>
 											<span>На сайт мероприятия</span>
 										</p>
-									</Button>
-								</a>
+									</a>
+								</Button>
+								
 							}
 						</motion.div>
 					</div>
