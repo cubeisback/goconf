@@ -28,6 +28,7 @@ import DraftIcon from "@/public/images/svg/draft_icon.svg";
 import BackIcon from "@/public/images/svg/back_icon.svg";
 import styled from "@emotion/styled";
 import EventMultiDropdown from "./add/EventMultiDropdown";
+import { useYandexMetrika } from "@/hooks/useYandexMetrika";
 
 const EventsAddEdit = () => {
 	const router = useRouter();
@@ -211,7 +212,7 @@ const EventsAddEdit = () => {
 	}
 
 
-
+const { reachGoal } = useYandexMetrika();
 	const handleAddEventSubmit = async(items, status) => {
 		try {
 			const response = await axios.post(
@@ -228,6 +229,9 @@ const EventsAddEdit = () => {
 			}
 			);
 			console.log("editor ", response);
+			if(status == 'moderation') {
+				reachGoal('event-moderation');
+			}
 		} catch (error) {
 			console.error(error);
 		}
