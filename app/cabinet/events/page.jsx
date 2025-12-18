@@ -188,6 +188,21 @@ const UserEvents = () => {
 		},
 	});
 	
+	const [promotionPrice, setPromotionPrice] = useState();
+	const getPromotionPrice = async() => {
+		try {
+			const response = await axios.get(
+				getApiUrl("/backend/wp-json/account/v2/promotion/advanced/"),
+			);
+			console.log('promotionPrice', response.data.value)
+			if (response.status === 200) {
+				setPromotionPrice(response.data.value)
+			}
+		} catch (error) {
+			console.error("Error promotionPrice", error);
+		}
+	};
+
 	
 	const [actualTariffs, setActualTariffs] = useState({})
 	const orderedKeys = ["cost_7", "cost_14", "cost_21", "cost_28"];
@@ -202,12 +217,13 @@ const UserEvents = () => {
 				setActualTariffs(response.data)
 			}
 		} catch (error) {
-			console.error("Update password error", error);
+			console.error("Error tariffs", error);
 		}
 	};
 
 	useEffect(()=>{
 		getTariffs()
+		getPromotionPrice()
 	}, [])
 
 	const [tariffOne, setTariffOne] = useState(true);
@@ -1143,7 +1159,7 @@ const UserEvents = () => {
 							<div>Добавление фото/видео материалов</div>
 						</div>
                         <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; margin-bottom: 8px; span {color: #191921; font-weight: 500;}`}>Срок размещения - <span>бессрочно</span></p>
-                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; span {color: #191921; font-weight: 500;}}`}>Стоимость услуги - <span>5 000 рублей</span></p>
+                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; span {color: #191921; font-weight: 500;}}`}>Стоимость услуги - <span>{promotionPrice && Number(promotionPrice).toLocaleString('ru-RU')} рублей</span></p>
                     </div>
                 
             </div>
@@ -1274,7 +1290,7 @@ const UserEvents = () => {
                     `}>
                         <div style={{flex: '0 1 500px'}}>Тариф «Расширенный»</div>
 						<div style={{flex: 1}}>бессрочно</div>
-                        <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;text-align: right;`}>5 000 руб.</div>
+                        <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;text-align: right;`}>{promotionPrice && Number(promotionPrice).toLocaleString('ru-RU')} руб.</div>
                     </div>
 					}
 					{tariffTwo && 
@@ -1304,7 +1320,7 @@ const UserEvents = () => {
 						</div>
                     </div>
 					}
-                    <div style={{textAlign: 'right', borderTop: '1px solid #D7DADD', paddingTop: 24}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>{((tariffTwo ?Number(tariffsArray[costOption]?.new) : 0) + (tariffOne ? 5000 : 0)).toLocaleString('ru-RU')} руб.</span></div>
+                    <div style={{textAlign: 'right', borderTop: '1px solid #D7DADD', paddingTop: 24}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>{((tariffTwo ?Number(tariffsArray[costOption]?.new) : 0) + (tariffOne ? Number(promotionPrice) : 0)).toLocaleString('ru-RU')} руб.</span></div>
                 </div>
                 <div className={css`color: #6C6C71;margin-bottom: 16px; font-size: 14px;line-height: 1.16;`}>Способ оплаты</div>
                 <div className={css`
