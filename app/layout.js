@@ -5,6 +5,13 @@ import Script from "next/script";
 export const metadata = {
   title: "GoConf",
   description: "Конференции и события",
+  robots: {
+    index: true,
+    follow: true,
+    'max-image-preview': 'large',
+    'max-snippet': -1,
+    'max-video-preview': -1,
+  },
 	icons: {
 		icon: [
 			// PNG favicon
