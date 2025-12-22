@@ -1,14 +1,13 @@
 import JivoChat from "@/components/JivoChat/JivoChat";
 import ThemeWrapper from "./theme-wrapper";
 import Script from "next/script";
-import { headers } from "next/headers";
 
 export const metadata = {
   title: "GoConf",
   description: "Конференции и события",
   robots: {
-    index: true,
-    follow: true,
+    index: process.env.NEXT_PUBLIC_VERSION === 'prod' ? true : false,
+    follow: process.env.NEXT_PUBLIC_VERSION === 'prod' ? true : false,
     'max-image-preview': 'large',
     'max-snippet': -1,
     'max-video-preview': -1,
@@ -49,22 +48,10 @@ export const viewport = {
 	viewportFit: 'cover'
 };
 
-async function getCanonicalUrl() {
-  const headersList = await headers();
-  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-  const host = headersList.get('host') || 'localhost:3000';
-  const pathname = headersList.get('x-invoke-path') || '/';
-  
-  return `${protocol}://${host}${pathname}`;
-}
-
-export default async function RootLayout({ children }) {
-	const canonicalUrl = await getCanonicalUrl();
-
+export default function RootLayout({ children }) {
   return (
     <html lang="ru">
 		<head>
-		<link rel="canonical" href={canonicalUrl} />
         <Script
           id="yandex-metrika"
           strategy="afterInteractive"

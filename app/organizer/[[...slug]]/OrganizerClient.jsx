@@ -7,7 +7,7 @@ import { Form } from '@/components/Form';
 import { MainEvents } from '@/components/MainEvents';
 import { motion } from 'framer-motion';
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getApiUrl } from "@/functions/functions";
@@ -16,6 +16,7 @@ import YtIcon from "@/public/images/svg/yt_icon.svg";
 import TgIcon from "@/public/images/svg/tg_icon.svg";
 
 export default function OrganizerClient({ params }) {
+	const [showNotFound, setShowNotFound] = useState(false);
 	const { slug } = useParams();
 	const [pageInfo, setPageInfo] = useState(null);
 	const [orgEvents, setOrgEvens] = useState(null);
@@ -31,6 +32,7 @@ export default function OrganizerClient({ params }) {
 			console.log('организатор ', response.data);
 		  })
 		  .catch((error) => {
+			setShowNotFound(true);
 			console.log(error);
 		  });
 		
@@ -43,6 +45,10 @@ export default function OrganizerClient({ params }) {
 			console.log(error);
 		  });
 	}, [slug]);
+
+	if (showNotFound) {
+		notFound();
+	}
 
     const theme = useTheme();
 
@@ -237,7 +243,7 @@ export default function OrganizerClient({ params }) {
 							)}
                             </div>
                             
-							{pageInfo?.fields?.link && 
+							{/* {pageInfo?.fields?.link && 
 							<a href={pageInfo.fields.link} target="_blank">
 								<Button green='true' style={{width: '100%'}}>
 									<p>
@@ -246,7 +252,7 @@ export default function OrganizerClient({ params }) {
 									</p>
 								</Button>
 							</a>
-							}
+							} */}
                         </motion.div>
                     </div>
                   

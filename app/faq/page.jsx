@@ -1,3 +1,4 @@
+import { getBaseUrl } from '@/lib/getBaseUrl';
 import FaqClient from './FaqClient';
 import { getApiUrl } from '@/functions/functions';
 
@@ -13,14 +14,20 @@ export async function generateMetadata() {
     
     const data = await response.json();
     const seo = data.data?.seo;
+	const baseUrl = getBaseUrl();
 
     return {
-      title: seo?.title || 'Часто задаваемые вопросы',
-      description: seo?.description || 'Ответы на популярные вопросы',
-      openGraph: {
-        title: seo?.title,
-        description: seo?.description,
-      },
+		title: seo?.title || 'Часто задаваемые вопросы',
+		description: seo?.description || 'Ответы на популярные вопросы',
+		metadataBase: new URL(baseUrl),
+		alternates: {
+			canonical: '/faq/',
+		},
+		openGraph: {
+			title: seo?.title,
+			description: seo?.description,
+			url: '/faq/',
+		},
     };
   } catch (error) {
     console.error('Error fetching SEO data:', error);

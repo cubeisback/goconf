@@ -499,10 +499,10 @@ const AddEdit = () => {
 									placeholder='+7 (___) ___-__-__'
 									/>
 							</div>
-							<div className={css`flex: 0 1 100%;`}>
+							{/* <div className={css`flex: 0 1 100%;`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Адрес сайта</p>
 								<input className={input} type="text" placeholder="https://" name="link" value={dataOrganization.link} onChange={handleDataOrganizaionChange} />
-							</div>
+							</div> */}
 						</div>
 
 						<div className={css`

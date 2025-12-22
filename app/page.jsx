@@ -1,5 +1,6 @@
 import { getApiUrl } from '@/functions/functions';
 import HomeClient from './HomeClient';
+import { getBaseUrl } from '@/lib/getBaseUrl';
 
 export async function generateMetadata() {
   try {
@@ -13,14 +14,20 @@ export async function generateMetadata() {
 	
 	const data = await response.json();
 	const seo = data?.seo;
+	const baseUrl = getBaseUrl();
 
 	return {
-	  title: seo?.title || 'Афиша бизнес-событий GoCONF',
-	  description: seo?.description || 'Делаем поиск профессиональных событий удобным, а привлечение участников эффективным',
-	  openGraph: {
-		title: seo?.title,
-		description: seo?.description,
-	  },
+		title: seo?.title || 'Афиша бизнес-событий GoCONF',
+		description: seo?.description || 'Делаем поиск профессиональных событий удобным, а привлечение участников эффективным',
+		metadataBase: new URL(baseUrl),
+		alternates: {
+			canonical: '/',
+		},
+		openGraph: {
+			title: seo?.title,
+			description: seo?.description,
+			url: '/',
+		},
 	};
   } catch (error) {
 	console.error('Error fetching SEO data:', error);
