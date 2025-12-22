@@ -12,6 +12,7 @@ if (fs.existsSync(envFile)) {
 
 const nextConfig = {
   reactStrictMode: true,
+  htmlLimitedBots: /.*/,
 
   webpack(config) {
     config.module.rules.push({
