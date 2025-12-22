@@ -151,7 +151,6 @@ export default function Main() {
 
 	useEffect(()=>{
 		console.log('PUBLIC VERSION', process.env.NEXT_PUBLIC_VERSION)
-		console.log(window)
 	}, [])
 
 	return (
