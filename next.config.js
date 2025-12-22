@@ -12,7 +12,7 @@ if (fs.existsSync(envFile)) {
 
 const nextConfig = {
   reactStrictMode: true,
-  htmlLimitedBots: /.*/,
+  htmlLimitedBots: /.*/, //try to fix append meta in body
 
   webpack(config) {
     config.module.rules.push({
