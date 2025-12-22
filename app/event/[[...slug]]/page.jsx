@@ -18,6 +18,20 @@ export async function generateMetadata(props) {
 			title: seo?.title,
 			description: seo?.description,
 			url: `/event/${slug}`,
+			images: [
+				{
+					url: seo?.image || `${baseUrl}/images/svg/logo.svg`,
+					width: 928,
+					height: 342,
+					alt: seo?.title || 'Изображение мероприятия',
+				},
+			],
+		},
+		twitter: {
+			card: 'summary_large_image',
+			title: seo?.title,
+			description: seo?.description,
+			images: [seo?.image || `${baseUrl}/images/svg/logo.svg`],
 		},
 	};
   }  
