@@ -6,8 +6,8 @@ export const metadata = {
   title: "GoConf",
   description: "Конференции и события",
   robots: {
-    index: process.env.NEXT_PUBLIC_VERSION === 'prod' ? true : false,
-    follow: process.env.NEXT_PUBLIC_VERSION === 'prod' ? true : false,
+    index: process.env.NEXT_PUBLIC_VERSION === 'production' ? true : false,
+    follow: process.env.NEXT_PUBLIC_VERSION === 'production' ? true : false,
     'max-image-preview': 'large',
     'max-snippet': -1,
     'max-video-preview': -1,
