@@ -1,4 +1,3 @@
-// import { Metadata } from 'next';
 import { getBaseUrl } from '@/lib/getBaseUrl';
 import EventsClient from './EventsClient';
 import { getSeoDataFromParams } from '@/lib/getSeoData';
@@ -14,7 +13,6 @@ export async function generateMetadata({ params }) {
   } else {
     canonicalPath += '/';
   }
-//   console.log('canonicalPath:', canonicalPath);
 
   return {
     title: seo?.title || 'Все мероприятия',
