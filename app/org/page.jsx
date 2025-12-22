@@ -1,3 +1,4 @@
+import { getBaseUrl } from '@/lib/getBaseUrl';
 import OrgClient from './OrgClient';
 import { getApiUrl } from '@/functions/functions';
 
@@ -13,14 +14,20 @@ export async function generateMetadata() {
     
     const data = await response.json();
     const seo = data.data?.seo;
+	const baseUrl = getBaseUrl();
 
     return {
-      title: seo?.title || 'Организаторам',
-      description: seo?.description || 'Страница организаторов мероприятий',
-      openGraph: {
-        title: seo?.title,
-        description: seo?.description,
-      },
+		title: seo?.title || 'Организаторам',
+		description: seo?.description || 'Страница организаторов мероприятий',
+		metadataBase: new URL(baseUrl),
+		alternates: {
+			canonical: '/org/',
+		},
+		openGraph: {
+			title: seo?.title,
+			description: seo?.description,
+			url: '/org/',
+		},
     };
   } catch (error) {
     console.error('Error fetching SEO data:', error);
