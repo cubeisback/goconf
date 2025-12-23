@@ -1,48 +1,95 @@
 'use client';
 
 import { Button } from '@/styles/ui';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-export default function TimepadWidgetSimple({ eventId }) {
+export default function TimepadWidget({ eventId }) {
+  const scriptLoaded = useRef(false);
+
   useEffect(() => {
-    if (typeof window === 'undefined' || !eventId) return;
+    if (!eventId || typeof window === 'undefined' || scriptLoaded.current) return;
 
-    const config = {
-      "event": { "id": parseInt(eventId) },
-      "hidePreloading": true,
-      "display": "popup",
-      "popup": { "triggerSelector": `#timepad_twf_register_${eventId}` }
+    const oldScripts = document.querySelectorAll('script[src*="timepad.ru"]');
+    oldScripts.forEach(script => script.remove());
+
+    const script = document.createElement('script');
+    
+    script.async = true;
+    script.defer = true;
+    script.charset = 'UTF-8';
+    script.setAttribute('data-timepad-customized', '');
+    script.setAttribute('data-timepad-widget-v2', 'event_register');
+    script.src = 'https://timepad.ru/js/tpwf/loader/min/loader.js';
+    
+    script.textContent = `
+      (function(){
+        return {
+          "event": {
+            "id": ${eventId}
+          },
+          "hidePreloading": true,
+          "display": "popup",
+          "popup": {
+            "triggerSelector": "#timepad_twf_register_${eventId}"
+          }
+        }
+      })();
+    `;
+    
+    script.id = `timepad-script-${eventId}`;
+    
+    document.body.appendChild(script);
+
+    return () => {
+      const scriptElement = document.getElementById(`timepad-script-${eventId}`);
+      if (scriptElement && scriptElement.parentNode) {
+        scriptElement.parentNode.removeChild(scriptElement);
+      }
+      scriptLoaded.current = false;
     };
-
-    window.timepadConfig = window.timepadConfig || {};
-    window.timepadConfig[eventId] = config;
-
-    document.body.setAttribute(`data-twf2s-event--${eventId}`, JSON.stringify(config));
-
-    if (!document.querySelector('script[src*="timepad.ru"]')) {
-      const script = document.createElement('script');
-      script.async = true;
-      script.defer = true;
-      script.charset = 'UTF-8';
-      script.src = 'https://timepad.ru/js/tpwf/loader/min/loader.js';
-      document.head.appendChild(script);
-    }
   }, [eventId]);
 
   return (
-	<Button green="true" style={{width: '100%'}}>
-		<a
-			href={`https://timepad.ru/event/${eventId}/`}
-			rel="nofollow noopener noreferrer"
-			target="_blank"
-			id={`timepad_twf_register_${eventId}`}
-		>
-			<p>
-				<span>Зарегистрироваться</span>
-				<span>Зарегистрироваться</span>
-			</p>
-			
-		</a>
+	<Button green="true" style={{width: '100%'}} 
+        rel="nofollow noopener noreferrer"
+        id={`timepad_twf_register_${eventId}`}
+        className="timepad-register-button"
+        onClick={(e) => {
+          e.preventDefault();
+
+          if (!scriptLoaded.current) {
+            
+            const oldScript = document.getElementById(`timepad-script-${eventId}`);
+            if (oldScript) oldScript.remove();
+            
+            const script = document.createElement('script');
+            script.async = true;
+            script.defer = true;
+            script.charset = 'UTF-8';
+            script.setAttribute('data-timepad-customized', '');
+            script.setAttribute('data-timepad-widget-v2', 'event_register');
+            script.src = 'https://timepad.ru/js/tpwf/loader/min/loader.js';
+            script.textContent = `
+              (function(){
+                return {
+                  "event": {
+                    "id": ${eventId}
+                  },
+                  "hidePreloading": true,
+                  "display": "popup",
+                  "popup": {
+                    "triggerSelector": "#timepad_twf_register_${eventId}"
+                  }
+                }
+              })();
+            `;
+            document.body.appendChild(script);
+          }
+    }}>
+		<p>
+			<span>Зарегистрироваться</span>
+			<span>Зарегистрироваться</span>
+		</p>
 	</Button>
   );
 }
