@@ -52,6 +52,7 @@ const EventsAddEdit = () => {
     const theme = useTheme();
 
     const [activeTab, setActiveTab] = useState(1)
+	const [activeTabReg, setActiveTabReg] = useState(1)
         const tabItem = css`
             background-color: #fff;
             transition: ${theme.transition};
@@ -107,6 +108,7 @@ const EventsAddEdit = () => {
 		short_text: '',
 		subject: [],
 		time_start: '',
+		timepad: '',
 		broadcast: '',
 		video: ''
 	});
@@ -625,12 +627,105 @@ const {
 								<EventDropdown options={metaParameters && metaParameters.companies} items={dataEvent.organizator} incomeFunction={handleDataEventChangeOrganizator} type={'org'} placeholder={'Выбрать организатора'} />
 								<p className={css`color: #6C6C71;`}>Если вы&nbsp;ещё не&nbsp;добавили организатора, сделайте это в&nbsp;соответствующем разделе. <Link href="/cabinet/org" target="_blank" className={css`color: ${theme.colors.purple};`}>Добавить организатора</Link></p>
 							</div>
-							<div>
-								<p>Ссылка на сайт мероприятия</p>
-								<input className={input} type="text" placeholder="Ссылка на сайт мероприятия" name="link" value={dataEvent.link} onChange={handleDataEventChange} />
-								<p className={css`color: #6C6C71;`}>Укажите ссылку на сайт мероприятия или форму регистрации. Она будет отображаться на странице события после активации тарифа <span className={css`color: #191921;`}>«Расширенный»</span>. Оплатить тариф можно в любой момент.</p>
-							</div>
 						</div>
+
+						<div className={css`
+							display: flex;
+							gap: 16px;
+							justify-content: space-between;
+							align-items: center;
+							margin-bottom: 24px;
+						`}><div className={css`
+							font-family: Impact;
+							font-size: 36px;
+							line-height: 1.12;
+						`}>Формат регистрации</div></div>
+						<div className={css`
+							display: flex;
+							gap: 4px;
+							padding: 4px;
+							background-color: #fff;
+							border-radius: 28px;
+							max-width: max-content;
+							margin-bottom: 32px;
+
+							@media(max-width: 575px) {
+								flex-direction: column;
+								max-width: 100%;
+							}
+						`}>
+							<div className={cx(tabItem, activeTabReg === 1 && tabItemActive)} onClick={()=>setActiveTabReg(1)}>Ссылка на сайт</div>
+							<div className={cx(tabItem, activeTabReg === 2 && tabItemActive)} onClick={()=>setActiveTabReg(2)}>Виджет Timepad</div>
+						</div>
+							{activeTabReg === 1 ? (
+								<div
+								>
+									<div className={css`
+										display: flex;
+										flex-wrap: wrap;
+										gap: 24px;
+										margin-bottom: 48px;
+										font-size: 14px;
+
+										& > div {
+											flex: 0 1 calc(33.333333% - 16px);
+											max-width: calc(33.333333% - 16px);
+											display: flex;
+											flex-direction: column;
+											gap: 8px;
+											color: #47474D;
+
+											@media(max-width: 575px) {
+												flex: 0 1 100%;
+												max-width: 100%;
+											}
+										}
+									`}>
+										<div className={css`
+											flex: 0 1 100%!important;
+											max-width: 100%!important;
+										`}>
+											<p>Ссылка на сайт мероприятия</p>
+											<input className={input} type="text" placeholder="Ссылка на сайт мероприятия" name="link" value={dataEvent.link} onChange={handleDataEventChange} /> 
+											<p className={css`color: #6C6C71;`}>Укажите ссылку на сайт мероприятия или форму регистрации. Она будет отображаться на странице события после активации тарифа <span className={css`color: #191921;`}>«Расширенный»</span>. Оплатить тариф можно в любой момент.</p>
+										</div>
+									</div>
+								</div>
+								) : (
+								<div
+								>
+									<div className={css`
+										display: flex;
+										flex-wrap: wrap;
+										gap: 24px;
+										margin-bottom: 48px;
+										font-size: 14px;
+
+										& > div {
+											flex: 0 1 calc(33.333333% - 16px);
+											max-width: calc(33.333333% - 16px);
+											display: flex;
+											flex-direction: column;
+											gap: 8px;
+											color: #47474D;
+
+											@media(max-width: 575px) {
+												flex: 0 1 100%;
+												max-width: 100%;
+											}
+										}
+									`}>
+										<div className={css`
+											flex: 0 1 100%!important;
+											max-width: 100%!important;
+										`}>
+											<p>ID виджета Timepad</p>
+											<input className={input} type="text" placeholder="ID виджета Timepad" name="timepad" value={dataEvent.timepad} onChange={handleDataEventChange} maxLength={7} />
+											<p className={css`color: #6C6C71;`}>Укажите ID&nbsp;вашего события на&nbsp;Timepad (это 7&nbsp;цифр в&nbsp;адресе события). Форма регистрации будет отображаться на&nbsp;странице события после активации тарифа <span className={css`color: #191921;`}>«Расширенный»</span>. Оплатить тариф можно в&nbsp;любой момент.</p>
+										</div>
+									</div>
+								</div>
+							)}
 						
 						<div className={css`
 							display: flex;

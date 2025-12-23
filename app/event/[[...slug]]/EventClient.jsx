@@ -23,6 +23,7 @@ import { useAuthReady } from "@/hooks/useAuthReady";
 import { ModalEvent } from "./Modal";
 import { Modal } from "@/components/ui/Modal";
 import { notFound } from 'next/navigation';
+import TimepadWidget from "@/components/TimepadWidget/TimepadWidget";
 
 export default function EventClient({ params }) {
 	const [showNotFound, setShowNotFound] = useState(false);
@@ -649,7 +650,7 @@ export default function EventClient({ params }) {
 								`}
 								onClick={()=>{setIsModalOpen(true)}}>Это ваше мероприятие?</div> 
 							}
-							{pageInfo.fields.events_link && 
+							{pageInfo.fields.events_link && !pageInfo.fields.events_timepad && 
 								<Button green="true" style={{width: '100%', marginTop: !pageInfo.fields.events_owner && 14}}>
 									<a href={pageInfo.fields.events_link} target="_blank" rel="noopener noreferrer" onClick={handleClickConversion}>
 										<p>
@@ -659,6 +660,13 @@ export default function EventClient({ params }) {
 									</a>
 								</Button>
 							}
+							{pageInfo.fields.events_timepad &&
+								<TimepadWidget 
+									eventId={pageInfo.fields.events_timepad} 
+									linkText="Зарегистрироваться на мероприятие"
+								/>
+							}
+							
 						</motion.div>
 					</div>
 					}
