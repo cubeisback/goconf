@@ -1,72 +1,45 @@
-'use client'
 
-import { Article, Breadcrumbs, Container, PagePromo, PageTitle, SkeletonText } from "@/styles/ui";
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { getApiUrl } from '@/functions/functions';
-import axios from 'axios';
+import { getBaseUrl } from '@/lib/getBaseUrl';
+import PrivacyClient from './PrivacyClient';
 
-const About = () => {
-	const [pageInfo, setPageInfo] = useState(null);
-	const [title, setTitle] = useState(null);
-	const [isLoading, setIsLoading] = useState(true);
+export async function generateMetadata() {
+  try {
+    const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/page/?slug=privacy"), {
+      next: { revalidate: 3600 }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch SEO data');
+    }
+    
+    const data = await response.json();
+    const seo = data?.seo;
+	const baseUrl = getBaseUrl();
 
-	useEffect(() => {
-		axios
-		  .get(getApiUrl("/backend/wp-json/pages/v2/page/?slug=privacy"))
-		  .then((response) => {
-			setPageInfo(response.data.content)
-			setTitle(response.data.title)
-			setIsLoading(false)
-			// console.log('privacy ', response.data);
-		  })
-		  .catch((error) => {
-			console.log(error);
-		  });
-	}, []);
-
-    return (
-        <>
-			<PagePromo>
-				<Container>
-					<Breadcrumbs>
-						<Link href="/">Главная</Link>
-						<p>{title && title}</p>
-					</Breadcrumbs>
-					{isLoading ? 
-						<SkeletonText $height="64" /> : 
-						title && <PageTitle>{title}</PageTitle>
-					}
-				</Container>
-			</PagePromo>
-			<Container>
-				{isLoading ? 
-					<Article>
-						<SkeletonText />
-						<SkeletonText />
-						<SkeletonText />
-						<SkeletonText $width='90' />
-						<SkeletonText />
-						<SkeletonText />
-						<SkeletonText $width='80' />
-						<SkeletonText />
-						<SkeletonText />
-						<SkeletonText />
-						<SkeletonText />
-						<SkeletonText />
-						<SkeletonText $width='90' />
-						<SkeletonText />
-						<SkeletonText />
-						<SkeletonText $width='80' />
-						<SkeletonText />
-						<SkeletonText />
-					</Article>
-				:
-				pageInfo && <Article dangerouslySetInnerHTML={{ __html:  pageInfo }}></Article> 
-				}
-			</Container>
-        </>
-    );
+    return {
+		title: seo?.title || 'Политика конфиденциальности',
+		description: seo?.description || 'Политика конфиденциальности',
+		metadataBase: new URL(baseUrl),
+		alternates: {
+			canonical: '/privacy/',
+		},
+		openGraph: {
+			title: seo?.title || 'Политика конфиденциальности',
+			description: seo?.description || 'Политика конфиденциальности',
+			type: 'website',
+			url: '/privacy/',
+		},
+    };
+  } catch (error) {
+    console.error('Error fetching SEO data:', error);
+    return {
+      title: 'Политика конфиденциальности',
+      description: 'Политика конфиденциальности',
+    };
+  }
 }
 
-export default About;
+export default function AboutPage() {
+  return <PrivacyClient />;
+}
