@@ -25,7 +25,10 @@ import { Modal } from "@/components/ui/Modal";
 import { notFound } from 'next/navigation';
 import TimepadWidget from "@/components/TimepadWidget/TimepadWidget";
 
-export default function EventClient({ params }) {
+export default function EventClient({ initialData }) {
+	// const [showNotFound, setShowNotFound] = useState(false);
+	const [pageInfo, setPageInfo] = useState(initialData);
+	const [isLoading, setIsLoading] = useState(!initialData);
 	const [showNotFound, setShowNotFound] = useState(false);
 
 	const theme = useTheme();
@@ -36,41 +39,79 @@ export default function EventClient({ params }) {
 	const { ready, token } = useAuthReady();
 
 	const { slug } = useParams(); // получаем параметр пути
-	const [pageInfo, setPageInfo] = useState(null);
+	// const [pageInfo, setPageInfo] = useState(null);
 
-	useEffect(() => {
-		if (!slug) return;
+	// useEffect(() => {
+	// 	if (!slug) return;
 	
-		axios
-		  .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`))
-		  .then((response) => {
-			setPageInfo(response.data);
-			// Здесь тоже можно вызывать функции для SEO если нужно
-			console.log('page tut bil test yml', response.data);
-		  })
-		  .catch((error) => {
-			console.log('asd', error, token);
-			setShowNotFound(true);
+	// 	axios
+	// 	  .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`))
+	// 	  .then((response) => {
+	// 		setPageInfo(response.data);
+	// 		// Здесь тоже можно вызывать функции для SEO если нужно
+	// 		console.log('page tut bil test yml', response.data);
+	// 	  })
+	// 	  .catch((error) => {
+	// 		console.log('asd', error, token);
+	// 		setShowNotFound(true);
 
-			// if(token) {
-			// 	axios
-			// 	.get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
-			// 		{
-			// 			headers: {
-			// 				Authorization: `Bearer ${token}`,
-			// 			},
-			// 		}
-			// 	)
-			// 	.then((res) => {
-			// 		setPageInfo(res.data);
-			// 		console.log('preview ', res);
-			// 	})
-			// } else {
-			// 	console.log('123')
-			// 	setShowNotFound(true);
-			// }
-		  });
-	}, [slug, token]);
+	// 		// if(token) {
+	// 		// 	axios
+	// 		// 	.get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
+	// 		// 		{
+	// 		// 			headers: {
+	// 		// 				Authorization: `Bearer ${token}`,
+	// 		// 			},
+	// 		// 		}
+	// 		// 	)
+	// 		// 	.then((res) => {
+	// 		// 		setPageInfo(res.data);
+	// 		// 		console.log('preview ', res);
+	// 		// 	})
+	// 		// } else {
+	// 		// 	console.log('123')
+	// 		// 	setShowNotFound(true);
+	// 		// }
+	// 	  });
+	// }, [slug, token]);
+
+	// Дозагружаем данные если initialData не было
+  useEffect(() => {
+    if (!initialData && slug) {
+      setIsLoading(true);
+      axios
+        .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`))
+        .then((response) => {
+          setPageInfo(response.data);
+          setShowNotFound(false);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching event:', error);
+          setShowNotFound(true);
+          setIsLoading(false);
+        });
+    }
+  }, [initialData, slug]);
+
+  // Если загрузка
+  if (isLoading) {
+    return (
+      <Container>
+        <div style={{ padding: '50px', textAlign: 'center' }}>
+          Загрузка...
+        </div>
+      </Container>
+    );
+  }
+
+  // Если не найдено
+  if (showNotFound || !pageInfo) {
+    // Используем notFound из next/navigation
+    const { notFound } = require('next/navigation');
+    notFound();
+    return null;
+  }
 
 	 const handleClickConversion = async (e) => {
 		// e.preventDefault();
@@ -143,9 +184,9 @@ export default function EventClient({ params }) {
 //       });
 // }, [slug, token, ready]); // Добавляем ready в зависимости
 	
-	if (showNotFound) {
-		notFound();
-	}
+	// if (showNotFound) {
+	// 	notFound();
+	// }
 	
 
 	const promoThemes = css`
