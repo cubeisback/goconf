@@ -11,21 +11,32 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@/components/ui/Modal';
 
-const OrgClient = () => {
+const OrgClient = ({ initialData }) => {
 	const token = useAuthStore((state) => state.token);
 	const router = useRouter();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
-	const [orgsData, setOrgsData] = useState(null)
-	useEffect(() => {
-		axios
-			.get(getApiUrl('/backend/wp-json/pages/v2/org/'))
-			.then((response) => {
-				setOrgsData(response.data);
-				// console.log('orgs - ', response.data)
-			})
-			.catch(console.error);
-	}, []);
+	// const [orgsData, setOrgsData] = useState(null)
+	// useEffect(() => {
+	// 	axios
+	// 		.get(getApiUrl('/backend/wp-json/pages/v2/org/'))
+	// 		.then((response) => {
+	// 			setOrgsData(response.data);
+	// 			// console.log('orgs - ', response.data)
+	// 		})
+	// 		.catch(console.error);
+	// }, []);
+	const [orgsData, setOrgsData] = useState(initialData);
+  
+  // Дозагружаем свежие данные на клиенте при необходимости
+  useEffect(() => {
+    if (!initialData) {
+      axios
+        .get(getApiUrl('/backend/wp-json/pages/v2/org/'))
+        .then((response) => setOrgsData(response.data))
+        .catch(console.error);
+    }
+  }, [initialData]);
 
 	return (
 		<>
