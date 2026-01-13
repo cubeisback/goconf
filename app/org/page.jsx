@@ -38,6 +38,12 @@ export async function generateMetadata() {
   }
 }
 
-export default function OrgPage() {
-  return <OrgClient />;
+export default async function OrgPage() {
+//   return <OrgClient />;
+const response = await fetch(getApiUrl('/backend/wp-json/pages/v2/org/'), {
+    next: { revalidate: 3600 }
+  });
+  const orgsData = response.ok ? await response.json() : null;
+
+  return <OrgClient initialData={orgsData} />;
 }
