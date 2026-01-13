@@ -1,41 +1,114 @@
 import { getEventSeo } from '@/lib/getEventSeo';
-import EventClient from './EventClient';
 import { getBaseUrl } from '@/lib/getBaseUrl';
+import { getApiUrl } from '@/functions/functions';
+import EventClient from './EventClient';
+import { notFound } from 'next/navigation';
 
-export async function generateMetadata(props) {
-	const { slug } = await props.params;
-	const seo = await getEventSeo(slug);
-	const baseUrl = getBaseUrl();
+// Генерируем статические пути на этапе сборки
+export async function generateStaticParams() {
+  try {
+    const response = await fetch(getApiUrl('/backend/wp-json/events/v2/list/'), {
+      next: { revalidate: 3600 }
+    });
+    
+    if (!response.ok) {
+      return [];
+    }
+    
+    const data = await response.json();
+    
+    // Преобразуем данные в массив slug'ов
+    return data.map(event => ({
+      slug: [event.slug || event.id],
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
+
+export async function generateMetadata({ params }) {
+  try {
+    const { slug } = params;
+    const seo = await getEventSeo(slug);
+    const baseUrl = getBaseUrl();
+    
+    if (!seo) {
+      return {
+        title: 'Мероприятие',
+        description: 'Описание мероприятия',
+      };
+    }
+    
+    return {
+      title: seo.title || 'Мероприятие',
+      description: seo.description || 'Описание мероприятия',
+      metadataBase: new URL(baseUrl),
+      alternates: {
+        canonical: `/event/${slug}`,
+      },
+      openGraph: {
+        title: seo.title,
+        description: seo.description,
+        url: `/event/${slug}`,
+        images: [
+          {
+            url: seo.image || `${baseUrl}/images/svg/logo.svg`,
+            width: 928,
+            height: 342,
+            alt: seo.title || 'Изображение мероприятия',
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: seo.title,
+        description: seo.description,
+        images: [seo.image || `${baseUrl}/images/svg/logo.svg`],
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata:', error);
+    return {
+      title: 'Мероприятие',
+      description: 'Описание мероприятия',
+    };
+  }
+}
+
+// Получаем данные на сервере
+async function getEventData(slug) {
+  try {
+    const response = await fetch(
+      getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
+      { 
+        cache: 'force-cache',
+        next: { revalidate: 3600 }
+      }
+    );
+    
+    if (!response.ok) {
+      return null;
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching event data:', error);
+    return null;
+  }
+}
+
+export default async function EventPage({ params }) {
+  const { slug } = params;
   
-	return {
-		title: seo?.title || 'Мероприятие',
-		description: seo?.description || 'Описание мероприятия',
-		metadataBase: new URL(baseUrl),
-		alternates: {
-			canonical: `/event/${slug}`,
-		},
-		openGraph: {
-			title: seo?.title,
-			description: seo?.description,
-			url: `/event/${slug}`,
-			images: [
-				{
-					url: seo?.image || `${baseUrl}/images/svg/logo.svg`,
-					width: 928,
-					height: 342,
-					alt: seo?.title || 'Изображение мероприятия',
-				},
-			],
-		},
-		twitter: {
-			card: 'summary_large_image',
-			title: seo?.title,
-			description: seo?.description,
-			images: [seo?.image || `${baseUrl}/images/svg/logo.svg`],
-		},
-	};
-  }  
-
-export default function EventPage({ params }) {
-  return <EventClient params={params} />;
+  // Загружаем данные на сервере
+  const eventData = await getEventData(slug);
+  
+  // Если данные не найдены, показываем 404
+  if (!eventData) {
+    notFound();
+  }
+  
+  // Передаем данные клиентскому компоненту
+  return <EventClient initialData={eventData} />;
 }
