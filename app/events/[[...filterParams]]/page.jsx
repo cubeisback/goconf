@@ -9,9 +9,9 @@ export async function generateMetadata({ params }) {
 
   let canonicalPath = '/events';
   if (filterParams.length > 0) {
-    canonicalPath += '/' + filterParams.join('/') + '/';
+    canonicalPath += '/' + filterParams.join('/');
   } else {
-    canonicalPath += '/';
+    canonicalPath += '';
   }
 
   return {

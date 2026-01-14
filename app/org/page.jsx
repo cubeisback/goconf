@@ -21,12 +21,12 @@ export async function generateMetadata() {
 		description: seo?.description || 'Страница организаторов мероприятий',
 		metadataBase: new URL(baseUrl),
 		alternates: {
-			canonical: '/org/',
+			canonical: '/org',
 		},
 		openGraph: {
 			title: seo?.title,
 			description: seo?.description,
-			url: '/org/',
+			url: '/org',
 		},
     };
   } catch (error) {

@@ -22,13 +22,13 @@ export async function generateMetadata() {
 		description: seo?.description || 'Публичная оферта',
 		metadataBase: new URL(baseUrl),
 		alternates: {
-			canonical: '/offer/',
+			canonical: '/offer',
 		},
 		openGraph: {
 			title: seo?.title || 'Публичная оферта',
 			description: seo?.description || 'Публичная оферта',
 			type: 'website',
-			url: '/offer/',
+			url: '/offer',
 		},
     };
   } catch (error) {
