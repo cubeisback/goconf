@@ -109,6 +109,7 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+		<meta name="google-site-verification" content="n8asrtPoRx4M5v6xchKuoo5CVDG1xtUqjwFnI94r-K8" />
 		{process.env.NEXT_PUBLIC_VERSION === 'dev' &&
 			<>
 				<meta name="robots" content="noindex, nofollow" />
