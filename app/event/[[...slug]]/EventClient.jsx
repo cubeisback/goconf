@@ -2,30 +2,27 @@
 
 import { Breadcrumbs, Button, Container, EventPage, EventPageArticle, EventPageBlock, EventPageBlockInfo, EventPageBlockInfoBlock, EventPageBlockInfoIsYour, EventPageBlockInfoItem, EventPageBlockInfoItemPurple, EventPageBlockMain, EventPageBlockMainImage, PagePromo, PageTitle, pageTitle, PromoThemes } from "@/styles/ui";
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 import { MainEventsSlider } from '@/components/MainEventsSlider';
 import { Form } from '@/components/Form';
 import { MainEvents } from '@/components/MainEvents';
-import { motion } from 'framer-motion';
-import { useLocation } from 'react-router';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation, Pagination } from 'swiper/modules';
 import axios from 'axios';
-import { decodeHtmlEntities, detectVideoType, formatDate, formatPrice, getApiUrl, VideoPlayer } from '@/functions/functions';
+import { detectVideoType, formatDate, formatPrice, getApiUrl, VideoPlayer } from '@/functions/functions';
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAuthReady } from "@/hooks/useAuthReady";
 import { ModalEvent } from "./Modal";
 import { Modal } from "@/components/ui/Modal";
-import { notFound } from 'next/navigation';
 import TimepadWidget from "@/components/TimepadWidget/TimepadWidget";
+import Image from "next/image";
 
 export default function EventClient({ initialData }) {
-	// const [showNotFound, setShowNotFound] = useState(false);
 	const [pageInfo, setPageInfo] = useState(initialData);
 	const [isLoading, setIsLoading] = useState(!initialData);
 	const [showNotFound, setShowNotFound] = useState(false);
@@ -155,7 +152,14 @@ export default function EventClient({ initialData }) {
 					<EventPageBlock>
 						<EventPageBlockMain>
 							<EventPageBlockMainImage>
-								<img src={pageInfo.fields.anons?.url} alt="" />
+								{/* <img src={pageInfo.fields.anons?.url} alt="" /> */}
+								<Image 
+									src={pageInfo.fields.anons?.url}
+									alt={pageInfo.data.post_title}
+									width={928}
+									height={342}
+									layout="responsive"
+								/>
 							</EventPageBlockMainImage>
 
 							<EventPageArticle dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
