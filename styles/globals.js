@@ -1,34 +1,7 @@
 import { css } from '@emotion/react';
 
 export const globalStyles = (props) => css`
-	@font-face {
-		font-family: 'StyreneAWeb';
-		src: url('/fonts/StyreneAWeb-Regular.woff2') format('woff2'),
-			url('/fonts/StyreneAWeb-Regular.woff') format('woff');
-		font-weight: normal;
-		font-style: normal;
-	}
-	@font-face {
-		font-family: 'StyreneAWeb';
-		src: url('/fonts/StyreneAWeb-Bold.woff2') format('woff2'),
-			url('/fonts/StyreneAWeb-Bold.woff') format('woff');
-		font-weight: bold;
-		font-style: normal;
-	}
-	@font-face {
-		font-family: 'StyreneAWeb';
-		src: url('/fonts/StyreneAWeb-Medium.woff2') format('woff2'),
-			url('/fonts/StyreneAWeb-Medium.woff') format('woff');
-		font-weight: 500;
-		font-style: normal;
-	}
-	@font-face {
-		font-family: 'Impact';
-		src: url('/fonts/Impact.woff2') format('woff2'),
-			url('/fonts/Impact.woff') format('woff');
-		font-weight: normal;
-		font-style: normal;
-	}
+	
 
   *,
   *::before,
@@ -40,7 +13,7 @@ export const globalStyles = (props) => css`
   }
 
   body {
-    font-family: 'StyreneAWeb', sans-serif;
+    font-family: var(--font-styrene), sans-serif;
     overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
     line-height: 1.28;
@@ -68,7 +41,7 @@ export const globalStyles = (props) => css`
   textarea {
     outline: none;
     border: none;
-    font-family: StyreneAWeb;
+    font-family: var(--font-styrene), sans-serif;
   }
 
 input {

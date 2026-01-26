@@ -1,6 +1,6 @@
 "use client"
 
-import { Breadcrumbs, breadcrumbs, Button, Container, PagePromo, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, breadcrumbs, Button, Container, EventPage, EventPageBlock, EventPageBlockInfo, EventPageBlockMain, PagePromo, PageTitle, pageTitle } from "@/styles/ui";
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
@@ -228,7 +228,7 @@ export default function EventClient({ initialData }) {
 		}
 		& > h1 {
 			font-size: 28px;
-			font-family: Impact;
+			font-family: var(--font-impact), sans-serif;
 			line-height: 1.34;
 			font-weight: normal;
 		}
@@ -288,7 +288,7 @@ export default function EventClient({ initialData }) {
 						<Link href="/events">Мероприятия</Link>
 						<p>{pageInfo && pageInfo.data.post_title}</p>
 					</Breadcrumbs>
-					{pageInfo && <h1 className={pageTitle}>{pageInfo.data.post_title}</h1> }
+					{pageInfo && <PageTitle>{pageInfo.data.post_title}</PageTitle> }
 					<div className={promoThemes}>
 						<p>Направления:</p>
 						{pageInfo && pageInfo.subjects.map(theme => (
@@ -298,31 +298,11 @@ export default function EventClient({ initialData }) {
 				</Container>
 			</PagePromo>
 
-			<div className={css`
-				padding: 32px 0 120px;
-
-				@media(max-width: 575px) {
-					padding-bottom: 64px;
-				}
-			`}>
+			<EventPage>
 				<Container>
 					{pageInfo &&
-					<div className={css`
-						display: flex;
-						gap: 32px;
-
-						@media(max-width: 991px) {
-							flex-direction: column;
-						}
-					`}>
-						<motion.div 
-						initial={{ opacity: 0, x: 50 }}
-						animate={{ opacity: 1, x: 0 }} 
-						transition={{ duration: .3 }}
-						className={css`
-							flex: 1;
-							max-width: 952px;
-						`}>
+					<EventPageBlock>
+						<EventPageBlockMain>
 							<div className={css`
 								// height: 400px;
 								overflow: hidden;
@@ -528,25 +508,8 @@ export default function EventClient({ initialData }) {
 
 							)}
 
-						</motion.div>
-						<motion.div 
-						initial={{ opacity: 0, x: 80 }}
-						animate={{ opacity: 1, x: 0 }} 
-						transition={{ duration: .3 }}
-						className={css`
-							flex: 0 1 296px;
-							max-width: 296px;
-							position: sticky;
-							top: 108px;
-							height: max-content;
-							display: flex;
-							flex-direction: column;
-
-							@media(max-width: 991px) {
-								flex: 0 1 100%;
-								max-width: 100%;
-							}
-						`}>
+						</EventPageBlockMain>
+						<EventPageBlockInfo>
 							<div className={css`
 								background-color: #F5F7FA;
 								border-radius: 28px;
@@ -708,11 +671,11 @@ export default function EventClient({ initialData }) {
 								/>
 							}
 							
-						</motion.div>
-					</div>
+						</EventPageBlockInfo>
+					</EventPageBlock>
 					}
 				</Container>
-			</div>
+			</EventPage>
 			
 			<div className={css`
 				position: relative;
