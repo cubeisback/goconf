@@ -1,6 +1,38 @@
 import JivoChat from "@/components/JivoChat/JivoChat";
 import ThemeWrapper from "./theme-wrapper";
 import Script from "next/script";
+import localFont from 'next/font/local'
+
+// Локальные шрифты
+const styrene = localFont({
+  src: [
+    {
+      path: '../public/fonts/StyreneAWeb-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/StyreneAWeb-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/StyreneAWeb-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-styrene',
+  display: 'swap',
+})
+
+const impact = localFont({
+  src: '../public/fonts/Impact.woff2',
+  weight: '400',
+  style: 'normal',
+  variable: '--font-impact',
+  display: 'swap',
+})
 
 export const metadata = {
   title: "GoConf",
@@ -49,8 +81,9 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+	const fontClasses = `${styrene.variable} ${impact.variable}`;
   return (
-    <html lang="ru">
+    <html lang="ru" className={fontClasses}>
 		<head>
         <Script
           id="yandex-metrika"

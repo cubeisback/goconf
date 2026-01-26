@@ -393,7 +393,7 @@ export const Breadcrumbs = styled.div`
 //TODO Удалить просто стиль
 export const pageTitle = css`
   margin-bottom: 24px;
-  font-family: Impact;
+  font-family: var(--font-impact), sans-serif;
   font-size: 56px;
   line-height: 1.15;
   font-weight: normal;
@@ -405,7 +405,7 @@ export const pageTitle = css`
 
 export const PageTitle = styled.h1`
   margin-bottom: 24px;
-  font-family: Impact;
+  font-family: var(--font-impact), sans-serif;
   font-size: 56px;
   line-height: 1.15;
   font-weight: normal;
@@ -527,7 +527,7 @@ export const Article = styled.article`
 		}
 		h1 {
 			font-size: 28px;
-			font-family: Impact;
+			font-family: var(--font-impact), sans-serif;
 			line-height: 1.34;
 			font-weight: 500;
 		}
@@ -709,7 +709,7 @@ export const UserMainTitles = styled.div`
     }
 `;
 export const UserMainTitlesTitle = styled.div`
-	font-family: Impact;
+	font-family: var(--font-impact), sans-serif;
     font-size: 36px;
     line-height: 1.12;
 
@@ -766,7 +766,7 @@ export const PageNotFoundBlockInfo = styled.div`
 	flex: 1;
 `;
 export const PageNotFoundBlockInfoImg = styled.div`
-	font-family: Impact;
+	font-family: var(--font-impact), sans-serif;
     font-size: 104px;
     line-height: 1.1;
     margin-bottom: 90px;
@@ -842,7 +842,7 @@ export const OrgSubtitle = styled.div`
 export const OrgPageTitle = styled.div`
 	font-size: 36px;
 	line-height: 1.12;
-	font-family: Impact;
+	font-family: var(--font-impact), sans-serif;
 	text-align: center;
 	margin-bottom: 24px;
 `;
@@ -907,7 +907,7 @@ export const OrgPageBlockItem = styled.div`
 export const OrgPageBlockItemTitle = styled.div`
 	color: #8553F9;
 	text-align: center;
-	font-family: Impact;
+	font-family: var(--font-impact), sans-serif;
 	font-size: 28px;
 	line-height: 1.34;
 	margin-bottom: 24px;
@@ -1077,4 +1077,39 @@ export const SkeletonText = styled.div`
 			transform: translateX(100%);
 		}
 	}
+`;
+
+
+export const EventPage = styled.div`
+padding: 32px 0 120px;
+
+				@media(max-width: 575px) {
+					padding-bottom: 64px;
+				}
+`;
+export const EventPageBlock = styled.div`
+display: flex;
+						gap: 32px;
+
+						@media(max-width: 991px) {
+							flex-direction: column;
+						}
+`;
+export const EventPageBlockMain = styled.div`
+flex: 1;
+							max-width: 952px;
+`;
+export const EventPageBlockInfo = styled.div`
+flex: 0 1 296px;
+							max-width: 296px;
+							position: sticky;
+							top: 108px;
+							height: max-content;
+							display: flex;
+							flex-direction: column;
+
+							@media(max-width: 991px) {
+								flex: 0 1 100%;
+								max-width: 100%;
+							}
 `;
