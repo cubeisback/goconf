@@ -1079,6 +1079,28 @@ export const SkeletonText = styled.div`
 	}
 `;
 
+export const PromoThemes = styled.div`
+		display: flex;
+		gap: 16px;
+		font-size: 14px;
+		line-height: 1.16;
+		flex-wrap: wrap;
+
+		@media(max-width: 575px) {
+			gap: 8px 16px;
+		}
+
+		& > p {
+			color: #47474D;
+		}
+		& > a {
+			color: ${({ theme }) => theme.colors.purple};
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+`;
 
 export const EventPage = styled.div`
 padding: 32px 0 120px;
@@ -1099,6 +1121,19 @@ export const EventPageBlockMain = styled.div`
 flex: 1;
 							max-width: 952px;
 `;
+export const EventPageBlockMainImage = styled.div`
+// height: 400px;
+								overflow: hidden;
+								margin-bottom: 40px;
+								@media(max-width: 575px) {
+									// height: 160px;
+								}
+	
+								img {
+								width: 100%; 
+								border-radius: 16px;
+								}
+`;
 export const EventPageBlockInfo = styled.div`
 flex: 0 1 296px;
 							max-width: 296px;
@@ -1112,4 +1147,92 @@ flex: 0 1 296px;
 								flex: 0 1 100%;
 								max-width: 100%;
 							}
+`;
+export const EventPageBlockInfoBlock = styled.div`
+background-color: #F5F7FA;
+								border-radius: 28px;
+								padding: 24px;
+								margin-bottom: 14px;
+`;
+export const EventPageBlockInfoItem = styled.div`
+	display: flex;
+	flex-direction: column;
+	padding: 14px 0;
+	gap: 8px;
+
+	& > span {
+		display: block;
+		line-height: 1.28;
+	}
+	& > p {
+		font-size: 14px;
+		line-height: 1.16;
+	}
+	& > a {
+		font-size: 14px;
+		line-height: 1.16;
+		color: #8553F9;
+		cursor: pointer;
+	}
+`;
+export const EventPageBlockInfoItemPurple = styled.p`
+	font-size: 14px;
+	line-height: 1.16;
+	font-weight: 500;
+	color: #8553F9;
+`;
+export const EventPageBlockInfoIsYour = styled.div`
+	color: #8553F9;
+	cursor: pointer;
+`;
+// export const EventPageBlockInfo = styled.div`
+
+// `;
+export const EventPageArticle = styled.div`
+
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+
+		& > p {
+			line-height: 1.28;
+		}
+		& > div {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 1.36;
+		}
+		& > h1 {
+			font-size: 28px;
+			font-family: var(--font-impact), sans-serif;
+			line-height: 1.34;
+			font-weight: normal;
+		}
+		& > h2 {
+			font-size: 24px;
+			line-height: 1.34;
+		}
+		& > h3 {
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 1.4;
+		}
+		& > h4 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 1.36;
+		}
+		& > ul {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+		& > ol {
+			padding-left: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
 `;

@@ -76,6 +76,10 @@ const NavWrapper = styled.nav`
     gap: 32px;
     transition: ${({ theme }) => theme.transition};
   	margin-left: ${({ $searchOpened }) => ($searchOpened ? "-400px" : "0")};
+
+	@media(max-width: 1199px) {
+	display: none;
+	}
 `
 const RightSection = styled.div`
 	display: flex;
@@ -266,7 +270,7 @@ export const Header = () => {
 				<LogoImg />
 			</Link>
 		</Logo>
-        {width > 1199 &&
+        {/* {width > 1199 && */}
         <NavWrapper $searchOpened={searchOpened}>
             <Link href="/events" >
 				<DoubleLink>
@@ -289,7 +293,7 @@ export const Header = () => {
 			  </DoubleLink>
             </Link>
         </NavWrapper>
-        }
+        {/* } */}
         <RightSection>
           {/* {width > 575 && 
           <SearchWrapper

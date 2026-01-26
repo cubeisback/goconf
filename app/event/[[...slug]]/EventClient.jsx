@@ -1,10 +1,9 @@
 "use client"
 
-import { Breadcrumbs, breadcrumbs, Button, Container, EventPage, EventPageBlock, EventPageBlockInfo, EventPageBlockMain, PagePromo, PageTitle, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, Button, Container, EventPage, EventPageArticle, EventPageBlock, EventPageBlockInfo, EventPageBlockInfoBlock, EventPageBlockInfoIsYour, EventPageBlockInfoItem, EventPageBlockInfoItemPurple, EventPageBlockMain, EventPageBlockMainImage, PagePromo, PageTitle, pageTitle, PromoThemes } from "@/styles/ui";
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
 import { css, cx } from '@emotion/css';
 import { useTheme } from '@emotion/react';
-import { Helper } from '@/components/ui/Helper';
 import { useEffect, useRef, useState } from 'react';
 import { MainEventsSlider } from '@/components/MainEventsSlider';
 import { Form } from '@/components/Form';
@@ -38,43 +37,8 @@ export default function EventClient({ initialData }) {
 
 	const { ready, token } = useAuthReady();
 
-	const { slug } = useParams(); // получаем параметр пути
-	// const [pageInfo, setPageInfo] = useState(null);
-
-	// useEffect(() => {
-	// 	if (!slug) return;
+	const { slug } = useParams();
 	
-	// 	axios
-	// 	  .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`))
-	// 	  .then((response) => {
-	// 		setPageInfo(response.data);
-	// 		// Здесь тоже можно вызывать функции для SEO если нужно
-	// 		console.log('page tut bil test yml', response.data);
-	// 	  })
-	// 	  .catch((error) => {
-	// 		console.log('asd', error, token);
-	// 		setShowNotFound(true);
-
-	// 		// if(token) {
-	// 		// 	axios
-	// 		// 	.get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
-	// 		// 		{
-	// 		// 			headers: {
-	// 		// 				Authorization: `Bearer ${token}`,
-	// 		// 			},
-	// 		// 		}
-	// 		// 	)
-	// 		// 	.then((res) => {
-	// 		// 		setPageInfo(res.data);
-	// 		// 		console.log('preview ', res);
-	// 		// 	})
-	// 		// } else {
-	// 		// 	console.log('123')
-	// 		// 	setShowNotFound(true);
-	// 		// }
-	// 	  });
-	// }, [slug, token]);
-
 	// Дозагружаем данные если initialData не было
   useEffect(() => {
     if (!initialData && slug) {
@@ -145,120 +109,7 @@ export default function EventClient({ initialData }) {
 		// setIsLoading(false);
 		}
 	};
-	
-// 	useEffect(() => {
-//     // Ждем пока аутентификация будет готова и есть slug
-//     if (!ready || !slug) return;
 
-//     axios
-//       .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`))
-//       .then((response) => {
-//         setPageInfo(response.data);
-//         setShowNotFound(false);
-//         console.log('page ', response.data);
-//       })
-//       .catch((error) => {
-//         // Если есть токен (пользователь авторизован), пробуем получить превью
-//         if (token) {
-//             axios
-//             .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`),
-//                 {
-//                     headers: {
-//                         Authorization: `Bearer ${token}`,
-//                     },
-//                 }
-//             )
-//             .then((res) => {
-//                 setPageInfo(res.data);
-//                 setShowNotFound(false);
-//                 console.log('preview ', res);
-//             })
-//             .catch((previewError) => {
-//                 // Если и превью запрос failed, показываем 404
-//                 setShowNotFound(true);
-//             });
-//         } else {
-//             // Если токена нет, сразу показываем 404
-//             setShowNotFound(true);
-//         }
-//       });
-// }, [slug, token, ready]); // Добавляем ready в зависимости
-	
-	// if (showNotFound) {
-	// 	notFound();
-	// }
-	
-
-	const promoThemes = css`
-		display: flex;
-		gap: 16px;
-		font-size: 14px;
-		line-height: 1.16;
-		flex-wrap: wrap;
-
-		@media(max-width: 575px) {
-			gap: 8px 16px;
-		}
-
-		& > p {
-			color: #47474D;
-		}
-		& > a {
-			color: ${theme.colors.purple};
-
-			&:hover {
-				text-decoration: underline;
-			}
-		}
-	`;
-
-	const text = css`
-		display: flex;
-		flex-direction: column;
-		// gap: 24px;
-		gap: 16px;
-
-		& > p {
-			line-height: 1.28;
-		}
-		& > div {
-			font-size: 18px;
-			font-weight: 500;
-			line-height: 1.36;
-		}
-		& > h1 {
-			font-size: 28px;
-			font-family: var(--font-impact), sans-serif;
-			line-height: 1.34;
-			font-weight: normal;
-		}
-		& > h2 {
-			font-size: 24px;
-			line-height: 1.34;
-		}
-		& > h3 {
-			font-size: 20px;
-			font-weight: 500;
-			line-height: 1.4;
-		}
-		& > h4 {
-			font-size: 18px;
-			font-weight: 500;
-			line-height: 1.36;
-		}
-		& > ul {
-			padding-left: 20px;
-			display: flex;
-			flex-direction: column;
-			gap: 10px;
-		}
-		& > ol {
-			padding-left: 20px;
-			display: flex;
-			flex-direction: column;
-			gap: 10px;
-		}
-	`;
 
 
 	const [isFullscreen, setIsFullscreen] = useState(false);
@@ -289,12 +140,12 @@ export default function EventClient({ initialData }) {
 						<p>{pageInfo && pageInfo.data.post_title}</p>
 					</Breadcrumbs>
 					{pageInfo && <PageTitle>{pageInfo.data.post_title}</PageTitle> }
-					<div className={promoThemes}>
+					<PromoThemes>
 						<p>Направления:</p>
 						{pageInfo && pageInfo.subjects.map(theme => (
 							<Link key={theme.term_id} href={`/events/direction_${theme.slug}`}>{theme.name}</Link>
 						))}
-					</div>
+					</PromoThemes>
 				</Container>
 			</PagePromo>
 
@@ -303,32 +154,17 @@ export default function EventClient({ initialData }) {
 					{pageInfo &&
 					<EventPageBlock>
 						<EventPageBlockMain>
-							<div className={css`
-								// height: 400px;
-								overflow: hidden;
-								margin-bottom: 40px;
-								@media(max-width: 575px) {
-									// height: 160px;
-								}`}>
-								<img src={pageInfo.fields.anons?.url} alt="" 
-								// className={css`
-								// 	object-fit: cover;
-								// 	width:100%;height:100%;
-								// 	object-position: 50% 50%;
-								// 	border-radius: 16px;`}
-								style={{width: '100%', borderRadius: 16}} 
-								/>
-							</div>
+							<EventPageBlockMainImage>
+								<img src={pageInfo.fields.anons?.url} alt="" />
+							</EventPageBlockMainImage>
 
-							<div className={text} dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
+							<EventPageArticle dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
 
 							{pageInfo?.tariff.value === 'advanced' && (
 							
 							<>
 							{pageInfo?.fields?.group_gallery?.gallery &&
-							<div className={css`
-								padding-top: 32px;
-							`}>
+							<div style={{paddingTop: 32}}>
 								<div className={css`
 									display: flex;
 									gap: 16px;
@@ -510,26 +346,10 @@ export default function EventClient({ initialData }) {
 
 						</EventPageBlockMain>
 						<EventPageBlockInfo>
-							<div className={css`
-								background-color: #F5F7FA;
-								border-radius: 28px;
-								padding: 24px;
-								margin-bottom: 14px;
-							`}>
-							<div className={css`
-								display: flex;
-								flex-direction: column;
-								padding: 14px 0;
-								gap: 8px;
-							`}>
-								<p className={css`
-									line-height: 1.28;
-								`}>Дата проведения</p>
-								<p className={css`
-									font-size: 14px;
-									line-height: 1.16;
-								`}>
-									{/* {pageInfo.fields.events_start} - {pageInfo.fields.events_end} */}
+							<EventPageBlockInfoBlock>
+							<EventPageBlockInfoItem>
+								<span>Дата проведения</span>
+								<p>
 									{
 									(() => {
 										const [d1, m1, y1] = pageInfo.fields.events_start.split('.');
@@ -538,10 +358,9 @@ export default function EventClient({ initialData }) {
 										if (pageInfo.fields.events_start === pageInfo.fields.events_end) {
 										return formatDate(pageInfo.fields.events_start);
 										} else if (m1 === m2 && y1 === y2) {
-										// Берём отформатированную дату и убираем оттуда число, оставляя "июня 2025"
 										const formatted = formatDate(pageInfo.fields.events_start);
-										const [, monthAndYear] = formatted.split(' ', 2); // может вернуть только месяц
-										const rest = formatted.slice(formatted.indexOf(' ') + 1); // "июня 2025"
+										const [, monthAndYear] = formatted.split(' ', 2);
+										const rest = formatted.slice(formatted.indexOf(' ') + 1);
 										return `${d1}–${d2} ${rest}`;
 										} else {
 										return (
@@ -555,104 +374,44 @@ export default function EventClient({ initialData }) {
 									}
 									{pageInfo.fields.events_time_start && `, ${pageInfo.fields.events_time_start}` }
 								</p>
-							</div>
+							</EventPageBlockInfoItem>
 							{pageInfo.cities[0] && 
-							<div className={css`
-								display: flex;
-								flex-direction: column;
-								padding: 14px 0;
-								gap: 8px;
-							`}>
-								<p className={css`
-									line-height: 1.28;
-								`}>Место проведения</p>
-								<p className={css`
-									font-size: 14px;
-									line-height: 1.16;
-								`}>{pageInfo.cities[0] && pageInfo.cities[0].name}</p>
-							</div>
+							<EventPageBlockInfoItem>
+								<span>Место проведения</span>
+								<p>{pageInfo.cities[0] && pageInfo.cities[0].name}</p>
+							</EventPageBlockInfoItem>
 							}
 							{pageInfo.fields.online || pageInfo.fields.address ?
-							<div className={css`
-								display: flex;
-								flex-direction: column;
-								padding: 14px 0;
-								gap: 8px;
-							`}>
-								<p className={css`
-									line-height: 1.28;
-								`}>Адрес</p>
-								<p className={css`
-									font-size: 14px;
-									line-height: 1.16;
-								`}>{pageInfo.fields.online ? 'Онлайн-событие' : pageInfo.fields.address}</p>
-							</div>
+							<EventPageBlockInfoItem>
+								<span>Адрес</span>
+								<p>{pageInfo.fields.online ? 'Онлайн-событие' : pageInfo.fields.address}</p>
+							</EventPageBlockInfoItem>
 							: null
 							}
 							
-							<div className={css`
-								display: flex;
-								flex-direction: column;
-								padding: 14px 0;
-								gap: 8px;
-							`}>
-								<p className={css`
-									line-height: 1.28;
-								`}>Стоимость</p>
-								<p className={css`
-									font-size: 14px;
-									line-height: 1.16;
-									font-weight: 500;
-									color: #8553F9;
-								`}>{pageInfo.fields.free ? 'Бесплатно' : formatPrice(pageInfo.fields.events_cost) + ' руб.'}</p>
-							</div>
+							<EventPageBlockInfoItem>
+								<span>Стоимость</span>
+								<EventPageBlockInfoItemPurple>{pageInfo.fields.free ? 'Бесплатно' : formatPrice(pageInfo.fields.events_cost) + ' руб.'}</EventPageBlockInfoItemPurple>
+							</EventPageBlockInfoItem>
 							{pageInfo.formats && 
-							<div className={css`
-								display: flex;
-								flex-direction: column;
-								padding: 14px 0;
-								gap: 8px;
-							`}>
-								<p className={css`
-									line-height: 1.28;
-								`}>Формат</p>
+							<EventPageBlockInfoItem>
+								<span>Формат</span>
 
 								{pageInfo.formats.map(format => (
-									<Link href={`/events/format_${format.slug}`} key={format.name} className={css`
-										font-size: 14px;
-										line-height: 1.16;
-										color: #8553F9;
-										cursor: pointer;
-									`}>{format.name}</Link>
+									<Link href={`/events/format_${format.slug}`} key={format.name}>{format.name}</Link>
 								))}
-							</div>
+							</EventPageBlockInfoItem>
 							}
 							{pageInfo.company[0] && 
-							<div className={css`
-								display: flex;
-								flex-direction: column;
-								padding: 14px 0;
-								gap: 8px;
-							`}>
-								<p className={css`
-									line-height: 1.28;
-								`}>Организатор</p>
-								<Link href={`/organizer/${pageInfo.company[0] && pageInfo.company[0].slug}`} className={css`
-									font-size: 14px;
-									line-height: 1.16;
-									color: #8553F9;
-									cursor: pointer;
-								`}>{pageInfo.company[0] && pageInfo.company[0].name}</Link>
-							</div>
+							<EventPageBlockInfoItem>
+								<span>Организатор</span>
+								<Link href={`/organizer/${pageInfo.company[0] && pageInfo.company[0].slug}`}>{pageInfo.company[0] && pageInfo.company[0].name}</Link>
+							</EventPageBlockInfoItem>
 							}
-							</div>
+							</EventPageBlockInfoBlock>
 							
 							{!pageInfo.fields.events_owner &&
-								<div className={css`
-									color: ${theme.colors.purple};
-									cursor: pointer;
-								`}
-								onClick={()=>{setIsModalOpen(true)}}>Это ваше мероприятие?</div> 
+								<EventPageBlockInfoIsYour onClick={()=>{setIsModalOpen(true)}}>Это ваше мероприятие?</EventPageBlockInfoIsYour> 
 							}
 							{pageInfo.fields.events_link && !pageInfo.fields.events_timepad && 
 								<Button green="true" style={{width: '100%', marginTop: !pageInfo.fields.events_owner && 14}}>
