@@ -13,7 +13,7 @@ export const globalStyles = (props) => css`
   }
 
   body {
-    font-family: var(--font-styrene), sans-serif;
+    font-family: var(--font-styrene);
     overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
     line-height: 1.28;
@@ -41,7 +41,7 @@ export const globalStyles = (props) => css`
   textarea {
     outline: none;
     border: none;
-    font-family: var(--font-styrene), sans-serif;
+    font-family: var(--font-styrene);
   }
 
 input {
