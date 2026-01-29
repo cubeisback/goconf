@@ -75,33 +75,29 @@ export default function EventClient({ initialData }) {
   }
 
 	 const handleClickConversion = async (e) => {
-		// e.preventDefault();
-		
-		// if (isLoading) return;
-		
-		// setIsLoading(true);
-		// https://goconf.ru/backend/wp-json/events/v2/increment-click/ 
 		try {
-		// Отправляем GET-запрос на бэкенд с авторизацией
-		await axios.post(
-			getApiUrl(`/backend/wp-json/events/v2/increment-click/`),
-			{
-				event_id: pageInfo.data.ID
-			},
-			{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			}
-		);
+			await axios.post(
+				getApiUrl(`/backend/wp-json/events/v2/increment-click/`),
+				{
+					event_id: pageInfo.data.ID
+				},
+				{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				}
+			);
 		
-		// После успешной отправки запроса открываем ссылку
-		window.open(pageInfo.fields.events_link, '_blank');
+			if(pageInfo.fields.events_link) {
+				window.open(pageInfo.fields.events_link, '_blank');
+			}
+			
 		
 		} catch (error) {
-		console.error('Error tracking click:', error);
-		// В случае ошибки всё равно открываем ссылку
-		window.open(pageInfo.fields.events_link, '_blank');
+			console.error('Error tracking click:', error);
+			if(pageInfo.fields.events_link) {
+				window.open(pageInfo.fields.events_link, '_blank');
+			}
 		} finally {
 		// setIsLoading(false);
 		}
@@ -430,7 +426,7 @@ export default function EventClient({ initialData }) {
 							{pageInfo.fields.events_timepad &&
 								<TimepadWidget 
 									eventId={pageInfo.fields.events_timepad} 
-									linkText="Зарегистрироваться на мероприятие"
+									handleClickConversion={handleClickConversion}
 								/>
 							}
 							

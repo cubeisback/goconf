@@ -3,7 +3,7 @@
 import { Button } from '@/styles/ui';
 import { useEffect, useRef } from 'react';
 
-export default function TimepadWidget({ eventId }) {
+export default function TimepadWidget({ eventId, handleClickConversion }) {
   const scriptLoaded = useRef(false);
 
   useEffect(() => {
@@ -58,6 +58,7 @@ export default function TimepadWidget({ eventId }) {
           e.preventDefault();
 
           if (!scriptLoaded.current) {
+			handleClickConversion()
             
             const oldScript = document.getElementById(`timepad-script-${eventId}`);
             if (oldScript) oldScript.remove();
