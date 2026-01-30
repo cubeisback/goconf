@@ -1,7 +1,7 @@
 "use client"
 
 import { css } from "@emotion/css";
-import { ButtonMore, Container, DoubleLinkArrow } from "@/styles/ui";
+import { ButtonMore, Container, DoubleLinkArrow, ShowMoreBtn } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
 import LinkArrow from "@/public/images/svg/arrow_link.svg";
 import { useEffect, useState } from "react";
@@ -266,29 +266,11 @@ export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadM
                 // )
 				!allLoaded && events && events.length > 0 && (
         
-		<div
-            className={css`
-              margin: 0 auto;
-              padding: 14px 32px;
-              border-radius: 28px;
-              border: 2px solid ${theme.colors.purple};
-              background-color: #fff;
-              width: max-content;
-              color: ${theme.colors.purple};
-              line-height: 1.28;
-              cursor: pointer;
-              transition: ${theme.transition};  
-              &:hover {
-                background-color: ${theme.colors.purple};
-                color: #fff;
-              }
-              opacity: ${loading ? 0.6 : 1};
-              pointer-events: ${loading ? "none" : "auto"};
-            `}
+		<ShowMoreBtn
             onClick={onLoadMore}
           >
             {loading ? "Загрузка..." : "Показать еще +"}
-          </div>
+          </ShowMoreBtn>
       )
                 }
 				

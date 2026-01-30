@@ -464,6 +464,55 @@ export const checkBox = css`
   }
 `;
 
+export const CheckBox = styled.div`
+  input {
+    display: none;
+  }
+
+  label {
+    cursor: pointer;
+    padding-left: 40px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.16;
+
+    &::before {
+      content: "";
+      position: absolute;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      background-color: transparent;
+      border-radius: 5px;
+      width: 24px;
+      height: 24px;
+      left: 2px;
+      top: -3px;
+      transition: all 0.3s ease;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.883 6.88398L9.883 17.884C9.39485 18.3721 8.60339 18.3721 8.11523 17.884L3.11523 12.884L4.883 11.1162L8.99912 15.2323L19.1152 5.11621L20.883 6.88398Z" fill="%238553F9"/></svg>');
+      width: 24px;
+      height: 24px;
+      left: 2px;
+      top: -3px;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+  }
+
+  input:checked ~ label {
+    &::before {
+      background-color: #fff;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+`;
+
 export const inputRadio = css`
   padding-left: 40px;
   padding: 6px 0 6px 40px;
@@ -1235,4 +1284,182 @@ export const EventPageArticle = styled.div`
 			gap: 10px;
 		}
 
+`;
+
+
+export const EventsSearchInput = styled.form`
+background-color: #fff;
+			border-radius: 28px;
+			padding: 14px 16px;
+			width: 608px;
+			font-size: 14px;
+			line-height: 1.16;
+			display: flex;
+			gap: 8px;
+			align-items: center;
+
+			@media(max-width: 640px) {
+			  width: 100%;
+			}
+
+			& > button {
+			  background: transparent;
+			  display: flex;
+			  border: none;
+			  cursor: pointer;
+			}
+`;
+export const EventsFilterBefore = styled.div`
+position: relative;
+
+		&::before {
+		  content: '';
+		  position: absolute;
+		  left: -100vw;
+		  top: 0;
+		  width: 200vw;
+		  height: 80px;
+		  background-color: #F5F7FA;
+		  z-index: -1;
+		}
+`;
+export const EventsFilterTags = styled.div`
+display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+
+            a {
+              padding: 7px 12px 9px;
+              border-radius: 8px;
+              background-color: #F5F7FA;
+              font-size: 14px;
+              font-weight: 500;
+              cursor: pointer;
+              transition: ${({ theme }) => theme.transition};
+              text-decoration: none;
+              color: inherit;
+
+              &:hover {
+                background-color: ${({ theme }) => theme.colors.green};
+              }
+
+              &.active {
+                background-color: ${({ theme }) => theme.colors.green};
+              }
+            }
+`;
+export const EventsPageText = styled.div`
+display: flex;
+                  flex-direction: column;
+                  gap: 16px;
+
+                  p {
+                    color: #47474D;
+                  }
+`;
+
+
+
+
+export const FilterBlock = styled.div`
+width: 100%;
+  border-radius: 28px;
+  background-color: ${({ theme }) => theme.colors.purple};
+  margin-bottom: ${({ full }) => (full ? '24px' : '95px')};
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @media (max-width: 1339px) {
+    margin-bottom: ${({ full }) => (full ? '24px' : '-48px')};
+    padding-bottom: ${({ full }) => (full ? '16px' : '80px')};
+  }
+`;
+
+export const FilterBlockItem = styled.div`
+flex:  ${({ full }) => (full ? '1' : '0 1 calc(16.666666% - 13.333333px)')};
+                      max-width: ${({ full }) => (full ? '' : 'calc(16.666666% - 13.333333px)')};
+
+                      @media(max-width: 1339px) {
+                        flex: 0 1 calc(33.3333333% - 10.666666px);
+                        max-width: calc(33.3333333% - 10.666666px);
+                      }
+                      @media(max-width: 575px) {
+                        flex: 0 1 100%;
+                        max-width: 100%;
+                      }
+`;
+export const FilterBlockMore = styled.div`
+flex: 0 1 100%;
+                        max-width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 8px;
+                        margin-top: 8px;
+                        flex-wrap: wrap;
+                        gap: 24px;
+`;
+
+export const FilterBlockMoreLeft = styled.div`
+display: flex;
+                          gap: 24px;
+
+                          @media(max-width: 575px) {
+                            flex: 0 1 100%;
+                            max-width: 100%;
+                            justify-content: space-between;
+                          }
+
+                          div {
+                            color:#fff;
+                            font-size:14px;
+                            line-height:1.16;
+                          }
+`;
+export const FilterBlockMoreRight = styled.div`
+color: #fff;
+                          font-size: 14px;
+                          line-height: 1.16;
+                          position: relative;
+                          padding-left: 40px;
+                          cursor: pointer;
+
+                          @media(max-width: 575px) {
+                            margin: 0 auto;
+                          }
+
+                          &::before {
+                            content: '';
+                            position: absolute;
+                            left: 0;
+                            top: -3px;
+                            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M2 12C2 6.47715 6.57241 2 12.2128 2C16.3345 2 19.8859 4.39078 21.4995 7.83333M21.4995 7.83333H18.1702M21.4995 7.83333L22 4.22222M22 12C22 17.5229 17.4276 22 11.7872 22C7.66554 22 4.11413 19.6092 2.5005 16.1667M2.5005 16.1667H5.82979M2.5005 16.1667L2 19.7778" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+                            width: 24px;
+                            height: 24px;
+                            transition: ${({ theme }) => theme.transition};
+                          }
+
+                          &:hover::before {
+                              transform: rotate(180deg);
+                          }
+`;
+
+export const ShowMoreBtn = styled.div`
+margin: 0 auto;
+              padding: 14px 32px;
+              border-radius: 28px;
+              border: 2px solid ${({ theme }) => theme.colors.purple};
+              background-color: #fff;
+              width: max-content;
+              color: ${({ theme }) => theme.colors.purple};
+              line-height: 1.28;
+              cursor: pointer;
+              transition: ${({ theme }) => theme.transition};  
+              &:hover {
+                background-color: ${({ theme }) => theme.colors.purple};
+                color: #fff;
+              }
 `;

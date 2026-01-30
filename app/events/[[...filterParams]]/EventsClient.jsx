@@ -6,358 +6,278 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
-import { Breadcrumbs, breadcrumbs, Container, input, PagePromo, pageTitle } from "@/styles/ui";
+import { Breadcrumbs, Container, EventsFilterBefore, EventsFilterTags, EventsPageText, EventsSearchInput, input, PagePromo, PageTitle } from "@/styles/ui";
 import { Filter } from '@/components/Filter/Filter';
 import { EventsFiltered } from '@/components/EventsFiltered';
 import { Form } from '@/components/Form';
 import SearchIcon from "@/public/images/svg/search.svg";
 import { getApiUrl } from '@/functions/functions';
 
-export default function EventsClient({ params }) {
-	const theme = useTheme();
-	const [events, setEvents] = useState(null);
-	const [total, setTotal] = useState(null);
-	const [pageH1, setPageH1] = useState(null);
-	const [pageText, setPageText] = useState(null);
-	const [seoTitle, setSeoTitle] = useState(null);
-	const [seoDescription, setSeoDescription] = useState(null);
-	const [query, setQuery] = useState('');
-	const [formatItems, setFormatItems] = useState(null);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [loading, setLoading] = useState(false);
-	const [currentFilters, setCurrentFilters] = useState({});
+export default function EventsClient({ params, initialData }) {
+  const theme = useTheme();
+  
+  // Инициализируем состояния из initialData
+  const [events, setEvents] = useState(initialData.initialEvents || []);
+  const [total, setTotal] = useState(initialData.initialTotal || 0);
+  const [pageH1, setPageH1] = useState(initialData.h1 || initialData.pageH1 || 'Все мероприятия');
+  const [pageText, setPageText] = useState(initialData.pageText || '');
+  const [seoTitle, setSeoTitle] = useState(initialData.initialSeo?.title || '');
+  const [seoDescription, setSeoDescription] = useState(initialData.initialSeo?.description || '');
+  const [query, setQuery] = useState('');
+  const [formatItems, setFormatItems] = useState(initialData.formatItems || []);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState({});
 
-	useEffect(() => {
-		axios
-			.get(getApiUrl("/backend/wp-json/events/v2/popular-formats/"))
-			.then((response) => {
-				setFormatItems(response.data.items);
-			})
-			.catch(console.error);
-	}, []);
+  // Загружаем форматы только если их нет в initialData
+  useEffect(() => {
+    if (!initialData.formatItems || initialData.formatItems.length === 0) {
+      axios
+        .get(getApiUrl("/backend/wp-json/events/v2/popular-formats/"))
+        .then((response) => {
+          setFormatItems(response.data.items);
+        })
+        .catch(console.error);
+    }
+  }, [initialData.formatItems]);
 
-	// НОВАЯ функция для загрузки дополнительных событий с фильтрами
-const handleLoadMoreWithFilters = useCallback(async () => {
+  // НОВАЯ функция для загрузки дополнительных событий с фильтрами
+  const handleLoadMoreWithFilters = useCallback(async () => {
     const nextPage = currentPage + 1;
     setLoading(true);
     
     try {
-        // Используем тот же эндпоинт, что и в фильтрах
-        const response = await axios.post(
-            getApiUrl("/backend/wp-json/events/v2/filter/"),
-            {
-                ...currentFilters,
-                load_page: nextPage
-            }
-        );
-        
-        // Защита от дубликатов
-        setEvents(prev => {
-            const eventsMap = new Map();
-            prev.forEach(event => eventsMap.set(event.id, event));
-            response.data.events.forEach(event => eventsMap.set(event.id, event));
-            return Array.from(eventsMap.values());
-        });
-        
-        setTotal(response.data.total);
-        setCurrentPage(nextPage);
-        
-        console.log('Догрузка - загружено событий:', response.data.events.length, 'Всего:', response.data.total);
+      const response = await axios.post(
+        getApiUrl("/backend/wp-json/events/v2/filter/"),
+        {
+          ...currentFilters,
+          load_page: nextPage
+        }
+      );
+      
+      // Защита от дубликатов
+      setEvents(prev => {
+        const eventsMap = new Map();
+        prev.forEach(event => eventsMap.set(event.id, event));
+        response.data.events.forEach(event => eventsMap.set(event.id, event));
+        return Array.from(eventsMap.values());
+      });
+      
+      setTotal(response.data.total);
+      setCurrentPage(nextPage);
+      
+      // Обновляем SEO данные если пришли
+      if (response.data.seo) {
+        setSeoTitle(response.data.seo.title || '');
+        setSeoDescription(response.data.seo.description || '');
+      }
+      
     } catch (error) {
-        console.error('Ошибка при загрузке:', error);
+      console.error('Ошибка при загрузке:', error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-}, [currentPage, currentFilters]);
+  }, [currentPage, currentFilters]);
 
-	const [activeMode, setActiveMode] = useState('filters'); // 'filters' | 'search' | 'all'
-
-const handleSearchSubmit = useCallback(async (e, page = 1, loadMore = false) => {
+  const handleSearchSubmit = useCallback(async (e, page = 1, loadMore = false) => {
     if (e) e.preventDefault();
     
     setLoading(true);
     try {
-        // Если поиск не пустой - используем поиск
-        if (query.trim()) {
-            const response = await axios.post(
-                getApiUrl("/backend/wp-json/events/v2/search/"),
-                { 
-                    search: query,
-                    load_page: page,
-                }
-            );
-            
-            if (loadMore) {
-                // Защита от дубликатов при догрузке
-                setEvents(prev => {
-                    const eventsMap = new Map();
-                    prev.forEach(event => eventsMap.set(event.id, event));
-                    response.data.events.forEach(event => eventsMap.set(event.id, event));
-                    return Array.from(eventsMap.values());
-                });
-            } else {
-                setEvents(response.data.events);
-                setCurrentPage(1);
-            }
-            
-            setTotal(response.data.total);
-            setSeoTitle(response.data.seo.title);
-            setSeoDescription(response.data.seo.description);
-            
-            console.log('Поиск - загружено событий:', response.data.events.length, 'Всего:', response.data.total);
-        } 
-        // Если поиск пустой И есть активные фильтры - используем фильтры
-        else if (Object.keys(currentFilters).length > 0) {
-            const response = await axios.post(
-                getApiUrl("/backend/wp-json/events/v2/filter/"),
-                {
-                    ...currentFilters,
-                    load_page: page
-                }
-            );
-            
-            if (loadMore) {
-                // Защита от дубликатов при догрузке
-                setEvents(prev => {
-                    const eventsMap = new Map();
-                    prev.forEach(event => eventsMap.set(event.id, event));
-                    response.data.events.forEach(event => eventsMap.set(event.id, event));
-                    return Array.from(eventsMap.values());
-                });
-            } else {
-                setEvents(response.data.events);
-                setCurrentPage(1);
-            }
-            
-            setTotal(response.data.total);
-            console.log('Фильтры - загружено событий:', response.data.events.length, 'Всего:', response.data.total);
-        }
-        // Если поиск пустой И нет фильтров - загружаем все события
-        else {
-            const response = await axios.post(
-                getApiUrl("/backend/wp-json/events/v2/filter/"),
-                {
-                    load_page: page
-                }
-            );
-            
-            if (loadMore) {
-                // Защита от дубликатов при догрузке
-                setEvents(prev => {
-                    const eventsMap = new Map();
-                    prev.forEach(event => eventsMap.set(event.id, event));
-                    response.data.events.forEach(event => eventsMap.set(event.id, event));
-                    return Array.from(eventsMap.values());
-                });
-            } else {
-                setEvents(response.data.events);
-                setCurrentPage(1);
-            }
-            
-            setTotal(response.data.total);
-            console.log('Все события - загружено:', response.data.events.length, 'Всего:', response.data.total);
+      // Если поиск не пустой - используем поиск
+      if (query.trim()) {
+        const response = await axios.post(
+          getApiUrl("/backend/wp-json/events/v2/search/"),
+          { 
+            search: query,
+            load_page: page,
+          }
+        );
+        
+        if (loadMore) {
+          // Защита от дубликатов при догрузке
+          setEvents(prev => {
+            const eventsMap = new Map();
+            prev.forEach(event => eventsMap.set(event.id, event));
+            response.data.events.forEach(event => eventsMap.set(event.id, event));
+            return Array.from(eventsMap.values());
+          });
+        } else {
+          setEvents(response.data.events);
+          setCurrentPage(1);
         }
         
+        setTotal(response.data.total);
+        setSeoTitle(response.data.seo?.title || '');
+        setSeoDescription(response.data.seo?.description || '');
+        
+      } 
+      // Если поиск пустой И есть активные фильтры - используем фильтры
+      else if (Object.keys(currentFilters).length > 0) {
+        const response = await axios.post(
+          getApiUrl("/backend/wp-json/events/v2/filter/"),
+          {
+            ...currentFilters,
+            load_page: page
+          }
+        );
+        
+        if (loadMore) {
+          // Защита от дубликатов при догрузке
+          setEvents(prev => {
+            const eventsMap = new Map();
+            prev.forEach(event => eventsMap.set(event.id, event));
+            response.data.events.forEach(event => eventsMap.set(event.id, event));
+            return Array.from(eventsMap.values());
+          });
+        } else {
+          setEvents(response.data.events);
+          setCurrentPage(1);
+        }
+        
+        setTotal(response.data.total);
+        
+        // Обновляем текст страницы если пришел
+        if (!loadMore && response.data.text) {
+          setPageText(response.data.text);
+        }
+        
+        // Обновляем SEO данные если пришли
+        if (response.data.seo) {
+          setSeoTitle(response.data.seo.title || '');
+          setSeoDescription(response.data.seo.description || '');
+        }
+      }
+      // Если поиск пустой И нет фильтров - загружаем все события
+      else {
+        const response = await axios.post(
+          getApiUrl("/backend/wp-json/events/v2/filter/"),
+          {
+            load_page: page
+          }
+        );
+        
+        if (loadMore) {
+          // Защита от дубликатов при догрузке
+          setEvents(prev => {
+            const eventsMap = new Map();
+            prev.forEach(event => eventsMap.set(event.id, event));
+            response.data.events.forEach(event => eventsMap.set(event.id, event));
+            return Array.from(eventsMap.values());
+          });
+        } else {
+          setEvents(response.data.events);
+          setCurrentPage(1);
+        }
+        
+        setTotal(response.data.total);
+      }
+      
     } catch (error) {
-        console.error('Ошибка при загрузке:', error);
+      console.error('Ошибка при загрузке:', error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-}, [query, currentFilters]);
+  }, [query, currentFilters]);
 
-
-	
-
-
-	// Функция для определения, какую функцию загрузки использовать
-	// const handleLoadMore = useCallback(() => {
-	// 	// Если есть активные фильтры (не только поиск), используем фильтрованную загрузку
-	// 	if (Object.keys(currentFilters).length > 0 && 
-	// 		(!query || Object.keys(currentFilters).some(key => 
-	// 			key !== 'dateStart' && key !== 'dateEnd' && currentFilters[key]))) {
-	// 		handleLoadMoreWithFilters();
-	// 	} else {
-	// 		// Иначе используем поисковую загрузку
-	// 		handleSearchSubmit(null, currentPage + 1, true);
-	// 	}
-	// }, [currentPage, currentFilters, query, handleSearchSubmit, handleLoadMoreWithFilters]);
-	
-	// Функция для загрузки дополнительных событий
-const handleLoadMore = useCallback(() => {
+  // Функция для загрузки дополнительных событий
+  const handleLoadMore = useCallback(() => {
     const nextPage = currentPage + 1;
     
     if (query.trim()) {
-        // Если есть поисковый запрос - используем поиск
-        handleSearchSubmit(null, nextPage, true);
+      // Если есть поисковый запрос - используем поиск
+      handleSearchSubmit(null, nextPage, true);
     } else if (Object.keys(currentFilters).length > 0) {
-        // Если есть фильтры - используем фильтры
-        handleLoadMoreWithFilters();
+      // Если есть фильтры - используем фильтры
+      handleLoadMoreWithFilters();
     } else {
-        // Иначе загружаем все события
-        handleSearchSubmit(null, nextPage, true);
+      // Иначе загружаем все события
+      handleSearchSubmit(null, nextPage, true);
     }
-}, [currentPage, query, currentFilters, handleSearchSubmit, handleLoadMoreWithFilters]);
+  }, [currentPage, query, currentFilters, handleSearchSubmit, handleLoadMoreWithFilters]);
 
-// Функция для сброса поиска (при очистке поля)
-// const handleSearchReset = useCallback(() => {
-//     setQuery('');
-//     // При сбросе поиска загружаем события с текущими фильтрами
-//     if (Object.keys(currentFilters).length > 0) {
-//         // Используем фильтры
-//         handleLoadMoreWithFilters(); // Это перезагрузит события с фильтрами
-//     } else {
-//         // Или загружаем все события
-//         handleSearchSubmit(null, 1, false);
-//     }
-// }, [currentFilters, handleLoadMoreWithFilters, handleSearchSubmit]);
+  return (
+    <>
+      {/* Блок 1: Хедер с хлебными крошками и H1 */}
+      <PagePromo>
+        <Container>
+          <Breadcrumbs>
+            <Link href="/">Главная</Link>
+            <p>{pageH1}</p>
+          </Breadcrumbs>
+          
+          {/* H1 заголовок (данные пришли с сервера через initialData) */}
+          <PageTitle>{pageH1}</PageTitle>
 
-// useEffect(() => {
-//     if (Object.keys(currentFilters).length > 0 && query) {
-//         setQuery(''); // Сбрасываем поисковый запрос при применении фильтров
-//     }
-// }, [currentFilters]);
+          {/* Форма поиска */}
+          <EventsSearchInput onSubmit={handleSearchSubmit} >
+            <input
+              className={cx(input, css`padding: 0 4px;`)}
+              type="text"
+              placeholder='Поиск по мероприятиям'
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button type='submit'>
+              <SearchIcon style={{cursor: 'pointer'}} />
+            </button>
+          </EventsSearchInput>
+        </Container>
+      </PagePromo>
 
-	return (
-		<>
-			<PagePromo>
-				<Container>
-					<Breadcrumbs>
-						<Link href="/">Главная</Link>
-						<p>{pageH1}</p>
-					</Breadcrumbs>
-					<h1 className={pageTitle}>{pageH1}</h1>
+      <EventsFilterBefore>
+        <Container>
+          <Filter
+            full
+            setEvents={setEvents}
+            setTotal={setTotal}
+            setPageH1={setPageH1} // Обновляет H1 при фильтрации
+            setPageText={setPageText} // Обновляет текст при фильтрации
+            setQuery={setQuery}
+            setSeoDescription={setSeoDescription}
+            setSeoTitle={setSeoTitle}
+            setCurrentFilters={setCurrentFilters}
+            setCurrentPage={setCurrentPage}
+            setLoading={setLoading}
+          />
+            
+          <p style={{paddingBottom: 24}}>
+            {total ? `Найдено событий: ${total}` : 'По заданным параметрам событий не найдено'}
+          </p>
 
-					<form onSubmit={handleSearchSubmit} className={css`
-						background-color: #fff;
-						border-radius: 28px;
-						padding: 14px 16px;
-						width: 608px;
-						font-size: 14px;
-						line-height: 1.16;
-						display: flex;
-						gap: 8px;
-						align-items: center;
+          <EventsFilterTags>
+            {formatItems && formatItems.map((item, index) => (
+              <Link
+                key={index}
+                href={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`}
+                dangerouslySetInnerHTML={{ __html: item.name }}
+              />
+            ))}
+          </EventsFilterTags>
+        </Container>
 
-						@media(max-width: 640px) {
-							width: 100%;
-						}
+        <EventsFiltered 
+          onPage 
+          events={events} 
+          total={total} 
+          loading={loading}
+          onLoadMore={handleLoadMore}
+          currentPage={currentPage}
+        />
 
-						& > button {
-							background: transparent;
-							display: flex;
-						}
-					`}>
-						<input
-							className={cx(input, css`padding: 0 4px;`)}
-							type="text"
-							placeholder='Поиск по мероприятиям'
-							value={query}
-							onChange={(e) => setQuery(e.target.value)}
-						/>
-						<button type='submit'>
-							<SearchIcon className={css`cursor: pointer;`} />
-						</button>
-					</form>
-				</Container>
-			</PagePromo>
+        {/* Блок 2: Текстовый блок (данные пришли с сервера через initialData) */}
+        {pageText && (
+          <div style={{padding: '64px 0', backgroundColor: '#F5F7FA'}}>
+            <Container>
+              <EventsPageText
+                dangerouslySetInnerHTML={{ __html: pageText }} 
+              />
+            </Container>
+          </div>
+        )}
 
-			<div className={css`
-				position: relative;
-
-				&::before {
-					content: '';
-					position: absolute;
-					left: -100vw;
-					top: 0;
-					width: 200vw;
-					height: 80px;
-					background-color: #F5F7FA;
-					z-index: -1;
-				}
-			`}>
-				<Container>
-					<Filter
-						full
-						setEvents={setEvents}
-						setTotal={setTotal}
-						setPageH1={setPageH1}
-						setPageText={setPageText}
-						setQuery={setQuery}
-						setSeoDescription={setSeoDescription}
-						setSeoTitle={setSeoTitle}
-						setCurrentFilters={setCurrentFilters}
-						setCurrentPage={setCurrentPage} // Добавляем для сброса пагинации
-						setLoading={setLoading}
-					/>
-						
-					{/* {total && <p className={css`padding-bottom: 24px;`}>Найдено событий: {total}</p>} */}
-					<p className={css`padding-bottom: 24px;`}>{total ? `Найдено событий: ${total}` : 'По заданным параметрам событий не найдено'}</p>
-
-					<div className={css`
-						display: flex;
-						gap: 16px;
-						flex-wrap: wrap;
-
-						a {
-							padding: 7px 12px 9px;
-							border-radius: 8px;
-							background-color: #F5F7FA;
-							font-size: 14px;
-							font-weight: 500;
-							cursor: pointer;
-							transition: ${theme.transition};
-
-							&:hover {
-								background-color: ${theme.colors.green};
-							}
-
-							br {
-								display: none;
-							}
-
-							&.active {
-								background-color: ${theme.colors.green};
-							}
-						}
-					`}>
-						{formatItems && formatItems.map((item, index) => (
-							<Link
-								key={index}
-								href={`/events/${item.subject ? `direction_${item.subject}/` : ''}${item.city ? `city_${item.city}/` : ''}${item.format ? `format_${item.format}/` : ''}`}
-								dangerouslySetInnerHTML={{ __html: item.name }}
-							/>
-						))}
-					</div>
-				</Container>
-
-				<EventsFiltered 
-					onPage 
-					events={events} 
-					total={total} 
-					loading={loading}
-					onLoadMore={handleLoadMore}
-					currentPage={currentPage}
-				/>
-
-				<div className={css`
-					padding: 64px 0;
-					background-color: #F5F7FA;
-				`}>
-					<Container>
-						<div className={css`
-							display: flex;
-							flex-direction: column;
-							gap: 16px;
-
-							p {
-								color: #47474D;
-							}
-						`} dangerouslySetInnerHTML={{ __html: pageText }} />
-					</Container>
-				</div>
-
-				<Form />
-			</div>
-		</>
-	);
+        <Form />
+      </EventsFilterBefore>
+    </>
+  );
 }
