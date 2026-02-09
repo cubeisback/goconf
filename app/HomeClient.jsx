@@ -2,11 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { Container } from "@/styles/ui";
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Formats } from '@/components/Formats/Formats';
 import { MainEventsSlider } from '@/components/MainEventsSlider';
-import { MainEvents } from '@/components/MainEvents';
 import { Form } from '@/components/Form';
 import { FilterOnMain } from '@/components/Filter/FilterOnMain';
 import styled from "@emotion/styled";
@@ -15,7 +14,7 @@ import { Suspense, useEffect } from 'react';
 import { ResetPassword } from '@/components/ResetPassword';
 import { MainEventsTest } from '@/components/MainEventsTest';
 
-export default function Main() {
+export default function Main({ initialData }) {
 	const theme = useTheme();
 
 	const PromoMain = styled.div`
@@ -186,13 +185,13 @@ export default function Main() {
 			</div>
 			<PurpleBg>
 				<Container $fullWidth>
-					<MainEventsSlider />
+					<MainEventsSlider initialData={initialData?.interestingEvents || null} />
 				</Container>
 			</PurpleBg>
 			
-			<Formats />
+			<Formats initialItems={initialData?.popularFormats || null} />
 			
-			<MainEventsTest />
+			<MainEventsTest initialEvents={initialData?.nearEvents || []} initialTotal={initialData?.nearEventsTotal || 0} />
 
 			<Form />
 

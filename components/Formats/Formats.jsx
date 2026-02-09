@@ -141,7 +141,7 @@ const Next = styled.div`
 	}
 `
 
-export const Formats = () => {
+export const Formats = ({ initialItems = null }) => {
 
   const navigationPrevRef = useRef(null);
       const navigationNextRef = useRef(null);
@@ -149,21 +149,21 @@ export const Formats = () => {
 
 	// const width = useWindowSizeStore((state) => state.width);
 
-    const [formatItems, setFormatItems] = useState(null)
-	const [isLoading, setIsLoading] = useState(true);
+    const [formatItems, setFormatItems] = useState(initialItems);
+	const [isLoading, setIsLoading] = useState(!initialItems);
     useEffect(() => {
-      axios
-		.get(getApiUrl("/backend/wp-json/events/v2/popular-formats/"))
-        .then((response) => {
-            setFormatItems(response.data.items)
-			setIsLoading(false)
-            console.log('popular-formats ', response.data)
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-
-    }, [])
+      if (!initialItems) {
+        axios
+          .get(getApiUrl("/backend/wp-json/events/v2/popular-formats/"))
+          .then((response) => {
+              setFormatItems(response.data.items);
+              setIsLoading(false);
+          })
+          .catch((error) => {
+              console.log(error);
+          });
+      }
+    }, [initialItems]);
 
     const duplicatedItems = formatItems
   ? Array(Math.ceil(20 / formatItems.length)).fill(formatItems).flat()

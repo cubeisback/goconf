@@ -10,12 +10,12 @@ import axios from "axios";
 import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 
-export const MainEventsTest = () => {
+export const MainEventsTest = ({ initialEvents = [], initialTotal = 0 }) => {
   const theme = useTheme();
 
-  const [nearEvents, setNearEvents] = useState([]);   // массив всех событий
+  const [nearEvents, setNearEvents] = useState(initialEvents);   // массив всех событий
   const [currentPage, setCurrentPage] = useState(1);  // текущая страница
-  const [total, setTotal] = useState(0);              // всего событий
+  const [total, setTotal] = useState(initialTotal);              // всего событий
   const [loading, setLoading] = useState(false);
 
   const loadEvents = async (page) => {
@@ -57,10 +57,12 @@ export const MainEventsTest = () => {
   }
 };
 
-  // загружаем первую страницу
+  // загружаем первую страницу, только если не пришли initialEvents
   useEffect(() => {
-    loadEvents(1);
-  }, []);
+    if (!initialEvents || initialEvents.length === 0) {
+      loadEvents(1);
+    }
+  }, [initialEvents]);
 
   const handleLoadMore = () => {
     const nextPage = currentPage + 1;

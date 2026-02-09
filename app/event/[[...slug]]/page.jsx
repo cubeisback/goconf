@@ -98,6 +98,42 @@ async function getEventData(slug) {
   }
 }
 
+async function getInterestingEvents() {
+  try {
+    const response = await fetch(getApiUrl("/backend/wp-json/events/v2/interesting-events/"), {
+      cache: 'force-cache',
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching interesting events for event page:', error);
+    return null;
+  }
+}
+
+async function getSimilarEvents(id) {
+  try {
+    const response = await fetch(getApiUrl(`/backend/wp-json/events/v2/similar-events/?id=${id}`), {
+      cache: 'force-cache',
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      return { items: [] };
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching similar events:', error);
+    return { items: [] };
+  }
+}
+
 export default async function EventPage({ params }) {
   const { slug } = params;
   
@@ -108,7 +144,18 @@ export default async function EventPage({ params }) {
   if (!eventData) {
     notFound();
   }
+
+  const [interestingEvents, similarEvents] = await Promise.all([
+    getInterestingEvents(),
+    getSimilarEvents(eventData.data?.ID),
+  ]);
   
   // Передаем данные клиентскому компоненту
-  return <EventClient initialData={eventData} />;
+  return (
+    <EventClient
+      initialData={eventData}
+      initialInterestingEvents={interestingEvents}
+      initialSimilarEvents={similarEvents?.items || []}
+    />
+  );
 }
