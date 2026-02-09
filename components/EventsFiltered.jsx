@@ -4,7 +4,6 @@ import { css } from "@emotion/css";
 import { ButtonMore, Container, DoubleLinkArrow, ShowMoreBtn } from "@/styles/ui";
 import { useTheme } from "@emotion/react";
 import LinkArrow from "@/public/images/svg/arrow_link.svg";
-import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import { formatDate } from "../functions/functions";
 import Link from "next/link";
@@ -12,15 +11,6 @@ import Link from "next/link";
 
 export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadMore, currentPage }) => {
     const theme = useTheme();
-	
-    // const [limit, setLimit] = useState(5);
-
-    const [nearEvents, setNearEvents] = useState(null)
-   
-    useEffect(() => {
-        setNearEvents(events);
-		console.log('filtered events ', events, events?.length, total)
-    }, [events]);
 
 	// Проверяем, все ли события загружены
   const allLoaded = events && total && events.length >= total;
@@ -51,7 +41,7 @@ export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadM
                 <div className={css`
                     margin-bottom: 32px;
                 `}>
-                    {nearEvents && nearEvents.map((item) => (
+                    {events && events.map((item) => (
                         <motion.div 
                             initial={{ y: 50, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
