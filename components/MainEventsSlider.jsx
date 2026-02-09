@@ -156,26 +156,26 @@ const SliderItemDate = styled.div`
 `
 const getRandomOrder = () => Math.random() - 0.5;
 
-export const MainEventsSlider = () => {
+export const MainEventsSlider = ({ initialData }) => {
     const navigationPrevRef = useRef(null);
     const navigationNextRef = useRef(null);
 
-    const [events, setEvents] = useState(null);
-	const [isLoading, setIsLoading] = useState(true);
+    const [events, setEvents] = useState(initialData || null);
+	const [isLoading, setIsLoading] = useState(!initialData);
     useEffect(() => {
-      axios
-        .get(getApiUrl("/backend/wp-json/events/v2/interesting-events/"))
-        .then((response) => {
-			setEvents(response.data);
-			// console.log('ОШИБКА ТУТ', response.data)
-			setIsLoading(false);
-        })
-        .catch((error) => {
+      if (!initialData) {
+        axios
+          .get(getApiUrl("/backend/wp-json/events/v2/interesting-events/"))
+          .then((response) => {
+            setEvents(response.data);
+            setIsLoading(false);
+          })
+          .catch((error) => {
             console.log(error);
-			setIsLoading(false);
-        });
-
-    }, []);
+            setIsLoading(false);
+          });
+      }
+    }, [initialData]);
 
 	const shuffledItems = events?.items ? [...events.items].sort(getRandomOrder) : [];
 

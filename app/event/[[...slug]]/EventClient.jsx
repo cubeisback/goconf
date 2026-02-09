@@ -22,7 +22,7 @@ import { Modal } from "@/components/ui/Modal";
 import TimepadWidget from "@/components/TimepadWidget/TimepadWidget";
 import Image from "next/image";
 
-export default function EventClient({ initialData }) {
+export default function EventClient({ initialData, initialInterestingEvents, initialSimilarEvents }) {
 	const [pageInfo, setPageInfo] = useState(initialData);
 	const [isLoading, setIsLoading] = useState(!initialData);
 	const [showNotFound, setShowNotFound] = useState(false);
@@ -456,11 +456,11 @@ export default function EventClient({ initialData }) {
 				}
 			`}>
 				<Container $fullWidth>
-					<MainEventsSlider />
+					<MainEventsSlider initialData={initialInterestingEvents || null} />
 				</Container>
 			</div>
 
-			<MainEvents id={pageInfo && pageInfo.data.ID} similar={true} />
+			<MainEvents id={pageInfo && pageInfo.data.ID} similar={true} events={initialSimilarEvents || undefined} />
 			<Form />
 
 			<ModalEvent isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} onReg={()=>setIsModalOpen2(true)} eventName={pageInfo && pageInfo.data.post_title} eventId={pageInfo && pageInfo.data.ID} />
