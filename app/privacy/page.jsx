@@ -40,6 +40,12 @@ export async function generateMetadata() {
   }
 }
 
-export default function AboutPage() {
-  return <PrivacyClient />;
+export default async function PrivacyPage() {
+  const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/page/?slug=privacy"), {
+    next: { revalidate: 3600 },
+  });
+
+  const pageData = response.ok ? await response.json() : null;
+
+  return <PrivacyClient initialData={pageData} />;
 }

@@ -79,23 +79,26 @@ const SkeletonItem = styled.div`
 	}
 `
 
-const AboutClient = () => {
-	const [aboutItems, setAboutItems] = useState(null);
-	const [isLoading, setIsLoading] = useState(true);
+const AboutClient = ({ initialData }) => {
+	const [aboutItems, setAboutItems] = useState(initialData?.fields?.benefits || null);
+	const [isLoading, setIsLoading] = useState(!initialData);
 
+	// Дозагружаем данные на клиенте только если их не передали с сервера
 	useEffect(() => {
-		axios
-		  .get(getApiUrl("/backend/wp-json/pages/v2/about/"))
-		  .then((response) => {
-			setAboutItems(response.data.fields.benefits)
-			setIsLoading(false)
-			console.log('about ', response.data);
-		  })
-		  .catch((error) => {
-			console.log(error);
-		  });
-	}, []);
-	//TODO SEO
+		if (!initialData) {
+			axios
+				.get(getApiUrl("/backend/wp-json/pages/v2/about/"))
+				.then((response) => {
+					setAboutItems(response.data.fields.benefits);
+					setIsLoading(false);
+					console.log('about ', response.data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	}, [initialData]);
+
     return (
         <>
             <PagePromo>

@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { Breadcrumbs, Container, PagePromo, PageTitle } from "@/styles/ui";
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlusIcon from "@/public/images/svg/plus.svg";
 import MinusIcon from "@/public/images/svg/minus.svg";
 import { Form } from '@/components/Form';
 import styled from "@emotion/styled";
-import { useEffect } from "react";
 import axios from "axios";
 import { getApiUrl } from "@/functions/functions";
 
@@ -55,10 +54,13 @@ const SkeletonItem = styled.div`
 	}
 `
 //TODO SEO
-const FaqClient = () => {
-	const [questions, setQuestions] = useState(null)
-	const [openIndexes, setOpenIndexes] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
+const FaqClient = ({ initialData }) => {
+	const [questions, setQuestions] = useState(initialData?.fields?.faq || null);
+	// На сервере сразу открываем все вопросы, чтобы ответы попали в HTML (SSR)
+	const [openIndexes, setOpenIndexes] = useState(
+		initialData?.fields?.faq ? initialData.fields.faq.map((_, index) => index) : []
+	);
+	const [isLoading, setIsLoading] = useState(!initialData);
 
     // Функция для обработки клика
     const handleToggle = (index) => {
@@ -71,21 +73,31 @@ const FaqClient = () => {
         }
     };
 
-	const [pageInfo, setPageInfo] = useState(null);
+	const [pageInfo, setPageInfo] = useState(initialData || null);
+
+	// На клиенте сразу после гидратации сворачиваем все ответы,
+	// чтобы пользователь видел закрытый аккордеон, но HTML с ответами уже был отрендерен на сервере.
+	useEffect(() => {
+		if (initialData?.fields?.faq) {
+			setOpenIndexes([]);
+		}
+	}, [initialData]);
 
 	useEffect(() => {
-		axios
-		  .get(getApiUrl("/backend/wp-json/pages/v2/faq/"))
-		  .then((response) => {
-			setQuestions(response.data.fields.faq);
-			setIsLoading(false)
-			setPageInfo(response.data)
-			console.log('faq ', response.data);
-		  })
-		  .catch((error) => {
-			console.log(error);
-		  });
-	}, []);
+		if (!initialData) {
+			axios
+				.get(getApiUrl("/backend/wp-json/pages/v2/faq/"))
+				.then((response) => {
+					setQuestions(response.data.fields.faq);
+					setIsLoading(false);
+					setPageInfo(response.data);
+					console.log('faq ', response.data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	}, [initialData]);
 
     return (
         <>

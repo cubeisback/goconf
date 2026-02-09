@@ -38,6 +38,12 @@ export async function generateMetadata() {
   }
 }
 
-export default function FaqPage() {
-  return <FaqClient />;
+export default async function FaqPage() {
+  const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/faq/"), {
+    next: { revalidate: 3600 },
+  });
+
+  const faqData = response.ok ? await response.json() : null;
+
+  return <FaqClient initialData={faqData} />;
 }

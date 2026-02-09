@@ -40,6 +40,12 @@ export async function generateMetadata() {
   }
 }
 
-export default function AboutPage() {
-  return <NewsletterClient />;
+export default async function NewsletterPage() {
+  const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/page/?slug=newsletter"), {
+    next: { revalidate: 3600 },
+  });
+
+  const pageData = response.ok ? await response.json() : null;
+
+  return <NewsletterClient initialData={pageData} />;
 }

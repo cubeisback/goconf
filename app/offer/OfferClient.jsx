@@ -6,24 +6,27 @@ import { useEffect, useState } from 'react';
 import { getApiUrl } from '@/functions/functions';
 import axios from 'axios';
 
-const OfferClient = () => {
-	const [pageInfo, setPageInfo] = useState(null);
-	const [title, setTitle] = useState(null);
-	const [isLoading, setIsLoading] = useState(true);
+const OfferClient = ({ initialData }) => {
+	const [pageInfo, setPageInfo] = useState(initialData?.content || null);
+	const [title, setTitle] = useState(initialData?.title || null);
+	const [isLoading, setIsLoading] = useState(!initialData);
 
+	// Дозагружаем данные на клиенте только если их не передали с сервера
 	useEffect(() => {
-		axios
-		  .get(getApiUrl("/backend/wp-json/pages/v2/page/?slug=offer"))
-		  .then((response) => {
-			setPageInfo(response.data.content)
-			setTitle(response.data.title)
-			setIsLoading(false)
-			// console.log('offer ', response.data);
-		  })
-		  .catch((error) => {
-			console.log(error);
-		  });
-	}, []);
+		if (!initialData) {
+			axios
+				.get(getApiUrl("/backend/wp-json/pages/v2/page/?slug=offer"))
+				.then((response) => {
+					setPageInfo(response.data.content);
+					setTitle(response.data.title);
+					setIsLoading(false);
+					// console.log('offer ', response.data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	}, [initialData]);
 
 	return (
 		<>

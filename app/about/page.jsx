@@ -40,6 +40,12 @@ export async function generateMetadata() {
   }
 }
 
-export default function AboutPage() {
-  return <AboutClient />;
+export default async function AboutPage() {
+  const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/about/"), {
+    next: { revalidate: 3600 },
+  });
+
+  const aboutData = response.ok ? await response.json() : null;
+
+  return <AboutClient initialData={aboutData} />;
 }

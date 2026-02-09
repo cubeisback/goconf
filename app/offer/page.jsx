@@ -40,6 +40,12 @@ export async function generateMetadata() {
   }
 }
 
-export default function AboutPage() {
-  return <OfferClient />;
+export default async function OfferPage() {
+  const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/page/?slug=offer"), {
+    next: { revalidate: 3600 },
+  });
+
+  const pageData = response.ok ? await response.json() : null;
+
+  return <OfferClient initialData={pageData} />;
 }

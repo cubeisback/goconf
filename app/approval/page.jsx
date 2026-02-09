@@ -40,6 +40,12 @@ export async function generateMetadata() {
   }
 }
 
-export default function AboutPage() {
-  return <ApprovalClient />;
+export default async function ApprovalPage() {
+  const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/page/?slug=approval"), {
+    next: { revalidate: 3600 },
+  });
+
+  const pageData = response.ok ? await response.json() : null;
+
+  return <ApprovalClient initialData={pageData} />;
 }
