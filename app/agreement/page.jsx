@@ -40,6 +40,12 @@ export async function generateMetadata() {
   }
 }
 
-export default function AboutPage() {
-  return <AgreementClient />;
+export default async function AgreementPage() {
+  const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/page/?slug=agreement"), {
+    next: { revalidate: 3600 },
+  });
+
+  const pageData = response.ok ? await response.json() : null;
+
+  return <AgreementClient initialData={pageData} />;
 }
