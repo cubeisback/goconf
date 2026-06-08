@@ -16,6 +16,10 @@ import { MainEventsTest } from '@/components/MainEventsTest';
 
 export default function Main({ initialData }) {
 	const theme = useTheme();
+	
+	useEffect(()=>{
+		console.log('check')
+	}, [])
 
 	const PromoMain = styled.div`
 	padding-top: 180px;
