@@ -94,7 +94,6 @@ export const viewport = {
 };
 
 export default async function RootLayout({ children }) {
-	const isProd = await isProductionRequest();
 	const fontClasses = `${styrene.variable} ${impact.variable}`;
 
   return (
@@ -127,19 +126,10 @@ export default async function RootLayout({ children }) {
 		<meta name="google-site-verification" content="n8asrtPoRx4M5v6xchKuoo5CVDG1xtUqjwFnI94r-K8" />
       </head>
       <body>
-		{isProd ? (
-			<ThemeWrapper>
-				{children}
-				<JivoChat />
-			</ThemeWrapper>
-		) : (
-			<noindex>
-				<ThemeWrapper>
-					{children}
-					<JivoChat />
-				</ThemeWrapper>
-			</noindex>
-		)}
+		<ThemeWrapper>
+			{children}
+			<JivoChat />
+		</ThemeWrapper>
       </body>
     </html>
   );

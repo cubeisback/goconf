@@ -162,6 +162,9 @@ export const MainEventsSlider = ({ initialData }) => {
 
     const [events, setEvents] = useState(initialData || null);
 	const [isLoading, setIsLoading] = useState(!initialData);
+	// Стабильный порядок для SSR/гидрации; shuffle только после mount
+	const [displayItems, setDisplayItems] = useState(initialData?.items || []);
+
     useEffect(() => {
       if (!initialData) {
         axios
@@ -177,7 +180,14 @@ export const MainEventsSlider = ({ initialData }) => {
       }
     }, [initialData]);
 
-	const shuffledItems = events?.items ? [...events.items].sort(getRandomOrder) : [];
+	useEffect(() => {
+		const items = events?.items;
+		if (!items?.length) {
+			setDisplayItems([]);
+			return;
+		}
+		setDisplayItems([...items].sort(getRandomOrder));
+	}, [events]);
 
     return (       
         <SliderBlock>
@@ -237,14 +247,16 @@ export const MainEventsSlider = ({ initialData }) => {
 							))}
 						</div>
 					) : 
-                        shuffledItems.map((item, index) => (
-                            <SwiperSlide key={index} style={{borderRadius: 24, backgroundColor: '#fff', overflow: 'hidden'}}>
+                        displayItems.map((item, index) => (
+                            <SwiperSlide key={item.id || item.slug || index} style={{borderRadius: 24, backgroundColor: '#fff', overflow: 'hidden'}}>
                                 <Link href={`/event/${item.slug}`} style={{width: '100%', height: 256}}>
+                                    {item.cover ? (
                                     <img src={item.cover} alt="" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
+                                    ) : null}
                                 </Link>
                                 <div style={{padding: 24, display: 'flex', flexDirection: 'column', gap: 16, height: 256}}>
                                     <div>
-										{item.format.map((f, idx) => (
+										{item.format?.map((f, idx) => (
 											<SliderFormatsItem key={idx}>
 												<Link href={`/events/${f.slug}`}>
 													{f.name}
