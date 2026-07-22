@@ -2,6 +2,7 @@ import JivoChat from "@/components/JivoChat/JivoChat";
 import ThemeWrapper from "./theme-wrapper";
 import Script from "next/script";
 import localFont from 'next/font/local'
+import { isProductionRequest } from '@/lib/getBaseUrl';
 
 // Локальные шрифты
 const styrene = localFont({
@@ -34,47 +35,56 @@ const impact = localFont({
   display: 'swap',
 })
 
-// prod = goconf.ru (индексируем); dev / local / остальное — noindex
-const isProd = process.env.NEXT_PUBLIC_VERSION === 'prod';
+export async function generateMetadata() {
+  const isProd = await isProductionRequest();
 
-export const metadata = {
-  title: "GoConf",
-  description: "Конференции и события",
-  robots: {
-    index: isProd,
-    follow: isProd,
-    'max-image-preview': 'large',
-    'max-snippet': -1,
-    'max-video-preview': -1,
-  },
-	icons: {
-		icon: [
-			// PNG favicon
-			{
-				url: "/favicon.png",
-				type: "image/png",
-			},
-			// SVG favicon 120x120
-			{
-				url: "/favicon.svg",
-				type: "image/svg+xml",
-				sizes: "120x120",
-			},
-			// ICO favicon (традиционный)
-			{
-				url: "/favicon.ico",
-				sizes: "any",
-			},
-			],
-			apple: [
-			// Apple touch icon
-			{
-				url: "/apple-touch-icon.png",
-				type: "image/png",
-			},
-		],
-	},
-};
+  return {
+    title: "GoConf",
+    description: "Конференции и события",
+    // На prod — только indexable директивы, без noindex в исходнике.
+    // На dev/local — явный noindex.
+    robots: isProd
+      ? {
+          index: true,
+          follow: true,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+          'max-video-preview': -1,
+        }
+      : {
+          index: false,
+          follow: false,
+          googleBot: {
+            index: false,
+            follow: false,
+          },
+        },
+    icons: {
+      icon: [
+        {
+          url: "/favicon.png",
+          type: "image/png",
+        },
+        {
+          url: "/favicon.svg",
+          type: "image/svg+xml",
+          sizes: "120x120",
+        },
+        {
+          url: "/favicon.ico",
+          sizes: "any",
+        },
+      ],
+      apple: [
+        {
+          url: "/apple-touch-icon.png",
+          type: "image/png",
+        },
+      ],
+    },
+  };
+}
+
 export const viewport = {
 	width: 'device-width',
 	initialScale: 1,
@@ -83,8 +93,10 @@ export const viewport = {
 	viewportFit: 'cover'
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+	const isProd = await isProductionRequest();
 	const fontClasses = `${styrene.variable} ${impact.variable}`;
+
   return (
     <html lang="ru" className={fontClasses}>
 		<head>
@@ -113,12 +125,6 @@ export default function RootLayout({ children }) {
           }}
         />
 		<meta name="google-site-verification" content="n8asrtPoRx4M5v6xchKuoo5CVDG1xtUqjwFnI94r-K8" />
-		{!isProd &&
-			<>
-				<meta name="robots" content="noindex, nofollow" />
-				<meta name="googlebot" content="noindex, nofollow" />
-			</>
-		}
       </head>
       <body>
 		{isProd ? (

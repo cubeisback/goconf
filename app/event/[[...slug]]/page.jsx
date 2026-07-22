@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
 		if (!slug) return {};
 
 		const seo = await getEventSeo(slug);
-		const baseUrl = getBaseUrl();
+		const baseUrl = await getBaseUrl();
 
 		if (!seo) {
 			return {

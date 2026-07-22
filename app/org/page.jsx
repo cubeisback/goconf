@@ -14,7 +14,7 @@ export async function generateMetadata() {
     
     const data = await response.json();
     const seo = data.data?.seo;
-	const baseUrl = getBaseUrl();
+	const baseUrl = await getBaseUrl();
 
     return {
 		title: seo?.title || 'Организаторам',
