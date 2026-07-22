@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from "react";
 import PlusIcon from "@/public/images/svg/plus.svg";
 import MinusIcon from "@/public/images/svg/minus.svg";
-import { Form } from '@/components/Form';
+// import { Form } from '@/components/Form';
 import styled from "@emotion/styled";
 import axios from "axios";
 import { getApiUrl } from "@/functions/functions";
@@ -152,7 +152,7 @@ const FaqClient = ({ initialData }) => {
                 </Container>
             </PagePromo>
             
-            <Form />
+            {/* <Form /> */}
         </>
     );
 }

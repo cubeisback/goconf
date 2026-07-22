@@ -97,11 +97,10 @@ const DropdownInput = ({ full, options, placeholder, isSimple, handleFilterChang
     // }
     if(handleFilterChange) {
       handleFilterChange(keys[index], type);
-    //   console.log('asfas', keys[index], type)
     }
-    // console.log('values', values)
-	// console.log('pidr', value, index, keys[index])
-    incomeFunction(keys[index])
+    if (typeof incomeFunction === 'function') {
+      incomeFunction(keys[index]);
+    }
 	
   };
 

@@ -130,6 +130,7 @@ export default async function RootLayout({ children }) {
 		{isProd ? (
 			<ThemeWrapper>
 				{children}
+				<JivoChat />
 			</ThemeWrapper>
 		) : (
 			<noindex>

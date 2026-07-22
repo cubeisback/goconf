@@ -15,7 +15,8 @@ import { useDateStore } from '@/store/useDateStore';
 
 export const Filter = ({
 	full, 
-	setEvents, 
+	setEvents,
+	setPastEvents,
 	setTotal, 
 	setPageH1, 
 	setPageText, 
@@ -144,7 +145,7 @@ export const Filter = ({
             }
         );
         
-        console.log("Запрос из фильтра:", res.data);
+        console.log("Events filter response:", res.data);
         
         // Если это не первая страница, защищаем от дубликатов
         if (page > 1) {
@@ -155,7 +156,10 @@ export const Filter = ({
                 return Array.from(eventsMap.values());
             });
         } else {
-            setEvents(res.data.events);
+            setEvents(res.data.events || []);
+            if (setPastEvents) {
+                setPastEvents(res.data.past_events || []);
+            }
         }
         
         setTotal(res.data.total);

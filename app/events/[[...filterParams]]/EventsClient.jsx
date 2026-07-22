@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { Breadcrumbs, Container, EventsFilterBefore, EventsFilterTags, EventsPageText, EventsSearchInput, input, PagePromo, PageTitle } from "@/styles/ui";
 import { Filter } from '@/components/Filter/Filter';
 import { EventsFiltered } from '@/components/EventsFiltered';
-import { Form } from '@/components/Form';
+// import { Form } from '@/components/Form';
 import SearchIcon from "@/public/images/svg/search.svg";
 import { getApiUrl } from '@/functions/functions';
 
@@ -18,6 +18,7 @@ export default function EventsClient({ params, initialData }) {
   
   // Инициализируем состояния из initialData
   const [events, setEvents] = useState(initialData.initialEvents || []);
+  const [pastEvents, setPastEvents] = useState(initialData.initialPastEvents || []);
   const [total, setTotal] = useState(initialData.initialTotal || 0);
   const [pageH1, setPageH1] = useState(initialData.h1 || initialData.pageH1 || 'Все мероприятия');
   const [pageText, setPageText] = useState(initialData.pageText || '');
@@ -28,6 +29,17 @@ export default function EventsClient({ params, initialData }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [currentFilters, setCurrentFilters] = useState({});
+
+  const hasActiveFilters = Boolean(
+    query.trim() ||
+    currentFilters?.city ||
+    currentFilters?.format ||
+    currentFilters?.direction ||
+    currentFilters?.dateStart ||
+    currentFilters?.dateEnd ||
+    currentFilters?.isOnline ||
+    currentFilters?.isFree
+  );
 
   // Загружаем форматы только если их нет в initialData
   useEffect(() => {
@@ -54,6 +66,8 @@ export default function EventsClient({ params, initialData }) {
           load_page: nextPage
         }
       );
+
+      console.log('Events filter response (load more):', response.data);
       
       // Защита от дубликатов
       setEvents(prev => {
@@ -93,6 +107,8 @@ export default function EventsClient({ params, initialData }) {
             load_page: page,
           }
         );
+
+        console.log('Events search response:', response.data);
         
         if (loadMore) {
           // Защита от дубликатов при догрузке
@@ -103,7 +119,8 @@ export default function EventsClient({ params, initialData }) {
             return Array.from(eventsMap.values());
           });
         } else {
-          setEvents(response.data.events);
+          setEvents(response.data.events || []);
+          setPastEvents(response.data.past_events || []);
           setCurrentPage(1);
         }
         
@@ -121,6 +138,8 @@ export default function EventsClient({ params, initialData }) {
             load_page: page
           }
         );
+
+        console.log('Events filter response:', response.data);
         
         if (loadMore) {
           // Защита от дубликатов при догрузке
@@ -131,7 +150,8 @@ export default function EventsClient({ params, initialData }) {
             return Array.from(eventsMap.values());
           });
         } else {
-          setEvents(response.data.events);
+          setEvents(response.data.events || []);
+          setPastEvents(response.data.past_events || []);
           setCurrentPage(1);
         }
         
@@ -156,6 +176,8 @@ export default function EventsClient({ params, initialData }) {
             load_page: page
           }
         );
+
+        console.log('Events filter response (all):', response.data);
         
         if (loadMore) {
           // Защита от дубликатов при догрузке
@@ -166,7 +188,8 @@ export default function EventsClient({ params, initialData }) {
             return Array.from(eventsMap.values());
           });
         } else {
-          setEvents(response.data.events);
+          setEvents(response.data.events || []);
+          setPastEvents(response.data.past_events || []);
           setCurrentPage(1);
         }
         
@@ -230,6 +253,7 @@ export default function EventsClient({ params, initialData }) {
           <Filter
             full
             setEvents={setEvents}
+            setPastEvents={setPastEvents}
             setTotal={setTotal}
             setPageH1={setPageH1} // Обновляет H1 при фильтрации
             setPageText={setPageText} // Обновляет текст при фильтрации
@@ -256,14 +280,27 @@ export default function EventsClient({ params, initialData }) {
           </EventsFilterTags>
         </Container>
 
-        <EventsFiltered 
-          onPage 
-          events={events} 
-          total={total} 
-          loading={loading}
-          onLoadMore={handleLoadMore}
-          currentPage={currentPage}
-        />
+        {events?.length > 0 && (
+          <EventsFiltered 
+            onPage 
+            events={events} 
+            total={total} 
+            loading={loading}
+            onLoadMore={handleLoadMore}
+            currentPage={currentPage}
+          />
+        )}
+
+        {hasActiveFilters && pastEvents?.length > 0 && (
+          <EventsFiltered
+            onPage
+            events={pastEvents}
+            total={pastEvents.length}
+            title="Прошедшие мероприятия"
+            hideLoadMore
+            withTopPadding={!events?.length}
+          />
+        )}
 
         {/* Блок 2: Текстовый блок (данные пришли с сервера через initialData) */}
         {pageText && (
@@ -276,7 +313,7 @@ export default function EventsClient({ params, initialData }) {
           </div>
         )}
 
-        <Form />
+        {/* <Form /> */}
       </EventsFilterBefore>
     </>
   );

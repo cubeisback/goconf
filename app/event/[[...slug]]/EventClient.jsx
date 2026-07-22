@@ -6,7 +6,7 @@ import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 import { MainEventsSlider } from '@/components/MainEventsSlider';
-import { Form } from '@/components/Form';
+// import { Form } from '@/components/Form';
 import { MainEvents } from '@/components/MainEvents';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -35,6 +35,12 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 	const { ready, token } = useAuthReady();
 
 	const { slug } = useParams();
+
+	useEffect(() => {
+		if (pageInfo) {
+			console.log('Event page response:', pageInfo);
+		}
+	}, [pageInfo]);
 	
 	// Дозагружаем данные если initialData не было
   useEffect(() => {
@@ -43,6 +49,7 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
       axios
         .get(getApiUrl(`/backend/wp-json/events/v2/single/?slug=${slug}`))
         .then((response) => {
+		  console.log('Event page response:', response.data);
           setPageInfo(response.data);
           setShowNotFound(false);
           setIsLoading(false);
@@ -461,7 +468,7 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 			</div>
 
 			<MainEvents id={pageInfo && pageInfo.data.ID} similar={true} events={initialSimilarEvents || undefined} />
-			<Form />
+			{/* <Form /> */}
 
 			<ModalEvent isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} onReg={()=>setIsModalOpen2(true)} eventName={pageInfo && pageInfo.data.post_title} eventId={pageInfo && pageInfo.data.ID} />
 			<Modal isOpen={isModalOpen2} onClose={()=>setIsModalOpen2(false)} />

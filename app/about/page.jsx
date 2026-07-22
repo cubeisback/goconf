@@ -1,4 +1,3 @@
-
 import { getApiUrl } from '@/functions/functions';
 import AboutClient from './AboutClient';
 import { getBaseUrl } from '@/lib/getBaseUrl';
@@ -41,11 +40,17 @@ export async function generateMetadata() {
 }
 
 export default async function AboutPage() {
-  const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/about/"), {
-    next: { revalidate: 3600 },
-  });
+  const [aboutResponse, orgResponse] = await Promise.all([
+    fetch(getApiUrl("/backend/wp-json/pages/v2/about/"), {
+      next: { revalidate: 3600 },
+    }),
+    fetch(getApiUrl("/backend/wp-json/pages/v2/org/"), {
+      next: { revalidate: 3600 },
+    }),
+  ]);
 
-  const aboutData = response.ok ? await response.json() : null;
+  const aboutData = aboutResponse.ok ? await aboutResponse.json() : null;
+  const orgsData = orgResponse.ok ? await orgResponse.json() : null;
 
-  return <AboutClient initialData={aboutData} />;
+  return <AboutClient initialData={aboutData} orgsData={orgsData} />;
 }

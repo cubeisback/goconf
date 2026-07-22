@@ -144,6 +144,8 @@ export default async function EventPage({ params }) {
 		notFound();
 	}
 
+	console.log('Event page response:', eventData);
+
 	const [interestingEvents, similarEvents] = await Promise.all([
 		getInterestingEvents(),
 		getSimilarEvents(eventData?.data?.ID),
