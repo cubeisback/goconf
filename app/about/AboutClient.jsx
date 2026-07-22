@@ -1,12 +1,16 @@
 'use client'
 
-import { Breadcrumbs, Container, PagePromo, PageTitle } from "@/styles/ui";
-import { Form } from '@/components/Form';
+import { Breadcrumbs, Button, Container, OrgPageInfo, OrgPageInfoImg, OrgPageInfoPrice, OrgPageInfoText, OrgPageInfoTitle, OrgPageSubtitle, OrgPageTitle, OrgSubtitle, PagePromo, PageTitle } from "@/styles/ui";
+// import { Form } from '@/components/Form';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { getApiUrl } from '@/functions/functions';
 import axios from 'axios';
 import styled from "@emotion/styled";
+import { useAuthStore } from '@/store/useAuthStore';
+import { useRouter } from 'next/navigation';
+import { Modal } from '@/components/ui/Modal';
 
 const AboutSubtitle = styled.div`
 	text-align:center;
@@ -79,8 +83,13 @@ const SkeletonItem = styled.div`
 	}
 `
 
-const AboutClient = ({ initialData }) => {
+const AboutClient = ({ initialData, orgsData: initialOrgsData }) => {
+	const token = useAuthStore((state) => state.token);
+	const router = useRouter();
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
 	const [aboutItems, setAboutItems] = useState(initialData?.fields?.benefits || null);
+	const [orgsData, setOrgsData] = useState(initialOrgsData || null);
 	const [isLoading, setIsLoading] = useState(!initialData);
 
 	// Дозагружаем данные на клиенте только если их не передали с сервера
@@ -98,6 +107,17 @@ const AboutClient = ({ initialData }) => {
 				});
 		}
 	}, [initialData]);
+
+	useEffect(() => {
+		if (!initialOrgsData) {
+			axios
+				.get(getApiUrl('/backend/wp-json/pages/v2/org/'))
+				.then((response) => setOrgsData(response.data))
+				.catch(console.error);
+		}
+	}, [initialOrgsData]);
+
+	const interestingEvents = orgsData?.fields?.['interesting-events'];
 
     return (
         <>
@@ -132,10 +152,51 @@ const AboutClient = ({ initialData }) => {
 							</AboutItem>
 						))}
                     </AboutBlock>
+
+					<OrgSubtitle>После регистрации на нашем сайте вы можете бесплатно размещать неограниченное количество бизнес-мероприятий. Все события проходят предварительную модерацию и появляются в каталоге.</OrgSubtitle>
+
+					{interestingEvents && (
+						<>
+							<OrgPageTitle>Интересные события</OrgPageTitle>
+							<OrgPageSubtitle>Также, мы&nbsp;предлагаем дополнительные опции продвижения,<br/> которые помогут вывести ваше событие в&nbsp;топ и&nbsp;привлечь именно ту&nbsp;аудиторию, которая вам нужна.</OrgPageSubtitle>
+							<OrgPageInfo>
+								<div style={{flex: 1}}>
+									<OrgPageInfoTitle dangerouslySetInnerHTML={{ __html: interestingEvents.text_1 }}></OrgPageInfoTitle>
+									<OrgPageInfoText>{interestingEvents.text_2}</OrgPageInfoText>
+									<OrgPageInfoPrice>{interestingEvents.text_3}</OrgPageInfoPrice>
+									<Button 
+									onClick={()=>{
+											token ?
+												router.push('/cabinet/events')
+											:
+												setIsModalOpen(true)
+										}}
+									>
+										<p>
+											<span>Попробовать</span>
+											<span>Попробовать</span>
+										</p>
+									</Button>
+								</div>
+								<OrgPageInfoImg>
+									{interestingEvents?.image && 
+									<Image 
+										src={interestingEvents.image} 
+										alt="GoConf Организаторам"
+										width={661}
+										height={491}
+									/>
+									}
+								</OrgPageInfoImg>
+							</OrgPageInfo>
+						</>
+					)}
                 </Container>
             </AboutWrapper>
 
-            <Form />
+            {/* <Form /> */}
+
+			<Modal isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} />
         </>
     );
 }

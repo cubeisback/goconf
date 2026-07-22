@@ -50,11 +50,13 @@ async function getPageData(filterParams = []) {
     }
     
     const data = await response.json();
+    console.log('Events filter response (SSR):', data);
     
     return {
       h1: data.h1 || 'Все мероприятия', // Используем h1 из ответа API
       pageText: data.text || '',
       events: data.events || [],
+      pastEvents: data.past_events || [],
       total: data.total || 0,
       seo: data.seo || {},
       // Добавляем fallback на случай если h1 нет в ответе
@@ -67,6 +69,7 @@ async function getPageData(filterParams = []) {
       h1: 'Все мероприятия',
       pageText: '<p>Каталог мероприятий. Найдите подходящее событие для себя!</p>',
       events: [],
+      pastEvents: [],
       total: 0,
       seo: {},
       pageH1: 'Все мероприятия'
@@ -140,6 +143,7 @@ export default async function EventsPage({ params }) {
     
     // Данные для работы компонента
     initialEvents: pageData.events,
+    initialPastEvents: pageData.pastEvents,
     initialTotal: pageData.total,
     initialSeo: pageData.seo,
     

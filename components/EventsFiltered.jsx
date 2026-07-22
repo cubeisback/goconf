@@ -9,22 +9,34 @@ import { formatDate } from "../functions/functions";
 import Link from "next/link";
 
 
-export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadMore, currentPage }) => {
+export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadMore, currentPage, title, hideLoadMore, withTopPadding }) => {
     const theme = useTheme();
 
 	// Проверяем, все ли события загружены
   const allLoaded = events && total && events.length >= total;
+  const useCompactTop = title && !withTopPadding;
 
     return (
         <div className={css`
-            padding: 120px 0;
+            padding: ${useCompactTop ? '0 0 120px' : '120px 0'};
 
             @media(max-width: 575px) {
-                padding: 64px 0;
+                padding: ${useCompactTop ? '0 0 64px' : '64px 0'};
             }
         `}>
             <Container>
-                {!onPage && 
+                {title ? (
+				<div className={css`
+                    font-family: Impact;
+                    margin-bottom: 40px;
+                    font-size: 36px;
+                    line-height: 1.15;
+
+                    @media(max-width: 575px) {
+                        font-size: 32px;
+                    }
+				`}>{title}</div>
+                ) : !onPage && 
                 <div className={css`
                     text-align: center;
                     font-family: Impact;
@@ -245,15 +257,7 @@ export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadM
                     ))}
                 </div>
 
-                {!similar &&
-                // nearEvents && limit < total && (
-                //     <ButtonMore onClick={()=>setLimit(prev => prev+5)}>
-				// 		<p>
-				// 			<span>Показать еще +</span>
-				// 			<span>Показать еще +</span>
-				// 		</p>
-				// 	</ButtonMore>
-                // )
+                {!hideLoadMore && !similar &&
 				!allLoaded && events && events.length > 0 && (
         
 		<ShowMoreBtn

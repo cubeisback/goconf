@@ -638,7 +638,8 @@ export const UserEventsBlock = styled.div`
     gap: 32px;
 `;
 export const UserEventsBlockItem = styled.div`
-	border-radius: 0 0 28px 28px;
+	// border-radius: 0 0 28px 28px;
+	border-radius: 28px;
     background-color: #fff;
     box-shadow: 0px 196px 55px 0px rgba(0, 0, 0, 0.00), 0px 125px 50px 0px rgba(0, 0, 0, 0.01), 0px 71px 42px 0px rgba(0, 0, 0, 0.02), 0px 31px 31px 0px rgba(0, 0, 0, 0.03), 0px 8px 17px 0px rgba(0, 0, 0, 0.04);
     padding: 24px 32px;
@@ -870,6 +871,9 @@ export const OrgSubtitle = styled.div`
 	font-size: 20px;
 	line-height: 1.4;
 	text-align: center;
+
+	// time for about pageTitle
+	margin: 64px 0;
 
 	span {
 		color: #8553F9;

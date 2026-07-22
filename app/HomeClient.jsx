@@ -6,7 +6,7 @@ import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Formats } from '@/components/Formats/Formats';
 import { MainEventsSlider } from '@/components/MainEventsSlider';
-import { Form } from '@/components/Form';
+// import { Form } from '@/components/Form';
 import { FilterOnMain } from '@/components/Filter/FilterOnMain';
 import styled from "@emotion/styled";
 import { ConfirmRegistration } from '@/components/ConfirmRegistration';
@@ -197,7 +197,7 @@ export default function Main({ initialData }) {
 			
 			<MainEventsTest initialEvents={initialData?.nearEvents || []} initialTotal={initialData?.nearEventsTotal || 0} />
 
-			<Form />
+			{/* <Form /> */}
 
 			<Suspense fallback={null}>
 				<ConfirmRegistration />

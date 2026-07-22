@@ -177,7 +177,8 @@ const UserEvents = () => {
 		title: '',
 
 		promo: '',
-		tariff: 1,
+		// tariffOne «Расширенный» временно скрыт — было tariff: 1
+		tariff: 0,
 		pay: 'pay_tochka',
 
 		info: {
@@ -189,6 +190,7 @@ const UserEvents = () => {
 	});
 	
 	const [promotionPrice, setPromotionPrice] = useState();
+	// tariffOne «Расширенный» временно скрыт — раскомментировать getPromotionPrice при возврате
 	const getPromotionPrice = async() => {
 		try {
 			const response = await axios.get(
@@ -223,25 +225,29 @@ const UserEvents = () => {
 
 	useEffect(()=>{
 		getTariffs()
-		getPromotionPrice()
+		// tariffOne «Расширенный» временно скрыт
+		// getPromotionPrice()
 	}, [])
 
-	const [tariffOne, setTariffOne] = useState(true);
-	const [tariffTwo, setTariffTwo] = useState(false);
+	// tariffOne «Расширенный» временно скрыт — было useState(true)
+	const [tariffOne, setTariffOne] = useState(false);
+	// tariffTwo стал основным вместо tariffOne — было useState(false)
+	const [tariffTwo, setTariffTwo] = useState(true);
 
-	useEffect(()=>{
-		tariffOne 
-		? 
-		setDataForPayment((prev) => ({
-			...prev,
-			tariff: 1,
-		}))
-		:
-		setDataForPayment((prev) => ({
-			...prev,
-			tariff: 0,
-		}))
-	}, [tariffOne])
+	// tariffOne «Расширенный» временно скрыт — раскомментировать при возврате
+	// useEffect(()=>{
+	// 	tariffOne 
+	// 	? 
+	// 	setDataForPayment((prev) => ({
+	// 		...prev,
+	// 		tariff: 1,
+	// 	}))
+	// 	:
+	// 	setDataForPayment((prev) => ({
+	// 		...prev,
+	// 		tariff: 0,
+	// 	}))
+	// }, [tariffOne])
 
 	useEffect(()=>{
 		const promoMap = {
@@ -326,8 +332,11 @@ const UserEvents = () => {
 
 	const [isTariffActive, setIsTariffActive] = useState(false)
 	useEffect(()=>{
-		setTariffOne(isTariffActive ? false : true)
-		setTariffTwo(isTariffActive ? true : false)
+		// tariffOne «Расширенный» временно скрыт — было:
+		// setTariffOne(isTariffActive ? false : true)
+		// setTariffTwo(isTariffActive ? true : false)
+		setTariffOne(false)
+		setTariffTwo(true) // основной тариф вместо tariffOne
 	}, [isTariffActive])
 
 	const [orderUrError, setOrderUrError] = useState();
@@ -481,7 +490,7 @@ const UserEvents = () => {
 												`}><Loader /></div> // 🔹 прелоадер
 											) : events && events.length > 0 ? (events.map((event, index) => (
 					<div key={index}>
-					<UserEventsBlockHead $active={event.tariff.value === 'advanced' && true }>
+					{/* <UserEventsBlockHead $active={event.tariff.value === 'advanced' && true }>
 						<div style={{display: 'flex', alignItems: 'center', fontSize: 14}}>
 							{event.promotion && 
 							<div className={css`
@@ -577,7 +586,7 @@ const UserEvents = () => {
 							: <p style={{color: '#fff'}}>Полный доступ к&nbsp;возможностям</p>
 							}
 						</div>
-					</UserEventsBlockHead>
+					</UserEventsBlockHead> */}
 					<UserEventsBlockItem>
 						<UserEventsBlockItemTop>
 							{event.status === 'publish' ? 
@@ -1096,6 +1105,7 @@ const UserEvents = () => {
             <div className={css`margin-bottom: 16px; font-size: 20px; font-weight: 500; line-height: 1.4;`}>{dataForPayments.title}</div>
             {/* <div className={css`margin-bottom: 8px; color: #6C6C71; font-size: 14px;line-height: 1.16;`}>Опции для продвижения</div> */}
 			
+			{/* tariffOne «Расширенный» временно скрыт — раскомментировать блок ниже при возврате
 			{!isTariffActive && 
             <div className={css`display: flex; flex-direction: column;gap: 8px; margin-bottom: 24px;`}>
                 
@@ -1164,6 +1174,7 @@ const UserEvents = () => {
                 
             </div>
 			}
+			*/}
 			<div className={css`display: flex; flex-direction: column;gap: 8px; margin-bottom: 24px;`}>
                 
                     <div className={css`
@@ -1204,7 +1215,8 @@ const UserEvents = () => {
                     </div>
                 
             </div>
-			{!tariffOne && !tariffTwo && <div style={{fontSize: 12, color: '#FC1234', paddingLeft: 10, marginBottom: 8}}>Выберите хотя бы одну опцию</div>}
+			{/* tariffOne «Расширенный» временно скрыт — было: !tariffOne && !tariffTwo */}
+			{!tariffTwo && <div style={{fontSize: 12, color: '#FC1234', paddingLeft: 10, marginBottom: 8}}>Выберите хотя бы одну опцию</div>}
 			<div style={{display: 'flex', gap: 16}}>
 			<Button onClick={()=>setView(1)} className={cx(css`background-color:#fff!important;`)}>
 				<p>
@@ -1213,7 +1225,8 @@ const UserEvents = () => {
 				</p>
 			</Button>
             <Button onClick={()=>{
-				if(tariffOne || tariffTwo) {
+				// tariffOne «Расширенный» временно скрыт — было: if(tariffOne || tariffTwo)
+				if(tariffTwo) {
 					setView(3)
 				} 
 			}}>
@@ -1275,6 +1288,7 @@ const UserEvents = () => {
                     }
                 `}>
                     <div className={css`margin-bottom: 16px;color: #6C6C71;font-size: 14px;line-height: 1.16;`}>Промежуточный итог</div>
+					{/* tariffOne «Расширенный» временно скрыт — раскомментировать при возврате
 					{tariffOne && 
                     <div className={css`
                         display: flex;
@@ -1293,6 +1307,7 @@ const UserEvents = () => {
                         <div style={{flex: 1}} className={css`font-weight: 500;color: #8553F9;text-align: right;`}>{promotionPrice && Number(promotionPrice).toLocaleString('ru-RU')} руб.</div>
                     </div>
 					}
+					*/}
 					{tariffTwo && 
                     <div className={css`
                         display: flex;gap:16px;justify-content: space-between;margin-bottom: 24px;
@@ -1320,7 +1335,8 @@ const UserEvents = () => {
 						</div>
                     </div>
 					}
-                    <div style={{textAlign: 'right', borderTop: '1px solid #D7DADD', paddingTop: 24}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>{((tariffTwo ?Number(tariffsArray[costOption]?.new) : 0) + (tariffOne ? Number(promotionPrice) : 0)).toLocaleString('ru-RU')} руб.</span></div>
+					{/* tariffOne «Расширенный» временно скрыт — было: + (tariffOne ? Number(promotionPrice) : 0) */}
+                    <div style={{textAlign: 'right', borderTop: '1px solid #D7DADD', paddingTop: 24}}>Итого: <span className={css`font-weight: 500;color: #8553F9;`}>{(tariffTwo ? Number(tariffsArray[costOption]?.new) : 0).toLocaleString('ru-RU')} руб.</span></div>
                 </div>
                 <div className={css`color: #6C6C71;margin-bottom: 16px; font-size: 14px;line-height: 1.16;`}>Способ оплаты</div>
                 <div className={css`

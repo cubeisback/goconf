@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { css, cx } from '@emotion/css';
 import { Button, checkBox } from '@/styles/ui';
 import { useTheme } from '@emotion/react';
-import Google from "@/public/images/svg/google.svg";
+// Google auth временно скрыт — раскомментировать для возврата
+// import Google from "@/public/images/svg/google.svg";
 import Yandex from "@/public/images/svg/yandex.svg";
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import Link from 'next/link';
@@ -113,7 +114,7 @@ const modalSocials = css`
     justify-content: center;
     cursor: pointer;
 
-	&:nth-of-type(2) {
+	&:nth-of-type(1) {
 		background: #FC3F1D;
 		border-color: #FC3F1D;
 	}
@@ -213,10 +214,11 @@ export const Modal = ({ isOpen, onClose }) => {
 
 	// Redirect всегда на текущий домен (local / dev / prod), чтобы не уезжать на чужой env
 	const origin = typeof window !== 'undefined' ? window.location.origin : '';
-	const googleRedirectUri = origin
-		? `${origin}/social-login/google`
-		: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
-	const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=879586637662-g3v612m81nt3lktccs13nvfg63v8qoqg.apps.googleusercontent.com&redirect_uri=${encodeURIComponent(googleRedirectUri)}&response_type=code&scope=openid%20email%20profile&access_type=online&prompt=consent`;
+	// Google auth временно скрыт — раскомментировать для возврата
+	// const googleRedirectUri = origin
+	// 	? `${origin}/social-login/google`
+	// 	: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
+	// const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=879586637662-g3v612m81nt3lktccs13nvfg63v8qoqg.apps.googleusercontent.com&redirect_uri=${encodeURIComponent(googleRedirectUri)}&response_type=code&scope=openid%20email%20profile&access_type=online&prompt=consent`;
 
 	const yandexRedirectUri = origin
 		? `${origin}/social-login/yandex`
@@ -498,9 +500,11 @@ const ErrorWrapper = (message) => {
                 <div className={modalContentTop}>
                   <div className={modalTitle}>Войти</div>
                   <div className={modalSocials}>
+                    {/* Google auth временно скрыт
                     <a href={googleAuthUrl}>
 						<Google />
 					</a>
+                    */}
                     <a href={yandexAuthUrl}>
                       <Yandex />
                     </a>
@@ -603,9 +607,11 @@ const ErrorWrapper = (message) => {
                       <p>Зарегистрироваться через</p>
                     </div>
                     <div className={cx(modalSocials, css`margin-bottom: 0;`)}>
+						{/* Google auth временно скрыт
 						<a href={googleAuthUrl}>
 							<Google />
 						</a>
+						*/}
 						<a href={yandexAuthUrl}>
 							<Yandex />
 						</a>
@@ -653,9 +659,11 @@ const ErrorWrapper = (message) => {
                       <p>Зарегистрироваться через</p>
                     </div>
                     <div className={cx(modalSocials, css`margin-bottom: 0;`)}>
+						{/* Google auth временно скрыт
 						<a href={googleAuthUrl}>
 							<Google />
 						</a>
+						*/}
 						<a href={yandexAuthUrl}>
 							<Yandex />
 						</a>

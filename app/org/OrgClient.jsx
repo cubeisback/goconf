@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { Form } from '@/components/Form';
+// import { Form } from '@/components/Form';
 import { Breadcrumbs, Button, Container, OrgPageBlock, OrgPageBlockItem, OrgPageBlockItemList, OrgPageBlockItemPrice, OrgPageBlockItemTitle, OrgPageInfo, OrgPageInfoImg, OrgPageInfoPrice, OrgPageInfoText, OrgPageInfoTitle, OrgPagePadding, OrgPageSubtitle, OrgPageTitle, OrgSubtitle, PagePromo, PageTitle } from "@/styles/ui";
 import Link from 'next/link';
 import Image from 'next/image';
@@ -119,7 +119,7 @@ const OrgClient = ({ initialData }) => {
 				</Container>
 			</OrgPagePadding>
 
-			<Form />
+			{/* <Form /> */}
 
 			<Modal isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} />
 		</>

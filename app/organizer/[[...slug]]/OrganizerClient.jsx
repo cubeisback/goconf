@@ -3,7 +3,7 @@
 import { Breadcrumbs, Button, Container, PagePromo, PageTitle } from "@/styles/ui";
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
-import { Form } from '@/components/Form';
+// import { Form } from '@/components/Form';
 import { MainEvents } from '@/components/MainEvents';
 import { motion } from 'framer-motion';
 import Link from "next/link";
@@ -260,7 +260,7 @@ export default function OrganizerClient({ initialData, initialArchiveEvents }) {
 
       {archiveOrgEvents?.length > 0 && <MainEvents similar={true} archive={true} events={archiveOrgEvents} onPage={true} />}
 
-      <Form />
+      {/* <Form /> */}
     </>
   );
 }
