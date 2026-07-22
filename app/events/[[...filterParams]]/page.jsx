@@ -100,7 +100,7 @@ async function getFormatItems() {
 export async function generateMetadata({ params }) {
   const filterParams = params?.filterParams || [];
   const seo = await getSeoDataFromParams(filterParams);
-  const baseUrl = getBaseUrl();
+  const baseUrl = await getBaseUrl();
 
   let canonicalPath = '/events';
   if (filterParams.length > 0) {

@@ -31,7 +31,7 @@ export async function generateMetadata(props) {
   try {
     const { slug } = await props.params;
     const seo = await getOrganizatorSeo(slug);
-    const baseUrl = getBaseUrl();
+    const baseUrl = await getBaseUrl();
     
     if (!seo) {
       return {
