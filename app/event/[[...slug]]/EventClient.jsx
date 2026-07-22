@@ -155,14 +155,15 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 					<EventPageBlock>
 						<EventPageBlockMain>
 							<EventPageBlockMainImage>
-								{/* <img src={pageInfo.fields.anons?.url} alt="" /> */}
+								{pageInfo.fields.anons?.url ? (
 								<Image 
-									src={pageInfo.fields.anons?.url}
-									alt={pageInfo.data.post_title}
+									src={pageInfo.fields.anons.url}
+									alt={pageInfo.data.post_title || ''}
 									width={928}
 									height={342}
 									layout="responsive"
 								/>
+								) : null}
 							</EventPageBlockMainImage>
 
 							<EventPageArticle dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
@@ -252,17 +253,17 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 										max-height: 168px;
 									`} key={index}
 									onClick={() => {
-										console.log('hui1')
 										setActiveIndex(index);
 										setIsFullscreen(true);
-										console.log('hui2')
 									}}
 									>
+										{item.url ? (
 										<img src={item.url} alt="" style={{objectFit: 'cover', width: '100%', height: '100%', cursor: 'pointer', transition: '.3s ease-in-out'}} className={css`
 											
 											&:hover {
 												transform: scale(1.05);
 											}`} />
+										) : null}
 									</SwiperSlide>
 
 									))}
@@ -302,8 +303,9 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
                     height: "100%",
                   }}
                 >
+                  {(item.big || item.url) ? (
                   <img
-                    src={item.big}
+                    src={item.big || item.url}
                     alt=""
                     style={{
                       maxWidth: "100%",
@@ -311,6 +313,7 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
                       objectFit: "contain",
                     }}
                   />
+                  ) : null}
                 </div>
               </SwiperSlide>
             ))}
