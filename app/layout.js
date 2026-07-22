@@ -34,12 +34,15 @@ const impact = localFont({
   display: 'swap',
 })
 
+// prod = goconf.ru (индексируем); dev / local / остальное — noindex
+const isProd = process.env.NEXT_PUBLIC_VERSION === 'prod';
+
 export const metadata = {
   title: "GoConf",
   description: "Конференции и события",
   robots: {
-    index: process.env.NEXT_PUBLIC_VERSION === 'production' ? true : false,
-    follow: process.env.NEXT_PUBLIC_VERSION === 'production' ? true : false,
+    index: isProd,
+    follow: isProd,
     'max-image-preview': 'large',
     'max-snippet': -1,
     'max-video-preview': -1,
@@ -110,7 +113,7 @@ export default function RootLayout({ children }) {
           }}
         />
 		<meta name="google-site-verification" content="n8asrtPoRx4M5v6xchKuoo5CVDG1xtUqjwFnI94r-K8" />
-		{process.env.NEXT_PUBLIC_VERSION !== 'dev' &&
+		{!isProd &&
 			<>
 				<meta name="robots" content="noindex, nofollow" />
 				<meta name="googlebot" content="noindex, nofollow" />
@@ -118,17 +121,17 @@ export default function RootLayout({ children }) {
 		}
       </head>
       <body>
-		{process.env.NEXT_PUBLIC_VERSION !== 'dev' ? (
+		{isProd ? (
+			<ThemeWrapper>
+				{children}
+			</ThemeWrapper>
+		) : (
 			<noindex>
 				<ThemeWrapper>
 					{children}
+					<JivoChat />
 				</ThemeWrapper>
 			</noindex>
-		) : (
-			<ThemeWrapper>
-				{children}
-				<JivoChat />
-			</ThemeWrapper>
 		)}
       </body>
     </html>

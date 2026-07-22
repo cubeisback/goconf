@@ -13,16 +13,14 @@ export function GoogleSocialLogin() {
 	const router = useRouter();
 	const login = useAuthStore.getState().login;
 
-	// &uri=http://localhost:3000/social-login/google
-	// const localuri = process.env.NODE_ENV === 'development' ? '&uri=http://localhost:3000/social-login/google' : '&uri=https://dev.goconf.ru/social-login/google';
-	const localuri = `&uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI}`;
+	const redirectUri = typeof window !== 'undefined'
+		? `${window.location.origin}/social-login/google`
+		: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
 
 	useEffect(() => {
-		if (code) {
-		// fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=google_oauth&code=${code}${localuri}`)
+		if (code && redirectUri) {
 		axios
-			.get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=google_oauth&code=${code}${localuri}`))
-			// .then(res => res.json())
+			.get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=google_oauth&code=${code}&uri=${encodeURIComponent(redirectUri)}`))
 			.then(data => {
 				console.log('Ответ от WP:', data);
 				if (data.data.token) {
@@ -31,7 +29,7 @@ export function GoogleSocialLogin() {
 				}
 			});
 		}
-	}, [code]);
+	}, [code, redirectUri]);
 	
 	return (
 		<div style={{position: 'fixed', width: '100vw', height: '100vh', background: '#fff', zIndex: 99}}>

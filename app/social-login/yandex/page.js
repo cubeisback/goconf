@@ -13,14 +13,15 @@ export function YandexSocialLogin() {
 	const router = useRouter();
 	const login = useAuthStore.getState().login;
 	
-	// &uri=http://localhost:3000/social-login/yandex
+	// uri должен совпадать с redirect_uri, с которым уходили в OAuth
+	const redirectUri = typeof window !== 'undefined'
+		? `${window.location.origin}/social-login/yandex`
+		: process.env.NEXT_PUBLIC_YANDEX_REDIRECT_URI;
 
 	useEffect(() => {
-		if (code) {
-		// fetch(`https://dev.goconf.ru/wp-json/users/v2/login-social/?action=yandex_oauth&code=${code}`)
+		if (code && redirectUri) {
 		axios
-			.get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=yandex_oauth&code=${code}`))
-			// .then(res => res.json())
+			.get(getApiUrl(`/backend/wp-json/users/v2/login-social/?action=yandex_oauth&code=${code}&uri=${encodeURIComponent(redirectUri)}`))
 			.then(data => {
 				console.log('Ответ от WP:', data);
 				if (data.data.token) {
@@ -29,7 +30,7 @@ export function YandexSocialLogin() {
 				}
 			});
 		}
-	}, [code]);
+	}, [code, redirectUri]);
 	
 	return (
 		<div style={{position: 'fixed', width: '100vw', height: '100vh', background: '#fff', zIndex: 99}}>
