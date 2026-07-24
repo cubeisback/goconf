@@ -277,11 +277,11 @@ export const Header = () => {
               		<span>Мероприятия</span><span>Мероприятия</span>
 			  	</DoubleLink>
             </Link>
-            <Link href="/org">
+            {/* <Link href="/org">
 			<DoubleLink>
               <span>Организаторам</span><span>Организаторам</span>
 			  </DoubleLink>
-            </Link>
+            </Link> */}
             <Link href="/about">
 			<DoubleLink>
               <span>О&nbsp;проекте</span><span>О&nbsp;проекте</span>
@@ -525,11 +525,11 @@ export const Header = () => {
               <span>Мероприятия</span><span>Мероприятия</span>
 			  </DoubleLink>
             </Link>
-            <Link href="/org" onClick={()=>setBurger(false)}>
+            {/* <Link href="/org" onClick={()=>setBurger(false)}>
 			<DoubleLink>
               <span>Организаторам</span><span>Организаторам</span>
 			  </DoubleLink>
-            </Link>
+            </Link> */}
             <Link href="/about" onClick={()=>setBurger(false)}>
 			<DoubleLink>
               <span>О&nbsp;проекте</span><span>О&nbsp;проекте</span>

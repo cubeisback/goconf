@@ -1211,7 +1211,7 @@ const UserEvents = () => {
                         <div className={css`padding: 6px 0 16px;`}>Размещение в&nbsp;сквозном слайдере <b style={{fontWeight: 500}}>Интересные события</b></div>
 						
                         <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; margin-bottom: 8px; span {color: #191921; font-weight: 500;}`}>Срок размещения - <span>от 7 до 28 дней</span></p>
-                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; span {color: #191921; font-weight: 500;}}`}>Стоимость услуги - <span>от 5 000 рублей</span></p>
+                        <p className={css`font-size: 14px;line-height: 1.16; color: #6C6C71; span {color: #191921; font-weight: 500;}}`}>Стоимость услуги - <span>от 2 500 рублей</span></p>
                     </div>
                 
             </div>

@@ -31,7 +31,7 @@ export const Footer = () => {
 
   return (
     <FooterWrapper>
-        <div>© GoCONF 2025</div>
+        <div>© GoCONF {new Date().getFullYear()}</div>
         <div><a href="mailto:info@goconf.ru">info@goconf.ru</a></div>
 		<div><Link href="/offer">Публичная оферта</Link></div>
 		<div><Link href="/privacy">Политика конфиденциальности</Link></div>

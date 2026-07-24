@@ -721,7 +721,7 @@ const {
 										`}>
 											<p>ID виджета Timepad</p>
 											<input className={input} type="text" placeholder="ID виджета Timepad" name="timepad" value={dataEvent.timepad} onChange={handleDataEventChange} maxLength={7} />
-											<p className={css`color: #6C6C71;`}>Укажите ID&nbsp;вашего события на&nbsp;Timepad (это 7&nbsp;цифр в&nbsp;адресе события). Форма регистрации будет отображаться на&nbsp;странице события после активации тарифа <span className={css`color: #191921;`}>«Расширенный»</span>. Оплатить тариф можно в&nbsp;любой момент.</p>
+											<p className={css`color: #6C6C71;`}>Укажите ID&nbsp;вашего события на&nbsp;Timepad (это 7&nbsp;цифр в&nbsp;адресе события). Форма регистрации будет отображаться на&nbsp;странице события.</p>
 										</div>
 									</div>
 								</div>
