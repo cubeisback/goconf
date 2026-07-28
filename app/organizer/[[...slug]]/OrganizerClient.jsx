@@ -21,7 +21,8 @@ export default function OrganizerClient({ initialData, initialArchiveEvents }) {
   const [orgEvents, setOrgEvens] = useState(initialData?.["similar-events"] || []);
   const [isLoading, setIsLoading] = useState(!initialData);
   
-  const { slug } = useParams();
+  const { slug: slugParam } = useParams();
+  const slug = Array.isArray(slugParam) ? slugParam[0] : slugParam;
   const theme = useTheme();
 
   // Дозагружаем данные если initialData не было
@@ -31,7 +32,7 @@ export default function OrganizerClient({ initialData, initialArchiveEvents }) {
       
       // Загружаем основные данные организатора
       axios
-        .get(getApiUrl(`/backend/wp-json/org/v2/simple/?slug=${slug}`))
+        .get(getApiUrl(`/backend/wp-json/org/v2/simple/?slug=${encodeURIComponent(slug)}`))
         .then((response) => {
           setPageInfo(response.data);
           setOrgEvens(response.data["similar-events"] || []);
@@ -44,7 +45,7 @@ export default function OrganizerClient({ initialData, initialArchiveEvents }) {
 
       // Загружаем архивные события
       axios
-        .get(getApiUrl(`/backend/wp-json/org/v2/archive/?slug=${slug}`))
+        .get(getApiUrl(`/backend/wp-json/org/v2/archive/?slug=${encodeURIComponent(slug)}`))
         .then((response) => {
           setArchiveOrgEvens(response.data.items || []);
         })

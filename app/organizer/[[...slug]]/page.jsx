@@ -4,6 +4,11 @@ import { getBaseUrl } from '@/lib/getBaseUrl';
 import { getApiUrl } from '@/functions/functions';
 import { notFound } from 'next/navigation';
 
+function normalizeSlug(slug) {
+  if (!slug) return null;
+  return Array.isArray(slug) ? slug[0] : slug;
+}
+
 // Генерируем статические пути на этапе сборки
 export async function generateStaticParams() {
   try {
@@ -27,9 +32,17 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata(props) {
+export async function generateMetadata({ params }) {
   try {
-    const { slug } = await props.params;
+    const resolvedParams = await params;
+    const slug = normalizeSlug(resolvedParams?.slug);
+    if (!slug) {
+      return {
+        title: 'Организатор',
+        description: 'Описание организатора',
+      };
+    }
+
     const seo = await getOrganizatorSeo(slug);
     const baseUrl = await getBaseUrl();
     
@@ -66,7 +79,7 @@ export async function generateMetadata(props) {
 async function getOrganizerData(slug) {
   try {
     const response = await fetch(
-      getApiUrl(`/backend/wp-json/org/v2/simple/?slug=${slug}`),
+      getApiUrl(`/backend/wp-json/org/v2/simple/?slug=${encodeURIComponent(slug)}`),
       { 
         cache: 'force-cache',
         next: { revalidate: 3600 }
@@ -87,7 +100,7 @@ async function getOrganizerData(slug) {
 async function getArchiveEvents(slug) {
   try {
     const response = await fetch(
-      getApiUrl(`/backend/wp-json/org/v2/archive/?slug=${slug}`),
+      getApiUrl(`/backend/wp-json/org/v2/archive/?slug=${encodeURIComponent(slug)}`),
       { 
         cache: 'force-cache',
         next: { revalidate: 3600 }
@@ -106,7 +119,12 @@ async function getArchiveEvents(slug) {
 }
 
 export default async function OrganizerPage({ params }) {
-  const { slug } = params;
+  const resolvedParams = await params;
+  const slug = normalizeSlug(resolvedParams?.slug);
+
+  if (!slug) {
+    notFound();
+  }
   
   // Загружаем данные на сервере
   const [organizerData, archiveData] = await Promise.all([
@@ -123,7 +141,7 @@ export default async function OrganizerPage({ params }) {
   return (
     <OrganizerClient 
       initialData={organizerData}
-      initialArchiveEvents={archiveData.items}
+      initialArchiveEvents={archiveData?.items || []}
     />
   );
 }
