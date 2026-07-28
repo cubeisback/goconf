@@ -1,35 +1,22 @@
 import { getOrganizatorSeo } from '@/lib/getOrganizatorSeo';
 import OrganizerClient from './OrganizerClient';
-import { getBaseUrl } from '@/lib/getBaseUrl';
 import { getApiUrl } from '@/functions/functions';
 import { notFound } from 'next/navigation';
+
+// Не SSG: metadata/layout используют headers(), из-за этого на проде был 500
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
 
 function normalizeSlug(slug) {
   if (!slug) return null;
   return Array.isArray(slug) ? slug[0] : slug;
 }
 
-// Генерируем статические пути на этапе сборки
-export async function generateStaticParams() {
-  try {
-    const response = await fetch(getApiUrl('/backend/wp-json/org/v2/list/'), {
-      next: { revalidate: 3600 }
-    });
-    
-    if (!response.ok) {
-      return [];
-    }
-    
-    const data = await response.json();
-    
-    // Преобразуем данные в массив slug'ов
-    return data.map(organizer => ({
-      slug: [organizer.slug || organizer.id],
-    }));
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
+function getMetadataBase() {
+  const version = process.env.NEXT_PUBLIC_VERSION;
+  if (version === 'dev') return 'https://dev.goconf.ru';
+  if (version === 'local') return 'http://localhost:3000';
+  return 'https://goconf.ru';
 }
 
 export async function generateMetadata({ params }) {
@@ -44,14 +31,7 @@ export async function generateMetadata({ params }) {
     }
 
     const seo = await getOrganizatorSeo(slug);
-    const baseUrl = await getBaseUrl();
-    
-    if (!seo) {
-      return {
-        title: 'Организатор',
-        description: 'Описание организатора',
-      };
-    }
+    const baseUrl = getMetadataBase();
     
     return {
       title: seo?.title || 'Организатор',
@@ -75,15 +55,11 @@ export async function generateMetadata({ params }) {
   }
 }
 
-// Получаем данные на сервере
 async function getOrganizerData(slug) {
   try {
     const response = await fetch(
       getApiUrl(`/backend/wp-json/org/v2/simple/?slug=${encodeURIComponent(slug)}`),
-      { 
-        cache: 'force-cache',
-        next: { revalidate: 3600 }
-      }
+      { cache: 'no-store' }
     );
     
     if (!response.ok) {
@@ -101,10 +77,7 @@ async function getArchiveEvents(slug) {
   try {
     const response = await fetch(
       getApiUrl(`/backend/wp-json/org/v2/archive/?slug=${encodeURIComponent(slug)}`),
-      { 
-        cache: 'force-cache',
-        next: { revalidate: 3600 }
-      }
+      { cache: 'no-store' }
     );
     
     if (!response.ok) {
@@ -119,29 +92,31 @@ async function getArchiveEvents(slug) {
 }
 
 export default async function OrganizerPage({ params }) {
-  const resolvedParams = await params;
-  const slug = normalizeSlug(resolvedParams?.slug);
+  try {
+    const resolvedParams = await params;
+    const slug = normalizeSlug(resolvedParams?.slug);
 
-  if (!slug) {
-    notFound();
+    if (!slug) {
+      notFound();
+    }
+    
+    const [organizerData, archiveData] = await Promise.all([
+      getOrganizerData(slug),
+      getArchiveEvents(slug)
+    ]);
+    
+    if (!organizerData) {
+      notFound();
+    }
+    
+    return (
+      <OrganizerClient 
+        initialData={organizerData}
+        initialArchiveEvents={archiveData?.items || []}
+      />
+    );
+  } catch (error) {
+    console.error('OrganizerPage error:', error);
+    throw error;
   }
-  
-  // Загружаем данные на сервере
-  const [organizerData, archiveData] = await Promise.all([
-    getOrganizerData(slug),
-    getArchiveEvents(slug)
-  ]);
-  
-  // Если основные данные организатора не найдены, показываем 404
-  if (!organizerData) {
-    notFound();
-  }
-  
-  // Передаем данные клиентскому компоненту
-  return (
-    <OrganizerClient 
-      initialData={organizerData}
-      initialArchiveEvents={archiveData?.items || []}
-    />
-  );
 }
