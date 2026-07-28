@@ -1,6 +1,5 @@
 import { getBaseUrl } from '@/lib/getBaseUrl';
 import EventsClient from './EventsClient';
-import { getSeoDataFromParams } from '@/lib/getSeoData';
 import { getApiUrl } from '@/functions/functions';
 
 // Функция для получения данных страницы (SEO + текст + h1)
@@ -101,16 +100,29 @@ async function getFormatItems() {
 }
 
 export async function generateMetadata({ params }) {
-  const filterParams = params?.filterParams || [];
-  const seo = await getSeoDataFromParams(filterParams);
+  const resolvedParams = await params;
+  const filterParams = resolvedParams?.filterParams || [];
+  const pageData = await getPageData(filterParams);
+  const seo = pageData.seo || {};
   const baseUrl = await getBaseUrl();
 
   let canonicalPath = '/events';
   if (filterParams.length > 0) {
     canonicalPath += '/' + filterParams.join('/');
-  } else {
-    canonicalPath += '';
   }
+
+  // Страницы с применённым фильтром: пустые — noindex, с событиями — index
+  const hasFilter = filterParams.length > 0;
+  const hasEvents =
+    (pageData.total || 0) > 0 ||
+    (pageData.events?.length || 0) > 0 ||
+    (pageData.pastEvents?.length || 0) > 0;
+
+  const robots = hasFilter
+    ? hasEvents
+      ? { index: true, follow: true }
+      : { index: false, follow: false }
+    : undefined;
 
   return {
     title: seo?.title || 'Все мероприятия',
@@ -124,11 +136,13 @@ export async function generateMetadata({ params }) {
       description: seo?.description,
       url: canonicalPath,
     },
+    ...(robots ? { robots } : {}),
   };
 }
 
 export default async function EventsPage({ params }) {
-  const filterParams = params?.filterParams || [];
+  const resolvedParams = await params;
+  const filterParams = resolvedParams?.filterParams || [];
   
   // Получаем данные на сервере
   const pageData = await getPageData(filterParams);
@@ -152,5 +166,5 @@ export default async function EventsPage({ params }) {
     formatItems,
   };
   
-  return <EventsClient params={params} initialData={initialData} />;
+  return <EventsClient params={resolvedParams} initialData={initialData} />;
 }
