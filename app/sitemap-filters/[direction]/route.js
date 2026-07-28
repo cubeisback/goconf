@@ -33,7 +33,7 @@ export async function GET(request, { params }) {
   try {
     const apiUrl = getApiUrl(`/backend/wp-json/sitemap/v2/filters?direction=${direction}`);
     const res = await fetch(apiUrl, {
-      next: { revalidate: 604800 } // 7 дней
+      cache: 'no-store',
     });
     
     if (!res.ok) throw new Error(`API error: ${res.status}`);
@@ -58,7 +58,7 @@ export async function GET(request, { params }) {
     return new NextResponse(sitemapXml, {
       headers: {
         'Content-Type': 'application/xml',
-        'Cache-Control': 'public, s-maxage=604800',
+        'Cache-Control': 'no-store, max-age=0',
       },
     });
     

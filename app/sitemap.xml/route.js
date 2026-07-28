@@ -31,7 +31,7 @@ export async function GET() {
     // Получаем индекс sitemap из WordPress
     const apiUrl = getApiUrl('/backend/wp-json/sitemap/v2/index/');
     const res = await fetch(apiUrl, {
-      next: { revalidate: 3600 } // Кэш на 1 час
+      cache: 'no-store', // сброс кеша — всегда свежие данные с WP
     });
     
     if (!res.ok) {
@@ -98,7 +98,7 @@ export async function GET() {
     return new NextResponse(sitemapIndexXml, {
       headers: {
         'Content-Type': 'application/xml',
-        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=1800',
+        'Cache-Control': 'no-store, max-age=0',
       },
     });
     
