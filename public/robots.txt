@@ -1,0 +1,89 @@
+User-agent: *
+Disallow: /backend/wp-admin/
+Disallow: /backend/wp-includes/
+Disallow: /backend/wp-content/
+Disallow: /backend/xmlrpc.php
+Disallow: /backend/
+Disallow: /cabinet
+Disallow: /social-login/
+Allow: /
+Allow: /backend/wp-json/
+Allow: /backend/wp-content/uploads/
+Allow: /backend/*.png
+Allow: /backend/*.jpg
+Allow: /backend/*.jpeg
+Allow: /backend/*.webp
+Allow: /backend/*.svg
+
+
+User-agent: GoogleBot
+Disallow: /backend/wp-admin/
+Disallow: /backend/wp-includes/
+Disallow: /backend/wp-content/
+Disallow: /backend/xmlrpc.php
+Disallow: /backend/
+Disallow: /cabinet
+Allow: /backend/wp-json/
+Allow: /backend/wp-content/uploads/
+Allow: /backend/*.png
+Allow: /backend/*.jpg
+Allow: /backend/*.jpeg
+Allow: /backend/*.webp
+Allow: /backend/*.svg
+Allow: /backend/wp-admin/admin-ajax.php
+
+User-agent: Yandex
+Disallow: /backend/wp-admin/
+Disallow: /backend/wp-includes/
+Disallow: /backend/wp-content/
+Disallow: /backend/xmlrpc.php
+Disallow: /backend/
+Disallow: /cabinet
+Allow: /backend/wp-json/
+Allow: /backend/wp-content/uploads/
+Allow: /backend/*.png
+Allow: /backend/*.jpg
+Allow: /backend/*.jpeg
+Allow: /backend/*.webp
+Allow: /backend/*.svg
+Allow: /backend/wp-admin/admin-ajax.php
+Clean-param: utm_source&utm_medium&utm_campaign
+Clean-param: openstat
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: BingAI
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: ai-seo
+Allow: /
+
+Sitemap: https://goconf.ru/sitemap.xml
