@@ -635,7 +635,7 @@ const UserEvents = () => {
 						>{event.title && event.title}</Link>
 						{!event.online &&
 							event.cost > 0 && 
-								<div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>{formatPrice(event.cost)} руб.</div> 
+								<div className={css`margin-bottom: 24px;color: #8553F9;font-weight: 500;`}>{event.cost_from ? 'от ' : ''}{formatPrice(event.cost)} руб.</div> 
 						}
 						<div className={css`
                                 display: flex;flex-direction: column;gap: 8px;margin-bottom: 24px;

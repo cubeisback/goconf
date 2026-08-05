@@ -1176,6 +1176,7 @@ flex: 1;
 `;
 export const EventPageBlockMainImage = styled.div`
 // height: 400px;
+								position: relative;
 								overflow: hidden;
 								margin-bottom: 40px;
 								@media(max-width: 575px) {
@@ -1186,6 +1187,29 @@ export const EventPageBlockMainImage = styled.div`
 								width: 100%; 
 								border-radius: 16px;
 								}
+`;
+export const EventPagePastBadge = styled.div`
+	position: absolute;
+	top: 16px;
+	left: 16px;
+	z-index: 1;
+	padding: 8px 14px;
+	border-radius: 10px;
+	background-color: rgba(108, 108, 113, 0.72);
+	backdrop-filter: blur(5px);
+	-webkit-backdrop-filter: blur(5px);
+	color: #fff;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.2;
+	width: max-content;
+
+	@media(max-width: 575px) {
+		top: 12px;
+		left: 12px;
+		padding: 6px 12px;
+		font-size: 14px;
+	}
 `;
 export const EventPageBlockInfo = styled.div`
 flex: 0 1 296px;

@@ -9,11 +9,13 @@ import { formatDate } from "../functions/functions";
 import Link from "next/link";
 
 
-export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadMore, currentPage, title, hideLoadMore, withTopPadding }) => {
+export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadMore, currentPage, title, hideLoadMore, withTopPadding, hasMore }) => {
     const theme = useTheme();
 
 	// Проверяем, все ли события загружены
-  const allLoaded = events && total && events.length >= total;
+  const allLoaded = typeof hasMore === 'boolean'
+    ? !hasMore
+    : (events && total && events.length >= total);
   const useCompactTop = title && !withTopPadding;
 
     return (

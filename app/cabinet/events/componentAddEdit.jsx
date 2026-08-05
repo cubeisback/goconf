@@ -98,6 +98,7 @@ const EventsAddEdit = () => {
 		city: {},
 		content: '',
 		cost: '',
+		cost_from: false,
 		cover: {},
 		format: [],
 		free: false,
@@ -195,6 +196,14 @@ const EventsAddEdit = () => {
 		setDataEvent((prev) => ({
 			...prev,
 			free: value,
+			...(value ? { cost_from: false } : {}),
+		}));
+	};
+
+	const handleDataEventChangeCostFrom = (value) => {
+		setDataEvent((prev) => ({
+			...prev,
+			cost_from: value,
 		}));
 	};
 
@@ -1121,10 +1130,13 @@ const {
 							<div>
 								<p>Стоимость участия</p>
 								{!dataEvent?.free &&
-									<div className={css`display: flex;gap:8px;align-items: center;`}>
-										<input className={input} type="number" placeholder="Введите стоимость" name="cost" value={dataEvent.cost ? dataEvent.cost : ''} onChange={handleDataEventChange} min="0" />
-										<p className={css`color: #47474D;`}>руб.</p>
-									</div>
+									<>
+										<div className={css`display: flex;gap:8px;align-items: center;`}>
+											<input className={input} type="number" placeholder="Введите стоимость" name="cost" value={dataEvent.cost ? dataEvent.cost : ''} onChange={handleDataEventChange} min="0" />
+											<p className={css`color: #47474D;`}>руб.</p>
+										</div>
+										<AnimatedSwitch label="Цена от" initialChecked={!!dataEvent?.cost_from} incomeFunction={handleDataEventChangeCostFrom} />
+									</>
 								}
 								
 								<AnimatedSwitch label="Бесплатное участие" initialChecked={dataEvent?.free} incomeFunction={handleDataEventChangeFree} />
