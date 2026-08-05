@@ -19,6 +19,7 @@ export default function EventsClient({ params, initialData }) {
   // Инициализируем состояния из initialData
   const [events, setEvents] = useState(initialData.initialEvents || []);
   const [pastEvents, setPastEvents] = useState(initialData.initialPastEvents || []);
+  const [hasMorePastEvents, setHasMorePastEvents] = useState(!!initialData.initialHasMorePastEvents);
   const [total, setTotal] = useState(initialData.initialTotal || 0);
   const [pageH1, setPageH1] = useState(initialData.h1 || initialData.pageH1 || 'Все мероприятия');
   const [pageText, setPageText] = useState(initialData.pageText || '');
@@ -27,7 +28,9 @@ export default function EventsClient({ params, initialData }) {
   const [query, setQuery] = useState('');
   const [formatItems, setFormatItems] = useState(initialData.formatItems || []);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pastCurrentPage, setPastCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [pastLoading, setPastLoading] = useState(false);
   const [currentFilters, setCurrentFilters] = useState({});
 
   const hasActiveFilters = Boolean(
@@ -121,6 +124,8 @@ export default function EventsClient({ params, initialData }) {
         } else {
           setEvents(response.data.events || []);
           setPastEvents(response.data.past_events || []);
+          setHasMorePastEvents(!!response.data.has_more_past_events);
+          setPastCurrentPage(1);
           setCurrentPage(1);
         }
         
@@ -152,6 +157,8 @@ export default function EventsClient({ params, initialData }) {
         } else {
           setEvents(response.data.events || []);
           setPastEvents(response.data.past_events || []);
+          setHasMorePastEvents(!!response.data.has_more_past_events);
+          setPastCurrentPage(1);
           setCurrentPage(1);
         }
         
@@ -190,6 +197,8 @@ export default function EventsClient({ params, initialData }) {
         } else {
           setEvents(response.data.events || []);
           setPastEvents(response.data.past_events || []);
+          setHasMorePastEvents(!!response.data.has_more_past_events);
+          setPastCurrentPage(1);
           setCurrentPage(1);
         }
         
@@ -218,6 +227,42 @@ export default function EventsClient({ params, initialData }) {
       handleSearchSubmit(null, nextPage, true);
     }
   }, [currentPage, query, currentFilters, handleSearchSubmit, handleLoadMoreWithFilters]);
+
+  const handleLoadMorePast = useCallback(async () => {
+    if (pastLoading || !hasMorePastEvents) return;
+
+    const nextPage = pastCurrentPage + 1;
+    setPastLoading(true);
+
+    try {
+      const response = await axios.post(
+        getApiUrl("/backend/wp-json/events/v2/past/"),
+        {
+          ...currentFilters,
+          ...(query.trim() ? { search: query.trim() } : {}),
+          load_page: nextPage,
+        }
+      );
+
+      console.log('Events past response (load more):', response.data);
+
+      const newItems = response.data.past_events || response.data.events || [];
+
+      setPastEvents(prev => {
+        const eventsMap = new Map();
+        prev.forEach(event => eventsMap.set(event.id, event));
+        newItems.forEach(event => eventsMap.set(event.id, event));
+        return Array.from(eventsMap.values());
+      });
+
+      setHasMorePastEvents(!!response.data.has_more_past_events);
+      setPastCurrentPage(nextPage);
+    } catch (error) {
+      console.error('Ошибка при загрузке прошедших мероприятий:', error);
+    } finally {
+      setPastLoading(false);
+    }
+  }, [pastLoading, hasMorePastEvents, pastCurrentPage, currentFilters, query]);
 
   return (
     <>
@@ -254,6 +299,8 @@ export default function EventsClient({ params, initialData }) {
             full
             setEvents={setEvents}
             setPastEvents={setPastEvents}
+            setHasMorePastEvents={setHasMorePastEvents}
+            setPastCurrentPage={setPastCurrentPage}
             setTotal={setTotal}
             setPageH1={setPageH1} // Обновляет H1 при фильтрации
             setPageText={setPageText} // Обновляет текст при фильтрации
@@ -297,7 +344,9 @@ export default function EventsClient({ params, initialData }) {
             events={pastEvents}
             total={pastEvents.length}
             title="Прошедшие мероприятия"
-            hideLoadMore
+            loading={pastLoading}
+            onLoadMore={handleLoadMorePast}
+            hasMore={hasMorePastEvents}
             withTopPadding={!events?.length}
           />
         )}

@@ -1,6 +1,6 @@
 "use client"
 
-import { Breadcrumbs, Button, Container, EventPage, EventPageArticle, EventPageBlock, EventPageBlockInfo, EventPageBlockInfoBlock, EventPageBlockInfoIsYour, EventPageBlockInfoItem, EventPageBlockInfoItemPurple, EventPageBlockMain, EventPageBlockMainImage, PagePromo, PageTitle, pageTitle, PromoThemes } from "@/styles/ui";
+import { Breadcrumbs, Button, Container, EventPage, EventPageArticle, EventPageBlock, EventPageBlockInfo, EventPageBlockInfoBlock, EventPageBlockInfoIsYour, EventPageBlockInfoItem, EventPageBlockInfoItemPurple, EventPageBlockMain, EventPageBlockMainImage, EventPagePastBadge, PagePromo, PageTitle, pageTitle, PromoThemes } from "@/styles/ui";
 import SliderArrow from "@/public/images/svg/slider_arrow.svg";
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
@@ -164,6 +164,9 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 									layout="responsive"
 								/>
 								) : null}
+								{pageInfo.fields?.past && (
+									<EventPagePastBadge>Прошедшее событие</EventPagePastBadge>
+								)}
 							</EventPageBlockMainImage>
 
 							<EventPageArticle dangerouslySetInnerHTML={{ __html: pageInfo.data.post_content }} />
@@ -401,7 +404,11 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 							
 							<EventPageBlockInfoItem>
 								<span>Стоимость</span>
-								<EventPageBlockInfoItemPurple>{pageInfo.fields.free ? 'Бесплатно' : formatPrice(pageInfo.fields.events_cost) + ' руб.'}</EventPageBlockInfoItemPurple>
+								<EventPageBlockInfoItemPurple>
+									{pageInfo.fields.free
+										? 'Бесплатно'
+										: `${pageInfo.fields.cost_from ? 'от ' : ''}${formatPrice(pageInfo.fields.events_cost)} руб.`}
+								</EventPageBlockInfoItemPurple>
 							</EventPageBlockInfoItem>
 							{pageInfo.formats && 
 							<EventPageBlockInfoItem>

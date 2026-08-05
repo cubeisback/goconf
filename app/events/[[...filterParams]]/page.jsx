@@ -56,6 +56,7 @@ async function getPageData(filterParams = []) {
       pageText: data.text || '',
       events: data.events || [],
       pastEvents: data.past_events || [],
+      hasMorePastEvents: !!data.has_more_past_events,
       total: data.total || 0,
       seo: data.seo || {},
       // Добавляем fallback на случай если h1 нет в ответе
@@ -69,6 +70,7 @@ async function getPageData(filterParams = []) {
       pageText: '<p>Каталог мероприятий. Найдите подходящее событие для себя!</p>',
       events: [],
       pastEvents: [],
+      hasMorePastEvents: false,
       total: 0,
       seo: {},
       pageH1: 'Все мероприятия'
@@ -158,6 +160,7 @@ export default async function EventsPage({ params }) {
     // Данные для работы компонента
     initialEvents: pageData.events,
     initialPastEvents: pageData.pastEvents,
+    initialHasMorePastEvents: pageData.hasMorePastEvents,
     initialTotal: pageData.total,
     initialSeo: pageData.seo,
     

@@ -17,6 +17,8 @@ export const Filter = ({
 	full, 
 	setEvents,
 	setPastEvents,
+	setHasMorePastEvents,
+	setPastCurrentPage,
 	setTotal, 
 	setPageH1, 
 	setPageText, 
@@ -159,6 +161,12 @@ export const Filter = ({
             setEvents(res.data.events || []);
             if (setPastEvents) {
                 setPastEvents(res.data.past_events || []);
+            }
+            if (setHasMorePastEvents) {
+                setHasMorePastEvents(!!res.data.has_more_past_events);
+            }
+            if (setPastCurrentPage) {
+                setPastCurrentPage(1);
             }
         }
         
