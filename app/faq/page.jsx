@@ -5,7 +5,7 @@ import { getApiUrl } from '@/functions/functions';
 export async function generateMetadata() {
   try {
     const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/faq/"), {
-      next: { revalidate: 3600 }
+      next: { revalidate: 60 }
     });
     
     if (!response.ok) {
@@ -40,7 +40,7 @@ export async function generateMetadata() {
 
 export default async function FaqPage() {
   const response = await fetch(getApiUrl("/backend/wp-json/pages/v2/faq/"), {
-    next: { revalidate: 3600 },
+    next: { revalidate: 60 },
   });
 
   const faqData = response.ok ? await response.json() : null;
