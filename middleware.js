@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { isProdHost } from '@/lib/getBaseUrl';
+import { allowsIndexing } from '@/lib/getBaseUrl';
 
 /**
- * Жёсткий запрет индексации на любом non-prod хосте
+ * Жёсткий запрет индексации на non-prod
  * (meta robots может не попасть в HTML из-за статики/оверрайдов страниц).
  */
 export function middleware(request) {
@@ -11,7 +11,7 @@ export function middleware(request) {
     request.headers.get('host') ||
     '';
 
-  if (isProdHost(host)) {
+  if (allowsIndexing(host)) {
     return NextResponse.next();
   }
 

@@ -5,6 +5,9 @@ import localFont from 'next/font/local'
 import { isProductionRequest } from '@/lib/getBaseUrl';
 import { getRobotsMetadata } from '@/lib/seoIndexing';
 
+// Metadata/robots считаем на каждый запрос по Host (иначе на dev может запечься prod index)
+export const dynamic = 'force-dynamic';
+
 // Локальные шрифты
 const styrene = localFont({
   src: [
@@ -80,10 +83,14 @@ export const viewport = {
 
 export default async function RootLayout({ children }) {
 	const fontClasses = `${styrene.variable} ${impact.variable}`;
+  const isProd = await isProductionRequest();
 
   return (
     <html lang="ru" className={fontClasses}>
 		<head>
+        {!isProd && (
+          <meta name="robots" content="noindex, nofollow" />
+        )}
         <Script
           id="yandex-metrika"
           strategy="afterInteractive"
