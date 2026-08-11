@@ -1,6 +1,11 @@
-import { isProductionRequest } from '@/lib/getBaseUrl';
+import {
+  getRequestHost,
+  isProductionRequest,
+  logSeoGuard,
+  SEO_GUARD_BUILD,
+} from '@/lib/getBaseUrl';
 
-// Disallow на local + dev.goconf.ru; боевой robots — только на goconf.ru
+// Disallow на local + dev; боевой robots — только production-сборка
 const NON_PROD_ROBOTS = `User-agent: *
 Disallow: /
 `;
@@ -99,12 +104,19 @@ Sitemap: https://goconf.ru/sitemap.xml
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  const host = await getRequestHost();
   const isProd = await isProductionRequest();
+  const version = process.env.NEXT_PUBLIC_VERSION || '(empty)';
+
+  logSeoGuard('robots.txt', host);
 
   return new Response(isProd ? PROD_ROBOTS : NON_PROD_ROBOTS, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
       'Cache-Control': 'no-store, must-revalidate',
+      'X-GoConf-Seo-Guard': SEO_GUARD_BUILD,
+      'X-GoConf-Version': version,
+      'X-GoConf-Robots-Mode': isProd ? 'allow-prod' : 'disallow-all',
     },
   });
 }
