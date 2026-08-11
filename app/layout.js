@@ -2,7 +2,7 @@ import JivoChat from "@/components/JivoChat/JivoChat";
 import ThemeWrapper from "./theme-wrapper";
 import Script from "next/script";
 import localFont from 'next/font/local'
-import { isProductionRequest } from '@/lib/getBaseUrl';
+import { getRequestHost, isProductionRequest, logSeoGuard } from '@/lib/getBaseUrl';
 import { getRobotsMetadata } from '@/lib/seoIndexing';
 
 // Metadata/robots считаем на каждый запрос по Host (иначе на dev может запечься prod index)
@@ -83,7 +83,9 @@ export const viewport = {
 
 export default async function RootLayout({ children }) {
 	const fontClasses = `${styrene.variable} ${impact.variable}`;
+  const host = await getRequestHost();
   const isProd = await isProductionRequest();
+  logSeoGuard('layout', host);
 
   return (
     <html lang="ru" className={fontClasses}>

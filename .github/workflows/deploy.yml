@@ -57,6 +57,8 @@ jobs:
             
             echo "=== CLEANING ==="
             rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
+            # rsync без --delete оставляет старый файл — он перебивает app/robots.txt
+            rm -f public/robots.txt
             
             echo "=== INSTALLING DEPENDENCIES ==="
             NODE_OPTIONS="--max-old-space-size=1024" npm install --legacy-peer-deps
