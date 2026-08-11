@@ -63,39 +63,33 @@ jobs:
             NODE_OPTIONS="--max-old-space-size=1024" npm install --legacy-peer-deps
             
             echo "=== BUILDING PRODUCTION ==="
+            if [ ! -f .env.production ]; then
+              echo "ERROR: .env.production missing"
+              exit 1
+            fi
+            if ! grep -qE 'NEXT_PUBLIC_VERSION=(prod|production)' .env.production; then
+              echo "ERROR: .env.production must contain NEXT_PUBLIC_VERSION=production"
+              exit 1
+            fi
+            grep NEXT_PUBLIC_VERSION .env.production || true
             NODE_OPTIONS="--max-old-space-size=1024" npm run build
             
             echo "=== RESTARTING PM2 ==="
             pm2 delete goconf-prod 2>/dev/null || true
             sleep 1
             
-            # Простой запуск без сложных опций
+            # Prod всегда на 3001
             NODE_ENV=production PORT=3001 pm2 start npm --name "goconf-prod" -- run start
             
             pm2 save --force
             
             echo "=== POST-DEPLOYMENT CHECK ==="
             sleep 5
-            
-            echo "PM2 Status:"
             pm2 list
+            echo "Local headers:"
+            curl -sI http://localhost:3001/robots.txt | tr -d '\r' | grep -iE 'HTTP|x-goconf|x-robots' || true
+            echo "Public headers (goconf.ru):"
+            curl -sI https://goconf.ru/robots.txt | tr -d '\r' | grep -iE 'HTTP|x-goconf|x-robots' || true
             
-            echo "Application check:"
-            # Проверяем что приложение работает
-            if curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 --max-time 10 | grep -q "200\|30"; then
-              echo "✅ Production application is running on port 3001"
-              
-              # Проверяем статические файлы
-              echo "Checking static files..."
-              STATIC_FILE=$(find .next/static/chunks -name "main-app-*.js" | head -1 | xargs basename)
-              if curl -s -o /dev/null -w "_next/static file: %{http_code}\n" http://localhost:3001/_next/static/chunks/$STATIC_FILE --max-time 5 | grep -q "200"; then
-                echo "✅ Static files are accessible"
-                echo "✅ Production deployment completed successfully"
-              else
-                echo "⚠️ Static files may have issues"
-              fi
-            else
-              echo "⚠️ Production application not responding"
-              pm2 logs goconf-prod --lines 20
-            fi
+            echo "✅ Production deployment completed"
           EOF

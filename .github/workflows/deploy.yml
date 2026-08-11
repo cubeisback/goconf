@@ -49,11 +49,9 @@ jobs:
             set -e
             cd /home/thunder/web/dev.goconf.ru/app
             
-            echo "=== STOPPING OLD PROCESSES ==="
-            # Освобождаем порты
+            echo "=== STOPPING DEV PROCESS ONLY ==="
+            # НЕ трогаем 3001 — там prod
             sudo fuser -k 3000/tcp 2>/dev/null || true
-            sudo fuser -k 3001/tcp 2>/dev/null || true
-            sudo fuser -k 3002/tcp 2>/dev/null || true
             
             echo "=== CLEANING ==="
             rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
@@ -64,35 +62,35 @@ jobs:
             NODE_OPTIONS="--max-old-space-size=1024" npm install --legacy-peer-deps
             
             echo "=== BUILDING PROJECT ==="
-            if [ -f .env.dev ]; then
-              cp .env.dev .env.production
-              echo "Using .env.dev for build"
-              # Явно: next.config читает ENV_FILE; VERSION=dev обязателен для noindex
-              grep -q 'NEXT_PUBLIC_VERSION=dev' .env.dev || echo "WARNING: NEXT_PUBLIC_VERSION=dev missing in .env.dev"
+            if [ ! -f .env.dev ]; then
+              echo "ERROR: .env.dev missing"
+              exit 1
             fi
+            if ! grep -q 'NEXT_PUBLIC_VERSION=dev' .env.dev; then
+              echo "ERROR: .env.dev must contain NEXT_PUBLIC_VERSION=dev"
+              exit 1
+            fi
+            cp .env.dev .env.production
+            echo "Using .env.dev for build (NEXT_PUBLIC_VERSION=dev)"
+            grep NEXT_PUBLIC_VERSION .env.dev || true
             
             ENV_FILE=.env.dev NODE_OPTIONS="--max-old-space-size=1024" npm run build
             
             echo "=== RESTARTING PM2 ==="
             pm2 delete goconf-dev 2>/dev/null || true
             
-            # Запускаем правильно
+            # Dev всегда на 3000
             NODE_ENV=production PORT=3000 pm2 start npm --name "goconf-dev" -- run start
             
             pm2 save --force
             
             echo "=== VERIFICATION ==="
             sleep 3
-            echo "PM2 Status:"
             pm2 list
-            
-            echo "Checking application..."
-            if curl -s -o /dev/null -w "%{http_code}" http://localhost:3001 | grep -q "200\|30"; then
-              echo "✅ Dev application is running on port 3001"
-            else
-              echo "⚠️ Dev application not responding"
-              pm2 logs goconf-dev --lines 10
-            fi
+            echo "Local headers:"
+            curl -sI http://localhost:3000/robots.txt | tr -d '\r' | grep -iE 'HTTP|x-goconf|x-robots' || true
+            echo "Public headers (dev.goconf.ru):"
+            curl -sI https://dev.goconf.ru/robots.txt | tr -d '\r' | grep -iE 'HTTP|x-goconf|x-robots' || true
             
             echo "✅ Dev deployment completed"
           EOF

@@ -90,9 +90,14 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="ru" className={fontClasses}>
 		<head>
-        {!isProd && (
-          <meta name="robots" content="noindex, nofollow" />
-        )}
+        {/* Дублируем noindex в HTML явно — не только через metadata API */}
+        {!isProd ? (
+          <>
+            <meta name="robots" content="noindex, nofollow" />
+            <meta name="googlebot" content="noindex, nofollow" />
+            <meta name="yandex" content="none" />
+          </>
+        ) : null}
         <Script
           id="yandex-metrika"
           strategy="afterInteractive"
