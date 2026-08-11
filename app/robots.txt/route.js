@@ -1,6 +1,7 @@
 import { isProductionRequest } from '@/lib/getBaseUrl';
 
-const DEV_ROBOTS = `User-agent: *
+// Disallow на local + dev.goconf.ru; боевой robots — только на goconf.ru
+const NON_PROD_ROBOTS = `User-agent: *
 Disallow: /
 `;
 
@@ -100,7 +101,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const isProd = await isProductionRequest();
 
-  return new Response(isProd ? PROD_ROBOTS : DEV_ROBOTS, {
+  return new Response(isProd ? PROD_ROBOTS : NON_PROD_ROBOTS, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
       'Cache-Control': 'no-store, must-revalidate',

@@ -65,9 +65,11 @@ jobs:
             if [ -f .env.dev ]; then
               cp .env.dev .env.production
               echo "Using .env.dev for build"
+              # Явно: next.config читает ENV_FILE; VERSION=dev обязателен для noindex
+              grep -q 'NEXT_PUBLIC_VERSION=dev' .env.dev || echo "WARNING: NEXT_PUBLIC_VERSION=dev missing in .env.dev"
             fi
             
-            NODE_OPTIONS="--max-old-space-size=1024" npm run build
+            ENV_FILE=.env.dev NODE_OPTIONS="--max-old-space-size=1024" npm run build
             
             echo "=== RESTARTING PM2 ==="
             pm2 delete goconf-dev 2>/dev/null || true
