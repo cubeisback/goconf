@@ -4,11 +4,10 @@ import { getApiUrl } from "@/functions/functions";
 import EventClient from "./EventClient";
 import { notFound } from "next/navigation";
 
-// Разрешаем динамические параметры
+// Не кэшируем HTML: удалённое в WP мероприятие должно сразу отдавать 404
+// (как /organizer — иначе ISR может держать страницу дольше TTL)
+export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
-
-// ISR – обновление раз в час
-export const revalidate = 3600;
 
 // Нормализация slug для [[...slug]]
 function normalizeSlug(slug) {
@@ -79,9 +78,7 @@ async function getEventData(slug) {
 					slug,
 				)}`,
 			),
-			{
-				next: { revalidate: 3600 },
-			},
+			{ cache: 'no-store' },
 		);
 
 		if (!response.ok) return null;
@@ -97,9 +94,7 @@ async function getInterestingEvents() {
 	try {
 		const response = await fetch(
 			getApiUrl("/backend/wp-json/events/v2/interesting-events/"),
-			{
-				next: { revalidate: 3600 },
-			},
+			{ cache: 'no-store' },
 		);
 
 		if (!response.ok) return null;
@@ -115,9 +110,7 @@ async function getSimilarEvents(id) {
 	try {
 		const response = await fetch(
 			getApiUrl(`/backend/wp-json/events/v2/similar-events/?id=${id}`),
-			{
-				next: { revalidate: 3600 },
-			},
+			{ cache: 'no-store' },
 		);
 
 		if (!response.ok) return { items: [] };

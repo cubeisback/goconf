@@ -3,6 +3,7 @@ import ThemeWrapper from "./theme-wrapper";
 import Script from "next/script";
 import localFont from 'next/font/local'
 import { isProductionRequest } from '@/lib/getBaseUrl';
+import { getRobotsMetadata } from '@/lib/seoIndexing';
 
 // Локальные шрифты
 const styrene = localFont({
@@ -41,24 +42,8 @@ export async function generateMetadata() {
   return {
     title: "GoConf",
     description: "Конференции и события",
-    // На prod — только indexable директивы, без noindex в исходнике.
-    // На dev/local — явный noindex.
-    robots: isProd
-      ? {
-          index: true,
-          follow: true,
-          'max-image-preview': 'large',
-          'max-snippet': -1,
-          'max-video-preview': -1,
-        }
-      : {
-          index: false,
-          follow: false,
-          googleBot: {
-            index: false,
-            follow: false,
-          },
-        },
+    // На prod — index; на dev/local — noindex (плюс X-Robots-Tag в middleware).
+    robots: getRobotsMetadata(isProd),
     icons: {
       icon: [
         {
