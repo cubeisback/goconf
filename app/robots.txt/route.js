@@ -1,4 +1,10 @@
-User-agent: *
+import { isProductionRequest } from '@/lib/getBaseUrl';
+
+const DEV_ROBOTS = `User-agent: *
+Disallow: /
+`;
+
+const PROD_ROBOTS = `User-agent: *
 Disallow: /backend/wp-admin/
 Disallow: /backend/wp-includes/
 Disallow: /backend/wp-content/
@@ -87,3 +93,17 @@ User-agent: ai-seo
 Allow: /
 
 Sitemap: https://goconf.ru/sitemap.xml
+`;
+
+export const dynamic = 'force-dynamic';
+
+export async function GET() {
+  const isProd = await isProductionRequest();
+
+  return new Response(isProd ? PROD_ROBOTS : DEV_ROBOTS, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-store, must-revalidate',
+    },
+  });
+}

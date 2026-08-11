@@ -1,4 +1,4 @@
-import { getBaseUrl } from '@/lib/getBaseUrl';
+import { getBaseUrl, isProductionRequest } from '@/lib/getBaseUrl';
 import EventsClient from './EventsClient';
 import { getApiUrl } from '@/functions/functions';
 
@@ -113,18 +113,22 @@ export async function generateMetadata({ params }) {
     canonicalPath += '/' + filterParams.join('/');
   }
 
-  // Страницы с применённым фильтром: пустые — noindex, с событиями — index
+  // Страницы с применённым фильтром: пустые — noindex, с событиями — index.
+  // На non-prod никогда не разрешаем index (иначе перебивает layout).
+  const isProd = await isProductionRequest();
   const hasFilter = filterParams.length > 0;
   const hasEvents =
     (pageData.total || 0) > 0 ||
     (pageData.events?.length || 0) > 0 ||
     (pageData.pastEvents?.length || 0) > 0;
 
-  const robots = hasFilter
-    ? hasEvents
-      ? { index: true, follow: true }
-      : { index: false, follow: false }
-    : undefined;
+  const robots = !isProd
+    ? { index: false, follow: false }
+    : hasFilter
+      ? hasEvents
+        ? { index: true, follow: true }
+        : { index: false, follow: false }
+      : undefined;
 
   return {
     title: seo?.title || 'Все мероприятия',
