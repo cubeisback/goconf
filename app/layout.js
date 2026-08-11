@@ -125,10 +125,20 @@ export default async function RootLayout({ children }) {
 		<meta name="google-site-verification" content="n8asrtPoRx4M5v6xchKuoo5CVDG1xtUqjwFnI94r-K8" />
       </head>
       <body>
-		<ThemeWrapper>
-			{children}
-			<JivoChat />
-		</ThemeWrapper>
+        {!isProd ? (
+          // Яндекс: весь контент вне индекса на non-prod (display:contents — без влияния на вёрстку)
+          <noindex style={{ display: 'contents' }}>
+            <ThemeWrapper>
+              {children}
+              <JivoChat />
+            </ThemeWrapper>
+          </noindex>
+        ) : (
+          <ThemeWrapper>
+            {children}
+            <JivoChat />
+          </ThemeWrapper>
+        )}
       </body>
     </html>
   );
