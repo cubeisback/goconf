@@ -116,6 +116,7 @@ export async function GET() {
       'Cache-Control': 'no-store, must-revalidate',
       'X-GoConf-Seo-Guard': SEO_GUARD_BUILD,
       'X-GoConf-Version': version,
+      'X-GoConf-Host': host || '(empty)',
       'X-GoConf-Robots-Mode': isProd ? 'allow-prod' : 'disallow-all',
     },
   });

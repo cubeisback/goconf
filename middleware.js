@@ -1,18 +1,22 @@
 import { NextResponse } from 'next/server';
-import { allowsIndexing, SEO_GUARD_BUILD } from '@/lib/getBaseUrl';
+import {
+  allowsIndexing,
+  resolvePublicHost,
+  SEO_GUARD_BUILD,
+} from '@/lib/getBaseUrl';
 
 /**
- * Жёсткий запрет индексации на non-prod (по NEXT_PUBLIC_VERSION + host).
+ * Индексация только для Host=goconf.ru|www.goconf.ru.
+ * На dev.goconf.ru всегда noindex + заголовки для проверки деплоя.
  */
 export function middleware(request) {
-  const host =
-    request.headers.get('x-forwarded-host') ||
-    request.headers.get('host') ||
-    '';
+  const host = resolvePublicHost(
+    request.headers.get('x-forwarded-host'),
+    request.headers.get('host'),
+  );
   const version = process.env.NEXT_PUBLIC_VERSION || '(empty)';
   const canIndex = allowsIndexing(host);
 
-  // Тестовый лог только на ключевых путях (иначе зальёт pm2)
   if (
     request.nextUrl.pathname === '/' ||
     request.nextUrl.pathname === '/robots.txt'
@@ -28,6 +32,8 @@ export function middleware(request) {
   const response = NextResponse.next();
   response.headers.set('X-GoConf-Seo-Guard', SEO_GUARD_BUILD);
   response.headers.set('X-GoConf-Version', version);
+  response.headers.set('X-GoConf-Host', host || '(empty)');
+  response.headers.set('X-GoConf-Index', canIndex ? 'allow' : 'deny');
 
   if (!canIndex) {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
