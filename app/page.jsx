@@ -41,8 +41,7 @@ export async function generateMetadata() {
 async function getInterestingEvents() {
   try {
     const response = await fetch(getApiUrl("/backend/wp-json/events/v2/interesting-events/"), {
-      cache: 'force-cache',
-      next: { revalidate: 3600 },
+      cache: 'no-store',
     });
 
     if (!response.ok) {
