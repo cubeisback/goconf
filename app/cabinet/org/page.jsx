@@ -216,14 +216,16 @@ const UserOrg = () => {
 							
                         </div>
                         <div className={css`flex:1;`}>
-                            <Link href={`/organizer/${item?.slug}`} className={css`
+                            {item.status === 'publish' ? <Link href={`/organizer/${item?.slug}`} className={css`
 								font-size:20px;font-weight:500;line-height:1.4;margin-bottom: 8px;
 								transition: .3s ease-in-out;
 
 								&:hover {
 									color: #8553F9;
 								}
-							`}>{item.name}</Link>
+							`}>{item.name}</Link> : <div className={css`
+                                font-size:20px;font-weight:500;line-height:1.4;margin-bottom: 8px;
+                            `}>{item.name}</div>}
                             <div className={css`color: #47474D;font-size: 14px;line-height: 1.16;margin-bottom: 16px;`} dangerouslySetInnerHTML={{ __html: item.text }} />
                             <div className={css`font-size: 14px;line-height: 1.16;`}>Мероприятия <span className={css`color: #8553F9;`}>({item.count})</span></div>
                         </div>

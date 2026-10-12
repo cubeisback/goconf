@@ -124,7 +124,7 @@ export default function OrganizerClient({ initialData, initialArchiveEvents }) {
         <Container>
           <Breadcrumbs>
             <Link href="/">Главная</Link>
-            <Link href="/org">Организаторы</Link>
+            <Link href="/">Организаторы</Link>
             <p>{pageInfo && pageInfo.h1}</p>
           </Breadcrumbs>
           <PageTitle>{pageInfo && pageInfo.h1}</PageTitle>
@@ -157,9 +157,9 @@ export default function OrganizerClient({ initialData, initialArchiveEvents }) {
               `}>
               {pageInfo?.fields?.logo && 
                 <div className={css`
-                  width: 96px;
-                  height: 96px;
-                  border-radius: 100%;
+                  width: 150px;
+                  height: 150px;
+                  border-radius: 28px;
                   background-color: #F5F7FA;
                   overflow: hidden;
                   margin-bottom: 16px;
@@ -257,7 +257,7 @@ export default function OrganizerClient({ initialData, initialArchiveEvents }) {
         </Container>
       </div>
       
-      {orgEvents?.length > 0 && <MainEvents similar={true} events={orgEvents} onPage={true} />}
+      {orgEvents?.length > 0 && <MainEvents similar={true} events={orgEvents} onPage={true} showMore={true} />}
 
       {archiveOrgEvents?.length > 0 && <MainEvents similar={true} archive={true} events={archiveOrgEvents} onPage={true} />}
 

@@ -160,8 +160,10 @@ const AddEdit = () => {
 			}
 			);
 			console.log("organization ", response);
+			return true;
 		} catch (error) {
 			console.error(error);
+			return false;
 		}
 	}
 
@@ -182,6 +184,19 @@ const AddEdit = () => {
 	});
 
 	const handleSubmitTest = async (status) => {
+		if (id) {
+			// The list includes the actual publication status, even if the edit response omits it.
+			const response = await axios.get(
+				getApiUrl("/backend/wp-json/account/v2/companies/"),
+				{ headers: { Authorization: `Bearer ${token}` } }
+			);
+			const organization = response.data.items?.find(item => String(item.id) === String(id));
+			if (!organization?.status) {
+				throw new Error('Не удалось определить статус организатора. Попробуйте сохранить ещё раз.');
+			}
+			status = organization.status;
+		}
+
 		let testImage = dataOrganization.logo;
 
 		if (file) {
@@ -195,7 +210,7 @@ const AddEdit = () => {
 			logo: testImage,
 			// другие поля
 		};
-		await handleAddOrganizationSubmit(payload, status); // основной запрос
+		return await handleAddOrganizationSubmit(payload, status); // основной запрос
 	};
 
 
@@ -227,7 +242,7 @@ const AddEdit = () => {
 		openModal({
 		title: 'Сохранение',
 		description: `Вы действительно хотите сохранить?`,
-		onConfirm: () => {
+		onConfirm: async () => {
 			// if(dataOrganization.name != '') {
 			// 	handleSubmitTest(), 
 			// 	router.replace('/cabinet/org')
@@ -255,8 +270,17 @@ const AddEdit = () => {
 				window.scrollTo({ top: 0, behavior: 'smooth' });
 				// return;
 			} else {
-				handleSubmitTest(organizationStatus ? organizationStatus : 'moderation'),
-				router.replace('/cabinet/org')
+				try {
+					const saved = await handleSubmitTest(organizationStatus || 'moderation');
+					if (saved) {
+						router.replace('/cabinet/org');
+					} else {
+						setOrganizatorErrors({ save: 'Не удалось сохранить организатора. Попробуйте ещё раз.' });
+					}
+				} catch (error) {
+					console.error(error);
+					setOrganizatorErrors({ save: error.message || 'Не удалось сохранить организатора.' });
+				}
 			}
 		},
 		confirmText: 'Сохранить',
@@ -536,6 +560,7 @@ const AddEdit = () => {
 							</div>
 						</div>
 
+						{organizatorErrors.save && <div role="alert" style={{ marginBottom: 16 }}>{ErrorWrapper(organizatorErrors.save)}</div>}
 						<div className={css`display: flex;gap:16px;`}>
 							{/* <Button className={cx(css`color:#8553F9!important;background-color:#fff!important;`)}>Предпросмотр</Button> */}
 							<Button 

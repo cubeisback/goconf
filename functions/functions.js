@@ -1,3 +1,5 @@
+import { css } from '@emotion/css';
+
 export function formatDate(dateString) {
   if (!dateString) return ""; // или вернуть null
 
@@ -183,8 +185,17 @@ export const VideoPlayer = ({ videoData }) => {
   const { type, embedUrl } = videoData;
 
   const commonIframeProps = {
-    width: "560",
-    height: "315",
+    width: "100%",
+    height: "500",
+    className: css`
+      display: block;
+      width: 100%;
+      height: 500px;
+
+      @media (max-width: 575px) {
+        height: 250px;
+      }
+    `,
     frameBorder: "0",
     allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
     allowFullScreen: true,
