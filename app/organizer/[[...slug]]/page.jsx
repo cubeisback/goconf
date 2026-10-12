@@ -2,6 +2,7 @@ import { getOrganizatorSeo } from '@/lib/getOrganizatorSeo';
 import OrganizerClient from './OrganizerClient';
 import { getApiUrl } from '@/functions/functions';
 import { notFound } from 'next/navigation';
+import { getBaseUrl } from '@/lib/getBaseUrl';
 
 // Не SSG: metadata/layout используют headers(), из-за этого на проде был 500
 export const dynamic = 'force-dynamic';
@@ -10,13 +11,6 @@ export const dynamicParams = true;
 function normalizeSlug(slug) {
   if (!slug) return null;
   return Array.isArray(slug) ? slug[0] : slug;
-}
-
-function getMetadataBase() {
-  const version = process.env.NEXT_PUBLIC_VERSION;
-  if (version === 'dev') return 'https://dev.goconf.ru';
-  if (version === 'local') return 'http://localhost:3000';
-  return 'https://goconf.ru';
 }
 
 export async function generateMetadata({ params }) {
@@ -31,19 +25,20 @@ export async function generateMetadata({ params }) {
     }
 
     const seo = await getOrganizatorSeo(slug);
-    const baseUrl = getMetadataBase();
+    const baseUrl = await getBaseUrl();
+    const organizerUrl = new URL(`/organizer/${slug}`, baseUrl).href;
     
     return {
       title: seo?.title || 'Организатор',
       description: seo?.description || 'Описание организатора',
       metadataBase: new URL(baseUrl),
       alternates: {
-        canonical: `/organizer/${slug}`,
+        canonical: organizerUrl,
       },
       openGraph: {
         title: seo?.title,
         description: seo?.description,
-        url: `/organizer/${slug}`,
+        url: organizerUrl,
       },
     };
   } catch (error) {
