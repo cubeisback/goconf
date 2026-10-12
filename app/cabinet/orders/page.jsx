@@ -49,7 +49,8 @@ const UserOrders = () => {
 
 	const [statuses, setStatuses] = useState({
 		pending: 'Не оплачено',
-		paid: 'Оплачено'
+		paid: 'Оплачено',
+		canceled: 'Отменён'
 	});
 	const [ordersError, setOrdersError] = useState();
 	const getHistSort = async(currentStatus) => {
@@ -177,9 +178,9 @@ const UserOrders = () => {
                             padding: 3px 8px 5px;
                             color: #fff;
                             border-radius: 8px;
-                            background-color: ${item.status === 'pending' ? '#FF5B3B' : '#69B90F'};
+                            background-color: ${item.status === 'canceled' ? '#6C6C71' : item.status === 'pending' ? '#FF5B3B' : '#69B90F'};
                             width: max-content;
-                        `}>{item.status === 'pending' ? 'Не оплачен' : 'Оплачен'}</div>
+                        `}>{item.status === 'canceled' ? 'Отменён' : item.status === 'pending' ? 'Не оплачен' : 'Оплачен'}</div>
                         <div>Дата: {item.date}</div>
                     </div>
                     <a href={item.invoice} target="_blank" className={css`color: ${theme.colors.purple};`}>
@@ -187,7 +188,9 @@ const UserOrders = () => {
 						{item.payment === 'Оплата по счету для юр.лиц' && 'Скачать счет'}
 					</a>
                 </div>
+				{item.name && 
 				<div style={{marginBottom: 8, fontSize: 20, fontWeight: 500, lineHeight: 1.4}}>{item.name}</div>
+				}
                 
                 <div><b>&#8470; заказа:</b> <span className={css`color: #6C6C71;`}> {item.id}</span></div>
                 <div><b>Сумма оплаты:</b> <span className={css`color: ${theme.colors.purple};font-weight: 500;`}>{item.total} руб.</span></div>

@@ -11,12 +11,12 @@ import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 
 
-export const MainEvents = ({onPage, similar, id, events, archive}) => {
+export const MainEvents = ({onPage, similar, id, events, archive, showMore = false}) => {
     const theme = useTheme();
 
     const [limit, setLimit] = useState(5);
 
-    const [nearEvents, setNearEvents] = useState(null)
+    const [nearEvents, setNearEvents] = useState(events ?? null)
    
     useEffect(() => {
         if (events === undefined || events === null) {
@@ -43,7 +43,11 @@ export const MainEvents = ({onPage, similar, id, events, archive}) => {
         } else {
           setNearEvents(events);
         }
-      }, [similar, id]);
+      }, [similar, id, events]);
+
+    useEffect(() => {
+        setLimit(5);
+    }, [similar, id, events]);
 
     return (
         <div className={css`
@@ -288,9 +292,10 @@ export const MainEvents = ({onPage, similar, id, events, archive}) => {
                     ))}
                 </div>
 
-                {!similar &&
+                {(!similar || showMore) &&
                 nearEvents && limit < nearEvents.length && (
-                    <div className={css`
+                    <button type="button" className={css`
+                        display: block;
                         margin: 0 auto;
                         padding: 14px 32px;
                         border-radius: 28px;
@@ -298,6 +303,7 @@ export const MainEvents = ({onPage, similar, id, events, archive}) => {
                         background-color: #fff;
                         width: max-content;
                         color: ${theme.colors.purple};
+                        font: inherit;
                         line-height: 1.28;
                         cursor: pointer;
                         transition: ${theme.transition};  
@@ -306,7 +312,7 @@ export const MainEvents = ({onPage, similar, id, events, archive}) => {
                             background-color: ${theme.colors.purple};
                             color: #fff;
                         }
-                    `} onClick={()=>setLimit(prev => prev+5)}>Показать еще +</div>
+                    `} onClick={()=>setLimit(prev => prev+5)}>Показать еще +</button>
                 )
                 }
             </Container>

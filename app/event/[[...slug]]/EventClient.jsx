@@ -21,6 +21,7 @@ import { ModalEvent } from "./Modal";
 import { Modal } from "@/components/ui/Modal";
 import TimepadWidget from "@/components/TimepadWidget/TimepadWidget";
 import Image from "next/image";
+import MobileEventLink from './MobileEventLink';
 
 export default function EventClient({ initialData, initialInterestingEvents, initialSimilarEvents }) {
 	const [pageInfo, setPageInfo] = useState(initialData);
@@ -241,8 +242,8 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 											loop: pageInfo.fields.group_gallery.gallery.length > 2
 										},
 										1024: {
-											slidesPerView: 3,
-											loop: pageInfo.fields.group_gallery.gallery.length > 3
+											slidesPerView: 2,
+											loop: pageInfo.fields.group_gallery.gallery.length > 2
 										},
 									}}
 								>
@@ -253,7 +254,7 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 										background-color: #fff;
 										overflow: hidden;
 										height: auto;
-										max-height: 168px;
+										max-height: 250px;
 									`} key={index}
 									onClick={() => {
 										setActiveIndex(index);
@@ -431,7 +432,8 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 								<EventPageBlockInfoIsYour onClick={()=>{setIsModalOpen(true)}}>Это ваше мероприятие?</EventPageBlockInfoIsYour> 
 							}
 							{pageInfo.fields.events_link && !pageInfo.fields.events_timepad && 
-								<Button green="true" style={{width: '100%', marginTop: !pageInfo.fields.events_owner && 14}}>
+								<MobileEventLink marginTop={!pageInfo.fields.events_owner ? 14 : 0}>
+								<Button green="true" style={{width: '100%'}}>
 									<a href={pageInfo.fields.events_link} target="_blank" rel="noopener noreferrer" onClick={handleClickConversion}>
 										<p>
 											<span>На сайт мероприятия</span>
@@ -439,6 +441,7 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 										</p>
 									</a>
 								</Button>
+								</MobileEventLink>
 							}
 							{pageInfo.fields.events_timepad &&
 								<TimepadWidget 

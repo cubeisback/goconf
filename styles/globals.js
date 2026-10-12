@@ -80,15 +80,23 @@ input[type=number] {
 	}
 	.texteditor_main {
 		div {
-			min-height: 200px!important;
-			max-height: 200px!important;
+			min-height: 400px!important;
+			max-height: 400px!important;
 			outline: none!important;
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
 		}
 	}
 
 	.swiper-button-prev, .swiper-button-next {
 		width: 56px;
 		height: 56px;
+
+		@media(max-width: 991px) {
+			width: 32px;
+			height: 32px;
+		}
 
 		&::after {
 			content: '';

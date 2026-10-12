@@ -147,8 +147,8 @@ const AboutClient = ({ initialData, orgsData: initialOrgsData }) => {
 								<div
           							dangerouslySetInnerHTML={{ __html: item.svg }}
         						/>
-								<div>{item.name}</div>
-								<p>{item.desc}</p>
+								<div dangerouslySetInnerHTML={{ __html: item.name || '' }} />
+								<p dangerouslySetInnerHTML={{ __html: item.desc || '' }} />
 							</AboutItem>
 						))}
                     </AboutBlock>
@@ -162,8 +162,8 @@ const AboutClient = ({ initialData, orgsData: initialOrgsData }) => {
 							<OrgPageInfo>
 								<div style={{flex: 1}}>
 									<OrgPageInfoTitle dangerouslySetInnerHTML={{ __html: interestingEvents.text_1 }}></OrgPageInfoTitle>
-									<OrgPageInfoText>{interestingEvents.text_2}</OrgPageInfoText>
-									<OrgPageInfoPrice>{interestingEvents.text_3}</OrgPageInfoPrice>
+									<OrgPageInfoText dangerouslySetInnerHTML={{ __html: interestingEvents.text_2 || '' }} />
+									<OrgPageInfoPrice dangerouslySetInnerHTML={{ __html: interestingEvents.text_3 || '' }} />
 									<Button 
 									onClick={()=>{
 											token ?
