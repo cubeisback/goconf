@@ -51,15 +51,32 @@ const AddEdit = () => {
 					},
 				}
 			);
-			setDataOrganization(response.data.data)
 			setOrganizationStatus(response.data.status)
-			setDataOrganization((prev) => {
-				return {
-					...prev,
-					emails: response.data.data.emails.map((item) => item.value),
-					phones: response.data.data.phones.map((item) => item.value),
-				};
-			});
+			const data = response.data.data ?? {};
+			const textValue = (value) => typeof value === 'string' ? value : '';
+			const contactValues = (items) => Array.isArray(items)
+				? items.map((item) => textValue(typeof item === 'string' ? item : item?.value))
+				: [];
+			setDataOrganization((prev) => ({
+				...prev,
+				...data,
+				name: textValue(data.name),
+				logo: data.logo || {},
+				text_short: textValue(data.text_short),
+				text: textValue(data.text),
+				city: textValue(data.city),
+				address: textValue(data.address),
+				link: textValue(data.link),
+				emails: contactValues(data.emails),
+				phones: contactValues(data.phones),
+				socials: {
+					...data.socials,
+					vk: textValue(data.socials?.vk),
+					tg: textValue(data.socials?.tg),
+					youtube: textValue(data.socials?.youtube),
+					rutube: textValue(data.socials?.rutube),
+				},
+			}));
 			console.log("get org info ", response);
 		} catch (error) {
 			console.error(error);
@@ -194,7 +211,7 @@ const AddEdit = () => {
 			if (!organization?.status) {
 				throw new Error('Не удалось определить статус организатора. Попробуйте сохранить ещё раз.');
 			}
-			status = organization.status;
+			status = organization.status === 'publish' ? 'publish' : 'moderation';
 		}
 
 		let testImage = dataOrganization.logo;
@@ -271,7 +288,7 @@ const AddEdit = () => {
 				// return;
 			} else {
 				try {
-					const saved = await handleSubmitTest(organizationStatus || 'moderation');
+					const saved = await handleSubmitTest(organizationStatus === 'publish' ? 'publish' : 'moderation');
 					if (saved) {
 						router.replace('/cabinet/org');
 					} else {
@@ -523,10 +540,10 @@ const AddEdit = () => {
 									placeholder='+7 (___) ___-__-__'
 									/>
 							</div>
-							{/* <div className={css`flex: 0 1 100%;`}>
+							<div className={css`flex: 0 1 100%;`}>
 								<p className={css`font-size: 14px;line-height:1.16;margin-bottom: 8px;`}>Адрес сайта</p>
 								<input className={input} type="text" placeholder="https://" name="link" value={dataOrganization.link} onChange={handleDataOrganizaionChange} />
-							</div> */}
+							</div>
 						</div>
 
 						<div className={css`

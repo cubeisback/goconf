@@ -205,6 +205,12 @@ export default function OrganizerClient({ initialData, initialArchiveEvents }) {
                 flex-direction: column;
                 gap: 16px;
               `}>
+				{pageInfo?.fields?.city && 
+                  <p className={css`
+                    font-size: 14px;
+                    line-height: 1.16;
+                  `}>{pageInfo.fields.city}</p>
+                }
                 {pageInfo?.fields?.address && 
                   <p className={css`
                     font-size: 14px;

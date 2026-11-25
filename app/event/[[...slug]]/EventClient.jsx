@@ -83,6 +83,7 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
   }
 
 	 const handleClickConversion = async (e) => {
+		const isLink = e?.currentTarget?.tagName === 'A';
 		try {
 			await axios.post(
 				getApiUrl(`/backend/wp-json/events/v2/increment-click/`),
@@ -96,14 +97,14 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 				}
 			);
 		
-			if(pageInfo.fields.events_link) {
+			if(!isLink && pageInfo.fields.events_link) {
 				window.open(pageInfo.fields.events_link, '_blank');
 			}
 			
 		
 		} catch (error) {
 			console.error('Error tracking click:', error);
-			if(pageInfo.fields.events_link) {
+			if(!isLink && pageInfo.fields.events_link) {
 				window.open(pageInfo.fields.events_link, '_blank');
 			}
 		} finally {
@@ -433,13 +434,11 @@ export default function EventClient({ initialData, initialInterestingEvents, ini
 							}
 							{pageInfo.fields.events_link && !pageInfo.fields.events_timepad && 
 								<MobileEventLink marginTop={!pageInfo.fields.events_owner ? 14 : 0}>
-								<Button green="true" style={{width: '100%'}}>
-									<a href={pageInfo.fields.events_link} target="_blank" rel="noopener noreferrer" onClick={handleClickConversion}>
-										<p>
-											<span>На сайт мероприятия</span>
-											<span>На сайт мероприятия</span>
-										</p>
-									</a>
+								<Button green="true" style={{width: '100%'}} href={pageInfo.fields.events_link} target="_blank" rel="noopener noreferrer" onClick={handleClickConversion}>
+									<p>
+										<span>На сайт мероприятия</span>
+										<span>На сайт мероприятия</span>
+									</p>
 								</Button>
 								</MobileEventLink>
 							}

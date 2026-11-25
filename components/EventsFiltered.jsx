@@ -7,6 +7,7 @@ import LinkArrow from "@/public/images/svg/arrow_link.svg";
 import { motion } from 'framer-motion';
 import { formatDate } from "../functions/functions";
 import Link from "next/link";
+import EventCover from '@/components/EventCover';
 
 
 export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadMore, currentPage, title, hideLoadMore, withTopPadding, hasMore }) => {
@@ -160,7 +161,7 @@ export const EventsFiltered = ({onPage, similar, events, total, loading, onLoadM
                                     object-position: top;
                                 }
                             `}>
-                                <img src={item.cover} alt="" />
+                                <EventCover src={item.cover} alt="" />
                             </Link>
                             <div className={css`
                                 flex: 1;

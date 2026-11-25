@@ -85,10 +85,11 @@ export const DoubleLinkArrow = styled(Link)`
 	}
 `;
 const ButtonType = ({ $button, ...props }) => {
-  const Component = $button ? 'button' : 'div';
+  const Component = props.href ? Link : $button ? 'button' : 'div';
   return <Component {...props} />;
 };
 export const Button = styled(ButtonType)`
+	display: ${({ href }) => href ? 'block' : undefined};
 	border-radius: 28px;
 	background: ${({ green, black, theme }) =>
 		green ? theme.colors.green : black ? '#191921' : theme.colors.purple};

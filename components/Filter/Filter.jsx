@@ -12,6 +12,7 @@ import useFiltersStore from '../../store/useFiltersStore';
 import { usePathname, useRouter } from 'next/navigation';
 import { getApiUrl } from '@/functions/functions';
 import { useDateStore } from '@/store/useDateStore';
+import { getEventsPageParams } from '@/lib/eventsPagination';
 
 export const Filter = ({
 	full, 
@@ -138,7 +139,7 @@ export const Filter = ({
             getApiUrl("/backend/wp-json/events/v2/filter/"),
             {
                 ...data,
-                load_page: page
+                ...getEventsPageParams(page)
             },
             {
                 headers: {

@@ -5,10 +5,6 @@ import {
   SEO_GUARD_BUILD,
 } from '@/lib/getBaseUrl';
 
-/**
- * Индексация только для Host=goconf.ru|www.goconf.ru.
- * На dev.goconf.ru всегда noindex + заголовки для проверки деплоя.
- */
 export function middleware(request) {
   const host = resolvePublicHost(
     request.headers.get('x-forwarded-host'),
