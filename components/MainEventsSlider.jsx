@@ -12,6 +12,7 @@ import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
 import styled from "@emotion/styled";
 import { DoubleLinkArrow } from "@/styles/ui";
+import EventCover from '@/components/EventCover';
 
 
 const Next = styled.div`
@@ -250,9 +251,7 @@ export const MainEventsSlider = ({ initialData }) => {
                         displayItems.map((item, index) => (
                             <SwiperSlide key={item.id || item.slug || index} style={{borderRadius: 24, backgroundColor: '#fff', overflow: 'hidden'}}>
                                 <Link href={`/event/${item.slug}`} style={{width: '100%', height: 256}}>
-                                    {item.cover ? (
-                                    <img src={item.cover} alt="" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
-                                    ) : null}
+                                    <EventCover src={item.cover} alt="" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
                                 </Link>
                                 <div style={{padding: 24, display: 'flex', flexDirection: 'column', gap: 16, height: 256}}>
                                     <div>

@@ -12,6 +12,7 @@ import { EventsFiltered } from '@/components/EventsFiltered';
 // import { Form } from '@/components/Form';
 import SearchIcon from "@/public/images/svg/search.svg";
 import { getApiUrl } from '@/functions/functions';
+import { getEventsPageParams } from '@/lib/eventsPagination';
 
 export default function EventsClient({ params, initialData }) {
   const theme = useTheme();
@@ -66,7 +67,7 @@ export default function EventsClient({ params, initialData }) {
         getApiUrl("/backend/wp-json/events/v2/filter/"),
         {
           ...currentFilters,
-          load_page: nextPage
+          ...getEventsPageParams(nextPage)
         }
       );
 
@@ -107,7 +108,7 @@ export default function EventsClient({ params, initialData }) {
           getApiUrl("/backend/wp-json/events/v2/search/"),
           { 
             search: query,
-            load_page: page,
+            ...getEventsPageParams(page),
           }
         );
 
@@ -140,7 +141,7 @@ export default function EventsClient({ params, initialData }) {
           getApiUrl("/backend/wp-json/events/v2/filter/"),
           {
             ...currentFilters,
-            load_page: page
+            ...getEventsPageParams(page)
           }
         );
 
@@ -180,7 +181,7 @@ export default function EventsClient({ params, initialData }) {
         const response = await axios.post(
           getApiUrl("/backend/wp-json/events/v2/filter/"),
           {
-            load_page: page
+            ...getEventsPageParams(page)
           }
         );
 

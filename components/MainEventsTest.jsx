@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import axios from "axios";
 import { formatDate, getApiUrl } from "@/functions/functions";
 import Link from "next/link";
+import EventCover from '@/components/EventCover';
 
 export const MainEventsTest = ({ initialEvents = [], initialTotal = 0 }) => {
   const theme = useTheme();
@@ -201,7 +202,7 @@ export const MainEventsTest = ({ initialEvents = [], initialTotal = 0 }) => {
 									object-position: top;
 								}
 							`}>
-								<img src={item.cover} alt="" />
+								<EventCover src={item.cover} alt="" />
 							</Link>
 							<div className={css`
 								flex: 1;
