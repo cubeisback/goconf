@@ -32,6 +32,7 @@ test ! -e .env.local
 test ! -e .env.production.local
 test ! -e public/robots.txt
 NODE_OPTIONS=--max-old-space-size=3072 npm ci --legacy-peer-deps --no-audit --no-fund
+npm audit --omit=dev --audit-level=low
 NODE_OPTIONS=--max-old-space-size=3072 npm run build
 
 candidate_pid=''
