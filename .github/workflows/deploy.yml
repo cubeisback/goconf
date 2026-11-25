@@ -1,96 +1,72 @@
-name: Deploy goconf Next.js App (Dev)
+name: Deploy frontend (dev)
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontend-dev
+  cancel-in-progress: false
 
 jobs:
-  deploy-dev:
+  deploy:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-
+    timeout-minutes: 30
+    env:
+      SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
+      SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY_DEV }}
+      ENV_CONTENT: ${{ secrets.ENV_DEV_CONTENT }}
+      TARGET: dev
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Create .env.dev
+      - uses: actions/checkout@v4
+      - name: Validate configuration and SSH access
+        shell: bash
         run: |
-          echo "${{ secrets.ENV_DEV_CONTENT }}" > .env.dev
-
-      - name: Setup SSH
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY_DEV }}
-        run: |
+          set -euo pipefail
+          test "$SERVER_IP" = "141.98.190.155"
+          test "$SERVER_USER" = "thunder"
+          test -n "$PRIVATE_KEY"
+          test -n "$ENV_CONTENT"
+          umask 077
           mkdir -p ~/.ssh
-          echo "$PRIVATE_KEY" > ~/.ssh/goconf_key
-          chmod 600 ~/.ssh/goconf_key
-          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-
-      - name: Upload project files
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
-        run: |
-          rsync -avz \
-            --exclude=".git" \
-            --exclude="node_modules" \
-            --exclude=".next" \
-            -e "ssh -i ~/.ssh/goconf_key" ./ \
-            $SERVER_USER@$SERVER_IP:/home/thunder/web/dev.goconf.ru/app/
-
-      - name: Install, Build and Restart PM2
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP_DEV }}
-          SERVER_USER: ${{ secrets.SERVER_USER_DEV }}
-        run: |
-          ssh -i ~/.ssh/goconf_key $SERVER_USER@$SERVER_IP << 'EOF'
-            set -e
-            cd /home/thunder/web/dev.goconf.ru/app
-            
-            echo "=== STOPPING DEV PROCESS ONLY ==="
-            # НЕ трогаем 3001 — там prod
-            sudo fuser -k 3000/tcp 2>/dev/null || true
-            
-            echo "=== CLEANING ==="
-            rm -rf .next node_modules/.cache npm-debug.log* 2>/dev/null || true
-            # rsync без --delete оставляет старый файл — он перебивает app/robots.txt
-            rm -f public/robots.txt
-            
-            echo "=== INSTALLING DEPENDENCIES ==="
-            NODE_OPTIONS="--max-old-space-size=1024" npm install --legacy-peer-deps
-            
-            echo "=== BUILDING PROJECT ==="
-            if [ ! -f .env.dev ]; then
-              echo "ERROR: .env.dev missing"
-              exit 1
-            fi
-            if ! grep -q 'NEXT_PUBLIC_VERSION=dev' .env.dev; then
-              echo "ERROR: .env.dev must contain NEXT_PUBLIC_VERSION=dev"
-              exit 1
-            fi
-            cp .env.dev .env.production
-            echo "Using .env.dev for build (NEXT_PUBLIC_VERSION=dev)"
-            grep NEXT_PUBLIC_VERSION .env.dev || true
-            
-            ENV_FILE=.env.dev NODE_OPTIONS="--max-old-space-size=1024" npm run build
-            
-            echo "=== RESTARTING PM2 ==="
-            pm2 delete goconf-dev 2>/dev/null || true
-            
-            # Dev всегда на 3000
-            NODE_ENV=production PORT=3000 pm2 start npm --name "goconf-dev" -- run start
-            
-            pm2 save --force
-            
-            echo "=== VERIFICATION ==="
-            sleep 3
-            pm2 list
-            echo "Local headers:"
-            curl -sI http://localhost:3000/robots.txt | tr -d '\r' | grep -iE 'HTTP|x-goconf|x-robots' || true
-            echo "Public headers (dev.goconf.ru):"
-            curl -sI https://dev.goconf.ru/robots.txt | tr -d '\r' | grep -iE 'HTTP|x-goconf|x-robots' || true
-            
-            echo "✅ Dev deployment completed"
+          printf '%s\n' "$PRIVATE_KEY" > ~/.ssh/goconf_key
+          ssh-keygen -y -P '' -f ~/.ssh/goconf_key > /dev/null
+          printf '%s\n' '141.98.190.155 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICq0yEw3stYLxE3k34QkhiQ1tF6IHzlZGVZGKReJtL/b' > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host goconf-deploy
+            HostName $SERVER_IP
+            User $SERVER_USER
+            IdentityFile ~/.ssh/goconf_key
+            IdentitiesOnly yes
+            BatchMode yes
+            StrictHostKeyChecking yes
+            ConnectTimeout 15
           EOF
+          ssh goconf-deploy 'test "$(id -un)" = thunder; command -v node npm pm2 rsync flock'
+      - name: Upload isolated release
+        shell: bash
+        run: |
+          set -euo pipefail
+          domain=goconf.ru
+          if [ "$TARGET" = dev ]; then domain=dev.goconf.ru; fi
+          release_id="${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          release="/home/thunder/web/$domain/releases/$release_id"
+          echo "RELEASE=$release" >> "$GITHUB_ENV"
+          echo "RELEASE_ID=$release_id" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/frontend"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/frontend"
+          find "$RUNNER_TEMP/frontend" -maxdepth 1 -name '.env*' -type f -delete
+          printf '%s\n' "$ENV_CONTENT" > "$RUNNER_TEMP/frontend/.env.production"
+          ssh goconf-deploy "mkdir -p '$release'"
+          rsync -az "$RUNNER_TEMP/frontend/" "goconf-deploy:$release/"
+      - name: Build, check and activate frontend
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh goconf-deploy "bash '$RELEASE/scripts/deploy-frontend.sh' '$TARGET' '$RELEASE_ID'"
