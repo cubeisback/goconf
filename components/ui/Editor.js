@@ -69,8 +69,15 @@ const textEditorField = css`
 
 export default function TextEditor({ content, onChange }) {
   const editor = useEditor({
+    immediatelyRender: false,
+    shouldRerenderOnTransaction: true,
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        underline: false,
+        strike: false,
+        link: false,
+        trailingNode: false,
+      }),
       Underline,
       Strike,
       TextAlign.configure({
@@ -105,7 +112,7 @@ export default function TextEditor({ content, onChange }) {
 
   useEffect(() => {
     if (editor && content !== undefined && content !== editor.getHTML()) {
-      editor.commands.setContent(content);
+      editor.commands.setContent(content, { emitUpdate: false });
     }
   }, [content, editor]);
 
