@@ -1,5 +1,7 @@
 import { getApiUrl } from '@/functions/functions';
 import AboutClient from './AboutClient';
+import DevOnly from '@/components/DevOnly';
+import PinnedPromotion from './PinnedPromotion';
 import { getBaseUrl } from '@/lib/getBaseUrl';
 
 export async function generateMetadata() {
@@ -52,5 +54,7 @@ export default async function AboutPage() {
   const aboutData = aboutResponse.ok ? await aboutResponse.json() : null;
   const orgsData = orgResponse.ok ? await orgResponse.json() : null;
 
-  return <AboutClient initialData={aboutData} orgsData={orgsData} />;
+  return <AboutClient initialData={aboutData} orgsData={orgsData}
+    promotionPreview={<DevOnly><PinnedPromotion /></DevOnly>}
+  />;
 }

@@ -567,13 +567,19 @@ export const LkWrapper = styled.div`
 //TODO добавить для всех мест с текстом
 export const Article = styled.article`
 	padding: 64px 0;
-	display: flex;
-		flex-direction: column;
-		gap: 16px;
+	font-size: 16px;
+	line-height: 1.6;
+	overflow-wrap: anywhere;
 
-		& > p {
-			font-size: 16px;
-			line-height: 1.28;
+		& > * + * {
+			margin-top: 16px;
+		}
+		p, ul, ol, li {
+			font-size: inherit;
+			line-height: inherit;
+		}
+		li > * + * {
+			margin-top: 8px;
 		}
 		h1 {
 			font-size: 28px;
@@ -588,35 +594,25 @@ export const Article = styled.article`
 		}
 		h3 {
 			font-size: 20px;
-			font-weight: 500;
 			line-height: 1.4;
 			font-weight: 500;
 		}
 		h4 {
 			font-size: 18px;
-			font-weight: 500;
 			line-height: 1.36;
 			font-weight: 500;
 		}
-		ul {
-			padding-left: 20px;
-			display: flex;
-			flex-direction: column;
-			gap: 10px;
-			
-			li {
-				font-size: 14px;
-			}
+		ul, ol {
+			padding-left: 1.5em;
 		}
-		ol {
-			padding-left: 20px;
-			display: flex;
-			flex-direction: column;
-			gap: 10px;
-
-			li {
-				font-size: 14px;
-			}
+		li + li {
+			margin-top: 8px;
+		}
+		a {
+			display: inline;
+			color: ${({ theme }) => theme.colors.purple};
+			text-decoration: underline;
+			text-underline-offset: 3px;
 		}
 		strong {
 			font-weight: 500;

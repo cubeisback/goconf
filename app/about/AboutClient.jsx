@@ -11,6 +11,7 @@ import styled from "@emotion/styled";
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@/components/ui/Modal';
+import { PromotionImage, PromotionImageFrame } from './PromotionImage';
 
 const AboutSubtitle = styled.div`
 	text-align:center;
@@ -83,7 +84,7 @@ const SkeletonItem = styled.div`
 	}
 `
 
-const AboutClient = ({ initialData, orgsData: initialOrgsData }) => {
+const AboutClient = ({ initialData, orgsData: initialOrgsData, promotionPreview }) => {
 	const token = useAuthStore((state) => state.token);
 	const router = useRouter();
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -157,7 +158,7 @@ const AboutClient = ({ initialData, orgsData: initialOrgsData }) => {
 
 					{interestingEvents && (
 						<>
-							<OrgPageTitle>Интересные события</OrgPageTitle>
+							<OrgPageTitle>Опции для продвижения</OrgPageTitle>
 							<OrgPageSubtitle>Также, мы&nbsp;предлагаем дополнительные опции продвижения,<br/> которые помогут вывести ваше событие в&nbsp;топ и&nbsp;привлечь именно ту&nbsp;аудиторию, которая вам нужна.</OrgPageSubtitle>
 							<OrgPageInfo>
 								<div style={{flex: 1}}>
@@ -178,19 +179,18 @@ const AboutClient = ({ initialData, orgsData: initialOrgsData }) => {
 										</p>
 									</Button>
 								</div>
-								<OrgPageInfoImg>
-									{interestingEvents?.image && 
-									<Image 
-										src={interestingEvents.image} 
+								<PromotionImage $arrow>
+									<PromotionImageFrame $interesting>
+									<img
+										src="/images/about-interesting-events.png"
 										alt="GoConf Организаторам"
-										width={661}
-										height={491}
 									/>
-									}
-								</OrgPageInfoImg>
+									</PromotionImageFrame>
+								</PromotionImage>
 							</OrgPageInfo>
 						</>
 					)}
+                    {promotionPreview}
                 </Container>
             </AboutWrapper>
 
